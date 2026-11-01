@@ -327,11 +327,11 @@ const server = http.createServer(async (req, res) => {
         else {
           const data=JSON.parse(await readBody()||'{}');
           // Recheck the canonical round content, not a caller-provided approval.
-          const approvedRound=()=>{
+          const approvedRound=(allowCompleted=false)=>{
             if(!tickRounds())throw Error('Round storage unavailable.');
             const round=ideaRounds.public();
             const text=round?.selected.map(id=>round.ideas.find(i=>i.id===id).text).join('\n\n');
-            if(!ideaRounds.buildPermission(text,{roundId:round?.id,approvedInputHash:round?.approvedInputHash}))throw Error('Approved matching community round required.');
+            if(!(allowCompleted&&round?.phase==='completed'&&ideaRounds.inputHash()===round.approvedInputHash)&&!ideaRounds.buildPermission(text,{roundId:round?.id,approvedInputHash:round?.approvedInputHash}))throw Error('Approved matching community round required.');
             return round;
           };
           if(data.action==='issue')result=buildQuarantine.issue(actor,approvedRound(),data);
@@ -339,7 +339,7 @@ const server = http.createServer(async (req, res) => {
           else if(data.action==='receive')result=buildQuarantine.receive(actor,data.id,data);
           else if(data.action==='begin-test')result=buildQuarantine.beginTest(actor,data.id,data.artifactHash);
           else if(data.action==='record-test')result=buildQuarantine.recordTest(actor,data.id,data.report);
-          else if(data.action==='approve')result=buildQuarantine.approve(actor,data.id,data,approvedRound());
+          else if(data.action==='approve')result=buildQuarantine.approve(actor,data.id,data,approvedRound(true));
           else if(data.action==='cancel'||data.action==='reject')result=buildQuarantine.close(actor,data.id,data.action==='cancel'?'cancelled':'rejected');
           else throw Error('Unknown quarantine action.');
         }

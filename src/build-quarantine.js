@@ -117,7 +117,7 @@ export class BuildQuarantine {
   }
   approve(actor,id,{artifactHash,reportHash,rightsAttested},round) {
     owner(actor);const job=this.job(id);
-    if (round?.phase!=='approved'||round.id!==job.roundId||round.approvedInputHash!==job.inputHash) throw Error('Community round approval changed.');
+    if (!['approved','completed'].includes(round?.phase)||round.id!==job.roundId||round.approvedInputHash!==job.inputHash) throw Error('Community round approval changed.');
     if(job.state!=='tested'||!job.report.passed||artifactHash!==job.artifactHash||reportHash!==job.reportHash||rightsAttested!==true)throw Error('Review passing tests, exact artifact/report hashes and rights before approval.');
     return this.change(()=>{job.approval={artifactHash,reportHash,rightsAttested:true,at:Date.now()};job.state='approved';job.revision++;return job;});
   }

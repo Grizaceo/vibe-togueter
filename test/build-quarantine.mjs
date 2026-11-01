@@ -110,3 +110,8 @@ test('resource manifest is copied into the immutable version and checked after r
  const stored=JSON.parse(fs.readFileSync(file));stored.jobs[0].resources.fingerprints='tampered';fs.writeFileSync(file,JSON.stringify(stored));
  assert.throws(()=>new BuildQuarantine(file),/manifest was altered/);
 });
+
+test('exact completed construction can receive final artifact approval without reopening intake',t=>{
+ const {q}=fixture(t);const job=tested(q);
+ assert.equal(q.approve(owner,job.id,{artifactHash:job.artifactHash,reportHash:job.reportHash,rightsAttested:true},{...round,phase:'completed'}).state,'approved');
+});

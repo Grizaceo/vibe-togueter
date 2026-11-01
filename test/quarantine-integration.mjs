@@ -51,3 +51,18 @@ await run(process.execPath,['scripts/quarantine-admin.mjs',requestFile,'--save-r
 check('operator can export exact source and reports to a new protected review file',JSON.parse(fs.readFileSync(reviewFile)).source===source&&(fs.statSync(reviewFile).mode&0o777)===0o600);
 await assert.rejects(run(process.execPath,['scripts/quarantine-admin.mjs',requestFile,'--save-review',reviewFile],{env:process.env}));
 check('operator helper refuses remote origins and review overwrite',await run(process.execPath,['scripts/quarantine-admin.mjs','list'],{env:{...process.env,VA_ARENA_URL:'https://example.com'}}).then(()=>false,()=>true));
+
+// Exercise final approval after the actual mock generator completes the input round.
+await action({action:'open'});
+assert.equal((await post('/admin/chat',{user:'completion-proposer',text:'!idea Completed construction approval fixture'})).status,200);
+await action({action:'vote'});await action({action:'close'});await action({action:'select',ids:[1]});
+let completedRound=(await(await fetch(base+'/community/state')).json()).round;
+completedRound=await action({action:'approve',roundId:completedRound.id,reviewToken:completedRound.reviewToken});
+let completedJob=await call({action:'issue',buildVmId:'fixture-builder-2',runtimeVmId:'fixture-runtime-2',agentProfile:'fixture-no-agent'});
+completedJob=await call({action:'receive',id:completedJob.id,source,expectedCodeSha256:sha(source)});
+completedJob=await call({action:'begin-test',id:completedJob.id,artifactHash:completedJob.artifactHash});
+completedJob=await call({action:'record-test',id:completedJob.id,report:{artifactHash:completedJob.artifactHash,testNonce:completedJob.testNonce,testVmId:'fixture-test-vm-2',isolatedVmAttested:true,evidenceSha256:sha('completed-round fixture'),checks:[{name:'fixture only',passed:true}]}});
+assert.equal((await post('/admin/fund',{amountUsd:20,source:'isolated-test-fixture'})).status,200);
+const generated=await post('/admin/generate',{idea:completedRound.ideas[0].text,roundId:completedRound.id,approvedInputHash:completedRound.approvedInputHash});assert.equal((await generated.json()).ok,true);
+const approvedCompleted=await call({action:'approve',id:completedJob.id,artifactHash:completedJob.artifactHash,reportHash:completedJob.reportHash,rightsAttested:true});
+check('HTTP final artifact approval accepts the exact completed construction round',approvedCompleted.state==='approved'&&(await(await fetch(base+'/community/state')).json()).round.phase==='completed');
