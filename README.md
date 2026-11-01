@@ -51,7 +51,11 @@ node scripts/arena-admin.mjs load chat-vs-streamer
 node scripts/arena-admin.mjs status
 ```
 
-## Two implemented formats
+## External Rust game runtimes
+
+The studio's Games section lists the two existing public CreateOS Rust demos. Local owner controls can check both runtimes, create a falling-blocks lobby, share its browser link and start after players join. State is journaled with idempotent creation and explicit reconciliation. No automatic start is placed in viewer links. Tee Arena currently has a browser link and health check; its passive chat bridge is pending. Both remote backends are public and lack platform-enforced private access. See [remote integration and rehearsal](docs/platform/REMOTE_GAMES.md).
+
+## Two implemented SDK formats
 
 **Marble Race** (inherited): `!play` adds your marble; browser players also join. `!race` starts when at least **two** marbles exist. `!reset` clears the race. The HUD's Spanish phrases mean “marbles / play to join / race to start.”
 

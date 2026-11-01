@@ -1,0 +1,77 @@
+{
+  "at": "2026-11-01T11:44:11.394Z",
+  "kind": "automated remote protocol rehearsal, not human/browser gameplay",
+  "checks": [
+    {
+      "name": "remote health API responds",
+      "ok": true
+    },
+    {
+      "name": "tee runtime health API responds",
+      "ok": true
+    },
+    {
+      "name": "lobby link waits for streamer start",
+      "ok": true
+    },
+    {
+      "name": "repeated create returns same session",
+      "ok": true
+    },
+    {
+      "name": "empty lobby cannot start",
+      "ok": true
+    },
+    {
+      "name": "two automated players joined correct room",
+      "ok": true
+    },
+    {
+      "name": "owner start confirmed",
+      "ok": true
+    },
+    {
+      "name": "both clients received Begin and live snapshots",
+      "ok": true
+    },
+    {
+      "name": "closed room reconciles as missing",
+      "ok": true
+    }
+  ],
+  "timingsMs": {
+    "inspect": 637,
+    "create": 2,
+    "start": 1272,
+    "reconcile": 635
+  },
+  "runtime": "https://01m6b6asmqr2znr2zf6xh9wnmb-8899.app.sb.createos.sh",
+  "health": {
+    "checkedAt": 1793533452589,
+    "ok": true,
+    "details": {
+      "ok": true,
+      "conns": 0,
+      "rooms": 0,
+      "playing": 0,
+      "list": []
+    }
+  },
+  "session": {
+    "id": "f797aa6a-5683-4ed9-b48a-abaae05543ad",
+    "code": "VA637F6C",
+    "joinURL": "https://01m6b6asmqr2znr2zf6xh9wnmb-8899.app.sb.createos.sh/?mode=online&room=VA637F6C&channel=gris_96&server=wss%3A%2F%2F01m6b6asmqr2znr2zf6xh9wnmb-8899.app.sb.createos.sh%2Fws"
+  },
+  "protocol": [
+    {
+      "welcome": true,
+      "begin": true,
+      "snapshots": 6
+    },
+    {
+      "welcome": true,
+      "begin": true,
+      "snapshots": 6
+    }
+  ]
+}

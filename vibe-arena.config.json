@@ -42,5 +42,23 @@
       "voteSeconds": 45,
       "maxIdeasPerPerson": 1
     }
-  }
+  },
+  "remoteGames": [
+    {
+      "id": "falling-blocks-demo",
+      "title": "Community Falling Blocks \u00b7 Rust demo",
+      "adapter": "t99",
+      "baseURL": "https://01m6b6asmqr2znr2zf6xh9wnmb-8899.app.sb.createos.sh",
+      "sourceProject": "tetris99-rs",
+      "rightsStatus": "Fan-made prototype; distribution rights review pending."
+    },
+    {
+      "id": "tee-coop-demo",
+      "title": "Tee Arena \u00b7 Rust demo",
+      "adapter": "tee",
+      "baseURL": "https://01m6b6ary1y2qa645hxc9h8gfd-8303.app.sb.createos.sh",
+      "sourceProject": "teeworlds-rs",
+      "rightsStatus": "Source and asset licenses need publication review."
+    }
+  ]
 }

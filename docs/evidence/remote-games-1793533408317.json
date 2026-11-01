@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-01T11:43:25.713Z",
+  "kind": "automated remote protocol rehearsal, not human/browser gameplay",
+  "checks": [
+    {
+      "name": "remote health API responds",
+      "ok": true
+    },
+    {
+      "name": "tee runtime health API responds",
+      "ok": true
+    }
+  ],
+  "timingsMs": {
+    "inspect": 790
+  },
+  "runtime": "https://01m6b6asmqr2znr2zf6xh9wnmb-8899.app.sb.createos.sh",
+  "health": {
+    "checkedAt": 1793533406893,
+    "ok": true,
+    "details": {
+      "ok": true,
+      "conns": 0,
+      "rooms": 0,
+      "playing": 0,
+      "list": []
+    }
+  },
+  "error": "Owner action create: 400 Room identity mismatch."
+}

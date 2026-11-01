@@ -9,6 +9,7 @@ import { WebSocketServer } from 'ws';
 import { GameHost } from './gamehost.js';
 import { CreatorAssets } from './creator-assets.js';
 import { importCuratedResource } from './curated-resources.js';
+import { RemoteGames } from './remote-games.js';
 import { IdeaRounds } from './idea-rounds.js';
 import { buildPolicy, localBuildPermission } from './build-policy.js';
 import { Treasury } from './treasury.js';
@@ -99,6 +100,7 @@ const executionPolicy=buildPolicy(CONFIG.build);
 const ideaRounds=new IdeaRounds(path.join(ROOT,'runtime','idea-rounds.json'),{settings:CONFIG.community?.rounds||{}});
 ideaRounds.recoverInterrupted();
 const creatorAssets=new CreatorAssets(path.join(ROOT,'runtime','creator-assets.json'));
+const remoteGames=new RemoteGames(CONFIG.remoteGames,path.join(ROOT,'runtime','remote-games.json'));
 let roundStorageHealthy=true;
 function tickRounds(){try{ideaRounds.tick();roundStorageHealthy=true;return true;}catch{if(roundStorageHealthy)console.error('Round storage unavailable; pending decisions are retained.');roundStorageHealthy=false;return false;}}
 
@@ -283,6 +285,7 @@ const server = http.createServer(async (req, res) => {
   if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({round:ideaRounds.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,workerConnected:false}}));}
   let bodyBytes=0;req.on('data',chunk=>{bodyBytes+=chunk.length;if(bodyBytes>262144){res.writeHead(413);res.end('request too large');req.destroy();}});
   if(url.pathname==='/community/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({assets:creatorAssets.catalog(),policy:{defaultTier:'free',paidCheckoutEnabled:false,platformCommission:null,creditPolicy:'Creator links stay in official game credits.'}}));}
+  if(url.pathname==='/community/games'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify(remoteGames.catalog()));}
   if(url.pathname==='/community/asset-proposals'&&req.method==='POST'){
     let data='';req.on('data',chunk=>data+=chunk);req.on('end',()=>{try{const asset=creatorAssets.draft(JSON.parse(data));res.writeHead(202,{'Content-Type':'application/json'});res.end(JSON.stringify({id:asset.id,status:asset.status}));}catch(error){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:error.message}));}});return;
   }
@@ -297,6 +300,9 @@ const server = http.createServer(async (req, res) => {
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
     if(url.pathname==='/admin/owner-status'&&req.method==='GET'){const ok=process.env.VA_STREAMER_KEY&&req.headers['x-streamer-key']===process.env.VA_STREAMER_KEY;res.writeHead(ok?200:403,{'Content-Type':'application/json'});return res.end(JSON.stringify({ok:!!ok}));}
     if(url.pathname==='/admin/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(creatorAssets.data.assets));}
+    if(url.pathname==='/admin/remote-games'&&req.method==='POST'){
+      try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');let result;if(data.action==='inspect')result=await remoteGames.inspect(data.gameId);else if(data.action==='create')result=await remoteGames.create(data.gameId,data.requestId,TWITCH_CHANNEL||'');else if(data.action==='start')result=await remoteGames.start(data.sessionId);else if(data.action==='reconcile')result=await remoteGames.reconcile(data.sessionId);else throw Error('Unknown remote game action.');res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
+    }
     if(url.pathname==='/admin/assets/import'&&req.method==='POST'){
       try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');const asset=importCuratedResource(creatorAssets,ROOT,data.key);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(asset));}catch(error){res.writeHead(400);return res.end(error.message);}
     }

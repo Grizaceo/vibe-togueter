@@ -1,0 +1,13 @@
+# External Rust runtime adapters
+
+The community studio lists configured remote games at `/community/games` and `/studio.html#games`. `remoteGames` in vibe-arena.config.json contains owner-trusted origins. Public clients cannot supply a destination URL. These entries connect to already-running public CreateOS demos; they do not provision VMs, launch coding agents, proxy noVNC or import the Rust sources.
+
+Falling blocks (tetris99-rs) supports local owner actions `inspect`, `create`, `start`, `reconcile` at POST `/admin/remote-games`. Each mutation requires local admin authentication plus x-streamer-key. Create accepts a stable requestId, journals before the request, and returns the same session for a retry. Codes respect upstream MAX_ROOM=8. Join URLs use mode=online and the exact WSS origin, without autostart. Start checks valid backend status and at least one human-protocol participant. Automated protocol clients are not human audience evidence. Restarted/ambiguous mutations require reconciliation by a read-only backend query.
+
+Tee Arena (teeworlds-rs) supports health inspection and a direct browser link. `chatControl:false` is explicit for both remote games: no passive Twitch-to-Rust input bridge has been implemented in this increment. Ordinary Vibe SDK games retain their existing chat handlers.
+
+The underlying demo APIs are public and do not authenticate their room-start requests. Local controller authorization does not protect a directly reachable Rust server. A room code is not a private-runtime access control. Private deployment requires a protected gateway/runtime contract before promising private games. Current CreateOS demos have ephemeral lifetimes and reported TCP/noVNC latency unsuitable for an unqualified competitive-play claim.
+
+Licensing/publication: tetris99-rs self-describes as a fan-made replica; this adapter uses a generic display title and does not distribute its code or assets. A renamed label does not establish rights. Review source/assets/branding before publishing a submission bundle. teeworlds-rs source/assets also need explicit publication license review. Neither game is claimed as authored by this Codex session.
+
+Run unit/isolated suites with `npm test`. Run the explicit real protocol rehearsal with `node scripts/rehearse-remote-games.mjs --live`; it uses the existing controller's private local keys internally, creates one public lobby, connects two automated v2 clients, starts it, checks live snapshots and closes those connections. It performs no Twitch chat, payment, provisioning or model calls. Evidence is saved under docs/evidence and failed attempts are retained.

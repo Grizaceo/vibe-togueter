@@ -6,6 +6,14 @@
 
 Stream communities contain people who want to play actively and people who want to stay in chat. Vibe Arena brings both into the same game. A fixed game SDK also lets a creator adapt a format with an AI coding assistant instead of building a new multiplayer platform each time.
 
+## Current platform scope
+
+The expanded product is a free-first community game studio, with independent artist visibility at its core. `/studio.html` implements limited idea rounds, replacement ballots, streamer selection and exact content/resource approval, plus a curator-reviewed free resource catalog with license notices and creator links. Three Kenney CC0 images are curated public resources, not artist signups. The selected pack has a credit preview; final generated-game credit enforcement is pending.
+
+Configured Rust browser demos are listed as external runtimes. The falling-blocks adapter can create, share and start a public lobby; Tee Arena currently has health inspection and a browser link. Their game code was built by parallel agents, not this Codex session. Passive Twitch control of those Rust runtimes is pending. Backend privacy and distribution rights require further work.
+
+Coding execution defaults to a separate cloud VM with no automatic host fallback. No isolated coding worker is connected yet; generation therefore returns a clear blocked result. The inherited generator remains available only with explicit trusted-local configuration and matching round approval. Paid creator checkout, VM/API budget separation, actual payments, Agent Native connections and the specialized PR safety gate are not complete. This is a working platform increment, not a claim that the full vision ships today.
+
 ## What it does
 
 Vibe Arena hosts small multiplayer games on a temporary public URL and an OBS browser-source overlay. In Marble Race, viewers send `!play` in Twitch chat and `!race` starts the race once at least two marbles exist. `!join` replies in the owner's actual channel with the public browser lobby.
@@ -26,7 +34,7 @@ Real Codex Session ID: **01a19536-0f02-7fc3-b030-d6b6fd8e170c**.
 
 At takeover, the prototype already contained the server, SDK game host, generic client and OBS overlay, chat adapters, signed webhook receivers, treasury, generator, MCP integration and Marble Race. Commit `fab3227` records that inherited source; it is not claimed as newly authored by this Codex session. The owner must confirm the original work's creation dates fall within the event's submission period.
 
-Codex's new work is visible in subsequent commits: porting the sibling project's OAuth lifecycle into Node, repairing tagged IRC parsing and reconnecting replies, creating EventSub subscriptions, mapping reward titles into game commands, building Democracy Duel, adding private streamer controls, testing public-tunnel administration restrictions, isolating test data, and running a real Twitch-chat rehearsal. The OAuth port follows `stream-to-shorts/twitchcon-app`; its MIT notice is retained in `LICENSES/`. The Python editing pipeline is not a dependency of Vibe Arena.
+Codex's new work is visible in subsequent commits: porting the sibling project's OAuth lifecycle into Node, repairing tagged IRC parsing and reconnecting replies, creating EventSub subscriptions, mapping reward titles into game commands, building Democracy Duel, adding private streamer controls, testing public-tunnel administration restrictions, isolating test data, and running a real Twitch-chat rehearsal. Later commits add durable community rounds, pinned approvals, a reviewed creator studio, curated licensed art and external runtime adapters. The OAuth port follows `stream-to-shorts/twitchcon-app`; its MIT notice is retained in `LICENSES/`. The Python editing pipeline is not a dependency of Vibe Arena.
 
 ## Challenges and accomplishments
 
