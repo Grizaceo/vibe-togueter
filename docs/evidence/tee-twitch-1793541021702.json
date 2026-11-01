@@ -1,0 +1,397 @@
+{
+  "startedAt": "2026-11-01T13:50:07.721Z",
+  "channel": "gris_96",
+  "checks": [
+    {
+      "name": "Twitch command queued: !tee on",
+      "ok": true
+    },
+    {
+      "name": "remote authoritative snapshot received",
+      "ok": true
+    },
+    {
+      "name": "Twitch command queued: !tee right",
+      "ok": true
+    },
+    {
+      "name": "real Twitch right command moved the crowd player",
+      "ok": true
+    },
+    {
+      "name": "Twitch command queued: !tee jump",
+      "ok": true
+    },
+    {
+      "name": "Twitch command queued: !tee fire",
+      "ok": true
+    },
+    {
+      "name": "real Twitch actions reached acknowledged remote input",
+      "ok": true
+    },
+    {
+      "name": "Twitch command queued: !tee off",
+      "ok": true
+    },
+    {
+      "name": "owner command closed crowd connection",
+      "ok": true
+    }
+  ],
+  "observed": [
+    {
+      "at": "2026-11-01T13:50:09.565Z",
+      "user": "gris_96",
+      "text": "!tee on",
+      "source": "twitch",
+      "messageId": "7097ceb9-ca1c-4fa3-91b1-113b9589a52a"
+    },
+    {
+      "at": "2026-11-01T13:50:11.377Z",
+      "user": "gris_96",
+      "text": "Tee crowd ready: !tee left|right|jump|hook|fire|stop",
+      "source": "twitch",
+      "messageId": "c55f3609-88e9-4c15-9a93-234b1d0f0a52"
+    },
+    {
+      "at": "2026-11-01T13:50:13.493Z",
+      "user": "gris_96",
+      "text": "!tee right",
+      "source": "twitch",
+      "messageId": "816d5ee4-dea6-48cb-973a-eb3bc804ca71"
+    },
+    {
+      "at": "2026-11-01T13:50:17.264Z",
+      "user": "gris_96",
+      "text": "!tee jump",
+      "source": "twitch",
+      "messageId": "dba62d70-47ba-4b79-bceb-a93685fe1011"
+    },
+    {
+      "at": "2026-11-01T13:50:19.267Z",
+      "user": "gris_96",
+      "text": "!tee fire",
+      "source": "twitch",
+      "messageId": "94961200-ef85-4fd2-869e-51025e6d3aed"
+    },
+    {
+      "at": "2026-11-01T13:50:21.682Z",
+      "user": "gris_96",
+      "text": "!tee off",
+      "source": "twitch",
+      "messageId": "39c8622f-0b6e-4751-98ef-feec2ba5d6ab"
+    }
+  ],
+  "commands": [
+    {
+      "at": "2026-11-01T13:50:09.288Z",
+      "text": "!tee on",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T13:50:13.216Z",
+      "text": "!tee right",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T13:50:16.985Z",
+      "text": "!tee jump",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T13:50:18.989Z",
+      "text": "!tee fire",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T13:50:21.398Z",
+      "text": "!tee off",
+      "queued": true
+    }
+  ],
+  "samples": [
+    {
+      "at": "2026-11-01T13:50:13.519Z",
+      "position": {
+        "x": 768,
+        "y": 370.0098876953125
+      },
+      "lastAck": 102,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:13.600Z",
+      "position": {
+        "x": 768,
+        "y": 370.0098876953125
+      },
+      "lastAck": 106,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:13.681Z",
+      "position": {
+        "x": 768,
+        "y": 370.0098876953125
+      },
+      "lastAck": 110,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:13.762Z",
+      "position": {
+        "x": 768,
+        "y": 370.0098876953125
+      },
+      "lastAck": 114,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:13.843Z",
+      "position": {
+        "x": 768,
+        "y": 370.0098876953125
+      },
+      "lastAck": 118,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:13.924Z",
+      "position": {
+        "x": 788,
+        "y": 370.0098876953125
+      },
+      "lastAck": 122,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.005Z",
+      "position": {
+        "x": 828,
+        "y": 370.0098876953125
+      },
+      "lastAck": 126,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.086Z",
+      "position": {
+        "x": 868,
+        "y": 370.0098876953125
+      },
+      "lastAck": 130,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.167Z",
+      "position": {
+        "x": 908,
+        "y": 370.0098876953125
+      },
+      "lastAck": 134,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.248Z",
+      "position": {
+        "x": 946.5250244140625,
+        "y": 375.0098876953125
+      },
+      "lastAck": 138,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.330Z",
+      "position": {
+        "x": 978.33251953125,
+        "y": 388.0098876953125
+      },
+      "lastAck": 142,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.411Z",
+      "position": {
+        "x": 1004.239990234375,
+        "y": 409.0098876953125
+      },
+      "lastAck": 146,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.492Z",
+      "position": {
+        "x": 1025.341796875,
+        "y": 438.0098876953125
+      },
+      "lastAck": 150,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.573Z",
+      "position": {
+        "x": 1042.529296875,
+        "y": 475.0098876953125
+      },
+      "lastAck": 153,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.655Z",
+      "position": {
+        "x": 1056.5286865234375,
+        "y": 520.0098876953125
+      },
+      "lastAck": 158,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.736Z",
+      "position": {
+        "x": 1067.931396484375,
+        "y": 573.0098876953125
+      },
+      "lastAck": 162,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.817Z",
+      "position": {
+        "x": 1074.009521484375,
+        "y": 634.0098876953125
+      },
+      "lastAck": 165,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.898Z",
+      "position": {
+        "x": 1074.009521484375,
+        "y": 703.0098876953125
+      },
+      "lastAck": 169,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:14.979Z",
+      "position": {
+        "x": 1074.009521484375,
+        "y": 780.0098876953125
+      },
+      "lastAck": 173,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:15.060Z",
+      "position": {
+        "x": 1074.009521484375,
+        "y": 818.0098876953125
+      },
+      "lastAck": 178,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:15.141Z",
+      "position": {
+        "x": 1074.009521484375,
+        "y": 818.0098876953125
+      },
+      "lastAck": 181,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:15.222Z",
+      "position": {
+        "x": 1074.009521484375,
+        "y": 818.0098876953125
+      },
+      "lastAck": 185,
+      "commands": 1,
+      "lastAction": "right"
+    },
+    {
+      "at": "2026-11-01T13:50:15.304Z",
+      "position": {
+        "x": 1074.009521484375,
+        "y": 818.0098876953125
+      },
+      "lastAck": 189,
+      "commands": 1,
+      "lastAction": "right"
+    }
+  ],
+  "limitations": [
+    "Automated commands from the owner account, not independent viewers.",
+    "No browser rendering, human play, OBS broadcast or video is established by this script."
+  ],
+  "broadcastLive": false,
+  "initial": {
+    "connected": true,
+    "reason": "ready",
+    "commands": 0,
+    "snapshots": 11,
+    "gameId": "tee-coop-demo",
+    "startedAt": 1793541009564,
+    "playerId": 5,
+    "lastAck": 2,
+    "player": {
+      "position": {
+        "x": 768,
+        "y": 370.0098876953125
+      },
+      "alive": true,
+      "score": 0
+    },
+    "lastSent": 20,
+    "enabled": true,
+    "pulseUntil": null
+  },
+  "maxRightDisplacement": 306.009521484375,
+  "final": {
+    "connected": true,
+    "reason": "ready",
+    "commands": 3,
+    "snapshots": 215,
+    "gameId": "tee-coop-demo",
+    "startedAt": 1793541009564,
+    "playerId": 5,
+    "lastAck": 408,
+    "player": {
+      "position": {
+        "x": 1074.009521484375,
+        "y": 818.0098876953125
+      },
+      "alive": true,
+      "score": 0
+    },
+    "lastSent": 427,
+    "lastAction": "fire",
+    "lastActor": "gris_96",
+    "lastCommandSeq": 407,
+    "enabled": true,
+    "pulseUntil": 1793541019617
+  },
+  "finishedAt": "2026-11-01T13:50:21.702Z"
+}

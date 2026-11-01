@@ -1,0 +1,59 @@
+{
+  "startedAt": "2026-11-01T13:49:41.834Z",
+  "channel": "gris_96",
+  "checks": [
+    {
+      "name": "Twitch command queued: !tee on",
+      "ok": true
+    },
+    {
+      "name": "remote authoritative snapshot received",
+      "ok": false
+    }
+  ],
+  "observed": [
+    {
+      "at": "2026-11-01T13:49:43.684Z",
+      "user": "gris_96",
+      "text": "!tee on",
+      "source": "twitch",
+      "messageId": "83ebc0f0-ef39-4d7a-b8e0-d020d5ac6e61"
+    }
+  ],
+  "commands": [
+    {
+      "at": "2026-11-01T13:49:43.379Z",
+      "text": "!tee on",
+      "queued": true
+    }
+  ],
+  "samples": [],
+  "limitations": [
+    "Automated commands from the owner account, not independent viewers.",
+    "No browser rendering, human play, OBS broadcast or video is established by this script."
+  ],
+  "broadcastLive": false,
+  "initial": {
+    "connected": true,
+    "reason": "ready",
+    "commands": 0,
+    "snapshots": 4,
+    "gameId": "tee-coop-demo",
+    "startedAt": 1793540983685,
+    "playerId": 4,
+    "lastAck": 0,
+    "player": {
+      "position": {
+        "x": 1408,
+        "y": 782
+      },
+      "alive": true,
+      "score": 0
+    },
+    "lastSent": 6,
+    "enabled": true,
+    "pulseUntil": null
+  },
+  "error": "remote authoritative snapshot received",
+  "finishedAt": "2026-11-01T13:49:45.416Z"
+}

@@ -4,7 +4,15 @@ The community studio lists configured remote games at `/community/games` and `/s
 
 Falling blocks (tetris99-rs) supports local owner actions `inspect`, `create`, `start`, `reconcile` at POST `/admin/remote-games`. Each mutation requires local admin authentication plus x-streamer-key. Create accepts a stable requestId, journals before the request, and returns the same session for a retry. Codes respect upstream MAX_ROOM=8. Join URLs use mode=online and the exact WSS origin, without autostart. Start checks valid backend status and at least one human-protocol participant. Automated protocol clients are not human audience evidence. Restarted/ambiguous mutations require reconciliation by a read-only backend query.
 
-Tee Arena (teeworlds-rs) supports health inspection and a direct browser link. `chatControl:false` is explicit for both remote games: no passive Twitch-to-Rust input bridge has been implemented in this increment. Ordinary Vibe SDK games retain their existing chat handlers.
+Tee Arena (teeworlds-rs) supports health inspection, a direct browser link and a separate owner-enabled crowd bridge. `chatControl` indicates adapter support, not whether a connection is enabled; the top-level teeBridge state reports the actual connection. Falling blocks still has no passive gameplay adapter. Ordinary Vibe SDK games retain their existing chat handlers.
+
+## Tee crowd bridge
+
+Owner `!tee on` or the private local studio enables a single WebSocket participant named chat@CHANNEL. Twitch viewers use `!tee left|right|jump|hook|fire|stop`. The latest accepted command controls one 350 ms pulse; each actor has a 250 ms cooldown. This is a shared crowd character, not one character per viewer or a vote window. Only actual Twitch-source messages drive it; web display names cannot impersonate the broadcaster to enable it. Owner `!tee off`, 60 seconds idle, disconnection, malformed protocol or backpressure closes it. It never auto-reconnects or re-enables after restart. It does not alter the Rust sources, start an agent or receive the streamer's credentials.
+
+Codec contract: the local Rust proto/input schema and the [Postcard specification](https://postcard.jamesmunns.com/wire-format.html). Golden bytes for Join, Input and Snapshot were generated independently using shared::proto in a scratch Rust executable outside this repo. Finite/bounded values, frame lengths, enum values and player/projectile limits are checked. There is no protocol-version negotiation upstream; incompatible snapshot data closes the bridge.
+
+`node scripts/rehearse-tee-twitch.mjs --live` sends real owner-channel commands, observes them independently through anonymous IRC, verifies server snapshots, actual displacement and an input acknowledgement at or beyond the fire command's sequence, then disables the bridge. It records evidence, not human gameplay/video. It refuses to begin while another bridge is enabled.
 
 The underlying demo APIs are public and do not authenticate their room-start requests. Local controller authorization does not protect a directly reachable Rust server. A room code is not a private-runtime access control. Private deployment requires a protected gateway/runtime contract before promising private games. Current CreateOS demos have ephemeral lifetimes and reported TCP/noVNC latency unsuitable for an unqualified competitive-play claim.
 

@@ -41,7 +41,7 @@ Hourly validation, refresh rotation, 401 retry, concurrent refresh coalescing, l
 
 ## Final test result
 
-Command: `npm test`. Exit: 0. **56 passing checks** = 15 focused tests + 41 isolated legacy/integration checks. Details: [machine-readable validation](evidence/validation.json), [full output](evidence/test-results.txt).
+Earlier prototype command: `npm test`. Exit: 0. **56 passing checks** = 15 focused tests + 41 isolated legacy/integration checks. Details: [machine-readable validation](evidence/validation.json), [full output](evidence/test-results.txt).
 
 The harness uses private ports, temporary source copies, test-generated RSA keys, isolated ledger/ideas/game directories and a private mock LLM. It checks both process exits and legacy printed FAIL lines. Normal tests do not use live Twitch credentials or the owner fund.
 
@@ -67,3 +67,13 @@ The remote runtime rehearsal at 11:43 UTC failed because a ten-character room co
 The final Vibe suite for this adapter passed 43 focused checks plus 49 isolated legacy/integration checks (92 total), zero failures. Log: /tmp/vibe-arena-remote-tests.log. The separate Rust tests remain 14 and 13; do not merge those counts. Computer-use was retried and still returned no browsers / browser access host unavailable. New UI has no visual verification here.
 
 Review found and repairs covered concurrent creation/reconciliation, stable pending request IDs across UI refreshes, and strict backend room-status types before any start or state reconciliation. No runtime dependencies were added. Backend direct APIs remain public; Tee passive chat input remains pending at this increment.
+
+## Real Twitch → Tee runtime bridge
+
+First attempt at 13:49 UTC received the actual Twitch enable command and remote snapshots, but asserted on an input acknowledgement before it arrived: [failure retained](evidence/tee-twitch-1793540985416.json). The verifier now waits for a positive remote input acknowledgement rather than assuming the first snapshots contain one.
+
+Second attempt at 13:50 UTC passed nine checks: [success](evidence/tee-twitch-1793541021702.json). Actual owner-channel IRC messages `!tee on`, `!tee right`, `!tee jump`, `!tee fire`, `!tee off` were observed by a separate anonymous IRC connection. Remote authoritative snapshots showed a maximum +306.01 horizontal displacement in game units after the right command. The fire-command sequence was acknowledged by the server; no kill/damage is claimed. The owner stop closed the bridge. Broadcast remained offline. No independent human viewers, browser rendering or OBS footage were tested.
+
+The separate reviewer hit its service usage limit before this bridge review ran. The earlier studio and runtime-adapter reviews remain valid for their increments; this bridge instead received local sequential review, codec golden checks, lifecycle/input unit checks, permission probes and real network rehearsal. Do not describe this last review as independent.
+
+Final bridge suite: 46 focused plus 52 isolated legacy/integration checks = **98 passing checks**, zero failures; `/tmp/vibe-arena-tee-tests.log`. New permission probes confirm a forged web broadcaster cannot enable the socket, missing streamer confirmation is denied, and a local owner can disable it. These tests make no real model/payment calls.

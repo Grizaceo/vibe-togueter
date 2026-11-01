@@ -53,7 +53,7 @@ node scripts/arena-admin.mjs status
 
 ## External Rust game runtimes
 
-The studio's Games section lists the two existing public CreateOS Rust demos. Local owner controls can check both runtimes, create a falling-blocks lobby, share its browser link and start after players join. State is journaled with idempotent creation and explicit reconciliation. No automatic start is placed in viewer links. Tee Arena currently has a browser link and health check; its passive chat bridge is pending. Both remote backends are public and lack platform-enforced private access. See [remote integration and rehearsal](docs/platform/REMOTE_GAMES.md).
+The studio's Games section lists the two existing public CreateOS Rust demos. Local owner controls can check both runtimes, create a falling-blocks lobby, share its browser link and start after players join. State is journaled with idempotent creation and explicit reconciliation. No automatic start is placed in viewer links. Tee Arena has a browser link, health check and an owner-enabled Twitch crowd bridge: `!tee on`, then viewers use `!tee left|right|jump|hook|fire|stop`; `!tee off` disconnects. The crowd shares one character with latest-command pulses; it is not per-viewer multiplayer or democracy voting. Inputs expire after 350 ms and an idle bridge closes after 60 seconds. The bridge is off after restart. Real Twitch-to-CreateOS movement and acknowledgements were rehearsed with owner-account commands; see docs/EVIDENCE.md. Both remote backends are public and lack platform-enforced private access. See [remote integration and rehearsal](docs/platform/REMOTE_GAMES.md).
 
 ## Two implemented SDK formats
 
