@@ -166,6 +166,7 @@ const localChat = createLocalChat(handleChat);
 // reply senders por plataforma (para links de sala / acks)
 const replies = {};
 const PUBLIC_URL = (process.env.VA_PUBLIC_URL || CONFIG.publicUrl || '').replace(/\/$/,'') || null;
+if(PUBLIC_URL && (!process.env.VA_ADMIN_TOKEN || CONFIG.monetization.eventsubSecret.startsWith('cambia-') || CONFIG.monetization.webhookSecret.startsWith('cambia-')))throw new Error('Run npm run setup:local before exposing a public URL.');
 
 let twitch;
 if (TWITCH_CHANNEL) {
@@ -241,6 +242,7 @@ if(fs.existsSync(deliveryFile))for(const line of fs.readFileSync(deliveryFile,'u
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
+  let bodyBytes=0;req.on('data',chunk=>{bodyBytes+=chunk.length;if(bodyBytes>262144){res.writeHead(413);res.end('request too large');req.destroy();}});
   // admin (localhost only)
   if (url.pathname.startsWith('/admin/')) {
     if(req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.headers.forwarded){res.writeHead(403);return res.end('local admin only');}
