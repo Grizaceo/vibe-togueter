@@ -1,0 +1,14 @@
+✔ exact approved source, historical report and PNGs package as inert data (10.512291ms)
+✔ transfer corruption and missing files fail verification (9.902499ms)
+✔ manifest rehash cannot replace approved code, resources or report (13.257925ms)
+✔ extra secret-like files and linked entries are rejected (6.302904ms)
+✔ historical frame cannot be rewritten with a matching transfer manifest (3.824207ms)
+✔ trusted external manifest digest pins SDK and harness transfer bytes (4.366391ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 115.539795

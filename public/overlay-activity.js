@@ -1,3 +1,4 @@
+import {communityCreditText} from './community-credit.js';
 // Shared WS snapshots keep the stream summary current without another polling loop.
 export function attachActivity(container){
  let pin;
@@ -9,6 +10,7 @@ export function attachActivity(container){
   line('strong',r?'Community round · '+r.phase.replaceAll('-',' '):'Community studio');
   line('p',r?`${r.ideas} ideas · ${r.voters} voters`:'Chat: !idea your game idea');
   for(const idea of (r?.highlights||[]).slice(0,state?.prediction?1:3))line('p',`#${idea.id} · ${idea.votes} votes · ${idea.author}: ${idea.text}`);
+  if(r?.credit)line('p','Approved input credit · Idea by '+r.credit.ideaAuthors.map(a=>a.name).join(', ')+' · '+communityCreditText(r.credit));
   if(!r)line('p','Propose → vote → streamer review');
   line('p',state?.builder||'Waiting for controller');
   if(state?.delegation)line('p',`Round approval: @${state.delegation.name} until ${new Date(state.delegation.expiresAt).toISOString().slice(11,19)} UTC`);

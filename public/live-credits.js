@@ -1,3 +1,4 @@
+import {communityCreditText} from './community-credit.js';
 import {renderCreatorCredits} from './credits.js';
 function names(items){return items?.map(person=>person.name).join(', ');}
 function addPeople(container,label,items,fallback){
@@ -12,13 +13,13 @@ export function attachLiveCredits(container){
   const valid=publication?.codeSha256===gameHash&&!!gameHash;
   const credits=valid?publication.contributors:null;
   const manifest=valid&&publication.status==='published'?publication.manifest:null;
-  const pin=JSON.stringify([gameHash,gameName,credits,manifest?.sha256]);if(lastPin===pin)return;lastPin=pin;
+  const pin=JSON.stringify([gameHash,gameName,credits,manifest?.sha256,publication?.showCommunityCredit]);if(lastPin===pin)return;lastPin=pin;
   container.hidden=false;container.replaceChildren();
   const strip=document.createElement('div');strip.className='creator-strip';strip.setAttribute?.('aria-label','Game, art and idea credits');
   addPeople(strip,'Game by',credits?.gameAuthors,'Attribution pending · '+gameName);
   const artists=[...new Map([...(credits?.artAuthors||[]),...(manifest?.assets||[]).map(a=>({name:a.creator.name,url:a.creator.website}))].map(person=>[person.name+'|'+(person.url||''),person])).values()];
   addPeople(strip,'Art by',artists,credits?.artNote||'Attribution pending');
-  addPeople(strip,'Idea by',credits?.ideaAuthors,'Author not recorded');container.append(strip);
+  addPeople(strip,'Idea by',credits?.ideaAuthors,'Author not recorded');if(credits?.communityCredit&&publication.showCommunityCredit!==false){const community=document.createElement('div');community.className='community-credit';community.textContent=communityCreditText(credits.communityCredit);strip.append(community);}container.append(strip);
   if(credits?.artNote&&artists?.length){const note=document.createElement('div');note.textContent=credits.artNote;container.append(note);}
   if(manifest?.assets?.length){
    const details=document.createElement('details'),summary=document.createElement('summary'),body=document.createElement('div');

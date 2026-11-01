@@ -1,0 +1,28 @@
+✔ approved participation counts supporters of selected ideas and records actual approver (8.586254ms)
+✔ quarantine pins community snapshot to exact artifact and detects altered participation metadata (3.47318ms)
+✔ community credit rejects unbounded or unbound claims (1.956837ms)
+✖ legacy blank display names do not block approval or rewrite original round provenance (1.53527ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 92.495798
+
+✖ failing tests:
+
+test at test/community-credit.mjs:18:1
+✖ legacy blank display names do not block approval or rewrite original round provenance (1.53527ms)
+  Error: Invalid community credit text.
+      at text (file:///home/gris96/vibe-arena/src/community-credit.js:5:77)
+      at file:///home/gris96/vibe-arena/src/community-credit.js:8:118
+      at Array.map (<anonymous>)
+      at communityCredit (file:///home/gris96/vibe-arena/src/community-credit.js:8:104)
+      at IdeaRounds.credit (file:///home/gris96/vibe-arena/src/idea-rounds.js:115:10)
+      at IdeaRounds.public (file:///home/gris96/vibe-arena/src/idea-rounds.js:117:342)
+      at IdeaRounds.approve (file:///home/gris96/vibe-arena/src/idea-rounds.js:105:153)
+      at file:///home/gris96/vibe-arena/src/idea-rounds.js:35:361
+      at IdeaRounds.transaction (file:///home/gris96/vibe-arena/src/idea-rounds.js:39:20)
+      at IdeaRounds.<computed> [as approve] (file:///home/gris96/vibe-arena/src/idea-rounds.js:35:345)

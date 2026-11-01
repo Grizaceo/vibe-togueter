@@ -50,6 +50,12 @@ Enter the private streamer key in the player page to control the streamer side o
 
 The [privacy notice](public/privacy.html) is served at `/privacy.html`, linked from all three pages. **Operator/contact were supplied by Cristóbal Muñoz; complete the visible hosting/recording placeholder and retention/deletion procedure before public operation.** Persistent ideas, ballots, creator and quarantine records currently require operator-managed retention/deletion.
 
+## Community co-credit
+
+With `features.communityCredit: true`, approved inputs show their selected idea authors, supporting ballot count and actual approver in the Studio/overlay. These **input-round credits** are separate from the game already playing. No current bundled game is credited with votes from an unrelated round.
+
+New quarantine tickets snapshot this participation metadata and include its fingerprint in the exact artifact binding. Published contributor metadata can carry the same snapshot; its visible “Voted by N · Approved by …” line appears only with matching game source. Delegated approvals identify the mod. Existing Seed Race bindings remain unchanged. Counts represent supporting voting identities, including unverified web sessions, not independently verified people. Disable the flag and restart to hide the added co-credit presentation without erasing recorded attribution.
+
 ## Temporary moderator approval
 
 With `features.approvalDelegation: true`, the broadcaster can use `!delegate trusted_mod 10` to delegate **selected round-input approval** for ten minutes, or `!delegate off` to revoke it. Local Studio controls offer the same grant (maximum 30 minutes). The named account must still carry Twitch's moderator tag when sending `!build approve REVIEW_TOKEN`; it should inspect the current selected ideas/resources in the Studio first. Expiry, revocation, loss of mod status, web aliases and stale review tokens deny approval. The round history records the actual approver and delegated authority.

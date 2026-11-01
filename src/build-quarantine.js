@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {communityCredit} from './community-credit.js';
 import {creditManifestFingerprint} from './creator-assets.js';
 
 const digest = value => crypto.createHash('sha256').update(value).digest('hex');
@@ -14,7 +15,7 @@ function requireHash(value) { if (typeof value !== 'string' || !HASH.test(value)
 function requireId(value) { if (typeof value !== 'string' || !ID.test(value)) throw Error('Expected a bounded identifier.'); return value; }
 function owner(actor) { if (actor?.owner !== true) throw Error('Streamer decision required.'); }
 function version(job) {
-  return digest(JSON.stringify({roundId:job.roundId,inputHash:job.inputHash,codeSha256:job.codeSha256,resourceHash:job.resources ? creditManifestFingerprint(job.resources) : null}));
+  return digest(JSON.stringify({roundId:job.roundId,inputHash:job.inputHash,codeSha256:job.codeSha256,resourceHash:job.resources ? creditManifestFingerprint(job.resources) : null,...(job.communityCredit?{communityCreditSha256:digest(JSON.stringify(job.communityCredit))}:{})}));
 }
 function reportValue(report,job) {
   if (!report || report.artifactHash !== job.artifactHash || report.testNonce !== job.testNonce) throw Error('Stale artifact or test attempt.');
@@ -33,6 +34,7 @@ function validate(job) {
   requireId(job.buildVmId); requireId(job.runtimeVmId); requireId(job.agentProfile);
   if (job.buildVmId === job.runtimeVmId || !STATES.has(job.state) || !Number.isSafeInteger(job.revision) || job.revision < 1) throw Error('Invalid quarantine record.');
   if (job.resources) creditManifestFingerprint(job.resources);
+  if(job.communityCredit){const credit=communityCredit(job.communityCredit);if(credit.roundId!==job.roundId||credit.approvedInputHash!==job.inputHash||JSON.stringify(credit)!==JSON.stringify(job.communityCredit))throw Error('Community credit integrity failure.');}
   if (!Array.isArray(job.attempts) || job.attempts.length>16 || new Set(job.attempts.map(a=>a.nonce)).size!==job.attempts.length) throw Error('Invalid test attempt history.');
   for(const attempt of job.attempts) {
     if(!/^[a-f0-9]{48}$/.test(attempt.nonce)||!['testing','completed','interrupted','cancelled','rejected'].includes(attempt.state))throw Error('Invalid test attempt.');
@@ -88,7 +90,7 @@ export class BuildQuarantine {
     if (buildVmId===runtimeVmId) throw Error('Build VM must differ from public runtime.');
     if (this.data.jobs.length>=32) throw Error('Quarantine ticket capacity reached; archive explicitly.');
     if (this.data.jobs.some(j=>j.roundId===round.id&&!terminal.has(j.state))) throw Error('Round already has a build ticket.');
-    const job={id:crypto.randomUUID(),roundId:round.id,inputHash:round.approvedInputHash,resources:structuredClone(round.resourceManifest||null),buildVmId,runtimeVmId,agentProfile,state:'awaiting-artifact',attempts:[],revision:1,createdAt:Date.now()};
+    const job={id:crypto.randomUUID(),roundId:round.id,inputHash:round.approvedInputHash,resources:structuredClone(round.resourceManifest||null),...(round.credit?{communityCredit:communityCredit(round.credit)}:{}),buildVmId,runtimeVmId,agentProfile,state:'awaiting-artifact',attempts:[],revision:1,createdAt:Date.now()};
     return this.change(()=>{this.data.jobs.push(job);return job;});
   }
   receive(actor,id,{source,expectedCodeSha256}) {

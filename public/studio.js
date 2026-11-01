@@ -1,3 +1,4 @@
+import {communityCreditText} from './community-credit.js';
 import {renderCreatorCredits} from './credits.js';
 import {studioLinkURL} from './resource-links.js';
 const $=id=>document.getElementById(id);let state=null,socket=null,ownerHeaders=null,reviewed=null;const picked=new Set();const remoteCreates=new Map();
@@ -8,7 +9,7 @@ function send(text){if(socket?.readyState!==1){message('round-message','Connect 
 function updateWords(){const words=$('proposal').value.trim().split(/\s+/u).filter(Boolean).length;$('words').textContent=`${words} / ${state?.round?.settings.maxWords||100} words`;}
 function renderRound(){
  if(!state)return;
- const r=state.round;$('channel').textContent=(state.channel?'#'+state.channel+' · ':'')+(state.twitchConnected?'Twitch connected':'web studio');
+ const r=state.round;$('community-credit').textContent=state.features?.communityCredit&&r?.credit?'Approved input credit · '+communityCreditText(r.credit):'';$('channel').textContent=(state.channel?'#'+state.channel+' · ':'')+(state.twitchConnected?'Twitch connected':'web studio');
  $('execution').textContent=state.build.mode==='cloud-vm'?'Construction: isolated VM required. Builder connection is still pending.':'Construction: explicitly trusted local agent mode.';
  $('phase').textContent=r?.phase||'First proposal opens a round';
  $('delegate-message').textContent=state.delegation?'Input approvals delegated to @'+state.delegation.name+' until '+new Date(state.delegation.expiresAt).toISOString().slice(11,19)+' UTC':'No active approval delegate.';

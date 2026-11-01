@@ -154,11 +154,12 @@ ideaRounds.recoverInterrupted();
 const buildQuarantine=new BuildQuarantine(path.join(ROOT,'runtime','build-quarantine.json'));
 const creatorAssets=new CreatorAssets(path.join(ROOT,'runtime','creator-assets.json'));
 const publicationSnapshot=new GameCreditsSnapshot({registry:creatorAssets,root:ROOT});
-function refreshPublication(){const value=publicationSnapshot.refresh(host.gameDir,host.game?.versionSha256);broadcast({t:'credits',publication:value});}
+function clientCredits(){return {...publicationSnapshot.get(),showCommunityCredit:CONFIG.features?.communityCredit===true};}
+function refreshPublication(){publicationSnapshot.refresh(host.gameDir,host.game?.versionSha256);broadcast({t:'credits',publication:clientCredits()});}
 refreshPublication();
 let resourceDebounce;
 const resourceWatcher=fs.watch(path.join(PUBLIC,'curated'),{recursive:true},()=>{clearTimeout(resourceDebounce);resourceDebounce=setTimeout(refreshPublication,25);});
-resourceWatcher.on('error',()=>{publicationSnapshot.value={status:'unavailable',manifest:null,contributors:null};broadcast({t:'credits',publication:publicationSnapshot.get()});});
+resourceWatcher.on('error',()=>{publicationSnapshot.value={status:'unavailable',manifest:null,contributors:null};broadcast({t:'credits',publication:clientCredits()});});
 const remoteGames=new RemoteGames(CONFIG.remoteGames,path.join(ROOT,'runtime','remote-games.json'));
 const teeBridge=new TeeChatBridge();
 let roundStorageHealthy=true;
@@ -342,7 +343,7 @@ function streamActivity(){
  const round=ideaRounds.current(),revision=round?round.id+':'+round.revision+':'+Math.floor(Date.now()/1000):null;
  if(revision!==activityRevision){
   activityRevision=revision;const r=ideaRounds.public();
-  activityRound=r?{phase:r.phase,ideas:r.ideas.length,voters:r.voters,voteEndsAt:r.voteEndsAt,
+  activityRound=r?{credit:CONFIG.features?.communityCredit===true?r.credit:null,phase:r.phase,ideas:r.ideas.length,voters:r.voters,voteEndsAt:r.voteEndsAt,
    highlights:r.ideas.slice().sort((a,b)=>b.votes-a.votes||a.id-b.id).slice(0,3).map(i=>({id:i.id,text:i.text.slice(0,100),author:i.author.slice(0,40),votes:i.votes}))}:null;
  }
  return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked,prediction:predictions.public(),delegation:approvalDelegation.public(),crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
@@ -375,12 +376,12 @@ if(fs.existsSync(deliveryFile))for(const line of fs.readFileSync(deliveryFile,'u
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
-  if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({round:ideaRounds.public(),delegation:approvalDelegation.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,workerConnected:false}}));}
+  if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({features:{communityCredit:CONFIG.features?.communityCredit===true},round:ideaRounds.public(),delegation:approvalDelegation.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,workerConnected:false}}));}
   let bodyBytes=0;req.on('data',chunk=>{bodyBytes+=chunk.length;if(bodyBytes>262144){res.writeHead(413);res.end('request too large');req.destroy();}});
   if(url.pathname==='/community/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({assets:creatorAssets.catalog(),policy:{defaultTier:'free',paidCheckoutEnabled:false,platformCommission:null,creditPolicy:'Creator links stay in official game credits.'}}));}
   if(url.pathname==='/community/games'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({...remoteGames.catalog(),teeBridge:teeBridge.status()}));}
   if(url.pathname==='/community/game-credits'&&req.method==='GET'){
-    const publication=publicationSnapshot.get();
+    const publication=clientCredits();
     res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify(publication));
   }
   if(url.pathname==='/community/asset-proposals'&&req.method==='POST'){
@@ -418,7 +419,7 @@ const server = http.createServer(async (req, res) => {
     if(url.pathname==='/admin/build-quarantine'&&(req.method==='GET'||req.method==='POST')){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
       try {
-        const actor={owner:true,name:'streamer',source:'streamer-ui'};
+        const actor={owner:true,name:TWITCH_CHANNEL||'local streamer',source:'streamer-ui'};
         let result;
         if(req.method==='GET')result=buildQuarantine.list();
         else {
@@ -464,7 +465,7 @@ const server = http.createServer(async (req, res) => {
       try{
         const data=JSON.parse(await readBody()||'{}');
         if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
-        const actor={name:'streamer',source:'streamer-ui',owner:true};
+        const actor={name:TWITCH_CHANNEL||'local streamer',source:'streamer-ui',owner:true};
         if(data.action==='open')ideaRounds.open(actor,data.settings||{});
         else if(data.action==='vote')ideaRounds.startVoting(actor);
         else if(data.action==='close')ideaRounds.finishVoting(actor);
@@ -644,12 +645,12 @@ wss.on('connection', (ws, req) => {
   ws.on('error',()=>ws.terminate());
   const url = new URL(req.url, 'http://x');
   const kind = url.pathname === '/spectate' ? 'spectator' : 'player';
-  const name = (url.searchParams.get('name') || `anon-${Math.floor(1000 + Math.random() * 9000)}`).slice(0, 20);
+  const name = (url.searchParams.get('name')?.trim() || `anon-${Math.floor(1000 + Math.random() * 9000)}`).slice(0, 20);
 
   const client = { id: nextId++, communityId:crypto.randomUUID(), name, kind, role:'viewer' };
   clients.set(ws, client);
 
-  ws.send(JSON.stringify({t:'credits',publication:publicationSnapshot.get()}));
+  ws.send(JSON.stringify({t:'credits',publication:clientCredits()}));
   ws.send(JSON.stringify({
     t: 'welcome', id: client.id, name, kind,
     game: host.game ? { name: host.game.name, desc: host.game.meta.description || '' } : null,

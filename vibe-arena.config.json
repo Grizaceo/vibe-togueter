@@ -50,7 +50,8 @@
     "configuredFallback": true,
     "distinctPersonBursts": true,
     "chatPredictions": true,
-    "approvalDelegation": true
+    "approvalDelegation": true,
+    "communityCredit": true
   },
   "fallback": {
     "order": []

@@ -85,3 +85,13 @@ Enabled behind `features.chatPredictions`. Broadcaster opens/locks/resolves/canc
 ### Block B progress: temporary approval delegate (B5)
 
 Enabled behind `features.approvalDelegation`. Broadcaster or authenticated Studio owner grants one named Twitch moderator up to 30 minutes of selected-input approval, with immediate revoke. Approval still requires the live trusted mod tag and current exact review token; no authority is copied into round editing, artifact approval/rights or other owner routes. Overlay/Studio show grant and expiry; restart clears it. Actual delegated approver/authority enters durable round history. Unit tests cover expiry/revoke/lost tag/foreign source/disable/stale review and successful exact round approval; four controller checks cover private control and web impersonation. Full suite: **214 = 113 focused + 101 integration**, green. A real-mod approval/revoke rehearsal remains owner work; this is not claimed as live Twitch evidence.
+
+### Block B progress: version-bound community co-credit (B2)
+
+Enabled behind `features.communityCredit`. Canonical approved inputs snapshot authors of selected ideas, count only ballots supporting those ideas and record the actual approver/authority. Studio and overlay label this as input credit, distinct from the existing game. New quarantine artifact bindings include the snapshot fingerprint; contributor records/rendering support the matching version's vote/approver line and hide stale or disabled presentation. Old approved Seed Race fingerprints remain unchanged (six transfer checks pass separately).
+
+Read-only review found a legacy blank-alias compatibility case; demonstrated red, fixed by normalizing new aliases and using visible unrecorded-name labels for legacy metadata without rewriting the original round or input hashes. Full suite: **219 = 118 focused + 101 integration**, green. Sixteen local Chromium checks and fresh screenshots `local-ui-1793570009026-*` verify input credit and source-game attribution separately. No new game, external publication or real audience votes are claimed.
+
+### Block B closing status
+
+All six B items are implemented behind separate config flags, with small green commits and local evidence. O1–O12 remain as the Block 0 closing audit: no new rights/privacy/hosting claims. A has no complete current run and stays off/Plan B primary; live VM budget/auth prerequisites remain unresolved. C is not eligible until A succeeds and all B gates pass before November 2 13:00. Owner still supplies hosting/account facts, real Twitch/mod/three-account rehearsal, OBS, English video/YouTube, private push/access and Devpost form. Stabilization/install/documentation refresh follows the A decision.

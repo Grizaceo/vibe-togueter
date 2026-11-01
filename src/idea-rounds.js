@@ -1,4 +1,5 @@
 // Durable chat-to-build decisions. No model calls, shell execution, payments or auto-approval.
+import {communityCredit} from './community-credit.js';
 import {creditManifestFingerprint} from './creator-assets.js';
 import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';
 export const ROUND_DEFAULTS=Object.freeze({maxWords:100,maxIdeas:10,winnerCount:1,voteSeconds:45,maxIdeasPerPerson:1});
@@ -58,7 +59,7 @@ export class IdeaRounds{
   if(r.ideas.some(i=>i.normalized===normalized))throw new Error('That idea is already in the round.');
   if(r.ideas.length>=r.settings.maxIdeas)throw new Error('Proposal capacity reached.');
   if(r.ideas.filter(i=>i.proposerKey===key).length>=r.settings.maxIdeasPerPerson)throw new Error('Your proposal allowance for this round is used.');
-  const idea={id:r.ideas.length+1,text,words,normalized,proposerKey:key,author:String(actor.name).slice(0,50),source:actor.source,at:this.now(),sha256:hash(text)};
+  const idea={id:r.ideas.length+1,text,words,normalized,proposerKey:key,author:String(actor.name||'').trim().slice(0,50)||'Unrecorded proposer',source:actor.source,at:this.now(),sha256:hash(text)};
   r.ideas.push(idea);if(messageId)r.messageIds.push(messageId);
   this.event(r,'idea-proposed',actor,{ideaId:idea.id});
   if(r.ideas.length===r.settings.maxIdeas)this.startVoting(actor,true);
@@ -108,5 +109,10 @@ export class IdeaRounds{
  finishBuild(grant,ok){const r=this.data.rounds.find(item=>item.id===grant?.roundId);if(r!==this.current()||r?.approvedInputHash!==grant?.approvedInputHash||r?.phase!=='building')throw new Error('No build in progress.');r.phase=ok?'completed':'awaiting-approval';if(!ok)r.approvedInputHash=null;this.event(r,ok?'build-completed':'build-failed',null);this.save();return this.public();}
  recoverInterrupted(){for(const r of this.data.rounds)if(r.phase==='building'){r.phase='reconcile-required';this.event(r,'build-state-unknown-after-restart',null);this.save();}}
  cancel(actor){this.owner(actor);const r=this.current();if(r?.phase==='building')throw new Error('Build is in progress; stop or reconcile it before cancelling.');if(!active(r))throw new Error('No active round to cancel.');r.phase='cancelled';this.event(r,'cancelled',actor);this.save();return this.public();}
- public(){const r=this.current();if(!r)return null;const counts=new Map(this.ranked().map(i=>[i.id,i.votes]));return structuredClone({id:r.id,revision:r.revision,phase:r.phase,settings:r.settings,openedAt:r.openedAt,voteEndsAt:r.voteEndsAt,selected:r.selected,approvedInputHash:r.approvedInputHash,reviewToken:this.reviewToken(),resourceManifest:r.resourceManifest,ideas:r.ideas.map(({id,text,words,author,source,at,sha256})=>({id,text,words,author,source,at,sha256,votes:counts.get(id)||0})),voters:Object.keys(r.ballots).length});}
+ credit(){
+  const r=this.current();if(!r||!['approved','building','completed','reconcile-required'].includes(r.phase)||r.approvedInputHash!==this.inputHash())return null;
+  const approval=r.history.findLast(e=>e.type==='streamer-approved'&&e.inputHash===r.approvedInputHash);if(!approval?.actor)return null;
+  return communityCredit({roundId:r.id,approvedInputHash:r.approvedInputHash,ideaAuthors:r.selected.map(id=>({name:String(r.ideas.find(i=>i.id===id).author||'').trim()||'Unrecorded proposer'})),voterCount:Object.values(r.ballots).filter(id=>r.selected.includes(id)).length,approvedBy:{name:String(approval.actor.name||'').trim()||'Unrecorded approver',source:String(approval.actor.source||'').trim()||'unknown',authority:approval.approvalAuthority||'streamer'}});
+ }
+ public(){const r=this.current();if(!r)return null;const counts=new Map(this.ranked().map(i=>[i.id,i.votes]));return structuredClone({id:r.id,revision:r.revision,phase:r.phase,settings:r.settings,openedAt:r.openedAt,voteEndsAt:r.voteEndsAt,selected:r.selected,approvedInputHash:r.approvedInputHash,reviewToken:this.reviewToken(),credit:this.credit(),resourceManifest:r.resourceManifest,ideas:r.ideas.map(({id,text,words,author,source,at,sha256})=>({id,text,words,author,source,at,sha256,votes:counts.get(id)||0})),voters:Object.keys(r.ballots).length});}
 }

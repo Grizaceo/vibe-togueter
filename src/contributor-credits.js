@@ -1,4 +1,5 @@
 // Participant-authored attribution metadata, pinned to source bytes independently of game code.
+import {communityCredit} from './community-credit.js';
 import {publicCreatorURL} from './creator-assets.js';
 import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';
 const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
@@ -16,6 +17,7 @@ export function contributorCredits(input){
  const result={gameAuthors:people(input.gameAuthors,'game authors'),ideaAuthors:people(input.ideaAuthors,'idea authors')};
  if(input.artAuthors)result.artAuthors=people(input.artAuthors,'art authors');
  if(input.artNote!==undefined){if(typeof input.artNote!=='string'||input.artNote.length>200)throw Error('Invalid art credit note.');result.artNote=input.artNote;}
+ if(input.communityCredit)result.communityCredit=communityCredit(input.communityCredit);
  return result;
 }
 export function bundledContributorCredits(root,dir,codeHash){
