@@ -57,3 +57,7 @@ Use local Marble as fallback rather than remote Tee: it avoids a network depende
 6. Fill Devpost repository/video/session fields, submit before the prudent deadline and verify its receipt. No submission has been sent by this session.
 
 Skill workflow used: [Hermes game-dev router](/home/gris96/.agents/skills/hermes-game-dev/SKILL.md), with gaming-hub, its game-development-resources and studio-capability-gates references. Native shell/Node, bubblewrap and Chromium were actually executed; no external engine/library integration is inferred from reading those references.
+
+## Later delivery-preparation update
+
+The owner supplied operator/credit name and privacy contacts; these are now displayed and Chromium-checked. Hosting/recording disclosure, retention/deletion policy and rights/date attestation remain pending. The owner chose human rehearsal later. See [the reproducible local rehearsal](../REHEARSAL.md), [inert approved Seed Race package and costed runtime proposal](SEED_RUNTIME_PROPOSAL.md), and [new evidence](../EVIDENCE.md#delivery-preparation--november-1-later-continuation). The 179 application checks passed again; six separate inert-transfer tests and five launcher checks were added. Plan B and all automation/runtime limitations remain unchanged. No spend, publication or external delivery was performed.

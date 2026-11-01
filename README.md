@@ -8,6 +8,8 @@ Vibe Arena lets a stream community shape games while keeping creators visible. *
 
 ## Run locally
 
+For a disposable practice session without owner configuration, run `node scripts/demo-local.mjs` after installing dependencies. It prints loopback player/studio/overlay URLs and provides terminal controls for game switching, fallback and proposal/vote/review/approval. `stop` cleans up its temporary state. See [the later human/Twitch rehearsal checklist](docs/REHEARSAL.md). This session has no Twitch connection or coding worker.
+
 Requirements: Linux with bubblewrap/user namespaces and `/usr/bin/node`, tested with Node 26.12.1. The local guest uses usr-merged library paths. Missing isolation support fails closed. Runtime dependencies are `ws` and `@modelcontextprotocol/sdk` and their locked dependencies.
 
 ```bash
@@ -40,7 +42,7 @@ OAuth validation/refresh and reconnecting IRC replies are implemented. Keep toke
 
 Enter the private streamer key in the player page to control the streamer side of Democracy Duel. The field clears and the key is not placed in browser storage or links. Studio owner tools also require local admin authentication and streamer confirmation. A web nickname never grants Twitch owner/moderator powers.
 
-The [privacy notice](public/privacy.html) is served at `/privacy.html`, linked from all three pages. **Fill the visible operator/contact/hosting placeholders before public operation.** Persistent ideas, ballots, creator and quarantine records currently require operator-managed retention/deletion.
+The [privacy notice](public/privacy.html) is served at `/privacy.html`, linked from all three pages. **Operator/contact were supplied by Cristóbal Muñoz; complete the visible hosting/recording placeholder and retention/deletion procedure before public operation.** Persistent ideas, ballots, creator and quarantine records currently require operator-managed retention/deletion.
 
 ## Safety and recovery
 
@@ -58,7 +60,7 @@ State is sent at 10 Hz with compact drawing coordinates, optional negotiated com
 
 Earlier saved network rehearsals establish actual Twitch commands/replies and public WSS effects for Marble Race, Democracy Duel and Grove. They used owner-account automation while offline; they are not independent audience or OBS evidence, and were not replayed in this revision.
 
-A real owner-selected Codex/Terra subscription trial built Seed Race in a private VM, passed twelve checks in another VM and received exact source/report approval. All eight trial guests were destroyed. Its preview is static, not proof of live deployed gameplay. [VM trial](docs/platform/VM_TRIAL.md). Browser dispatch, Seed Race runtime deployment, stable public judging access, paid settlement and automatic job recovery are still pending.
+A real owner-selected Codex/Terra subscription trial built Seed Race in a private VM, passed twelve checks in another VM and received exact source/report approval. All eight trial guests were destroyed. Its preview is static, not proof of live deployed gameplay. [VM trial](docs/platform/VM_TRIAL.md). Browser dispatch, Seed Race runtime deployment, stable public judging access, paid settlement and automatic job recovery are still pending. A [verified inert transfer package and costed runtime proposal](docs/platform/SEED_RUNTIME_PROPOSAL.md) are ready for review; no new hosting is authorized or provisioned.
 
 The inherited treasury is **simulated build-credit accounting**, not money, donations or a claim that Bits, subscriptions or Channel Points finance builds. Event-credit simulation is off by default; `VA_SIMULATE_EVENT_CREDITS=1` is used only by isolated legacy fixtures. The generic donation route returns 410 by default. Real payment processing, creator checkout and provider reconciliation are not implemented. External Rust games are absent from the shipped catalog and recording path pending rights/hosting review.
 

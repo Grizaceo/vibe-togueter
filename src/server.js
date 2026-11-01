@@ -37,6 +37,7 @@ const arg = (name, dflt) => {
 };
 loadEnv(arg('env-file', path.join(ROOT, '.env')));
 const PORT = Number(arg('port', 8420));
+const LISTEN_HOST = arg('host', '0.0.0.0');
 const TWITCH_CHANNEL = arg('twitch', null);
 const KICK_CHANNEL = arg('kick', null);
 const GAME_DIR = path.resolve(ROOT, arg('game-dir', 'games/demo'));
@@ -623,9 +624,9 @@ wss.on('connection', (ws, req) => {
   });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`[vibe-arena] players  -> http://localhost:${PORT}/`);
-  console.log(`[vibe-arena] overlay  -> http://localhost:${PORT}/overlay.html`);
+server.listen(PORT, LISTEN_HOST, () => {
+  console.log(`[vibe-arena] players  -> http://localhost:${server.address().port}/`);
+  console.log(`[vibe-arena] overlay  -> http://localhost:${server.address().port}/overlay.html`);
   console.log(`[vibe-arena] chat test-> type in this terminal, or !cmd`);
   console.log(`[vibe-arena] game dir -> ${GAME_DIR}`);
   if (TWITCH_CHANNEL) console.log(`[vibe-arena] twitch   -> ${TWITCH_CHANNEL}`);

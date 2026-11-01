@@ -101,3 +101,9 @@ This continuation's eight commits before this handoff:
 Official rules last revalidated November 1: **November 2, 2026, 22:00 UTC / 19:00 Santiago**. Prudent target **21:00 UTC / 18:00 Santiago**. Preserve **17:00–21:00 UTC** for stabilization, English video and delivery. Feature freeze remains Nov 2 13:00 UTC. At 15:27 UTC Nov 1, calendar remaining is 30h33 to official close, 29h33 to prudent submission and 21h33 to feature freeze. These are not engineering effort estimates; recalculate on resume. Resources returned 403 while rules remained readable.
 
 Owner still needs human play, OBS/video/public YouTube, source-rights/date confirmation, private repo push/judge access and Devpost submission. Do not push or submit on the owner's behalf under the current instruction. This handoff does not declare the platform or submission complete.
+
+## Latest preparation, after 7e8040a
+
+The owner chose to rehearse later and supplied Cristóbal Muñoz plus two privacy contacts. Those fields and Grove's credit now show the supplied identity; hosting/recording, retention/deletion and rights attestation remain pending. `node scripts/demo-local.mjs` provides temporary loopback play and terminal studio round controls without owner configuration; see `docs/REHEARSAL.md`. Do not call its synthetic smoke a human/Twitch rehearsal.
+
+The exact approved Seed Race is packaged inertly at `artifacts/seed-race/transfer/seed-race-approved.tar.gz`. Read `SEED_RUNTIME_PROPOSAL.md` before any transfer or deployment: it records archive/manifest hashes, current-SDK limitations, a one-hour private lease/access design and an estimated cost with **no new hosting authorization**. The runtime bridge is still unimplemented. Do not rebuild/reapprove/import the candidate. All human, OBS, hosting and external delivery actions remain open.
