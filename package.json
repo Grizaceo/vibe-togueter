@@ -1,0 +1,21 @@
+{
+  "name": "vibe-arena",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/e2e.mjs && node test/monetization.mjs && node test/mcp.mjs",
+    "start": "node --experimental-vm-modules src/server.js",
+    "dev": "node --experimental-vm-modules --watch src/server.js",
+    "mock-llm": "node test/mock-llm.mjs",
+    "mcp": "node --experimental-vm-modules src/mcp-server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "ws": "^8.22.1"
+  }
+}

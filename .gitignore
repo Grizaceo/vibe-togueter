@@ -1,0 +1,9 @@
+node_modules/
+treasury.jsonl
+ideas.jsonl
+games/auto-*
+.env
+.env.*
+!.env.example
+*.log
+runtime/

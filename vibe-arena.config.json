@@ -1,0 +1,24 @@
+{
+  "generator": {
+    "mode": "local",
+    "baseUrl": "http://localhost:11434/v1",
+    "model": "qwen2.5-coder:32b",
+    "apiKey": "",
+    "gameCostUsd": 0.25,
+    "maxCostUsd": 1.0,
+    "timeoutMs": 120000
+  },
+  "publicUrl": "",
+  "kick": {
+    "broadcasterUserId": 0
+  },
+  "monetization": {
+    "twitchSubUsd": 2.5,
+    "bitUsd": 0.01,
+    "kickSubUsd": 4.74,
+    "kickUsdPerKick": 0.01,
+    "autoGenerate": false,
+    "webhookSecret": "cambia-esto",
+    "eventsubSecret": "cambia-esto-tambien"
+  }
+}

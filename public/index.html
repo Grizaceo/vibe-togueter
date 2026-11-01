@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>vibe-arena — juega</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { margin:0; background:#0b0b0f; color:#eee; font:16px system-ui; display:flex; flex-direction:column; height:100vh; }
+  header { padding:8px 12px; display:flex; gap:12px; align-items:center; background:#14141c; }
+  header b { color:#8ef; }
+  canvas { flex:1; width:100%; touch-action:none; }
+  #bar { padding:6px 12px; background:#14141c; display:flex; gap:10px; font-size:14px; align-items:center; }
+  #players { color:#9a9; } #err { color:#f88; }
+  input { background:#222; color:#eee; border:1px solid #333; border-radius:4px; padding:4px 8px; }
+</style>
+</head>
+<body>
+<header>
+  <b id="game">vibe-arena</b>
+  <span id="me"></span>
+  <span style="color:#888">WASD/flechas para moverte · chat abajo para comandos</span>
+</header>
+<canvas id="cv"></canvas>
+<div id="bar">
+  <span id="players"></span>
+  <span id="err"></span>
+  <form id="chat" style="margin-left:auto;display:flex;gap:6px">
+    <input id="ct" placeholder="!comando o idea" size="24" autocomplete="off">
+  </form>
+</div>
+<script type="module">
+import { connect } from './client.js';
+const c = connect({
+  canvas: document.getElementById('cv'),
+  onWelcome: m => { document.getElementById('me').textContent = `eres ${m.name}`; },
+  onPlayers: (p, game, err) => {
+    if (game) document.getElementById('game').textContent = game.name + (game.desc ? ` — ${game.desc}` : '');
+    document.getElementById('players').textContent = `${p.length} jugando`;
+    document.getElementById('err').textContent = err || '';
+  },
+});
+document.getElementById('chat').onsubmit = e => {
+  e.preventDefault();
+  const i = document.getElementById('ct');
+  if (i.value.trim()) c.sendChat(i.value.trim());
+  i.value = '';
+};
+</script>
+</body>
+</html>

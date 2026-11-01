@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "vibe-arena": {
+      "command": "node",
+      "args": ["--experimental-vm-modules", "src/mcp-server.js"]
+    }
+  }
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>vibe-arena — overlay OBS</title>
+<style>
+  body { margin:0; background:transparent; font:16px system-ui; display:flex; height:100vh; overflow:hidden; }
+  /* OBS browser source: set this page as a browser source; background is transparent so it can sit on the stream, or capture the canvas fullscreen. */
+  canvas { flex:1; height:100%; background:#0b0b0f; }
+  #side { width:300px; background:#101018ee; color:#eee; display:flex; flex-direction:column; }
+  #side h3 { margin:10px 12px 4px; color:#8ef; font-size:14px; }
+  #feed { flex:1; overflow-y:auto; padding:0 12px; font-size:13px; line-height:1.5; }
+  #feed .chat { color:#ccc; } #feed .system { color:#8ef; }
+  #players { padding:8px 12px; border-top:1px solid #222; font-size:13px; color:#9a9; max-height:120px; overflow-y:auto; }
+  #fund { padding:8px 12px; border-top:1px solid #222; font-size:13px; color:#ffd166; }
+  #err { color:#f88; padding:0 12px; font-size:12px; }
+</style>
+</head>
+<body>
+<canvas id="cv" width="1280" height="720"></canvas>
+<div id="side">
+  <h3 id="game">vibe-arena</h3>
+  <div id="err"></div>
+  <div id="feed"></div>
+  <div id="fund"></div>
+  <div id="players"></div>
+</div>
+<script type="module">
+import { connect } from './client.js';
+const feed = document.getElementById('feed');
+connect({
+  spectator: true,
+  canvas: document.getElementById('cv'),
+  onWelcome: m => { (m.recent||[]).forEach(addFeed); },
+  onFeed: addFeed,
+  onPlayers: (p, game, err, fund) => {
+    if (game) document.getElementById('game').textContent = game.name;
+    document.getElementById('err').textContent = err || '';
+    document.getElementById('players').innerHTML = p.map(x => `▸ ${x.name}`).join('<br>');
+    if (fund) {
+      const pct = fund.goal > 0 ? Math.min(100, Math.round(fund.balance / fund.goal * 100)) : 0;
+      document.getElementById('fund').innerHTML =
+        `fondo $${fund.balance.toFixed(2)} / $${fund.goal.toFixed(2)} (${pct}%)` +
+        (fund.generating ? ' · <b style="color:#ffe66d">generando…</b>' : '');
+    }
+  },
+});
+function addFeed(ev) {
+  const d = document.createElement('div');
+  d.className = ev.kind;
+  d.textContent = ev.text;
+  feed.appendChild(d);
+  while (feed.children.length > 80) feed.firstChild.remove();
+  feed.scrollTop = feed.scrollHeight;
+}
+</script>
+</body>
+</html>
