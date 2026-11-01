@@ -1,6 +1,7 @@
 // Disposable local browser rehearsal. No owner .env, credentials, Twitch or cloud calls.
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import net from 'node:net';import {spawn} from 'node:child_process';import WebSocket from 'ws';
 const root=path.resolve(new URL('..',import.meta.url).pathname),temp=fs.mkdtempSync(path.join(os.tmpdir(),'va-ui-'));
+const runId='local-ui-'+Date.now();
 const evidence=path.join(root,'docs','evidence'),sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const free=()=>new Promise(r=>{const s=net.createServer();s.listen(0,'127.0.0.1',()=>{const p=s.address().port;s.close(()=>r(p));});});
 for(const name of ['src','public','games','templates','package.json','vibe-arena.config.json'])fs.cpSync(path.join(root,name),path.join(temp,name),{recursive:true,filter:p=>!p.includes('/auto-')});
@@ -24,7 +25,7 @@ try{
  await command('Page.enable');await command('Runtime.enable');await command('Network.enable');await command('Emulation.setDeviceMetricsOverride',{width:1600,height:900,deviceScaleFactor:1,mobile:false});
  const evaluate=async expression=>(await command('Runtime.evaluate',{expression,returnByValue:true})).result.value;
  const navigate=async route=>{await command('Page.navigate',{url:base+route});await wait(()=>evaluate("document.readyState==='complete'"));await sleep(500);};
- const capture=async name=>{const shot=await command('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(evidence,name+'.png'),Buffer.from(shot.data,'base64'));};
+ const capture=async name=>{const shot=await command('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(evidence,name.replace('local-ui',runId)+'.png'),Buffer.from(shot.data,'base64'));};
  await navigate('/?name=BrowserRehearsal');await wait(()=>evaluate("document.querySelector('.creator-strip')?.textContent.includes('Kenney')"));
  check('lobby shows game, art and idea credit while details are collapsed',await evaluate("(()=>{const c=document.querySelector('.creator-strip');return c.textContent.includes('Game:')&&c.textContent.includes('Art:')&&c.textContent.includes('Idea:')&&!document.querySelector('#live-credits details').open})()"));
  check('creator strip is inside the desktop viewport',await evaluate("(()=>{const r=document.querySelector('.creator-strip').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight})()"));
@@ -34,9 +35,9 @@ try{
  await wait(()=>latest.view.layers.filter(p=>p.t==='sprite'&&p.src.endsWith('tree01.png')).length>before);check('production browser keyboard handler plants a visible tree',true);await capture('local-ui-lobby');
  await navigate('/overlay.html');await wait(()=>evaluate("document.querySelector('.creator-strip')?.textContent.includes('Kenney')"));check('overlay keeps all three credit roles in the viewport',await evaluate("(()=>{const c=document.querySelector('.creator-strip'),r=c.getBoundingClientRect();return c.textContent.includes('Idea:')&&r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight})()"));await capture('local-ui-overlay');
  await navigate('/studio.html');check('studio renders its selected Plan B boundary and privacy link',await evaluate("document.querySelector('#execution').textContent.includes('pending')&&!!document.querySelector('a[href=\"/privacy.html\"]')"));await capture('local-ui-studio');
- await navigate('/privacy.html');check('privacy page exposes missing operator and contact',await evaluate("document.body.textContent.includes('[OWNER MUST ENTER')"));await capture('local-ui-privacy');
+ await navigate('/privacy.html');check('privacy page shows supplied operator/contact and pending hosting',await evaluate("document.body.textContent.includes('Cristóbal Muñoz')&&!!document.querySelector('a[href=\"mailto:cristobal.munoz@derecho.uchile.cl\"]')&&document.body.textContent.includes('[OWNER MUST COMPLETE BEFORE PUBLIC USE]')"));await capture('local-ui-privacy');
  check('no browser JavaScript exception occurred',errors.length===0);check('credit clients make no HTTP polling requests',!requests.some(url=>url.includes('/community/game-credits')));
- fs.writeFileSync(path.join(evidence,'local-ui-rehearsal.json'),JSON.stringify({at:new Date().toISOString(),kind:'automated-local-Chromium-rehearsal',checks,errors,temp,limits:['Disposable checkout without owner configuration.','No real Twitch traffic, human gameplay, OBS recording or submission video.','Desktop viewport 1600x900; not a mobile usability claim.']},null,2)+'\n');
+ fs.writeFileSync(path.join(evidence,runId+'-rehearsal.json'),JSON.stringify({at:new Date().toISOString(),kind:'automated-local-Chromium-rehearsal',checks,errors,temp,limits:['Disposable checkout without owner configuration.','No real Twitch traffic, human gameplay, OBS recording or submission video.','Desktop viewport 1600x900; not a mobile usability claim.']},null,2)+'\n');
  console.log(JSON.stringify({checks,errors,temp}));
 }catch(error){console.error(error.message);process.exitCode=1;fs.writeFileSync(path.join(evidence,'local-ui-failure-'+Date.now()+'.json'),JSON.stringify({at:new Date().toISOString(),error:error.message,checks,errors,temp},null,2)+'\n');}
 finally{socket?.close();cdp?.close();browser?.kill('SIGTERM');server.kill('SIGTERM');await sleep(300);fs.rmSync(temp,{recursive:true,force:true,maxRetries:5,retryDelay:100});}
