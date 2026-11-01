@@ -1,0 +1,25 @@
+{
+  "kind": "read-only-hosting-research",
+  "date": "2026-11-01",
+  "ownerPCForFullJudgingPeriod": false,
+  "humanRehearsal": "deferred by owner",
+  "createosInventory": {
+    "read": true,
+    "count": 2,
+    "statusCounts": {
+      "running": 2
+    },
+    "changed": false
+  },
+  "createosBillingBalanceVerified": false,
+  "whoamiUsableJsonBillingSummary": false,
+  "accountsCreated": false,
+  "deploymentsCreated": false,
+  "newSpending": false,
+  "limits": [
+    "Published offers were researched; actual free-host capacity, account eligibility, credits and isolation were not demonstrated.",
+    "Existing runtime VMs were not changed."
+  ],
+  "createosGeneralProfilePlan": "free",
+  "sandboxSpecificPlanCapacityVerified": false
+}

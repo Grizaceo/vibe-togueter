@@ -118,3 +118,8 @@ The full production-browser/terminal route is now checked: `node scripts/rehears
 ## Owner rights/date confirmation — latest update
 
 The owner explicitly confirmed the necessary prototype/resource rights and creation during the submission period, adding that Vibe Arena as an idea arose in the early hours of November 1, 2026. `docs/evidence/owner-rights-confirmation-2026-11-01.json` records the original reply and English translation. This supersedes earlier “rights/date attestation pending” notes; do not ask for the same confirmation again. Preserve separate Devin/Codex provenance. It authorizes no deployment, spend, push, publication or submission. The hosting-infrastructure question remains unanswered; human rehearsal is still deferred and privacy/retention plus recording/delivery remain open.
+
+
+## Hosting direction — owner follow-up
+
+The owner says the PC can stay on temporarily but keeping it running through November 15 is too much; research a free external host. Human rehearsal remains postponed. They can create Oracle Cloud and asked whether existing CreateOS also works. See `FREE_HOSTING_REVIEW.md`: CreateOS is technically plausible but no usable balance/expiry was established; its 321-hour base estimate is about $19.56 ($19.90 at the conservative rounded rate), before other account workloads. Read-only inventory currently found two running sandboxes, untouched. Check existing Sandbox credit, expiry, plan capacity and auto-top-up before choosing another provider. No new account, money, deployment or publication was authorized or performed. Oracle and Google trials are conditional alternatives, not provisioned hosts.
