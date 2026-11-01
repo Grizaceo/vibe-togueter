@@ -1,0 +1,118 @@
+{
+  "codeSha256": "f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105",
+  "artifactHash": "e41cdbd68ccad078fb9ab33e35b7c95dadbc44db1177808c81c03f62e914f3f5",
+  "inputHash": "704f5dc9736ab883609396961206d598d0a453f4659d2b5c8fcb4e42145bcc8c",
+  "roundId": "11346b8c-a624-4d5d-aa81-be359fb94ac3",
+  "resourceManifest": {
+    "version": 1,
+    "assets": [
+      {
+        "id": "88630c1b-5949-46a6-b190-f558ec40f598",
+        "title": "Kenney · sky.png",
+        "kind": "illustration",
+        "origin": "curated-public-source",
+        "sourceURL": "/curated/kenney-background-elements/sky.png",
+        "expectedContentSha256": "3dda74eb9caad5148dc8e7f8010ee97592be266f218c23e2763a723fb57e4465",
+        "creator": {
+          "name": "Kenney",
+          "website": "https://kenney.nl/",
+          "socials": [
+            {
+              "label": "Bluesky",
+              "url": "https://bsky.app/profile/kenney.nl"
+            }
+          ]
+        },
+        "license": {
+          "id": "CC0-1.0",
+          "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "attribution": "Background elements by Kenney (kenney.nl). CC0.",
+          "permissions": {
+            "gameUse": true,
+            "adaptation": true,
+            "redistribution": true
+          },
+          "obligations": []
+        }
+      },
+      {
+        "id": "a52e6d18-47d6-46ca-8433-5972a69954a4",
+        "title": "Kenney · hills1.png",
+        "kind": "illustration",
+        "origin": "curated-public-source",
+        "sourceURL": "/curated/kenney-background-elements/hills1.png",
+        "expectedContentSha256": "1264021ed5a69b214d22dfa6562a6bed54ee0f9c374bfafa5f9165cabdf63800",
+        "creator": {
+          "name": "Kenney",
+          "website": "https://kenney.nl/",
+          "socials": [
+            {
+              "label": "Bluesky",
+              "url": "https://bsky.app/profile/kenney.nl"
+            }
+          ]
+        },
+        "license": {
+          "id": "CC0-1.0",
+          "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "attribution": "Background elements by Kenney (kenney.nl). CC0.",
+          "permissions": {
+            "gameUse": true,
+            "adaptation": true,
+            "redistribution": true
+          },
+          "obligations": []
+        }
+      },
+      {
+        "id": "c5a0410c-00ce-41f6-824f-58c5000bfecd",
+        "title": "Kenney · tree01.png",
+        "kind": "illustration",
+        "origin": "curated-public-source",
+        "sourceURL": "/curated/kenney-background-elements/tree01.png",
+        "expectedContentSha256": "ea3a81fb7078dfc9e60e2a46ce338ff2534c7cd80edcc7b150d710ee264c7e25",
+        "creator": {
+          "name": "Kenney",
+          "website": "https://kenney.nl/",
+          "socials": [
+            {
+              "label": "Bluesky",
+              "url": "https://bsky.app/profile/kenney.nl"
+            }
+          ]
+        },
+        "license": {
+          "id": "CC0-1.0",
+          "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "attribution": "Background elements by Kenney (kenney.nl). CC0.",
+          "permissions": {
+            "gameUse": true,
+            "adaptation": true,
+            "redistribution": true
+          },
+          "obligations": []
+        }
+      }
+    ],
+    "creditPolicy": {
+      "inGame": true,
+      "clickableCreatorLinks": true,
+      "retainOnPlatformRemix": true
+    },
+    "fingerprints": "Builder must verify downloaded bytes against expectedContentSha256 before use.",
+    "sha256": "17c22a81c7186ec5d84089997ed47c49f587a3e5bf436db1c7ed7a53c4c7b849"
+  },
+  "buildVmId": "sb-01m6bs0vnqsx186jvqgygfcqr8",
+  "agentProfile": "codex-gpt-6_1-terra-subscription",
+  "reportHash": "3dcbc39f0eea93ba2acb134b421afb253227c6d5441163337bbb9656ae71165e",
+  "status": "approved",
+  "published": false,
+  "ownerApproval": {
+    "artifactHash": "e41cdbd68ccad078fb9ab33e35b7c95dadbc44db1177808c81c03f62e914f3f5",
+    "reportHash": "3dcbc39f0eea93ba2acb134b421afb253227c6d5441163337bbb9656ae71165e",
+    "rightsAttested": true,
+    "at": 1793545735310
+  },
+  "source": "Owner-selected Codex VM trial; not a Twitch vote.",
+  "executionBoundary": "Must run only in an isolated guest; never import this file on the host."
+}

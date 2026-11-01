@@ -1,0 +1,31 @@
+// Bounded owner-trial correction inside the same authenticated VM. No host execution.
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';
+import {execFile} from 'node:child_process';import {promisify} from 'node:util';
+import {VMBuilderPreflight,validateBuildSession} from '../src/vm-builder-preflight.js';
+import {IdeaRounds} from '../src/idea-rounds.js';import {BuildQuarantine} from '../src/build-quarantine.js';import {acquireController} from '../src/controller-lock.js';
+const root=path.resolve(new URL('..',import.meta.url).pathname),sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+if(process.argv.length!==3||process.argv[2]!=='--live'){console.error('Use --live for the bounded owner-trial correction.');process.exitCode=1;}
+else {
+ const release=await acquireController(path.join(root,'runtime','controller.lock'));let state,rounds,grant;
+ try{
+ const file=path.join(root,'runtime','seed-race-job.json'),old=JSON.parse(fs.readFileSync(file));if(old.phase!=='quarantined'||old.revisedFrom)throw Error('Inspect the current trial; no automatic revision retry.');
+ const builder=new VMBuilderPreflight(path.join(root,'runtime','builder-session.json'));const unit=validateBuildSession(builder.state);await promisify(execFile)('systemctl',['--user','is-active',unit+'.timer']);
+ const vm=builder.owned(JSON.parse(await builder.cli(['sandbox','get',old.vmId])));if(vm.status!=='running')throw Error('Builder must be running.');
+ const q=new BuildQuarantine(path.join(root,'runtime','build-quarantine.json')),ticket=q.inspect(old.ticketId),actor={owner:true,name:'gris_96',source:'owner-session-trial'};
+ if(ticket.state!=='tested'||!ticket.report?.passed)throw Error('Review the tested first candidate before revision.');
+ rounds=new IdeaRounds(path.join(root,'runtime','idea-rounds.json'));const previous=rounds.public();if(previous.id!==old.grant.roundId||previous.phase!=='completed')throw Error('Prior construction needs reconciliation.');
+ const brief=previous.ideas.find(i=>i.id===previous.selected[0]).text;
+ q.close(actor,ticket.id,'cancelled');rounds.open(actor);rounds.propose(actor,brief);rounds.startVoting(actor);rounds.finishVoting(actor);rounds.select(actor,[1],'Same owner-approved trial; correct renderer alignment and show bounded lane selections. Not a Twitch ballot.');rounds.chooseResources(actor,ticket.resources);rounds.approve(actor,{roundId:rounds.current().id,reviewToken:rounds.reviewToken()});
+ const round=rounds.public();grant={roundId:round.id,approvedInputHash:round.approvedInputHash};const next=q.issue(actor,round,{buildVmId:vm.id,runtimeVmId:'pending-seed-race-runtime',agentProfile:ticket.agentProfile});
+ state={...old,ticketId:next.id,grant,phase:'building',startedAt:Date.now(),revisedFrom:{ticketId:ticket.id,artifactHash:ticket.artifactHash,codeSha256:ticket.codeSha256,reportHash:ticket.reportHash}};fs.writeFileSync(file,JSON.stringify(state)+'\n',{mode:0o600});rounds.beginBuild(brief,grant);
+ const command='umask 077; cd /workspace/seed-race; export CODEX_HOME=/opt/vibe-codex; timeout --signal=TERM --kill-after=10s 180s codex -c \'forced_login_method="chatgpt"\' -c \'model_reasoning_effort="low"\' exec --ignore-user-config --skip-git-repo-check --ephemeral --sandbox workspace-write --model gpt-6.1-terra --json "Correct game.js only. The trusted renderer defaults text alignment to center. Give every left-margin title/instruction/credit text explicit align:left so it remains inside the frame. Also make web lane choice visible: retain a bounded player display name onJoin and draw a small bounded label under each lane listing up to three names currently selecting that lane, plus remaining count. Keep game mechanics, source asset paths, six seed progress state, commands, cooldowns and reset unchanged. Never inspect credentials, other directories, network or personal configuration. Do not install anything or run the candidate. Use at most four tool calls: read game.js, then write the correction." > /opt/vibe-codex/seed-revision.jsonl 2> /opt/vibe-codex/seed-revision.stderr';
+ await builder.cli(['sandbox','exec',vm.id,'--','bash','-c',command],{timeout:210000});
+ const summarize="const fs=require('node:fs');const es=fs.readFileSync('/opt/vibe-codex/seed-revision.jsonl','utf8').split('\\n').filter(Boolean).map(l=>{try{return JSON.parse(l)}catch{return {}}});const e=es.find(e=>e.type==='turn.completed');console.log(JSON.stringify({completed:!!e,usage:e?.usage||null,threadId:es.find(e=>e.type==='thread.started')?.thread_id||null,failed:es.some(e=>e.type==='error'||e.type==='turn.failed')}));";
+ state.agent=JSON.parse(await builder.cli(['sandbox','exec',vm.id,'--','node','-e',summarize]));if(!state.agent.completed||state.agent.failed)throw Error('Guest correction incomplete.');
+ const read="const fs=require('node:fs'),f='/workspace/seed-race/game.js';const st=fs.lstatSync(f);if(!st.isFile()||st.isSymbolicLink()||st.size>131072)throw Error('Invalid artifact');process.stdout.write(fs.readFileSync(f,'utf8'));";
+ const source=await builder.cli(['sandbox','exec',vm.id,'--','node','-e',read]);const received=q.receive(actor,next.id,{source,expectedCodeSha256:sha(source)});fs.writeFileSync(path.join(root,'runtime','seed-race-game.js'),source,{mode:0o600});rounds.finishBuild(grant,true);
+ state.phase='quarantined';state.codeSha256=received.codeSha256;state.artifactHash=received.artifactHash;state.finishedAt=Date.now();fs.writeFileSync(file,JSON.stringify(state)+'\n',{mode:0o600});
+ const evidence={at:new Date().toISOString(),sessionId:process.env.CODEX_THREAD_ID,...state,candidateExecutedOnHost:false,scope:'Real guest Codex revision of owner trial; no artifact approval/deployment yet.'};const output=path.join(root,'docs','evidence','seed-race-revision-'+Date.now()+'.json');fs.writeFileSync(output,JSON.stringify(evidence,null,2)+'\n');console.log(JSON.stringify({evidence:output,codeSha256:state.codeSha256,agent:state.agent}));
+ }catch{if(rounds?.current()?.phase==='building')rounds.recoverInterrupted();if(state){state.phase='reconcile-required';fs.writeFileSync(path.join(root,'runtime','seed-race-job.json'),JSON.stringify(state)+'\n',{mode:0o600});}console.error('Trial revision blocked/incomplete; inspect journals; no automatic retry.');process.exitCode=1;}
+ finally{await release();}
+}
