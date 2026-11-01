@@ -20,5 +20,14 @@
     "autoGenerate": false,
     "webhookSecret": "cambia-esto",
     "eventsubSecret": "cambia-esto-tambien"
+  },
+  "twitch": {
+    "rewardCommands": {
+      "Join race": "!play",
+      "Start race": "!race",
+      "Vote left": "!left",
+      "Vote right": "!right",
+      "Vote fire": "!fire"
+    }
   }
 }

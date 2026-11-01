@@ -11,6 +11,7 @@ import { Treasury } from './treasury.js';
 import { Generator } from './generator.js';
 import { createLocalChat } from './chat/local.js';
 import crypto from 'node:crypto';
+import { decodeTwitchEvent, rewardCommand } from './twitch-events.js';
 import { loadEnv, TwitchAuth } from './auth/twitch.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -231,10 +232,17 @@ setInterval(() => {
 // ---------- http ----------
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
 
+const deliveryFile=path.join(ROOT,'runtime','twitch-deliveries.jsonl');
+fs.mkdirSync(path.dirname(deliveryFile),{recursive:true});
+const twitchDeliveries=new Set();
+if(fs.existsSync(deliveryFile))for(const line of fs.readFileSync(deliveryFile,'utf8').split('\n')){try{const row=JSON.parse(line);if(Date.now()-row.at<600000)twitchDeliveries.add(row.id);}catch{}}
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
   // admin (localhost only)
   if (url.pathname.startsWith('/admin/')) {
+    if(req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.headers.forwarded){res.writeHead(403);return res.end('local admin only');}
+    if(process.env.VA_ADMIN_TOKEN && req.headers.authorization!=='Bearer '+process.env.VA_ADMIN_TOKEN){res.writeHead(403);return res.end('admin authentication required');}
     const ip = req.socket.remoteAddress;
     if (ip !== '127.0.0.1' && ip !== '::1' && ip !== '::ffff:127.0.0.1') {
       res.writeHead(403); return res.end('localhost only');
@@ -325,22 +333,15 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/webhook/twitch' && req.method === 'POST') {
     let b = ''; req.on('data', c => b += c);
     req.on('end', () => {
-      const secret = CONFIG.monetization.eventsubSecret;
-      const msgId = req.headers['twitch-eventsub-message-id'];
-      const ts = req.headers['twitch-eventsub-message-timestamp'];
-      const sig = String(req.headers['twitch-eventsub-message-signature'] || '');
-      const expect = 'sha256=' + crypto.createHmac('sha256', secret).update(String(msgId) + String(ts) + b).digest('hex');
-      const sigOk = sig.length === expect.length && crypto.timingSafeEqual(Buffer.from(expect), Buffer.from(sig));
-      if (!sigOk) {
-        res.writeHead(403); return res.end('bad signature');
-      }
-      const type = req.headers['twitch-eventsub-message-type'];
-      const body = JSON.parse(b || '{}');
+      const decoded=decodeTwitchEvent(req.headers,b,CONFIG.monetization.eventsubSecret);
+      if(decoded.status!==200){res.writeHead(decoded.status);return res.end('invalid event');}
+      const {id:msgId,type,body}=decoded;
       if (type === 'webhook_callback_verification') {
         res.writeHead(200, { 'content-type': 'text/plain' });
         return res.end(body.challenge);
       }
       if (type === 'notification') {
+        if(twitchDeliveries.has(msgId)){res.writeHead(204);return res.end();}
         const ev = body.event || {};
         const M = CONFIG.monetization;
         if (body.subscription?.type === 'channel.subscribe') {
@@ -359,9 +360,15 @@ const server = http.createServer(async (req, res) => {
             feed('system', `${bits} bits de ${ev.user_name} → +$${usd.toFixed(2)}`);
           }
         } else if (body.subscription?.type === 'channel.channel_points_custom_reward_redemption.add') {
-          feed('system', `${ev.user_name} canjeó "${ev.reward?.title}" (channel points → mapear a comando luego)`);
+          const command=rewardCommand(ev,CONFIG.twitch?.rewardCommands);
+          if(command){
+            const [cmd,...args]=command.slice(1).split(/\s+/);
+            const handled=host.safeCall('onChat',{name:ev.user_name||ev.user_login||'viewer',source:'twitch-reward'},cmd,args);
+            feed('system',`${ev.user_name||'viewer'} redeemed ${ev.reward.title} → ${command}${handled?'':' (not handled by this game)'}`);
+          }else feed('system',`Unmapped reward: ${ev.reward?.title||'unknown'}`);
         }
       }
+      if(type==='notification'){twitchDeliveries.add(msgId);fs.appendFileSync(deliveryFile,JSON.stringify({id:msgId,at:Date.now()})+'\n');}
       res.writeHead(204); res.end();
     });
     return;
