@@ -14,6 +14,7 @@ import { TeeChatBridge } from './tee-chat-bridge.js';
 import {reviewGame,publishGameCredits,currentGameCredits} from './game-credits.js';
 import { IdeaRounds } from './idea-rounds.js';
 import { buildPolicy, localBuildPermission } from './build-policy.js';
+import { BuildQuarantine } from './build-quarantine.js';
 import { Treasury } from './treasury.js';
 import { Generator } from './generator.js';
 import { createLocalChat } from './chat/local.js';
@@ -101,6 +102,7 @@ let generating = false;
 const executionPolicy=buildPolicy(CONFIG.build);
 const ideaRounds=new IdeaRounds(path.join(ROOT,'runtime','idea-rounds.json'),{settings:CONFIG.community?.rounds||{}});
 ideaRounds.recoverInterrupted();
+const buildQuarantine=new BuildQuarantine(path.join(ROOT,'runtime','build-quarantine.json'));
 const creatorAssets=new CreatorAssets(path.join(ROOT,'runtime','creator-assets.json'));
 const remoteGames=new RemoteGames(CONFIG.remoteGames,path.join(ROOT,'runtime','remote-games.json'));
 const teeBridge=new TeeChatBridge();
@@ -316,6 +318,34 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/build-quarantine'&&(req.method==='GET'||req.method==='POST')){
+      if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}
+      try {
+        const actor={owner:true,name:'streamer',source:'streamer-ui'};
+        let result;
+        if(req.method==='GET')result=buildQuarantine.list();
+        else {
+          const data=JSON.parse(await readBody()||'{}');
+          // Recheck the canonical round content, not a caller-provided approval.
+          const approvedRound=()=>{
+            if(!tickRounds())throw Error('Round storage unavailable.');
+            const round=ideaRounds.public();
+            const text=round?.selected.map(id=>round.ideas.find(i=>i.id===id).text).join('\n\n');
+            if(!ideaRounds.buildPermission(text,{roundId:round?.id,approvedInputHash:round?.approvedInputHash}))throw Error('Approved matching community round required.');
+            return round;
+          };
+          if(data.action==='issue')result=buildQuarantine.issue(actor,approvedRound(),data);
+          else if(data.action==='inspect')result=buildQuarantine.inspect(data.id);
+          else if(data.action==='receive')result=buildQuarantine.receive(actor,data.id,data);
+          else if(data.action==='begin-test')result=buildQuarantine.beginTest(actor,data.id,data.artifactHash);
+          else if(data.action==='record-test')result=buildQuarantine.recordTest(actor,data.id,data.report);
+          else if(data.action==='approve')result=buildQuarantine.approve(actor,data.id,data,approvedRound());
+          else if(data.action==='cancel'||data.action==='reject')result=buildQuarantine.close(actor,data.id,data.action==='cancel'?'cancelled':'rejected');
+          else throw Error('Unknown quarantine action.');
+        }
+        res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify(result));
+      }catch(error){res.writeHead(400,{'Content-Type':'application/json'});return res.end(JSON.stringify({error:error.message}));}
+    }
     if(url.pathname==='/admin/owner-status'&&req.method==='GET'){const ok=process.env.VA_STREAMER_KEY&&req.headers['x-streamer-key']===process.env.VA_STREAMER_KEY;res.writeHead(ok?200:403,{'Content-Type':'application/json'});return res.end(JSON.stringify({ok:!!ok}));}
     if(url.pathname==='/admin/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(creatorAssets.data.assets));}
     if(url.pathname==='/admin/game-publication'&&req.method==='POST'){
