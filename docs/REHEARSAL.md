@@ -30,6 +30,14 @@ node scripts/demo-local.mjs --check
 
 It exercises game switches, forced fallback and a synthetic local proposal/vote/review/approval. Those checks establish local routes and lifecycle, not human usability, automatic crash recovery footage, Twitch participation or OBS capture.
 
+For a repeatable production-browser pass through the normal launcher, with Chromium installed:
+
+```bash
+node scripts/rehearse-plan-b.mjs
+```
+
+This separate local automation uses real browser form/keyboard events for proposals, ballots and race chat, plus the launcher's normal terminal commands for review/approval and fallback. It writes new timestamped evidence and screenshots. It does not connect Twitch or substitute for the human checklist below. The latest successful pass verified 14 checks, including two entrants and authoritative marble movement. Missing Chromium and SIGTERM cleanup were exercised separately.
+
 ## Later real Twitch and OBS rehearsal
 
 Use the normal README operator-owned configuration/authentication path, rather than the disposable launcher. The owner enters and uses credentials privately. Start the reviewed Grove app with the selected channel. Complete hosting/recording disclosure before exposing it. Arrange stable free judging access separately; the localhost practice URL cannot serve remote judges.

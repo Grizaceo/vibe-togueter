@@ -1,0 +1,14 @@
+{
+  "kind": "English narration/subtitle draft validation",
+  "cues": 28,
+  "trackDurationSeconds": 165,
+  "maxLinesPerCue": 2,
+  "maxColumns": 42,
+  "nonemptyOrderedNonoverlappingCues": true,
+  "captionTextMatchesNarration": true,
+  "recordedAudio": false,
+  "exportedVideo": false,
+  "limits": [
+    "Timing is a draft, not measured spoken duration. Retiming and full export review remain owner work."
+  ]
+}

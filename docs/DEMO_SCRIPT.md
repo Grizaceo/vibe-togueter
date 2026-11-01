@@ -17,6 +17,10 @@ Use English narration/subtitles and real Twitch footage. The existing evidence f
 | 2:15–2:35 | This Codex thread, granular commits, final test output, isolation/fallback regression | “Codex reproduced the failures, isolated game execution, added recovery and verified 179 local checks.” Show the actual session ID. Never include live device codes, keys or credential files. |
 | 2:35–2:45 | Back to Grove, visible credits, one honest next step | “Connecting automatic isolated construction to the studio is next. Discovery and credited clips are future work.” |
 
+## English narration and subtitle drafts
+
+[Ready-to-read narration](recording/narration-en.txt) follows these shots and explicitly distinguishes the unpublished Seed Race trial from the live reviewed games. [SRT draft](recording/captions-en.srt) contains matching text on a 2:45 timing track. Retiming to the actual voice and footage, English export review and a measured final duration are still required. Neither draft is a recorded demo or evidence of Twitch/human participation. Use the requested-fallback wording only with a matching manual-fallback shot.
+
 ## Operator preparation
 
 The owner chose to rehearse later. Use [REHEARSAL.md](REHEARSAL.md) for disposable local practice and the pending human/Twitch checklist.
