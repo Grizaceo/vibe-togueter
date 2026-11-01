@@ -11,6 +11,7 @@ import { Treasury } from './treasury.js';
 import { Generator } from './generator.js';
 import { createLocalChat } from './chat/local.js';
 import crypto from 'node:crypto';
+import { loadEnv, TwitchAuth } from './auth/twitch.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -22,6 +23,7 @@ const arg = (name, dflt) => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? args[i + 1] : dflt;
 };
+loadEnv(arg('env-file', path.join(ROOT, '.env')));
 const PORT = Number(arg('port', 8420));
 const TWITCH_CHANNEL = arg('twitch', null);
 const KICK_CHANNEL = arg('kick', null);
@@ -32,6 +34,9 @@ const CONFIG = JSON.parse(fs.readFileSync(path.join(ROOT, 'vibe-arena.config.jso
 if (process.env.VA_BASE_URL) CONFIG.generator.baseUrl = process.env.VA_BASE_URL;
 if (process.env.VA_API_KEY) CONFIG.generator.apiKey = process.env.VA_API_KEY;
 if (process.env.VA_MODEL) CONFIG.generator.model = process.env.VA_MODEL;
+
+if(process.env.VA_EVENTSUB_SECRET)CONFIG.monetization.eventsubSecret=process.env.VA_EVENTSUB_SECRET;
+if(process.env.VA_WEBHOOK_SECRET)CONFIG.monetization.webhookSecret=process.env.VA_WEBHOOK_SECRET;
 
 // ---------- room ----------
 const clients = new Map(); // ws -> {id,name,kind:'player'|'spectator'}
@@ -157,19 +162,16 @@ const localChat = createLocalChat(handleChat);
 
 // reply senders por plataforma (para links de sala / acks)
 const replies = {};
-const PUBLIC_URL = process.env.VA_PUBLIC_URL || CONFIG.publicUrl || null;
+const PUBLIC_URL = (process.env.VA_PUBLIC_URL || CONFIG.publicUrl || '').replace(/\/$/,'') || null;
 
-// optional twitch
+let twitch;
 if (TWITCH_CHANNEL) {
-  import('./chat/twitch.js')
-    .then(m => {
-      const c = m.connectTwitch(TWITCH_CHANNEL, handleChat, {
-        oauth: process.env.VA_TWITCH_OAUTH,
-        nick: process.env.VA_TWITCH_NICK,
-      });
-      if (c.authed) replies.twitch = c.send;
-    })
-    .catch(e => console.error(`[twitch] disabled: ${e.message}`));
+  const {connectTwitch}=await import('./chat/twitch.js');
+  const auth=new TwitchAuth({file:arg('env-file',path.join(ROOT,'.env'))});
+  const info=await auth.validate({force:true});
+  if(info.login.toLowerCase()!==TWITCH_CHANNEL.toLowerCase())throw new Error('Use your own authorized Twitch channel.');
+  twitch=connectTwitch(TWITCH_CHANNEL,handleChat,{auth});
+  replies.twitch=twitch.send;
 }
 
 // optional kick send (needs user token OAuth chat:write)
@@ -448,4 +450,5 @@ server.listen(PORT, '0.0.0.0', () => {
   if (KICK_CHANNEL) console.log(`[vibe-arena] kick webhook -> POST /webhook/kick`);
 });
 
-process.on('SIGINT', () => { host.stop(); localChat.close(); server.close(); process.exit(0); });
+const shutdown=()=>{twitch?.close();host.stop();localChat.close();server.close();process.exit(0);};
+process.on('SIGINT',shutdown);process.on('SIGTERM',shutdown);

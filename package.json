@@ -8,7 +8,9 @@
     "start": "node --experimental-vm-modules src/server.js",
     "dev": "node --experimental-vm-modules --watch src/server.js",
     "mock-llm": "node test/mock-llm.mjs",
-    "mcp": "node --experimental-vm-modules src/mcp-server.js"
+    "mcp": "node --experimental-vm-modules src/mcp-server.js",
+    "twitch:auth": "node src/auth/twitch.js",
+    "twitch:status": "node src/auth/twitch.js --status"
   },
   "keywords": [],
   "author": "",
