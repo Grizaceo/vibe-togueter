@@ -1,6 +1,6 @@
 # Controller traffic and idle work
 
-The controller emits state every 100 ms (previously 66 ms), rounds only view coordinates to 0.1 world units and negotiates permessage-deflate at level 3 without context takeover. Monetary accounting fields retain their precision. Clients that decline compression still benefit from the lower cadence and compact coordinates. A socket with more than 128 KiB queued skips obsolete state; above 1 MiB it disconnects. WebSocket input frames are capped at 16 KiB and 120 messages per socket-second. This is an application guard, not a replacement for a hosting-level connection limit or DDoS protection.
+The controller emits state every 100 ms (previously 66 ms), projects flat SDK primitives and rounds view coordinates to 0.1 world units (rotation keeps 0.001 radians) and negotiates permessage-deflate at level 3 without context takeover. Monetary accounting fields retain their precision. Clients that decline compression still benefit from the lower cadence and compact coordinates. A socket with more than 128 KiB queued skips obsolete state; above 1 MiB it disconnects. WebSocket input frames are capped at 16 KiB and 120 messages per socket-second. This is an application guard, not a replacement for a hosting-level connection limit or DDoS protection.
 
 Chat admission precedes feed, commands, round writes and Tee forwarding: one accepted message per actor per 250 ms, at most 30 per instance-second, with at most 20,000 actor entries and stale-entry eviction. Ordinary text is capped at 200 characters. Explicit !idea submissions retain their separately bounded 10,000-character/round-word allowance, so the studio's word settings still work. Authenticated Twitch emergency fallback is handled before this gate; crowd spam cannot consume its admission slot. IRC dedupe and the Tee bridge's pulse/idle limits remain in force. Web display names do not grant moderator status.
 
@@ -16,9 +16,9 @@ Saved result: docs/evidence/state-bandwidth.json. Twenty web players and twenty 
 
 | Game | Previous estimate GB/client-hour | Compact, no compression | Compact + negotiated deflate | Reduction with deflate |
 |---|---:|---:|---:|---:|
-| Marble Race | 1.190 | 0.696 | 0.082 | 93.1% |
-| Democracy Duel | 0.185 | 0.122 | 0.038 | 79.3% |
-| Community Grove | 0.306 | 0.201 | 0.035 | 88.5% |
+| Marble Race | 1.190 | 0.696 | 0.083 | 93.0% |
+| Democracy Duel | 0.185 | 0.122 | 0.038 | 79.4% |
+| Community Grove | 0.306 | 0.201 | 0.036 | 88.3% |
 
 This is a payload estimate, excluding TLS/framing/handshake/feed/credit traffic, not measured billed egress. The initial Marble frame independently reproduced the audit's order of magnitude at 19,287 bytes (1.052 GB/client-hour at 66 ms). Active race frames are larger, so use the paired active-frame comparison above. test/traffic-integration.mjs verifies actual compression negotiation and admission before feed broadcast against a disposable controller; pure tests cover coordinate precision and slow-client backpressure. Human assessment of the lower display cadence remains part of rehearsal.
 

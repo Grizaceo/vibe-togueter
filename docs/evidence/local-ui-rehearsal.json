@@ -1,0 +1,45 @@
+{
+  "at": "2026-11-01T16:12:00.512Z",
+  "kind": "automated-local-Chromium-rehearsal",
+  "checks": [
+    {
+      "name": "lobby shows game, art and idea credit while details are collapsed",
+      "ok": true
+    },
+    {
+      "name": "creator strip is inside the desktop viewport",
+      "ok": true
+    },
+    {
+      "name": "production browser keyboard handler plants a visible tree",
+      "ok": true
+    },
+    {
+      "name": "overlay keeps all three credit roles in the viewport",
+      "ok": true
+    },
+    {
+      "name": "studio renders its selected Plan B boundary and privacy link",
+      "ok": true
+    },
+    {
+      "name": "privacy page exposes missing operator and contact",
+      "ok": true
+    },
+    {
+      "name": "no browser JavaScript exception occurred",
+      "ok": true
+    },
+    {
+      "name": "credit clients make no HTTP polling requests",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "temp": "/tmp/va-ui-hKZkjX",
+  "limits": [
+    "Disposable checkout without owner configuration.",
+    "No real Twitch traffic, human gameplay, OBS recording or submission video.",
+    "Desktop viewport 1600x900; not a mobile usability claim."
+  ]
+}

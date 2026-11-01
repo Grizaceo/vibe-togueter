@@ -5,6 +5,8 @@
 
 const spriteCache = new Map();
 function sprite(src) {
+  if(typeof src!=='string'||!/^\/curated\/[a-z0-9-]+\/[a-zA-Z0-9_-]+\.png$/.test(src))return null;
+  if(spriteCache.size>=128&&!spriteCache.has(src))return null;
   let img = spriteCache.get(src);
   if (!img) { img = new Image(); img.src = src; spriteCache.set(src, img); }
   return img;
@@ -53,7 +55,7 @@ function drawPrim(ctx, p) {
       break;
     case 'sprite': {
       const img = sprite(p.src);
-      if (!img.complete) break;
+      if (!img?.complete || !img.naturalWidth) break;
       ctx.save();
       if (p.rot) { ctx.translate(p.x + p.w / 2, p.y + p.h / 2); ctx.rotate(p.rot); ctx.translate(-p.x - p.w / 2, -p.y - p.h / 2); }
       ctx.drawImage(img, p.x, p.y, p.w, p.h);

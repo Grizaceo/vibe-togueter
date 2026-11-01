@@ -10,9 +10,15 @@ test('creator-specified notice, license and follow links appear in the credit pa
   assert.ok(all.some(n=>n.textContent===notice));assert.ok(all.some(n=>n.href==='https://creativecommons.org/licenses/by/4.0/'));assert.ok(all.some(n=>n.href==='https://example.test/social'));assert.ok(all.filter(n=>n.tag==='a').every(n=>n.rel==='noopener noreferrer'));
  }finally{globalThis.document=previous;}
 });
-test('live creator panel only displays credits matching the executing game hash',async()=>{
+test('live credits stay visible without polling and never attribute a stale version',async()=>{
  const {attachLiveCredits}=await import('../public/live-credits.js');class Node{constructor(tag){this.tag=tag;this.children=[];}append(...children){this.children.push(...children);}replaceChildren(...children){this.children=children;}}
- const previous={document:globalThis.document,fetch:globalThis.fetch,setInterval:globalThis.setInterval,clearInterval:globalThis.clearInterval};let cleared=false;
- globalThis.document={createElement:tag=>new Node(tag),createTextNode:text=>({textContent:text})};globalThis.fetch=async()=>({ok:true,json:async()=>({status:'published',codeSha256:'version-a',manifest:{sha256:'manifest-a',assets:[{title:'Test art',creator:{name:'Synthetic creator',website:'https://example.test/',socials:[]},license:{id:'CC0-1.0',url:'https://creativecommons.org/publicdomain/zero/1.0/',attribution:'Test art attribution'}}]}})});globalThis.setInterval=()=>1;globalThis.clearInterval=()=>{cleared=true;};
- try{const root=new Node('div'),panel=attachLiveCredits(root);await new Promise(resolve=>setImmediate(resolve));assert.equal(root.hidden,true);panel.matchGame({versionSha256:'version-a'});assert.equal(root.hidden,false);assert.equal(root.children[0].tag,'details');panel.matchGame({versionSha256:'version-b'});assert.equal(root.hidden,true);assert.equal(root.children.length,0);panel.close();assert.equal(cleared,true);}finally{Object.assign(globalThis,previous);}
+ const previous={document:globalThis.document,fetch:globalThis.fetch};let reads=0;
+ globalThis.document={createElement:tag=>new Node(tag),createTextNode:text=>({textContent:text})};globalThis.fetch=()=>{reads++;throw Error('Credit polling must not occur');};
+ const text=node=>[node.textContent||'',...(node.children||[]).map(text)].join(' ');
+ try{
+  const root=new Node('section'),panel=attachLiveCredits(root);assert.equal(root.hidden,false);
+  panel.update({status:'published',codeSha256:'version-a',contributors:{gameAuthors:[{name:'External vibecoder',url:'https://example.test/coder'}],ideaAuthors:[{name:'Community proposer'}],artAuthors:[{name:'Additional artist',url:'https://example.test/additional'}]},manifest:{sha256:'manifest-a',assets:[{title:'Test art',creator:{name:'Synthetic creator',website:'https://example.test/',socials:[]},license:{id:'CC0-1.0',url:'https://creativecommons.org/publicdomain/zero/1.0/',attribution:'Test art attribution'}}]}});
+  panel.matchGame({name:'Example game',versionSha256:'version-a'});const strip=root.children[0];assert.equal(strip.className,'creator-strip');for(const author of ['External vibecoder','Community proposer','Synthetic creator','Additional artist'])assert.ok(text(strip).includes(author));assert.equal(root.children[1].tag,'details');assert.equal(root.children[1].open,undefined);
+  panel.matchGame({name:'Changed game',versionSha256:'version-b'});assert.equal(root.hidden,false);assert.ok(!text(root).includes('Synthetic creator'));assert.ok(!text(root).includes('External vibecoder'));assert.ok(text(root).includes('Attribution pending'));assert.equal(reads,0);panel.close();assert.equal(root.children.length,0);
+ }finally{Object.assign(globalThis,previous);}
 });

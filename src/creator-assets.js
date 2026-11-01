@@ -54,11 +54,11 @@ export class CreatorAssets{
   const body={version:1,assets:structuredClone(assets),creditPolicy:{inGame:true,clickableCreatorLinks:true,retainOnPlatformRemix:true},fingerprints:'Builder must verify downloaded bytes against expectedContentSha256 before use.'};
   return {...body,sha256:hash(body)};
  }
- recordUsage(gameId,gameVersion,manifest){
+ recordUsage(gameId,gameVersion,manifest,contributors=null){
   text(gameId,'game id',100);if(typeof gameVersion!=='string'||!/^[a-f0-9]{64}$/.test(gameVersion))throw new Error('Pin the published game version.');
   const {sha256,...body}=manifest;
   const expected=this.manifest(manifest.assets.map(a=>a.id));if(hash(body)!==sha256||expected.sha256!==sha256)throw new Error('Credit/resource manifest changed; review before publication.');
-  const key=hash({gameId,gameVersion,manifest:manifest.sha256});if(this.data.usages.some(u=>u.key===key))return false;
-  const next=structuredClone(this.data);next.usages.push({key,gameId,gameVersion,manifestSha256:manifest.sha256,manifest:structuredClone(manifest),assetIds:manifest.assets.map(a=>a.id),at:Date.now()});this.commit(next);return true;
+  const key=hash({gameId,gameVersion,manifest:manifest.sha256,contributors});if(this.data.usages.some(u=>u.key===key))return false;
+  const next=structuredClone(this.data);next.usages.push({key,gameId,gameVersion,manifestSha256:manifest.sha256,manifest:structuredClone(manifest),contributors:structuredClone(contributors),assetIds:manifest.assets.map(a=>a.id),at:Date.now()});this.commit(next);return true;
  }
 }

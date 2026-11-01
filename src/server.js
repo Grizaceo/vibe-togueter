@@ -12,7 +12,7 @@ import { CreatorAssets } from './creator-assets.js';
 import { importCuratedResource } from './curated-resources.js';
 import { RemoteGames } from './remote-games.js';
 import { TeeChatBridge } from './tee-chat-bridge.js';
-import {reviewGame,publishGameCredits,currentGameCredits} from './game-credits.js';
+import {reviewGame,publishGameCredits,GameCreditsSnapshot} from './game-credits.js';
 import { IdeaRounds } from './idea-rounds.js';
 import { buildPolicy, localBuildPermission } from './build-policy.js';
 import { BuildQuarantine } from './build-quarantine.js';
@@ -91,6 +91,7 @@ const host = new GameHost({
   gameDir: GAME_DIR,
   onEvent: (kind, detail) => {
     if (kind === 'game-reloaded') for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
+    if (kind === 'game-reloaded') refreshPublication();
     if (kind === 'game-reloaded') feed('system', `juego recargado: ${host.game?.name}`);
     if (kind === 'game-error') {feed('system', `Game stopped: ${detail}`);requestFallback(detail);}
     if (kind === 'log') console.log(detail);
@@ -107,7 +108,7 @@ async function loadGameDir(dir,{isFallback=false}={}) {
     host.stop();host.gameDir=dir;
     if(!await host.load())return false;
     for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
-    host.start();host.startWatching();if(!isFallback)fallback={active:false,reason:null,at:null};return true;
+    host.start();host.startWatching();refreshPublication();if(!isFallback)fallback={active:false,reason:null,at:null};return true;
   }finally{transitioning=false;if(fallbackRequested)requestFallback(fallbackRequested);}
 }
 
@@ -124,6 +125,12 @@ const ideaRounds=new IdeaRounds(path.join(ROOT,'runtime','idea-rounds.json'),{se
 ideaRounds.recoverInterrupted();
 const buildQuarantine=new BuildQuarantine(path.join(ROOT,'runtime','build-quarantine.json'));
 const creatorAssets=new CreatorAssets(path.join(ROOT,'runtime','creator-assets.json'));
+const publicationSnapshot=new GameCreditsSnapshot({registry:creatorAssets,root:ROOT});
+function refreshPublication(){const value=publicationSnapshot.refresh(host.gameDir,host.game?.versionSha256);broadcast({t:'credits',publication:value});}
+refreshPublication();
+let resourceDebounce;
+const resourceWatcher=fs.watch(path.join(PUBLIC,'curated'),{recursive:true},()=>{clearTimeout(resourceDebounce);resourceDebounce=setTimeout(refreshPublication,25);});
+resourceWatcher.on('error',()=>{publicationSnapshot.value={status:'unavailable',manifest:null,contributors:null};broadcast({t:'credits',publication:publicationSnapshot.get()});});
 const remoteGames=new RemoteGames(CONFIG.remoteGames,path.join(ROOT,'runtime','remote-games.json'));
 const teeBridge=new TeeChatBridge();
 let roundStorageHealthy=true;
@@ -320,7 +327,7 @@ const server = http.createServer(async (req, res) => {
   if(url.pathname==='/community/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({assets:creatorAssets.catalog(),policy:{defaultTier:'free',paidCheckoutEnabled:false,platformCommission:null,creditPolicy:'Creator links stay in official game credits.'}}));}
   if(url.pathname==='/community/games'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({...remoteGames.catalog(),teeBridge:teeBridge.status()}));}
   if(url.pathname==='/community/game-credits'&&req.method==='GET'){
-    let publication=currentGameCredits(creatorAssets,ROOT,host.gameDir);if(publication.codeSha256!==host.game?.versionSha256)publication={status:'unreviewed',manifest:null};
+    const publication=publicationSnapshot.get();
     res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify(publication));
   }
   if(url.pathname==='/community/asset-proposals'&&req.method==='POST'){
@@ -370,7 +377,7 @@ const server = http.createServer(async (req, res) => {
     if(url.pathname==='/admin/owner-status'&&req.method==='GET'){const ok=process.env.VA_STREAMER_KEY&&req.headers['x-streamer-key']===process.env.VA_STREAMER_KEY;res.writeHead(ok?200:403,{'Content-Type':'application/json'});return res.end(JSON.stringify({ok:!!ok}));}
     if(url.pathname==='/admin/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(creatorAssets.data.assets));}
     if(url.pathname==='/admin/game-publication'&&req.method==='POST'){
-      try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');const result=data.action==='review'?reviewGame(ROOT,data.gameId):data.action==='publish'?publishGameCredits(creatorAssets,ROOT,data):null;if(!result)throw Error('Unknown publication action.');res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
+      try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');const result=data.action==='review'?reviewGame(ROOT,data.gameId):data.action==='publish'?publishGameCredits(creatorAssets,ROOT,data):null;if(!result)throw Error('Unknown publication action.');if(data.action==='publish')refreshPublication();res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
     }
     if(url.pathname==='/admin/tee-bridge'&&req.method==='POST'){
       try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');let result;if(data.action==='enable')result=await teeBridge.start(remoteGames.entry(data.gameId),TWITCH_CHANNEL||'local');else if(data.action==='disable')result=teeBridge.stop();else throw Error('Unknown bridge action.');res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
@@ -574,6 +581,7 @@ wss.on('connection', (ws, req) => {
   const client = { id: nextId++, communityId:crypto.randomUUID(), name, kind, role:'viewer' };
   clients.set(ws, client);
 
+  ws.send(JSON.stringify({t:'credits',publication:publicationSnapshot.get()}));
   ws.send(JSON.stringify({
     t: 'welcome', id: client.id, name, kind,
     game: host.game ? { name: host.game.name, desc: host.game.meta.description || '' } : null,
@@ -624,5 +632,5 @@ server.listen(PORT, '0.0.0.0', () => {
   if (KICK_CHANNEL) console.log(`[vibe-arena] kick webhook -> POST /webhook/kick`);
 });
 
-const shutdown=()=>{teeBridge.stop();twitch?.close();host.stop();localChat.close();server.close();process.exit(0);};
+const shutdown=()=>{resourceWatcher.close();clearTimeout(resourceDebounce);teeBridge.stop();twitch?.close();host.stop();localChat.close();server.close();process.exit(0);};
 process.on('SIGINT',shutdown);process.on('SIGTERM',shutdown);

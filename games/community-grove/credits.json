@@ -1,0 +1,36 @@
+{
+  "codeSha256": "1cfce9cb0a18c8c24acfab201255bc864cdd9f0f9a4683ee99051f671c587e75",
+  "contributors": {
+    "gameAuthors": [
+      {
+        "name": "Vibe Arena participant \u00b7 Codex implementation"
+      }
+    ],
+    "ideaAuthors": [
+      {
+        "name": "Vibe Arena participant"
+      }
+    ],
+    "artNote": "Background Elements \u00b7 CC0; curated resource, no endorsement",
+    "artAuthors": [
+      {
+        "name": "Kenney",
+        "url": "https://kenney.nl/"
+      }
+    ]
+  },
+  "resources": [
+    {
+      "path": "/curated/kenney-background-elements/sky.png",
+      "sha256": "3dda74eb9caad5148dc8e7f8010ee97592be266f218c23e2763a723fb57e4465"
+    },
+    {
+      "path": "/curated/kenney-background-elements/hills1.png",
+      "sha256": "1264021ed5a69b214d22dfa6562a6bed54ee0f9c374bfafa5f9165cabdf63800"
+    },
+    {
+      "path": "/curated/kenney-background-elements/tree01.png",
+      "sha256": "ea3a81fb7078dfc9e60e2a46ce338ff2534c7cd80edcc7b150d710ee264c7e25"
+    }
+  ]
+}

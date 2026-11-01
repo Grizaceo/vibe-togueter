@@ -6,8 +6,8 @@
 <style>
   body { margin:0; background:transparent; font:16px system-ui; display:flex; height:100vh; overflow:hidden; }
   /* OBS browser source: set this page as a browser source; background is transparent so it can sit on the stream, or capture the canvas fullscreen. */
-  canvas { flex:1; height:100%; background:#0b0b0f; }
-  #side { width:300px; background:#101018ee; color:#eee; display:flex; flex-direction:column; }
+  canvas { flex:1 1 0;min-width:0;width:0; height:100%; background:#0b0b0f; }
+  #side { width:300px;flex:0 0 300px; background:#101018ee; color:#eee; display:flex; flex-direction:column; }
   #side h3 { margin:10px 12px 4px; color:#8ef; font-size:14px; }
   #feed { flex:1; overflow-y:auto; padding:0 12px; font-size:13px; line-height:1.5; }
   #feed .chat { color:#ccc; } #feed .system { color:#8ef; }
@@ -15,6 +15,9 @@
   #fund { padding:8px 12px; border-top:1px solid #222; font-size:13px; color:#ffd166; }
   #err { color:#f88; padding:0 12px; font-size:12px; }
   #live-credits a { color:#8ef; }
+#live-credits { flex-shrink:0; }
+#live-credits details>div { max-height:140px;overflow:auto; }
+#feed { min-height:0; }
 </style>
 </head>
 <body>
@@ -25,7 +28,8 @@
   <div id="feed"></div>
   <div id="fund"></div>
   <div id="players"></div>
-  <div id="live-credits" hidden style="padding:8px 12px;max-height:180px;overflow:auto;font-size:12px"></div>
+  <div id="live-credits" hidden style="padding:8px 12px;font-size:12px"></div>
+  <a href="/privacy.html" style="padding:6px 12px;color:#9bd;font:12px system-ui">Privacy · operator details pending</a>
 </div>
 <script type="module">
 import { connect } from './client.js';
@@ -35,6 +39,7 @@ const feed = document.getElementById('feed');
 connect({
   spectator: true,
   canvas: document.getElementById('cv'),
+  onCredits: publication => credits.update(publication),
   onWelcome: m => { (m.recent||[]).forEach(addFeed); },
   onFeed: addFeed,
   onPlayers: (p, game, err, fund) => {
@@ -59,6 +64,6 @@ function addFeed(ev) {
   feed.scrollTop = feed.scrollHeight;
 }
 </script>
-<a href="/privacy.html" style="position:fixed;bottom:4px;right:8px;color:#9bd;font:12px system-ui;z-index:10">Privacy · operator details pending</a>
+
 </body>
 </html>

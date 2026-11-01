@@ -1,14 +1,30 @@
 import {renderCreatorCredits} from './credits.js';
+function names(items){return items?.map(person=>person.name).join(', ');}
+function addPeople(container,label,items,fallback){
+ const line=document.createElement('div');line.className='credit-line';line.append(document.createTextNode(label+': '));
+ if(!items?.length)line.append(document.createTextNode(fallback));
+ else items.forEach((person,index)=>{if(index)line.append(document.createTextNode(', '));if(person.url){const link=document.createElement('a');link.href=person.url;link.textContent=person.name;link.target='_blank';link.rel='noopener noreferrer';line.append(link);}else line.append(document.createTextNode(person.name));});
+ container.append(line);
+}
 export function attachLiveCredits(container){
- let publication=null,gameHash=null,lastPin=null;
+ let publication=null,gameHash=null,gameName='Waiting for game',lastPin=null;
  function render(){
-  const valid=publication?.status==='published'&&publication.codeSha256===gameHash;
-  container.hidden=!valid;if(!valid){container.replaceChildren();lastPin=null;return;}
-  const pin=publication.codeSha256+':'+publication.manifest.sha256;if(lastPin===pin)return;lastPin=pin;
-  const details=document.createElement('details'),summary=document.createElement('summary'),body=document.createElement('div');
-  const creators=[...new Set(publication.manifest.assets.map(a=>a.creator.name))];summary.textContent='Art by '+creators.join(', ')+' · creator links & licenses';renderCreatorCredits(body,publication.manifest);details.append(summary,body);container.replaceChildren(details);
+  const valid=publication?.codeSha256===gameHash&&!!gameHash;
+  const credits=valid?publication.contributors:null;
+  const manifest=valid&&publication.status==='published'?publication.manifest:null;
+  const pin=JSON.stringify([gameHash,gameName,credits,manifest?.sha256]);if(lastPin===pin)return;lastPin=pin;
+  container.hidden=false;container.replaceChildren();
+  const strip=document.createElement('div');strip.className='creator-strip';strip.setAttribute?.('aria-label','Game, art and idea credits');
+  addPeople(strip,'Game',credits?.gameAuthors,'Attribution pending · '+gameName);
+  const artists=[...new Map([...(credits?.artAuthors||[]),...(manifest?.assets||[]).map(a=>({name:a.creator.name,url:a.creator.website}))].map(person=>[person.name+'|'+(person.url||''),person])).values()];
+  addPeople(strip,'Art',artists,credits?.artNote||'Attribution pending');
+  addPeople(strip,'Idea',credits?.ideaAuthors,'Author not recorded');container.append(strip);
+  if(credits?.artNote&&artists?.length){const note=document.createElement('div');note.textContent=credits.artNote;container.append(note);}
+  if(manifest?.assets?.length){
+   const details=document.createElement('details'),summary=document.createElement('summary'),body=document.createElement('div');
+   summary.textContent='Art licenses & creator links · '+names(artists);renderCreatorCredits(body,manifest);details.append(summary,body);container.append(details);
+  }
  }
- async function refresh(){try{const response=await fetch('/community/game-credits',{cache:'no-store'});if(!response.ok)throw Error('Credits unavailable');publication=await response.json();}catch{publication=null;}render();}
- const timer=setInterval(refresh,2000);refresh();
- return {matchGame(game){gameHash=game?.versionSha256||null;render();},close(){clearInterval(timer);container.replaceChildren();}};
+ render();
+ return {update(value){publication=value;render();},matchGame(game){gameHash=game?.versionSha256||null;gameName=game?.name||'Waiting for game';render();},close(){container.replaceChildren();}};
 }

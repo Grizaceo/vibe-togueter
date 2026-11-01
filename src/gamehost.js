@@ -23,11 +23,14 @@ export class GameHost {
       await mod.evaluate({timeout});
       this.context.__module=mod.namespace;
       const json=vm.runInContext(`JSON.stringify({meta:__module.meta||{},exports:Object.keys(__module).filter(k=>typeof __module[k]==='function')})`,this.context,{timeout});
+      if(json.length>16384)throw Error('SDK metadata exceeds limit.');
       const descriptor=JSON.parse(json);
       for(const fn of ['createState','tick','view'])if(!descriptor.exports.includes(fn))throw Error('Missing SDK export '+fn);
-      const meta={world:{w:1280,h:720},tickRate:30,...descriptor.meta};
+      const raw=descriptor.meta;
+      if(raw.name!==undefined&&(typeof raw.name!=='string'||raw.name.length>200)||raw.description!==undefined&&(typeof raw.description!=='string'||raw.description.length>2000))throw Error('Invalid game description.');
+      const meta={name:raw.name,description:raw.description,world:{w:raw.world?.w??1280,h:raw.world?.h??720},tickRate:raw.tickRate??30};
       if(!Number.isFinite(meta.tickRate)||meta.tickRate<1||meta.tickRate>60)throw Error('Invalid tick rate.');
-      if(!Number.isFinite(meta.world?.w)||!Number.isFinite(meta.world?.h)||meta.world.w<=0||meta.world.h<=0)throw Error('Invalid world dimensions.');
+      if(!Number.isFinite(meta.world?.w)||!Number.isFinite(meta.world?.h)||meta.world.w<=0||meta.world.h<=0||meta.world.w>100000||meta.world.h>100000)throw Error('Invalid world dimensions.');
       this.game={name:meta.name||path.basename(this.gameDir||'game'),meta,fns:mod.namespace,exports:descriptor.exports,versionSha256:crypto.createHash('sha256').update(source).digest('hex')};
       this.error=null;this.resetState();return !this.error;
     }catch(error){this.error='Game load failed: '+error.message;return false;}
