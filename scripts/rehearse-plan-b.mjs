@@ -57,7 +57,7 @@ try{
  const player=await tab('/?name=LocalBrowserPlayer');
  await wait(()=>player.evaluate("document.querySelector('.creator-strip')?.textContent.includes('Cristóbal Muñoz')"));
  observer=new WebSocket(base.replace(/^http/,'ws')+'/spectate?name=LocalFrameObserver',{handshakeTimeout:5000});observer.on('message',raw=>{const msg=JSON.parse(raw);if(msg.t==='state')latest=msg;if(msg.t==='credits')latestCredits=msg.publication;});await new Promise((resolve,reject)=>{observer.once('open',resolve);observer.once('error',reject);});await wait(()=>latest);
- const trees=()=>latest.view.layers.filter(p=>p.t==='sprite'&&p.src.endsWith('tree01.png')).length,before=trees();
+ const trees=()=>latest.view.layers.filter(p=>p.t==='sprite'&&p.src.endsWith('tree01.png')).reduce((sum,p)=>sum+p.h,0),before=trees();
  await player.cdp('Input.dispatchKeyEvent',{type:'keyDown',key:' ',code:'Space',windowsVirtualKeyCode:32});await player.cdp('Input.dispatchKeyEvent',{type:'keyUp',key:' ',code:'Space',windowsVirtualKeyCode:32});
  await wait(()=>trees()>before);check('production keyboard input advances Grove through normal launcher',true);await player.capture('grove');
  await command('fallback');await wait(()=>player.evaluate("document.body.textContent.includes('Requested by local streamer')"));

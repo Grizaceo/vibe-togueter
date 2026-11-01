@@ -31,3 +31,11 @@ test('external game and idea authors can publish without an external art pack',(
 test('game contributor links follow the public creator URL policy',async()=>{
  const {contributorCredits}=await import('../src/contributor-credits.js');for(const url of ['https://localhost/private','https://127.0.0.1/private','https://example.test/?access_token=fake'])assert.throws(()=>contributorCredits({gameAuthors:[{name:'Coder',url}],ideaAuthors:[{name:'Proposer'}]}),/public|authentication/);
 });
+
+test('Grove shows the original illustration before input and grows through visible stages',()=>{
+ const state=grove.createState(),trees=()=>grove.view(state).layers.filter(p=>p.src?.endsWith('tree01.png'));
+ assert.equal(trees().length,8);const initial=trees()[2].h;assert.ok(initial>=100);
+ const heights=[0,.1,.4,.7,1].map(g=>{state.plots[0]=g;return trees()[2].h;});
+ assert.ok(heights.every((h,i)=>i===0||h>heights[i-1]));assert.equal(heights.at(-1),330);
+ assert.ok(grove.view(state).layers.some(p=>p.color==='#244f59'));
+});

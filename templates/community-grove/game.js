@@ -36,8 +36,15 @@ export function tick(s,dt){
 }
 export function view(s){
  const text=(x,y,value,size=24,color='#203b40')=>({t:'text',x,y,text:String(value),size,color});
- const layers=[{t:'sprite',src:ROOT+'sky.png',x:0,y:0,w:1280,h:720},{t:'sprite',src:ROOT+'hills1.png',x:0,y:290,w:1280,h:430},{t:'rect',x:0,y:560,w:1280,h:160,color:'#628c50'}];
- for(let i=0;i<6;i++){const x=140+i*200,g=s.plots[i];layers.push({t:'circle',x,y:565,r:42,color:'#314b31'});if(g>0){const h=45+g*230;layers.push({t:'sprite',src:ROOT+'tree01.png',x:x-h*.32,y:560-h,w:h*.64,h});}layers.push(text(x,610,(i+1)+' · '+Math.round(g*100)+'%',21,'#ffffff'));}
+ // Keep the pale original illustration readable against a dusk canopy.
+ const layers=[{t:'sprite',src:ROOT+'sky.png',x:0,y:0,w:1280,h:720},{t:'sprite',src:ROOT+'hills1.png',x:0,y:70,w:1280,h:155},{t:'rect',x:0,y:225,w:1280,h:335,color:'#244f59'},{t:'rect',x:0,y:560,w:1280,h:160,color:'#355b45'}];
+ // Established trees frame the community's six saplings from the first frame.
+ for(const [x,h] of [[-24,310],[1210,350]])layers.push({t:'sprite',src:ROOT+'tree01.png',x,y:560-h,w:h*.46,h});
+ for(let i=0;i<6;i++){
+  const x=140+i*200,g=s.plots[i],stage=g===0?0:g<.34?1:g<.67?2:g<1?3:4,h=[100,155,220,285,330][stage];
+  layers.push({t:'circle',x,y:565,r:30,color:'#203d32'},{t:'sprite',src:ROOT+'tree01.png',x:x-h*.23,y:560-h,w:h*.46,h});
+  layers.push(text(x,610,(i+1)+' · '+Math.round(g*100)+'%',24,'#ffffff'),text(x,640,['Ready to plant','Seedling','Taking root','Growing','Grown!'][stage],17,'#d7f1df'));
+ }
  for(const p of [...s.__players.values()].slice(0,30))layers.push({t:'circle',x:p.x,y:658,r:8,color:'#ffd48a'},text(p.x,687,p.name.slice(0,16),14,'#ffffff'));
  const grown=s.plots.filter(g=>g>=1).length,hud=[text(640,48,'COMMUNITY GROVE',40),text(640,94,'An illustration becomes a world we grow together',23),text(640,140,`!plant 1–6 · !water 1–6 · !sun  |  ${grown}/6 trees · round ${s.round}`,22),text(640,197,s.last.slice(0,100),20)];
  if(s.sun>0)layers.push({t:'circle',x:1160,y:90,r:40,color:'#ffe598'});

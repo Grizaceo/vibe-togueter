@@ -45,3 +45,7 @@ C is conditional on A and all B finishing before 13:00; otherwise rotating-role 
 | O12 | Resolved | SEED_RUNTIME_PROPOSAL.md documents inert archive and hashes; no games/ import. Preserve. |
 
 External review/product documents were read as reference only. This plan and implementation are independently written from current code/evidence. Owner actions remain hosting/account facts, human rehearsal including a real mod's !fallback, OBS, English video, YouTube, private push and testing@devpost.com access, and Devpost form. No push, publication or spend in this planning step.
+
+### Block 0 progress: Grove illustration
+
+The bundled game and its reusable template now show six saplings at zero input, five growth silhouettes and two framing trees. A read-only adversarial review identified matching tree/hill colors hiding the first attempt; hills were moved above the dark canopy and fresh Chromium captures verified the correction (`local-ui-1793568780710-*`). The first red test also exposed an unsynchronized template; both sources now match. Full suite: **180 = 98 focused + 82 integration**, green. Credit source fingerprint updated; licensed PNG bytes unchanged. No remote build or publication. 720p stream-layout check follows with the credit/footer topic.
