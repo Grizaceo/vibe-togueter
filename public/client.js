@@ -1,7 +1,7 @@
 // Shared client: connects over WS, forwards inputs, renders states.
 import { drawFrame } from './render.js';
 
-export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayers, onRole, onCredits } = {}) {
+export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayers, onRole, onCredits, onActivity } = {}) {
   const params = new URLSearchParams(location.search);
   const name = params.get('name') || localStorage.getItem('va-name') || `anon-${Math.floor(1000 + Math.random() * 9000)}`;
   localStorage.setItem('va-name', name);
@@ -16,6 +16,7 @@ export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayer
     const msg = JSON.parse(e.data);
     if (msg.t === 'welcome') { world = msg.world; onWelcome?.(msg); }
     if (msg.t === 'state') {
+      onActivity?.(msg.activity);
       onPlayers?.(msg.players, msg.game, msg.error || (msg.fallback?.active?'Fallback: '+msg.fallback.reason:''), msg.fund);
       if (ctx && canvas) {
         if (canvas.width !== canvas.clientWidth) { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }

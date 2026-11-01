@@ -297,6 +297,18 @@ function verifyKickSignature(req, rawBody) {
   } catch { return false; }
 }
 
+// Bounded stream summary; never expose ballots, actor IDs or approval tokens.
+let activityRevision=null,activityRound=null;
+function streamActivity(){
+ const round=ideaRounds.current(),revision=round?round.id+':'+round.revision+':'+Math.floor(Date.now()/1000):null;
+ if(revision!==activityRevision){
+  activityRevision=revision;const r=ideaRounds.public();
+  activityRound=r?{phase:r.phase,ideas:r.ideas.length,voters:r.voters,voteEndsAt:r.voteEndsAt,
+   highlights:r.ideas.slice().sort((a,b)=>b.votes-a.votes||a.id-b.id).slice(0,3).map(i=>({id:i.id,text:i.text.slice(0,100),author:i.author.slice(0,40),votes:i.votes}))}:null;
+ }
+ return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected'};
+}
+
 // ---------- broadcast loop (view @ 10Hz; slow recipients skip obsolete frames) ----------
 setInterval(() => {
   const players = [...clients.values()]
@@ -304,6 +316,7 @@ setInterval(() => {
     .map(c => ({ id: c.id, name: c.name }));
   broadcast({
     t: 'state',
+    activity: streamActivity(),
     view: host.getView(),
     players,
     game: host.game ? { name: host.game.name, desc: host.game.meta.description || '',versionSha256:host.game.versionSha256 } : null,

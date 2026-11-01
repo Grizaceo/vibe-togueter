@@ -15,10 +15,10 @@ export function attachLiveCredits(container){
   const pin=JSON.stringify([gameHash,gameName,credits,manifest?.sha256]);if(lastPin===pin)return;lastPin=pin;
   container.hidden=false;container.replaceChildren();
   const strip=document.createElement('div');strip.className='creator-strip';strip.setAttribute?.('aria-label','Game, art and idea credits');
-  addPeople(strip,'Game',credits?.gameAuthors,'Attribution pending · '+gameName);
+  addPeople(strip,'Game by',credits?.gameAuthors,'Attribution pending · '+gameName);
   const artists=[...new Map([...(credits?.artAuthors||[]),...(manifest?.assets||[]).map(a=>({name:a.creator.name,url:a.creator.website}))].map(person=>[person.name+'|'+(person.url||''),person])).values()];
-  addPeople(strip,'Art',artists,credits?.artNote||'Attribution pending');
-  addPeople(strip,'Idea',credits?.ideaAuthors,'Author not recorded');container.append(strip);
+  addPeople(strip,'Art by',artists,credits?.artNote||'Attribution pending');
+  addPeople(strip,'Idea by',credits?.ideaAuthors,'Author not recorded');container.append(strip);
   if(credits?.artNote&&artists?.length){const note=document.createElement('div');note.textContent=credits.artNote;container.append(note);}
   if(manifest?.assets?.length){
    const details=document.createElement('details'),summary=document.createElement('summary'),body=document.createElement('div');
