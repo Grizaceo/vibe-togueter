@@ -1,0 +1,96 @@
+{
+  "startedAt": "2026-11-01T09:33:05.515Z",
+  "channel": "gris_96",
+  "publicUrl": "https://activities-markets-disciplines-shall.trycloudflare.com",
+  "checks": {
+    "ircReady": true,
+    "publicPlayer": true,
+    "publicOverlay": true,
+    "publicAdminDenied": true,
+    "realPlay": true,
+    "realRace": true,
+    "ownerMarble": true,
+    "realJoinReply": true,
+    "streamerRole": true,
+    "publicWebInput": true,
+    "realVoteAction": true,
+    "realFireVote": true
+  },
+  "commands": [
+    {
+      "at": "2026-11-01T09:33:08.776Z",
+      "text": "!play",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T09:33:10.678Z",
+      "text": "!race",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T09:33:12.583Z",
+      "text": "!join",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T09:33:15.424Z",
+      "text": "!left",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T09:33:17.631Z",
+      "text": "!fire",
+      "queued": true
+    }
+  ],
+  "observed": [
+    {
+      "at": "2026-11-01T09:33:09.054Z",
+      "user": "gris_96",
+      "text": "!play",
+      "source": "twitch",
+      "messageId": "39122493-b0f4-4cb7-9bc0-60226e74a85e"
+    },
+    {
+      "at": "2026-11-01T09:33:10.950Z",
+      "user": "gris_96",
+      "text": "!race",
+      "source": "twitch",
+      "messageId": "de84878f-39c2-49d1-8a5e-5e9c63c9d95a"
+    },
+    {
+      "at": "2026-11-01T09:33:12.869Z",
+      "user": "gris_96",
+      "text": "!join",
+      "source": "twitch",
+      "messageId": "4173d5f7-c012-46ec-a934-beabcc576add"
+    },
+    {
+      "at": "2026-11-01T09:33:13.152Z",
+      "user": "gris_96",
+      "text": "entra a jugar: https://activities-markets-disciplines-shall.trycloudflare.com/?name=gris_96",
+      "source": "twitch",
+      "messageId": "75375791-2d77-4670-bc20-99dd36aebe48"
+    },
+    {
+      "at": "2026-11-01T09:33:15.700Z",
+      "user": "gris_96",
+      "text": "!left",
+      "source": "twitch",
+      "messageId": "9df1a524-d0ab-48d1-9a8f-90f5e178e76d"
+    },
+    {
+      "at": "2026-11-01T09:33:17.902Z",
+      "user": "gris_96",
+      "text": "!fire",
+      "source": "twitch",
+      "messageId": "0982bf6f-cdf3-4dc4-b300-2e5fbadd2996"
+    }
+  ],
+  "limitations": [
+    "Automated commands from owner account plus one automated public-web participant, not independent audience participants.",
+    "This verifies real Twitch chat; a broadcast/OBS recording is a separate evidence step."
+  ],
+  "broadcastLive": false,
+  "finishedAt": "2026-11-01T09:33:20.645Z"
+}

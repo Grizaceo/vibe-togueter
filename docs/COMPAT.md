@@ -1,57 +1,19 @@
-# Compatibilidad por plataforma — vibe-arena
+# Platform compatibility — November 1, 2026
 
-Verificado: 2026-11-01 (tests `test/platforms.mjs`, `test/e2e.mjs`).
-
-## Lectura de chat (comandos `!`)
-
-| | Twitch | Kick |
+| Path | Implemented | Evidence |
 |---|---|---|
-| Vía | IRC `wss://irc-ws.chat.twitch.tv` | Events API webhook `POST /webhook/kick` |
-| Auth | Anónima (justinfan) u OAuth `chat:read` | App token + suscripción `chat.message.sent` |
-| Setup | `--twitch <canal>` — funciona sin credenciales | App en Developer + webhook URL pública + `scripts/kick-subscribe.mjs` |
-| Estado | ✅ probado con canal real | ✅ receptor + firma RSA probados con firma forjada; falta evento real de Kick |
+| Twitch chat read/write | Local OAuth, validate/refresh, tagged IRC, reconnect, bounded reply queue | Actual `gris_96` `!play`, `!race`, `!join`, `!left`, `!fire`; anonymous observer saw bot's public URL reply |
+| Browser player and OBS page | HTTPS/WSS lobby and spectator overlay | Public HTTP/WSS probes; game state and input verified; rendered browser/OBS inspection remains manual |
+| Marble Race | Chat-only plus web participants | Actual Twitch command started a race with a second web participant |
+| Democracy Duel | One latest ballot per viewer, 3s majority window, private streamer input, automatic rounds | SDK tests plus real Twitch votes and public WSS web input |
+| Twitch subscriptions and Bits | Signed receiver, subscription CLI with correct app-token transport | Signed fixtures and mocked API tests; real paid events unverified |
+| Channel points | Exact configurable reward title → game command | Signed HTTP fixture affected a game vote once across duplicate delivery; actual redemption unverified |
+| Kick | Existing signed webhook and outgoing adapter | Existing RSA fixture tests; no real Kick account event/reply tested this session |
+| Fund → generated game | Existing ledger, OpenAI-compatible generator, SDK load/hot reload | Isolated mock LLM tests; actual model provider/billing not verified |
+| Chat Trivia / anarchy / subscriber weighting | Spec only | Not implemented or claimed |
 
-## Escritura de chat (respuestas del bot)
+`--twitch <channel>` now requires a validated OAuth login for that same owner's channel. The low-level IRC helper still supports anonymous observation; the application does not silently fall back to read-only mode when auth fails. Scopes for normal chat are `chat:read chat:edit`. EventSub additionally needs `channel:read:subscriptions bits:read channel:read:redemptions` and broadcaster eligibility. The active channel returned `broadcaster_type=""`; its token currently has only chat scopes.
 
-| | Twitch | Kick |
-|---|---|---|
-| Requisito | `VA_TWITCH_OAUTH` + `VA_TWITCH_NICK` (token `chat:edit`) | `VA_KICK_TOKEN` (user OAuth `chat:write`) + `kick.broadcasterUserId` |
-| Implementado | `send()` en `chat/twitch.js`, throttle 1 msg/s | `sendKickChat()` → `POST /public/v1/chat` |
-| Uso actual | `!join` responde link de sala | `!join` responde link de sala |
-| Estado | ⚠️ código listo, falta credencial tuya | ⚠️ código listo, falta credencial tuya |
+Twitch webhook subscriptions require an app token after user-scope consent, HTTPS port 443 and the same secret configured in the receiver. A quick tunnel URL expires when its process ends; changing the URL requires updating .env, restarting the server and recreating any webhook subscriptions. Public player links contain no control keys.
 
-## Monetización → fondo (treasury)
-
-| Evento | Twitch | Kick |
-|---|---|---|
-| Sub propia | `channel.subscribe` → `twitchSubUsd`×tier | `channel.subscription.new` → `kickSubUsd` |
-| Subs regaladas | `channel.subscription.gift` → ×total | `channel.subscription.gifts` → ×giftees |
-| Moneda virtual | `channel.bits.use`/`channel.cheer` → `bitUsd`×bits | `kicks.gifted` → `kickUsdPerKick`×kicks |
-| Channel points | recepción registrada en feed (mapeo a comandos: pendiente) | n/a (Kicks ya cubiertos) |
-| Donaciones externas | `/webhook/donation` (Streamlabs/Ko-fi) — funciona para ambas | igual |
-| Firma | HMAC-SHA256 `Twitch-Eventsub-Message-Signature` | RSA-SHA256 vs `/public/v1/public-key` |
-| Estado | ✅ HMAC verificado en test | ✅ RSA verificado en test con key inyectada (`VA_KICK_PUBKEY`) |
-
-## Agnóstico de plataforma (idéntico para ambas)
-
-- Cliente jugador por URL (`/`), overlay OBS (`/overlay.html`), lobby, feed
-- Pipeline de comandos, cooldown, `!idea`, votación futura
-- Generación de juegos (LLM local/nube), hot-reload, MCP tools
-- `!join`/`!play`/`!race` funcionan igual vengan de `source: 'twitch'|'kick'|'web'`
-
-## Lo que requiere TU cuenta (no automatizable)
-
-1. **Twitch**: app en dev.twitch.tv → token `chat:read chat:edit` para respuestas +
-   EventSub subscriptions con `eventsubSecret` para subs/bits.
-   El flujo OAuth ya está probado en `stream-to-shorts/twitchcon-app` — portar `.env` loader.
-2. **Kick**: app en Account → Developer → "Enable Webhooks" a `https://<tunnel>/webhook/kick`
-   + `scripts/kick-subscribe.mjs`. Para enviar: OAuth PKCE del broadcaster.
-3. **Tunnel público**: `cloudflared tunnel --url http://localhost:8420` (quick) o named
-   tunnel para URL fija — requerido por Kick webhooks y por jugadores desde fuera.
-
-## Notas
-
-- Lectura anónima de Kick chat **no existe más** (Pusher cloud abandonado; gateway
-  viewer requiere token de navegador). Sin app propia no hay lectura de Kick.
-- EventSub de Twitch igualmente requiere app + token para crear suscripciones;
-  el receptor ya está listo y probado.
+Source checks: [token validation](https://dev.twitch.tv/docs/authentication/validate-tokens/), [subscription authorization](https://dev.twitch.tv/docs/eventsub/manage-subscriptions/#authorization), [event types/scopes](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/). Do not equate valid signed fixtures with real purchases or Twitch delivery.

@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-01T09:39:31.066Z",
+  "login": "gris_96",
+  "userId": "137260402",
+  "scopes": [
+    "chat:edit",
+    "chat:read"
+  ],
+  "broadcaster_type": "",
+  "eventSubListObserved": [],
+  "eventSubSubscriptionsCreated": false,
+  "note": "Real app-token list request returned an empty list; paid-event creation awaits additional scopes and eligible broadcaster."
+}

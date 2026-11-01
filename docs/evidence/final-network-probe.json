@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-01T09:40:57.108Z",
+  "url": "https://activities-markets-disciplines-shall.trycloudflare.com",
+  "checks": {
+    "player": 200,
+    "overlay": 200,
+    "client": 200,
+    "admin": 403,
+    "localAdmin": 403,
+    "game": "Chat vs Streamer · Democracy Duel",
+    "renderPrimitives": 20
+  },
+  "renderedBrowserInspection": "Unavailable: computer-use browser host returned no browsers or apps."
+}
