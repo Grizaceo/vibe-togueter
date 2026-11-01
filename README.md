@@ -1,128 +1,71 @@
 # Vibe Arena
 
-A Twitch/Kick chat-games platform with two participation modes: open the public web lobby and play directly, or stay in chat and send commands. Existing games follow a fixed SDK and can be adapted live; the inherited fund ledger and OpenAI-compatible generator support commissioning new SDK games.
+## What to try in two minutes
 
-This submission extends an existing prototype. `fab3227` records the inherited code. Codex-authored changes follow it on `feat/twitchcon-codex`; see `SUBMISSION.md` and `docs/EVIDENCE.md`. Runtime dependencies remain **ws + @modelcontextprotocol/sdk**. Tested with Node 26.12.1 and `--experimental-vm-modules`.
+Start the local app, open `/studio.html`, propose a short game idea, vote, and inspect the streamer's review boundary. Open the player page, plant a tree with space or a click, and follow the permanent game/art/idea credits. Load Marble Race to try the fallback format. Twitch adds passive commands and `!join` after the operator connects their own channel.
 
-## Community studio increment (November 1)
+Vibe Arena lets a stream community shape games while keeping creators visible. **The submission uses Plan B:** playable reviewed games and community decisions, plus evidence of an actual operator-run Codex VM build. The studio does not dispatch a coding worker automatically. Approved Seed Race remains unpublished; it is not the game currently served by a clean install. See [the scope decision](docs/platform/REORIENTATION.md).
 
-The product direction is a free-first community game studio, with independent creators visible through clickable credits. Read [the platform vision](docs/platform/VISION.md) and [integration audit](docs/platform/INTEGRATION_AUDIT.md) for the wider scope and the boundaries of this increment.
+## Run locally
 
-Open `/studio.html` for proposals, replacement ballots, streamer selection/approval and a reviewed free-resource catalog. Local owner controls require both private admin and streamer keys; public viewers cannot approve builds or resources. Resource submissions currently accept metadata and a public HTTPS URL, not binary uploads. The browser can compute a local file fingerprint without uploading it. Creator names, license notices, website and social links appear in the selected pack's credit preview. That preview is not proof that a published game uses the pack. The new Community Grove example separately binds its approved source and bundled art to a published credit manifest, displayed on the actual player/OBS pages; see [creator game evidence](docs/platform/CREATOR_GAME_DEMO.md).
-
-Three bundled Kenney CC0 images can be imported by a local owner through `/admin/assets/import`, with keys listed in `public/curated/kenney-background-elements/provenance.json`, then reviewed through the studio. The importer verifies actual bundled bytes. They are labeled curated public resources: Kenney has not joined or endorsed this platform. Original archive and working files stay outside this repo.
-
-An owner-operated [build artifact quarantine journal](docs/platform/BUILD_QUARANTINE.md) now receives immutable candidate source as data, binds test receipts and approval to hashes, and preserves failed/interrupted attempts. Its HTTP/CLI path is tested locally. A subsequent [real Codex VM trial](docs/platform/VM_TRIAL.md) built Cooperative Seed Race through a fresh subscription login, tested the artifact in a separate guest and received exact owner approval. Reports remain operator-attested; the game is not deployed and this is not a general worker service.
-
-Build execution defaults to **cloud VM**, with no fallback to the streamer PC. The web/MCP generation path does not dispatch the operator VM tools yet, so it is intentionally blocked with `isolated_builder_required`. A deliberate `VA_BUILD_MODE=trusted-local` opt-in retains the inherited generator for trusted local use; it also requires an exact approved community round. Paid creator checkout and commission are not configured. Neither a real payment processor nor actual VM/API expense reconciliation is implemented.
-
-## Install and private setup
+Requirements: Linux with bubblewrap/user namespaces and `/usr/bin/node`, tested with Node 26.12.1. The local guest uses usr-merged library paths. Missing isolation support fails closed. Runtime dependencies are `ws` and `@modelcontextprotocol/sdk` and their locked dependencies.
 
 ```bash
 npm ci
-cp .env.example .env  # fresh checkout only; never overwrite configured credentials
-npm run setup:local  # generates private admin/streamer/webhook secrets; mode 600
+npm test
+npm start -- --game-dir games/community-grove
 ```
 
-Edit .env locally with your Twitch app's client ID, client secret, own channel login and exact registered redirect (default `http://localhost:3000/callback`). A Confidential Twitch application and account 2FA are required for the authorization-code flow. Do not paste tokens into chat, code, public URLs, recordings or command-line arguments.
+Open `http://localhost:8420/` to play, `/studio.html` for ideas/resources, and `/overlay.html` for the OBS layout. No Twitch account, payment or coding-provider key is needed for local play. Grove uses the three bundled Kenney CC0 images; its source-pinned contributor record credits their origin even before an operator publishes a resource manifest. Kenney has not joined or endorsed this project.
 
-```bash
-npm run twitch:auth       # authorize chat:read chat:edit through your browser
-npm run twitch:status     # safe login/scope/expiry summary only
-npm start -- --twitch YOUR_CHANNEL --game-dir games/marble-race
-```
-
-The server validates the token at startup and before each hour, refreshes tokens during hourly maintenance and retries a 401 once. Tokens rotate atomically into ignored mode-600 .env. The application requires the authorized account to own the specified channel and never silently falls back to anonymous read-only chat. `npm start` without `--twitch` still runs local/web play.
-
-## Public player and OBS overlay
-
-```bash
-cloudflared tunnel --url http://localhost:8420
-```
-
-Save the returned HTTPS URL as `VA_PUBLIC_URL` in .env, then restart the application. `!join` / `!unirse` replies with the public player URL in your actual Twitch channel. A quick tunnel is temporary; use stable hosting/a named tunnel for reliable longer-term access. Restarting the tunnel changes its URL and requires updating any webhook subscriptions.
-
-- Player: `http://localhost:8420/` locally, or your public tunnel URL.
-- OBS browser source: `http://localhost:8420/overlay.html`, suggested 1600×900.
-- Private streamer controls: enter `VA_STREAMER_KEY` from your local .env into the player page's password field and unlock before recording. The field clears after submission; keys are not placed in URLs or localStorage.
-- Local administration uses `VA_ADMIN_TOKEN`. Requests forwarded through the public tunnel are rejected, including with an admin token. MCP reads the local secret automatically.
+Grove controls: browser arrows/A-D and space, or click a plot; Twitch `!plant 1–6`, `!water 1–6`, `!sun`. Grow all six trees; the round resets after celebration. Marble Race: browser players join directly, chat users send `!play`, then `!race` once at least two marbles exist. Democracy Duel: chat `!left`, `!right`, `!fire` selects one action per three-second voting window; the privately authenticated streamer uses browser movement and space.
 
 ```bash
 node scripts/arena-admin.mjs load marble-race
 node scripts/arena-admin.mjs load chat-vs-streamer
-node scripts/arena-admin.mjs status
+node scripts/arena-admin.mjs load community-grove
 ```
 
-## External Rust game runtimes
+These administration commands are local. A second controller cannot acquire the same runtime lease. Do not reset an existing runtime journal to bypass reconciliation.
 
-The studio's Games section lists the two existing public CreateOS Rust demos. Local owner controls can check both runtimes, create a falling-blocks lobby, share its browser link and start after players join. State is journaled with idempotent creation and explicit reconciliation. No automatic start is placed in viewer links. Tee Arena has a browser link, health check and an owner-enabled Twitch crowd bridge: `!tee on`, then viewers use `!tee left|right|jump|hook|fire|stop`; `!tee off` disconnects. The crowd shares one character with latest-command pulses; it is not per-viewer multiplayer or democracy voting. Inputs expire after 350 ms and an idle bridge closes after 60 seconds. The bridge is off after restart. Real Twitch-to-CreateOS movement and acknowledgements were rehearsed with owner-account commands; see docs/EVIDENCE.md. Both remote backends are public and lack platform-enforced private access. See [remote integration and rehearsal](docs/platform/REMOTE_GAMES.md).
+## Connect an operator-owned Twitch channel
 
-## Illustrated cooperative example
-
-**Community Grove** (`games/community-grove` / `templates/community-grove`): Twitch `!plant 1–6`, `!water 1–6`, `!sun`; web users click a plot or use arrows/A-D and space. Grow six trees together; a completed grove resets after eight seconds. Uses actual Kenney CC0 art with creator website/social and license links on the player and OBS pages. Publication pins the source hash and verifies the bundled images. `node scripts/rehearse-grove.mjs --live` reproduces the authorized network check. This is an original trusted example, not evidence of a functioning VM coding worker.
-
-## Two other implemented SDK formats
-
-**Marble Race** (inherited): `!play` adds your marble; browser players also join. `!race` starts when at least **two** marbles exist. `!reset` clears the race. The HUD's Spanish phrases mean “marbles / play to join / race to start.”
-
-**Democracy Duel** (Codex-authored `templates/chat-vs-streamer/game.js`): chat votes `!left`, `!right`, `!fire` (also `!izq`, `!der`, `!disparar`). Each source/username has one latest ballot per three-second window. Majority determines one action; deterministic rotating ties avoid a permanent preferred option. No votes means hold position. The streamer moves with A/D/arrows or pointer input and fires with space. Three hits ends the round, followed by an automatic restart. Ordinary web viewers cannot drive the streamer ship. Vote identity is source plus username, not cross-platform identity verification.
-
-Chat Trivia remains a spec. Anarchy, subscription-weighted and paid voting are not implemented. A companion webpage / OBS browser source is not a Twitch Extension.
-
-## EventSub subscriptions and reward commands
-
-Normal chat requires no Affiliate/Partner status. Monetized Twitch events and custom rewards additionally depend on broadcaster eligibility and granted scopes. The rehearsed `gris_96` account returned no Affiliate/Partner status and currently grants chat scopes only; real paid events have not been demonstrated.
+Run `npm run setup:local`, then edit the ignored local configuration yourself with your Twitch app details and registered callback URL. Authorize through `npm run twitch:auth`, check the safe summary with `npm run twitch:status`, and start:
 
 ```bash
-npm run twitch:auth -- --events
-npm run twitch:subscribe -- --points
-npm run twitch:subscribe -- --list
+npm start -- --twitch YOUR_CHANNEL --game-dir games/community-grove
 ```
 
-The first command requests `channel:read:subscriptions bits:read channel:read:redemptions` in addition to chat scopes. The subscription script then uses an **app access token** from the same client, creating `channel.subscribe`, `channel.bits.use`, and optionally `channel.channel_points_custom_reward_redemption.add` webhooks at `VA_PUBLIC_URL/webhook/twitch`. It prints safe IDs/status only; check for `enabled`, since callback verification may initially be pending. HTTP 409 is reported as an existing subscription; changing a tunnel may require deleting the stale subscription in the Twitch app console/API first.
+OAuth validation/refresh and reconnecting IRC replies are implemented. Keep tokens, authorization codes and admin/streamer keys out of chat, URLs and recordings. Put a public player origin in `VA_PUBLIC_URL` only after arranging hosting/ingress and setup secrets. A temporary Cloudflare tunnel can be used for rehearsal; it is not a stable judging deployment. The local API rejects forwarded administration. Players can use the public URL; authenticated Twitch `!join` returns it in chat.
 
-`VA_EVENTSUB_SECRET` must match the receiver. Defaults from setup are private random alphanumeric strings. Signed notifications are checked for HMAC, timestamp and duplicate delivery. Recent delivery IDs are restored from ignored runtime storage on restart. Ledger updates and delivery-journal writes are separate operations; exactly-once processing across a crash between those writes is not guaranteed.
+Enter the private streamer key in the player page to control the streamer side of Democracy Duel. The field clears and the key is not placed in browser storage or links. Studio owner tools also require local admin authentication and streamer confirmation. A web nickname never grants Twitch owner/moderator powers.
 
-Configure exact title-to-command mappings in `vibe-arena.config.json`:
+The [privacy notice](public/privacy.html) is served at `/privacy.html`, linked from all three pages. **Fill the visible operator/contact/hosting placeholders before public operation.** Persistent ideas, ballots, creator and quarantine records currently require operator-managed retention/deletion.
 
-```json
-"twitch": { "rewardCommands": {
-  "Join race": "!play",
-  "Start race": "!race",
-  "Vote left": "!left",
-  "Vote right": "!right",
-  "Vote fire": "!fire"
-} }
-```
+## Safety and recovery
 
-Redeemers are attributed to their Twitch username; unknown titles are reported as unmapped. Only the configured command is used, never the viewer's free-text input. This routes game commands and does not automatically fulfill/refund rewards. Restart after config edits.
+Reviewed local SDK code runs in a disposable Linux namespace process with an empty credential environment, bounded pipes and deadlines. The controller does not evaluate game callbacks. An unresponsive or failed game switches to Marble Race, retains connected players and displays the cause. A failed fallback stops instead of retrying indefinitely. Twitch broadcaster/moderators can request `!fallback`; the trusted IRC mod tag supplies authority. Local streamer POST `/admin/fallback` requires the confirmation key. [Runtime details and limits](docs/platform/LOCAL_RUNTIME.md).
 
-## Existing generation fund and MCP
+Arbitrary generated artifacts still require separate build/test/runtime VMs. Cloud mode is the default, has no host fallback, and rejects automatic construction because the general worker is unconnected. MCP host installation is also blocked in that mode. Explicit `trusted-local` development is for owner-reviewed fixtures, not a substitute for arbitrary-game quarantine. No approved candidate is imported from `artifacts/` onto the host.
 
-`!idea TEXT` enters a durable community round (default 100 words, first 10 ideas, one proposal per actor). `!vote ID` replaces that actor's ballot. The owner controls `!build open|vote|close|choose IDs|approve TOKEN|cancel|status`; the local studio offers the same decisions with a pinned review token. Changing selected resources invalidates approval. Interrupted builds require reconciliation. The generation ledger check remains necessary, together with matching round approval and an explicit execution policy. Existing configuration supports a local OpenAI-compatible endpoint (default Ollama/Qwen) or cloud credentials through `VA_BASE_URL`, `VA_MODEL`, `VA_API_KEY`. The actual configured model provider is not verified in this session; the fund→generation→SDK load loop is tested with a mock. Configure and verify your chosen real provider before showing actual generation or billing in the video. Funds are a local accounting ledger, not a payment processor or proof of actual provider debit.
+Creator credits are outside candidate rendering, tied to the actual source version, and always visible with license details collapsed. External reviewed game/idea/art authors can be recorded in the publication API. Source/resource changes invalidate attribution; clients receive snapshots through WebSocket without credit polling. [Credit publication](docs/platform/CREATOR_CREDITS.md).
 
-`src/sdk-prompt.md` is the game contract. `src/gamehost.js` retains the original 30 Hz tick, hot reload and `node:vm` loader. Only trusted games should be loaded: `node:vm` is not hardened isolation. Do not expose admin credentials or activate unreviewed generated code in a production environment.
+State is sent at 10 Hz with compact drawing coordinates, optional negotiated compression and backpressure. Chat is throttled before broadcast/forwarding; ordinary web text is capped at 200 characters, with separately bounded idea submissions. [Reproducible traffic evidence](docs/platform/TRAFFIC.md).
 
-```bash
-npm run mcp  # stdio; existing .devin/mcp_config.json points here
-```
+## What is demonstrated
 
-Existing tools include status, SDK/template discovery, install/load, generation, ideas, treasury and local command injection. Local tests are labeled separately from Twitch evidence.
+`npm test`: **179 checks = 97 focused + 82 isolated integration**, all passing. Tests use temporary state and mock coding providers. Separately, automated Chromium passed eight local UI checks, including actual browser keyboard input, visible credits and no credit polling. [Evidence index](docs/EVIDENCE.md).
 
-Kick's existing receiver verifies RSA signatures. Configure a Kick developer app and use `scripts/kick-subscribe.mjs` for official webhook chat. Actual Kick delivery and replies remain untested in this session; see `docs/COMPAT.md`.
+Earlier saved network rehearsals establish actual Twitch commands/replies and public WSS effects for Marble Race, Democracy Duel and Grove. They used owner-account automation while offline; they are not independent audience or OBS evidence, and were not replayed in this revision.
 
-## Tests and authorized real rehearsal
+A real owner-selected Codex/Terra subscription trial built Seed Race in a private VM, passed twelve checks in another VM and received exact source/report approval. All eight trial guests were destroyed. Its preview is static, not proof of live deployed gameplay. [VM trial](docs/platform/VM_TRIAL.md). Browser dispatch, Seed Race runtime deployment, stable public judging access, paid settlement and automatic job recovery are still pending.
 
-```bash
-npm test
-# Explicitly sends !play !race !join !left !fire in your own configured Twitch channel:
-node scripts/rehearse-twitch.mjs
-```
+The inherited treasury is **simulated build-credit accounting**, not money, donations or a claim that Bits, subscriptions or Channel Points finance builds. Event-credit simulation is off by default; `VA_SIMULATE_EVENT_CREDITS=1` is used only by isolated legacy fixtures. The generic donation route returns 410 by default. Real payment processing, creator checkout and provider reconciliation are not implemented. External Rust games are absent from the shipped catalog and recording path pending rights/hosting review.
 
-`npm test` runs auth/game tests plus all four inherited suites and HTTP/WSS integration in a temporary copy with a private mock LLM and isolated ledgers/games. It fails on printed FAIL results even if a legacy test exits zero. It does not erase or spend the owner's fund, ideas or generated games. No additional runtime dependencies are installed.
+## Authorship and delivery
 
-The rehearsal requires the live application, active public tunnel and existing OAuth. It uses actual Twitch commands, an anonymous IRC observer for the bot reply and public WebSocket input/state; it writes timestamped JSON under `docs/evidence/`. Two marbles include one automated web participant. It can run while the channel is offline and does not establish an actual OBS broadcast or independent human audience test.
+The Devin CLI prototype is preserved at `fab3227`; it is not reattributed to Codex. Subsequent Codex sessions built the Twitch/studio/quarantine/VM increments and this audit-response implementation. An external read-only Devin audit informed findings; its prose, legal drafts and code were not imported. [Submission text and session IDs](SUBMISSION.md), [recording script](docs/DEMO_SCRIPT.md), [audit decisions and owner checklist](docs/platform/AUDIT_REPORT.md).
 
-## Submission
+Future work: connecting the isolated builder and approved runtime, a creator-discovery feed, clips retaining game/art/idea attribution, and subscriptions that might subsidize compute under explicit budgets. These are proposals, not current integrations or revenue claims.
 
-Use `SUBMISSION.md`, `docs/DEMO_SCRIPT.md` and `docs/EVIDENCE.md`. The owner records a real Twitch/OBS video under three minutes, uploads it publicly to YouTube, publishes the repository privately and grants `testing@devpost.com` access, then submits the real Codex Session ID. No push or submission is performed by these scripts. Do not commit .env, ledgers, private keys or runtime files. Retain the MIT notice for the OAuth source port under `LICENSES/`.
+Feature freeze is November 2, 13:00 UTC; target submission 21:00 UTC, official close 22:00 UTC. The owner handles human Twitch/OBS rehearsal, English video, public YouTube, private repository push/judge access and Devpost submission. Nothing was pushed, published or submitted by this revision.

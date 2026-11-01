@@ -1,68 +1,51 @@
 # Vibe Arena
 
-**Tagline:** A stream's chat becomes the game controller—and the game studio.
+## What a judge can try in two minutes
 
-## Inspiration
+Run the local app, open the community studio and propose/vote on an idea. Inspect the streamer approval step, then play Community Grove by clicking or pressing space. The permanent strip identifies the game creator, artist and idea author; creator links and license details stay with the game. Twitch viewers can participate through commands after the operator authorizes their own channel. README contains the setup and fallback commands.
 
-Stream communities contain people who want to play actively and people who want to stay in chat. Vibe Arena brings both into the same game. A fixed game SDK also lets a creator adapt a format with an AI coding assistant instead of building a new multiplayer platform each time.
+**Tagline:** Make a community's ideas playable, and keep the people behind them visible.
 
-## Current platform scope
+## The experience and its current boundary
 
-The expanded product is a free-first community game studio, with independent artist visibility at its core. `/studio.html` implements limited idea rounds, replacement ballots, streamer selection and exact content/resource approval, plus a curator-reviewed free resource catalog with license notices and creator links. Three Kenney CC0 images are curated public resources, not artist signups. The selected pack has a credit preview. An original cooperative Community Grove example uses that real art with version-bound credits and creator links on the player/OBS pages. A subsequent owner-operated quarantine journal pins candidate source, resource and report hashes and recovers interrupted tests. Reports remain operator-attested; no candidate executes or deploys through this journal. A real owner-selected Codex VM trial subsequently built Cooperative Seed Race using a fresh subscription login, passed 12 separate-VM checks and received exact artifact approval. The final source is retained outside the host games directory; deployment and arbitrary game/remix publication remain pending.
+A streamer has two audiences: people ready to open a game and people who prefer to stay in chat. Vibe Arena gives both a role. Grove lets them grow one illustrated world; Marble Race combines browser players and chat entrants; Democracy Duel turns chat ballots into one shared action against the streamer's direct controls.
 
-External Rust demos are excluded from the submission configuration pending rights review. Historical adapter evidence follows; these are not submission demo features. The falling-blocks adapter can create, share and start a public lobby; Tee Arena has health inspection, a browser link and an owner-enabled shared-character Twitch bridge. Their game code was built by parallel agents, not this Codex session. Real Twitch commands moved the Tee crowd character and received server input acknowledgements; the falling-blocks runtime does not yet have passive gameplay commands. Backend privacy and distribution rights require further work.
+The studio takes limited proposals, replacement ballots, streamer selection and exact input/resource approval. Free creator resources require curator review, explicit licenses and fingerprints. Three actual Kenney CC0 images are bundled examples, not creator signups. A source/resource-pinned credit strip remains visible on the player and OBS pages, including external game authors and idea contributors when recorded.
 
-Coding execution defaults to a separate cloud VM with no automatic host fallback. Operator CLI tools demonstrated one real isolated build; the web/MCP generator does not dispatch them yet and still returns a blocked result. The inherited generator remains available only with explicit trusted-local configuration and matching round approval. Paid creator checkout, VM/API budget separation, actual payments, Agent Native connections and the specialized PR safety gate are not complete. This is a working platform increment, not a claim that the full vision ships today.
+We chose **Plan B for the demo**: demonstrate the working decisions and reviewed games, then show the actual operator-run Codex VM construction evidence. The intended complete loop is community selection → streamer approval → isolated Codex build → separate quarantine → exact version approval → live play with automatic fallback. The web studio does not yet dispatch that worker. Seed Race was built, tested and approved but remains unpublished; we do not present its static preview as live Twitch gameplay.
 
-## What it does
+The controller runs reviewed SDK games in separate Linux namespaces with deadlines, bounded messages and a watchdog. A failed game switches to Marble Race; Twitch moderators or the broadcaster can request the same fallback. Rendering accepts bounded flat primitives and local curated image paths. Credits are delivered through version-matched WebSocket snapshots. State compression/backpressure and admission before chat broadcast reduce avoidable traffic. These controls are not a general guarantee that arbitrary uploaded games are safe.
 
-Vibe Arena hosts small multiplayer games on a temporary public URL and an OBS browser-source overlay. In Marble Race, viewers send `!play` in Twitch chat and `!race` starts the race once at least two marbles exist. `!join` replies in the owner's actual channel with the public browser lobby.
+The treasury is a simulated build-credit ledger. It does not receive donations, settle bills, or treat Bits, subscriptions or Channel Points as money for builds. Paid-event simulation is disabled by default; payments and paid asset checkout are outside this submission. External Rust runtimes were removed from the demo configuration pending rights/hosting review.
 
-Democracy Duel is a second implemented format: chat votes `!left`, `!right` or `!fire` in three-second windows, while the streamer directly controls the opposing ship from the browser. A person's latest vote replaces their earlier vote. The winning action visibly moves or fires the chat-controlled ship. Private streamer controls prevent ordinary browser players from driving the streamer's side.
+## Built with Codex, with explicit provenance
 
-The inherited platform also supplies an SDK game host, hot reload, MCP tools and a simulated build-credit ledger connected to an OpenAI-compatible game generator. New Twitch integrations add private OAuth lifecycle handling and signed EventSub reward-title-to-command routing.
+Main Codex build session: **01a19536-0f02-7fc3-b030-d6b6fd8e170c**.
 
-## How we built it
+Quarantine/real VM trial continuation: **01a19776-75a5-7e91-b5c1-f108c345dc8c**.
 
-Node ESM, HTTP/WebSocket transport, the existing sandboxed SDK game contract and the existing generic canvas client. Runtime dependencies remain `ws` and `@modelcontextprotocol/sdk`. Tokens and local control secrets stay in an ignored mode-600 .env. Twitch validates at startup and before each hour; tokens refresh during hourly maintenance and after a 401. EventSub webhook subscription creation uses an app access token after broadcaster user-scope authorization.
+This audit-response session: **01a197c1-5ea9-7b21-8339-a38373db96b1**. Show the corresponding thread and its commits/tests in the recording.
 
-The server restricts administration to authenticated local requests and rejects requests forwarded by the public tunnel. Generated games still run in `node:vm`, which is an accident barrier rather than a hardened isolation boundary.
+The initial prototype came from Devin CLI session `visual-graffiti`; commit `fab3227` records that inherited server/SDK/client/Marble Race baseline. Repository audit notes identify that session. A targeted read-only query independently confirmed its creation at November 1, 2026, 05:54:16 UTC (docs/evidence/prototype-session-origin.json). This supports the reported within-period origin; the participant must still attest rights and any pre-commit authorship that metadata cannot prove. We do not claim Codex authored the inherited prototype or the parallel Rust games.
 
-## How Codex was used
+Codex subsequently implemented Twitch OAuth lifecycle handling, tagged/reconnecting IRC, EventSub reward routing, Democracy Duel, private streamer controls, durable proposal rounds, creator/resource review, exact artifact quarantine and separate-VM tools. A real Codex/Terra guest built Cooperative Seed Race using fresh subscription authentication; another guest ran twelve checks and the owner approved the exact source/report. This revision independently reproduced controller escape/freeze risks, then implemented process isolation, recovery, transport controls, persistent contributor attribution and an independently written privacy notice.
 
-Main build Codex Session ID: **01a19536-0f02-7fc3-b030-d6b6fd8e170c**. Continuation session: **01a19776-75a5-7e91-b5c1-f108c345dc8c**, which added the inert artifact quarantine journal, exact source/report approval, durable test-attempt history, local operator helper and associated tests. It then implemented VM preflight/new subscription login, ran a real Terra build and separate quarantine tests, corrected shared input release behavior and recorded owner approval of the exact Seed Race artifact. This continuation did not author the inherited prototype or the parallel Rust games.
+An additional external **read-only audit with Devin** provided hypotheses and product ideas. We evaluated them against the current code, commands and primary rules. All implementation and documentation added in response to that audit were authored and verified with Codex in this session. No audit paragraphs, legal drafts, tables or code snippets were copied into the repository. This statement describes our new work and does not erase the inherited prototype's provenance.
 
-At takeover, the prototype already contained the server, SDK game host, generic client and OBS overlay, chat adapters, signed webhook receivers, treasury, generator, MCP integration and Marble Race. Commit `fab3227` records that inherited source; it is not claimed as newly authored by this Codex session. The owner must confirm the original work's creation dates fall within the event's submission period.
+The Twitch OAuth port was informed by the sibling `stream-to-shorts/twitchcon-app`; its MIT notice is retained in LICENSES. Its older editing pipeline is not a dependency or a submitted feature here. Kenney resources retain their own CC0 notice and provenance.
 
-Codex's new work is visible in subsequent commits: porting the sibling project's OAuth lifecycle into Node, repairing tagged IRC parsing and reconnecting replies, creating EventSub subscriptions, mapping reward titles into game commands, building Democracy Duel, adding private streamer controls, testing public-tunnel administration restrictions, isolating test data, and running a real Twitch-chat rehearsal. Later commits add durable community rounds, pinned approvals, a reviewed creator studio, curated licensed art and external runtime adapters. The OAuth port follows `stream-to-shorts/twitchcon-app`; its MIT notice is retained in `LICENSES/`. The Python editing pipeline is not a dependency of Vibe Arena.
+## Evidence and limitations
 
-## Challenges and accomplishments
+The current local suite passes **179 checks: 97 focused tests and 82 isolated integration checks**. Separate automated Chromium evidence covers eight UI checks, including production keyboard input and visible desktop credits. Separate real VM quarantine evidence is twelve checks, not added to the npm total. Failed intermediate attempts remain documented. See docs/EVIDENCE.md.
 
-Reconnecting IRC sockets previously left the reply function bound to the old connection, and tagged messages were missed. The new stable controller addresses both. A first real race rehearsal correctly failed with only one marble; the second succeeded after a web participant joined. This failure and its correction are both retained in the evidence.
+Saved real Twitch/WSS rehearsals verify commands, bot replies and effects in the existing games. Those runs used owner-account automation while the channel was offline. We have not represented them as independent audience play, a real OBS broadcast, or new Twitch evidence from this revision. Paid events, actual reward redemptions and payment settlement have not been demonstrated. Default tests use mock coding providers.
 
-Real Twitch commands, real bot replies and public HTTPS/WSS gameplay were verified on `gris_96`. Democracy votes and private web controls affected the game through those actual network paths. This was performed with automated owner commands while the channel was offline; it is not a claim of independent audience testing or a live OBS broadcast.
+The full vision still needs automatic worker dispatch/status/cancel, a separate approved-artifact runtime, stable free judging access and human rehearsal. There is no Twitch Extension, general marketplace, universal co-op conversion or connected Agent Native runtime. The privacy page is implemented, but the owner must fill its operator/contact/hosting placeholders and establish retention/deletion handling before public use.
 
-## Validation and limits
+## Next steps and submission fields
 
-See `docs/EVIDENCE.md` for exact timestamps and command results. `npm test` runs isolated mock-provider tests and focused auth/game tests without modifying the owner's fund or ideas.
+Future versions could help streamers discover creator games, export clips that preserve game/art/idea credit, and offer explicit-budget subscriptions to subsidize compute. These are roadmap proposals without current sales, platform partnerships or adoption claims.
 
-Signed local EventSub/Kick fixtures verify receiver behavior; real paid events have not been received. The configured channel reports no Affiliate/Partner status, and its existing authorization only grants chat scopes. Extra authorization and an eligible broadcaster are needed to test monetized events. Channel-point routing is implemented, not demonstrated by a real redemption. No real money was spent or real donation claimed during this rehearsal.
+Owner fills: repository URL and access for **testing@devpost.com**, public YouTube URL, operator/contact data, rights/date attestation and the Devpost form. Record an English video under three minutes showing real Twitch functionality and how Codex built the project; use docs/DEMO_SCRIPT.md. Keep judging access free through November 15. No push, publication, video upload or submission was performed here.
 
-The generator-to-fund loop has mock-provider evidence. The separate authenticated Codex VM trial has real generation evidence; actual provider billing and general automatic worker dispatch remain unverified. Chat Trivia, subscriber-weighted voting and paid-vote modes remain specs/unimplemented. Earlier browser control was unavailable. This continuation rendered and inspected a static quarantine frame through Chromium; interactive play, full UI review and the video remain pending. There is no Twitch Extension.
-
-## Built with
-
-JavaScript, Node.js ESM, WebSocket, Twitch IRC, Twitch OAuth, Twitch EventSub, OBS browser source, Cloudflare Tunnel, MCP, OpenAI Codex.
-
-## Submission fields to complete
-
-- Repository URL: owner creates/pushes the private GitHub or GitLab repository and shares access with `testing@devpost.com`. No push was performed by Codex.
-- Public YouTube URL: owner records the real Twitch/OBS demo under three minutes using `docs/DEMO_SCRIPT.md`.
-- Testing instructions: `README.md`, with a fresh operator-owned Twitch app/token. Never share the owner's .env with judges.
-- Codex thread: use the real Session ID above and show the corresponding thread/commit contribution in the video.
-
-[Official rules](https://twitchcon-codex.devpost.com/rules), checked November 1, 2026, require repository access, a description of features and Codex use, the build thread's Session ID, and public YouTube footage showing both Twitch functionality and Codex work. Submission materials need English or English translations. Current deadline: November 2, 2026, 14:00 PST / 22:00 UTC / 19:00 Santiago. Target submission by 21:00 UTC / 18:00 Santiago; reserve 17:00–21:00 UTC for final review and delivery.
-
-## External assistance and provenance
-
-The original prototype was created with Devin CLI; the repository identifies its session as `visual-graffiti`. Its initial source was captured in `fab3227`. The reported November 1, 2026 start date still needs owner attestation; Git alone does not prove when uncommitted source was written. Codex extended that prototype in the sessions above. A separate read-only Devin audit supplied findings and ideas for this review. Codex independently checked those claims and authored the resulting repository implementation and documentation; audit prose, legal drafts and code were not imported. This disclosure does not reattribute the inherited prototype to Codex.
+[Official rules](https://twitchcon-codex.devpost.com/rules), independently reopened November 1, require Codex use, original participant work, build-session ID, accessible source/testing instructions and English submission materials. They also require Twitch and Codex footage and permission for third-party material in the video. Deadline: November 2, 2026, 22:00 UTC / 19:00 Santiago; prudent delivery target 21:00 UTC. This document is a truthful draft, not a submission receipt.

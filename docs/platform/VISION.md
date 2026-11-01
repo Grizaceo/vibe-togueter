@@ -4,20 +4,20 @@ Owner-directed revision: November 1, 2026. This supersedes the earlier two-forma
 
 ## Product thesis
 
-A stream community proposes, funds, builds and plays games together; the streamer decides what is built, accepted, shared and spent.
+The long-term vision is a stream community proposing, explicitly budgeting, building and playing games together; the streamer decides what is built, accepted, shared and spent.
 
 ## Canonical journey
 
 Connect Twitch → choose/attach a cloud runtime → open a proposal round → accept up to 10 first-arriving ideas of up to 100 words → viewers vote → streamer confirms or overrides the selection → reserve the configured VM/AI budgets → run the selected coding agent inside an isolated build VM → quarantine and test the artifact → streamer approves that exact version → deploy to a separate game runtime → play actively or through bounded passive chat effects → save privately or publish with origin credit.
 
-All numerical defaults are streamer settings. More than one selected idea is an explicit streamer policy. No vote, donation, model output or PR can approve itself. A failure to connect an isolated builder blocks the build; it never falls back to the streamer's computer.
+All numerical defaults are streamer settings. More than one selected idea is an explicit streamer policy. No vote, simulated credit entry, model output or PR can approve itself. Future paid budgets require their own explicit settlement design. A failure to connect an isolated builder blocks the build; it never falls back to the streamer's computer.
 
 ## Required capabilities and current evidence
 
 |Owner requirement|Integration target / boundary|Current evidence|
 |---|---|---|
 |1. CreateOS or standard cloud VMs|Provider adapter, owner connection, runtime leases, usage and shutdown policy|Two existing CreateOS game VMs observed running; no VM created or deleted by this revision|
-|2. Preloaded/uploaded games + both Rust projects + Co-op Anything|Catalog separates SDK games, external WASM servers, remote desktops and reviewed uploaded artifacts|SDK games work; existing CreateOS Rust demos are listed; falling-blocks room creation/start and Tee crowd input have actual network evidence. Upload/deploy is pending. Co-op Anything upstream is a per-game research/build playbook, not a universal runtime conversion switch|
+|2. Preloaded/uploaded games + both Rust projects + Co-op Anything|Catalog separates SDK games, external WASM servers, remote desktops and reviewed uploaded artifacts|SDK games work; earlier CreateOS Rust demos are excluded from the submission configuration pending rights/hosting review; falling-blocks room creation/start and Tee crowd input have actual network evidence. Upload/deploy is pending. Co-op Anything upstream is a per-game research/build playbook, not a universal runtime conversion switch|
 |3. Prompt → capped intake → chat ballot → streamer choice → funded build|Durable round state; owner-controlled settings and explicit build approval|Durable configured rounds, replacement ballots, selection and pinned approval implemented; isolated builder and real funding remain pending|
 |4. Transparent VM/AI funding|Separate settled, reserved and spent balances per purpose; signed payment events; public receipts and usage reconciliation|Existing treasury is accounting/demo credit. Twitch events do not transfer cash to VM/AI providers. No payment or automatic settlement claimed|
 |5. Agent Native / bring your accounts and stack|BuilderIO Agent-Native, as identified in dike-desk; scoped connections, shared actions, external MCP agents, UI-only approvals|Installed dike-desk Core 0.222.2 docs read. No account, legal data, memory or credentials copied. Actual framework integration remains separate from matching its design patterns|
@@ -37,7 +37,7 @@ A streamer can explicitly select a trusted local agent; this is a distinct mode,
 
 Persistent agent resources are scoped to one channel/workspace. Learning records must link to artifact/test outcomes. Untrusted chat or PR text cannot directly install instructions, tools, credentials or permanent memory. Promotion into trusted reusable resources is a streamer decision.
 
-## Funding semantics
+## Future funding semantics — not connected to Twitch events
 
 Use integer minor units and purpose-bound reservations: VM hosting, AI construction and optional platform fee. A contribution records its allocation policy before payment. Changes affect future contributions, not already-restricted funds. Streamer top-ups are identifiable separately. Reject overspending and concurrent double reservations; release failed/cancelled work; reconcile actual usage and refunds.
 

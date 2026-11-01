@@ -1,27 +1,35 @@
-# Demo video — target 2:45, hard maximum under 3:00
+# Recording plan — Plan B, target 2:45
 
-The table below preserves the verified two-SDK-game rehearsal. For the expanded platform demo, use a 2:45 structure: 0:00–0:15 artist-first thesis; 0:15–0:40 curated art → actual Grove play → creator links; 0:40–1:10 real Twitch idea/vote and streamer selection; 1:10–1:50 public Rust lobby creation/join/start; 1:50–2:10 passive Twitch commands in the verified SDK game; 2:10–2:35 Codex contributions and evidence; 2:35–2:45 honest limitations. Record the Grove and Rust segments only after human browser verification. The default web generation route remains blocked. A separate owner-selected Seed Race trial has real Codex construction and isolated test evidence (platform/VM_TRIAL.md); show it as an operator trial, not an automatic Twitch-selected build. Fixture reports remain fixtures. Its static Chromium preview is not human gameplay or Twitch footage; do not stage it as such. Do not stage protocol probes as human play or curated Kenney resources as joined artists.
+## What to demonstrate in two minutes
 
-Record real Twitch chat beside the public player/OBS overlay. English voiceover or English subtitles throughout. The rehearsal proves chat integration while the channel is offline; it is not footage of an actual broadcast. Do not use the failed first race attempt as success evidence. Hide .env, authorization codes, private streamer/admin keys and token-bearing network panels.
+Show an idea entering the studio, a ballot and streamer approval; play Grove through real Twitch commands and browser input; keep the game/art/idea strip in view; demonstrate the fallback; then show Codex commits/tests and the real isolated Seed Race construction evidence. Explicitly distinguish that operator-run trial from an automatic studio build.
 
-| Time | Shot and action | English narration / proof |
+Use English narration/subtitles and real Twitch footage. The existing evidence files are rehearsal records, not a finished video. Human play, OBS capture and export review remain owner actions. Record only what you can reproduce on screen.
+
+| Time | Capture | English narration / evidence |
 |---|---|---|
-| 0:00–0:12 | Twitch channel + overlay, title Vibe Arena | “Your chat can play without leaving Twitch—or join the same game in a browser.” |
-| 0:12–0:42 | Load `marble-race`; one browser player joins; a real Twitch user sends `!play`, then `!race` | Show the username on a marble, countdown and moving race. At least two marbles are required. Do not substitute `/admin/chat` for Twitch. |
-| 0:42–0:58 | Send `!join` in actual Twitch chat; open the returned public URL | Show the bot reply and browser lobby. This is a public companion webpage, not a Twitch Extension. |
-| 0:58–1:38 | Local operator loads `chat-vs-streamer`; privately unlock streamer controls before capture; Twitch viewers send `!left`, `!right`, `!fire` | Show tally, three-second deadline, selected action and cyan ship moving/firing. Purple ship moves with A/D/arrows and shoots with space. One person has one latest ballot per window. |
-| 1:38–2:05 | Split screen: viewer vote and streamer's browser input | “The crowd makes one collective decision; the streamer responds directly.” Show both sides affecting the actual game. |
-| 2:05–2:30 | Codex thread, granular commits, SDK contract and tests | “Codex ported private OAuth and refresh handling, repaired reconnecting replies, added EventSub reward routing and built this second format against the existing SDK.” Show real Session ID and passing tests. |
-| 2:30–2:45 | Back to the game, one-sentence architecture and limits | “The existing generation fund can commission new SDK games. Real chat is verified; paid events still need an eligible channel and permission.” |
+| 0:00–0:15 | Real channel beside Grove player/overlay; credit strip visible | “Our community can shape games and play together, while game creators, artists and idea authors stay visible.” |
+| 0:15–0:40 | Actual Twitch `!idea` and `!vote`, studio round, local streamer selection/review | “Chat proposes and votes. The streamer approves the selected idea and resource pack.” Do not imply approval starts a worker today. |
+| 0:40–1:10 | Actual Twitch `!plant 3`, `!water 3`, `!sun`; browser player clicks another plot | Show the changes in the same live game. “Some people open the game; others stay in chat.” Do not substitute the local inject-chat API for Twitch. |
+| 1:10–1:25 | Game/art/idea strip and expanded license links | “The credit stays outside the game code, tied to this version.” Explain Kenney as a curated CC0 source, not a joined partner. |
+| 1:25–1:40 | Broadcaster/moderator `!fallback`, or local streamer fallback control explicitly labeled | Show Marble Race and the displayed cause. Include a browser player and chat `!play`; `!race` needs two entrants. Do not call a manual fallback shot an automatic crash test. |
+| 1:40–2:15 | The real Codex VM trial thread, construction receipt, separate-VM report and exact owner approval | “Codex built Seed Race in one private VM. Another VM tested it before exact version approval.” Label this as the earlier owner-selected trial, not the current Twitch proposal. Its static preview is not live deployed play. |
+| 2:15–2:35 | This Codex thread, granular commits, final test output, isolation/fallback regression | “Codex reproduced the failures, isolated game execution, added recovery and verified 179 local checks.” Show the actual session ID. Never include live device codes, keys or credential files. |
+| 2:35–2:45 | Back to Grove, visible credits, one honest next step | “Connecting automatic isolated construction to the studio is next. Discovery and credited clips are future work.” |
 
 ## Operator preparation
 
-1. `npm start -- --twitch gris_96 --game-dir games/marble-race`; run the Cloudflare tunnel and save its HTTPS URL as `VA_PUBLIC_URL` in private .env before starting the final server.
-2. OBS browser source: `http://localhost:8420/overlay.html`, width 1600, height 900. Keep private controls on the player page. Capture actual Twitch chat in a separate authorized window/source.
-3. Load formats locally: `node scripts/arena-admin.mjs load marble-race` / `node scripts/arena-admin.mjs load chat-vs-streamer`.
-4. On player page, enter `VA_STREAMER_KEY` from your private local .env into the password field, unlock, then clear/hide the field before recording. Never put the key in a public URL.
-5. Rehearse at least two participants for the race. Use real chat commands and leave time for a full democracy window. A small quiet chat works with one vote; the race needs two marbles.
-6. Actual paid subs/bits/channel-point redemptions have NOT been observed. Do not stage signed fixtures as live purchases. The configured channel currently has no Affiliate/Partner status returned by Helix.
-7. Actual provider generation was tested with a mock; a fresh model-generated game on a real provider is not yet verified. Only add a generation shot after configuring and proving your chosen provider. Label manual ledger deposits as demo credit; these are not real donations.
+1. Fill `/privacy.html` operator/contact/hosting details and confirm the prototype dates/rights. The original prototype is Devin-assisted; show the Codex-authored contributions without reattributing it. Record consent/visibility expectations for anyone whose username appears.
+2. Arrange a stable runtime/ingress within your approved hosting budget; no new hosting was provisioned by this revision. The approved Seed Race has no live runtime yet and must not be imported onto the host. Do not spend a new builder trial just to recreate footage.
+3. Run setup and Twitch authorization using your own private local configuration, then `npm start -- --twitch YOUR_CHANNEL --game-dir games/community-grove`. Confirm actual chat connection and `!join` replies. No .env or authorization-code screen belongs in the capture.
+4. Open the player page and `http://localhost:8420/overlay.html` in OBS at 1600×900. Record the complete overlay/credit sidebar. The isolated local Chromium rehearsal is evidence of desktop layout and synthetic keyboard input, not an OBS recording or human usability review.
+5. Prepare the studio round privately. Use local owner controls to open/start/close/select/review/approve; clear and hide key fields before recording. `!build approve` requires the exact review token; do not stage an unapproved build as a completed one.
+6. Rehearse with actual browser and Twitch participants. Let a real command/effect finish before the next shot. Keep at least two entrants for the Marble segment. For local forced fallback, POST `/admin/fallback` with the private confirmation header from a local tool; never put the header value into a screenshot or public URL. A Twitch moderator uses the trusted IRC mod tag, not a browser nickname.
+7. Hide unrelated tabs, notifications, credentials and unlicensed logos/music. Exclude all remote Rust demos from the recording path. Keep required source/license credits and verify permission for any third-party material visible in the final video.
+8. Record the real guest build from the existing Codex session/evidence if footage is available. If no construction footage exists, film a truthful walkthrough of that thread and its build/test receipts; do not label playback/static evidence as a new live build. Repeating a cloud trial requires separate scoped authorization and a fresh guest login; it is not part of this revision.
 
-Export at 1080p, 2:45 target. Watch the complete exported file; verify readable commands, visible real responses and English narration. Upload publicly to YouTube. Keep enough time to correct audio and permissions before submission.
+## Export and submit — owner only
+
+Watch the entire English export, target 2:45 and under three minutes. Verify readable commands, actual Twitch responses, creator attribution, session IDs and the honest worker boundary. Do not show simulated credit deposits as purchases or Channel Points as funding.
+
+Upload publicly to YouTube; verify logged-out access. Push the private repository yourself and grant testing@devpost.com access. Supply a working free test path through November 15, and complete the Devpost form. Freeze November 2 at 13:00 UTC (afterward, observed-failure fixes only); finish human demo by 16:00, reserve 17:00–21:00 for recording/review/delivery, verify access by 20:00 and aim to submit at 21:00 UTC. Official close is 22:00 UTC / 19:00 Santiago. No upload, push or submission has been performed by Codex here.

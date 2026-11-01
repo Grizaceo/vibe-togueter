@@ -1,18 +1,18 @@
 // vibe-arena MCP server (stdio). Lets any agent adapt pre-existing chat-game
-// formats or generate new ones, a prompt away from going live on stream.
+// formats in explicit trusted-local development. Cloud candidates use quarantine.
 //
 // Tools:
-//   arena_status        live state: current game, players, fund, errors
+//   arena_status        live state: current game, players, simulated build credits, errors
 //   get_sdk_spec        the game.js contract every game must implement
 //   list_templates      catalog of pre-existing chat-game formats
 //   get_template        full source + adaptation notes of one template
-//   install_game        write games/<name>/game.js and validate it compiles in the sandbox
+//   install_game        trusted-local only: write a reviewed SDK fixture and validate in the namespace guest
 //   load_game           put an installed game live on stream
-//   generate_game       ask the LLM provider to generate a game from an idea (uses fund)
+//   generate_game       ask the LLM provider to generate a game from an idea (uses simulated accounting; separate VM required by default)
 //   list_ideas          chat-proposed game ideas queue (!idea)
 //   clear_ideas         wipe the idea queue
-//   treasury_stats      fund balance / raised / spent / games generated
-//   deposit             add funds manually (testing; real money via webhook)
+//   treasury_stats      simulated credit balance / recorded usage / game count
+//   deposit             add simulated credits for local testing; no payment is received
 //   inject_chat         send a chat command as a user (testing commands)
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -49,7 +49,7 @@ async function api(p, body) {
 const server = new McpServer({ name: 'vibe-arena', version: '0.1.0' });
 
 server.registerTool('arena_status', {
-  description: 'Estado en vivo de vibe-arena: juego activo, jugadores, fondo, errores.',
+  description: 'Live game, players, simulated build-credit accounting and errors.',
   inputSchema: {},
 }, async () => {
   try { return ok(await api('/admin/status')); }
@@ -97,7 +97,7 @@ server.registerTool('get_template', {
 });
 
 server.registerTool('install_game', {
-  description: 'Escribe games/<name>/game.js y lo valida compilándolo en el sandbox (no lo pone en vivo). Usa activate=true para además cargarlo.',
+  description: 'Explicit trusted-local development only: install a reviewed SDK fixture and validate in the namespace guest. Cloud artifacts must use quarantine; no host fallback.',
   inputSchema: {
     name: z.string().regex(/^[\w-]+$/).describe('slug del juego'),
     code: z.string().describe('contenido completo de game.js según get_sdk_spec'),
@@ -133,7 +133,7 @@ server.registerTool('load_game', {
 });
 
 server.registerTool('generate_game', {
-  description: 'Pide al proveedor LLM configurado (local o nube) generar un juego desde una idea; cobra del fondo y lo pone en vivo.',
+  description: 'Request an approved build under the owner execution policy. Default cloud mode blocks without an isolated worker. Legacy local usage records simulated credits, not settled payments.',
   inputSchema: { idea: z.string() },
 }, async ({ idea }) => {
   try { return ok(await api('/admin/generate', { idea })); }
@@ -159,7 +159,7 @@ server.registerTool('clear_ideas', {
 });
 
 server.registerTool('treasury_stats', {
-  description: 'Balance del fondo: recaudado, gastado, juegos generados.',
+  description: 'Read simulated build-credit accounting; no cash balance or provider settlement.',
   inputSchema: {},
 }, async () => {
   try { return ok(await api('/admin/treasury')); }
@@ -167,7 +167,7 @@ server.registerTool('treasury_stats', {
 });
 
 server.registerTool('deposit', {
-  description: 'Depósito manual al fondo (testing; el dinero real entra por /webhook/donation).',
+  description: 'Add simulated build credits for a local fixture. No payment, donation or money transfer occurs.',
   inputSchema: { amountUsd: z.number().positive(), source: z.string().default('mcp') },
 }, async ({ amountUsd, source }) => {
   try { await api('/admin/fund', { amountUsd, source }); return ok(await api('/admin/treasury')); }

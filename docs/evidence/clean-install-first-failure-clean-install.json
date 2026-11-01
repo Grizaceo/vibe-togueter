@@ -1,0 +1,19 @@
+{
+  "kind": "disposable-clean-install",
+  "at": "2026-11-01T20:18:56.628980+00:00",
+  "results": [
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "exit": 1
+    }
+  ],
+  "ownerConfigurationCopied": false,
+  "cloudOrTwitchCalls": false,
+  "temp": "/tmp/va-clean-install-ea3lvg6a"
+}

@@ -101,3 +101,22 @@ Read-only adversarial reviews reproduced lifecycle/input/approval defects; fixes
 The approved game remains review material in artifacts/, outside games/ and public/, with version-bound creator metadata. It is not published or loaded locally. General web/MCP worker dispatch, a separate game deployment/runtime, real chat for this game, privacy/access enforcement, VM/AI reservations/settlement, payments, Agent Native and arbitrary uploads remain engineering work. No push occurred.
 
 The prior public quick tunnel returned HTTP 530 during this continuation, and no controller listened on 8420 when inspected; no old process was killed or restarted. This trial did not establish a current public Vibe player URL. Rules were readable and still state November 2 22:00 UTC / 19:00 Santiago; resources returned 403. The prudent target remains 21:00 UTC / 18:00 Santiago, with 17:00–21:00 UTC reserved for stabilization/video/delivery.
+
+## Audit response — Codex session 01a197c1-5ea9-7b21-8339-a38373db96b1
+
+The external read-only audit was treated as hypotheses. [Reorientation](platform/REORIENTATION.md) records the independent baseline at 7fc4f88: 150 tests, a discarded-process constructor escape, an infinite tick exceeding an external timeout, current provider inventory and independently serialized state sizes. The two existing Rust VMs were not changed. No new VM/model/payment request or Twitch message was made in this revision; owner configuration and credential files were not read or copied.
+
+| Evidence | What it establishes | What it does not establish |
+|---|---|---|
+| [Baseline probes](evidence/reorientation-baseline.json) | Current-code reproduction and inventory, not just copied audit measurements | A live audience or present stable hosting |
+| [Isolation suite](evidence/isolation-tests.txt) | 164 checks at the isolation/fallback commit, including a disposable controller surviving a looping game | Arbitrary uploaded-game safety or an OS hard memory quota |
+| [Traffic suite](evidence/traffic-tests.txt), [paired payload estimate](evidence/state-bandwidth.json) | Compression negotiation, bounded feed/backpressure, before/after serialized traffic | Billed egress or all-client capacity benchmark |
+| [Final credit suite](evidence/credits-tests.txt) | 179 checks: 97 focused + 82 integration; real file invalidation and version-matched HTTP/WS credits | Independent human gameplay |
+| [Chromium rehearsal](evidence/local-ui-rehearsal.json), [player screenshot](evidence/local-ui-lobby.png), [overlay](evidence/local-ui-overlay.png), [studio](evidence/local-ui-studio.png), [privacy](evidence/local-ui-privacy.png) | Eight separate local browser checks; production keyboard input; credits inside both viewport axes; no JS exception or credit polling | Twitch traffic, OBS capture, mobile usability or exported video |
+| [Clean install](evidence/clean-install.json), [full clean log](evidence/clean-install-tests.txt) | Disposable dependency install and test results with an empty npm profile and no owner configuration | New cloud construction or a publicly deployed URL |
+
+The read-only adversarial reviewer reproduced a cancellation hang, a second constructor escape, lost fallback requests, recursive frame processing and browser-driven sprite egress. Those findings have fixes and regressions. It then passed 32 targeted checks in a stable-file review without a remaining confirmed P0/P1 in that scope. The 32 are a subset, not added to the full suite. Review ran no browser or server and did not query provider billing.
+
+Intermediate failures remain described in LOCAL_RUNTIME.md and CREATOR_CREDITS.md; raw logs remain under /tmp/vibe-*. The first clean-install invocation failed because npm rejected loading the same empty config path twice; its evidence is retained separately. The retry uses distinct empty config files. Earlier Twitch/VM failures and successes were not rewritten or relabeled as this revision's work.
+
+[Targeted prototype-session metadata](evidence/prototype-session-origin.json) independently confirms visual-graffiti began November 1, 2026, 05:54:16 UTC. Only id, working directory and creation time for that session were selected read-only; no messages, credential fields or unrelated sessions were read. Repository attribution links it to the prototype. This does not prove rights to every asset/source.

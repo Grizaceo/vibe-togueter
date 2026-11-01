@@ -1,4 +1,6 @@
-# Vibe Arena — next-session handoff
+# Vibe Arena — prior VM-trial handoff
+
+**Submission-scope update:** the later audit-response session chose Plan B and implemented isolation/fallback/traffic/credits. Resume submission work from [AUDIT_REPORT.md](AUDIT_REPORT.md) and [REORIENTATION.md](REORIENTATION.md). The preserved artifact approval and owner decisions below still apply; deployment-first instructions are historical and do not override the newer scoped demo decision.
 
 Saved November 1, 2026, 15:27 UTC / 12:27 Santiago. Repository `/home/gris96/vibe-arena`, branch `feat/twitchcon-codex`. Working tree was clean before this handoff. Last implementation/evidence commit: `12a037d`; this document is committed immediately afterward. **No push.**
 

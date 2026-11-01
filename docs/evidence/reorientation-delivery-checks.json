@@ -1,0 +1,86 @@
+{
+  "at": "2026-11-01T20:29:08.675091+00:00",
+  "checks": [
+    {
+      "name": "external catalog empty",
+      "ok": true
+    },
+    {
+      "name": "cloud construction remains default",
+      "ok": true
+    },
+    {
+      "name": "index.html links privacy",
+      "ok": true
+    },
+    {
+      "name": "studio.html links privacy",
+      "ok": true
+    },
+    {
+      "name": "overlay.html links privacy",
+      "ok": true
+    },
+    {
+      "name": "README.md starts with two-minute path",
+      "ok": true
+    },
+    {
+      "name": "README.md does not advertise remote branded runtime",
+      "ok": true
+    },
+    {
+      "name": "SUBMISSION.md starts with two-minute path",
+      "ok": true
+    },
+    {
+      "name": "SUBMISSION.md does not advertise remote branded runtime",
+      "ok": true
+    },
+    {
+      "name": "docs/DEMO_SCRIPT.md starts with two-minute path",
+      "ok": true
+    },
+    {
+      "name": "docs/DEMO_SCRIPT.md does not advertise remote branded runtime",
+      "ok": true
+    },
+    {
+      "name": "approved artifact source unchanged and inert",
+      "ok": true
+    },
+    {
+      "name": "no private env file tracked",
+      "ok": true
+    },
+    {
+      "name": "external audit artifacts not tracked",
+      "ok": true
+    },
+    {
+      "name": "pattern scan of changed deliverables has no credential markers",
+      "ok": true
+    },
+    {
+      "name": "changed documentation local links resolve",
+      "ok": true
+    }
+  ],
+  "flaggedFiles": [],
+  "scanLimit": "Pattern scan of changed deliverables only; ignored secrets were not read. Not a guarantee that all secrets can be recognized.",
+  "ownerPending": [
+    "privacy operator/contact/hosting",
+    "prototype date/rights attestation",
+    "human Twitch/OBS/video",
+    "stable judging access",
+    "owner push/YouTube/Devpost"
+  ],
+  "tests": {
+    "focused": 97,
+    "integration": 82,
+    "total": 179,
+    "finalLog": "docs/evidence/delivery-tests.txt",
+    "cleanInstallPassed": true
+  },
+  "prototypeSessionStart": "2026-11-01T05:54:16+00:00"
+}

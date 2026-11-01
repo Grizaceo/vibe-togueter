@@ -1,8 +1,8 @@
 # Remaining platform execution plan
 
-Updated 2026-11-01 15:16 UTC. Main session: `01a19536-0f02-7fc3-b030-d6b6fd8e170c`; continuation: `01a19776-75a5-7e91-b5c1-f108c345dc8c`. Full owner vision remains in VISION.md; completed increments do not imply the full platform is finished.
+Updated after the November 1 audit response. Submission scope is governed by REORIENTATION.md and AUDIT_REPORT.md; the full vision remains future work. Previous checkpoint note: 2026-11-01 15:16 UTC. Main session: `01a19536-0f02-7fc3-b030-d6b6fd8e170c`; continuation: `01a19776-75a5-7e91-b5c1-f108c345dc8c`. Full owner vision remains in VISION.md; completed increments do not imply the full platform is finished.
 
-Resume from [HANDOFF_NEXT_SESSION.md](HANDOFF_NEXT_SESSION.md) for the exact approved artifact, owner decisions, cleanup status and deployment-first next step.
+For submission work, resume from [AUDIT_REPORT.md](AUDIT_REPORT.md) and [REORIENTATION.md](REORIENTATION.md). HANDOFF_NEXT_SESSION.md preserves the exact approved Seed Race artifact and previous owner decisions; it does not override the newer Plan B demo scope.
 
 Thesis: turn independent creators' freely contributed work into community-built games, with streamer-controlled decisions, cloud-isolated agents, transparent funding and persistent creator visibility.
 
@@ -12,9 +12,9 @@ Thesis: turn independent creators' freely contributed work into community-built 
 - Durable capped idea rounds, replacement ballots, streamer selection and exact input/resource approval.
 - Free-first creator resource catalog and moderation; three real Kenney CC0 curated images with traceable source/license/fingerprints.
 - Community Grove: original cooperative example using those images; actual Twitch and public WSS effects; published source/resource hashes and creator links on player/OBS pages.
-- Existing CreateOS Rust runtime catalog; real room creation/join/start/snapshots for falling blocks; owner-enabled real Twitch shared-character control in Tee Arena.
+- Historical external-runtime adapter evidence exists for public room creation and Tee chat control. The submission configuration now excludes those runtimes pending rights/hosting review; they are not demo dependencies.
 - Owner-operated inert artifact quarantine, pinned source/resource/test-report approval, durable test history/restart recovery and private local CLI. An owner-selected Codex/Terra subscription trial actually built Seed Race in a private VM, passed 12 separate-VM checks and obtained exact owner approval. All eight trial VMs were destroyed. General worker dispatch and deployment remain unconnected; VM_TRIAL.md records the boundary. See BUILD_QUARANTINE.md.
-- 150 passing local/isolated checks. Real network evidence is separate. A static game frame was rendered/inspected with Chromium; interactive browser play, full UI layout, independent human gameplay and video remain unverified.
+- 179 passing local/isolated checks (97 focused + 82 integration). Reviewed SDK games now run in a Linux namespace guest with automatic Marble fallback, bounded transport and permanent game/art/idea credit snapshots. A separate eight-check Chromium rehearsal exercised production keyboard input and visually inspected desktop player/overlay/studio/privacy layouts. Human play, OBS/video and new Twitch rehearsal remain pending. External runtimes are excluded from submission configuration; the ledger is simulated and event-credit fixtures are off by default.
 
 ## Next dependency chain
 

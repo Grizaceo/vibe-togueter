@@ -1,0 +1,13 @@
+{
+  "at": "2026-11-01T20:27:39.212528+00:00",
+  "kind": "read-only-targeted-session-metadata",
+  "sessionId": "visual-graffiti",
+  "workingDirectory": "/home/gris96",
+  "createdAt": "2026-11-01T05:54:16+00:00",
+  "source": "Devin CLI sessions.db; only id, working_directory and created_at for visual-graffiti selected",
+  "repositoryLink": "docs/platform/INTEGRATION_AUDIT.md identifies this as the prototype session; fab3227 records inherited source",
+  "limits": [
+    "No message body, credentials, metadata blob or unrelated session was read.",
+    "Session start plus repository attribution supports provenance; it does not prove ownership of every source or asset."
+  ]
+}

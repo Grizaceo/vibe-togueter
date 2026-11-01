@@ -1,0 +1,27 @@
+{
+  "kind": "disposable-clean-install",
+  "at": "2026-11-01T20:19:30.591865+00:00",
+  "results": [
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit": 0
+    }
+  ],
+  "ownerConfigurationCopied": false,
+  "cloudOrTwitchCalls": false,
+  "temp": "/tmp/va-clean-install-c4fp3nc6",
+  "firstAttemptFailure": "Same /dev/null config path was rejected by npm for double loading; retry uses distinct empty files."
+}
