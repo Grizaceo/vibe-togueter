@@ -1,0 +1,262 @@
+{
+  "startedAt": "2026-11-01T14:02:08.325Z",
+  "channel": "gris_96",
+  "checks": [
+    {
+      "name": "three reviewed CC0 resources exist",
+      "ok": true
+    },
+    {
+      "name": "public game credits match the approved source",
+      "ok": true
+    },
+    {
+      "name": "creator follow links and actual attribution travel with the game",
+      "ok": true
+    },
+    {
+      "name": "public WSS input plants an actual illustrated tree",
+      "ok": true
+    },
+    {
+      "name": "actual Twitch effect: !plant 3",
+      "ok": true
+    },
+    {
+      "name": "actual Twitch effect: !water 3",
+      "ok": true
+    },
+    {
+      "name": "actual Twitch effect: !sun",
+      "ok": true
+    },
+    {
+      "name": "served game version matches creator-credit version",
+      "ok": true
+    }
+  ],
+  "observed": [
+    {
+      "at": "2026-11-01T14:02:11.491Z",
+      "user": "gris_96",
+      "text": "!plant 3",
+      "source": "twitch",
+      "messageId": "c1986336-82dc-4df8-bf1b-a77d252fb28e"
+    },
+    {
+      "at": "2026-11-01T14:02:13.591Z",
+      "user": "gris_96",
+      "text": "!water 3",
+      "source": "twitch",
+      "messageId": "74e84b69-8647-4905-94d7-2fad91f295b5"
+    },
+    {
+      "at": "2026-11-01T14:02:15.692Z",
+      "user": "gris_96",
+      "text": "!sun",
+      "source": "twitch",
+      "messageId": "698a7882-5e4f-4613-9648-5f401dcf9012"
+    }
+  ],
+  "commands": [
+    {
+      "at": "2026-11-01T14:02:11.210Z",
+      "text": "!plant 3",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T14:02:13.311Z",
+      "text": "!water 3",
+      "queued": true
+    },
+    {
+      "at": "2026-11-01T14:02:15.413Z",
+      "text": "!sun",
+      "queued": true
+    }
+  ],
+  "limitations": [
+    "Kenney art is curated CC0, not a creator signup or endorsement.",
+    "Original example authored in this Codex session; not built by a VM coding worker or selected by a community vote.",
+    "Owner commands and automated browser-protocol input; no independent audience or visual/browser/video verification."
+  ],
+  "publication": {
+    "codeSha256": "1cfce9cb0a18c8c24acfab201255bc864cdd9f0f9a4683ee99051f671c587e75",
+    "manifest": {
+      "version": 1,
+      "assets": [
+        {
+          "id": "88630c1b-5949-46a6-b190-f558ec40f598",
+          "title": "Kenney · sky.png",
+          "kind": "illustration",
+          "origin": "curated-public-source",
+          "sourceURL": "/curated/kenney-background-elements/sky.png",
+          "expectedContentSha256": "3dda74eb9caad5148dc8e7f8010ee97592be266f218c23e2763a723fb57e4465",
+          "creator": {
+            "name": "Kenney",
+            "website": "https://kenney.nl/",
+            "socials": [
+              {
+                "label": "Bluesky",
+                "url": "https://bsky.app/profile/kenney.nl"
+              }
+            ]
+          },
+          "license": {
+            "id": "CC0-1.0",
+            "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "attribution": "Background elements by Kenney (kenney.nl). CC0.",
+            "permissions": {
+              "gameUse": true,
+              "adaptation": true,
+              "redistribution": true
+            },
+            "obligations": []
+          }
+        },
+        {
+          "id": "a52e6d18-47d6-46ca-8433-5972a69954a4",
+          "title": "Kenney · hills1.png",
+          "kind": "illustration",
+          "origin": "curated-public-source",
+          "sourceURL": "/curated/kenney-background-elements/hills1.png",
+          "expectedContentSha256": "1264021ed5a69b214d22dfa6562a6bed54ee0f9c374bfafa5f9165cabdf63800",
+          "creator": {
+            "name": "Kenney",
+            "website": "https://kenney.nl/",
+            "socials": [
+              {
+                "label": "Bluesky",
+                "url": "https://bsky.app/profile/kenney.nl"
+              }
+            ]
+          },
+          "license": {
+            "id": "CC0-1.0",
+            "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "attribution": "Background elements by Kenney (kenney.nl). CC0.",
+            "permissions": {
+              "gameUse": true,
+              "adaptation": true,
+              "redistribution": true
+            },
+            "obligations": []
+          }
+        },
+        {
+          "id": "c5a0410c-00ce-41f6-824f-58c5000bfecd",
+          "title": "Kenney · tree01.png",
+          "kind": "illustration",
+          "origin": "curated-public-source",
+          "sourceURL": "/curated/kenney-background-elements/tree01.png",
+          "expectedContentSha256": "ea3a81fb7078dfc9e60e2a46ce338ff2534c7cd80edcc7b150d710ee264c7e25",
+          "creator": {
+            "name": "Kenney",
+            "website": "https://kenney.nl/",
+            "socials": [
+              {
+                "label": "Bluesky",
+                "url": "https://bsky.app/profile/kenney.nl"
+              }
+            ]
+          },
+          "license": {
+            "id": "CC0-1.0",
+            "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "attribution": "Background elements by Kenney (kenney.nl). CC0.",
+            "permissions": {
+              "gameUse": true,
+              "adaptation": true,
+              "redistribution": true
+            },
+            "obligations": []
+          }
+        }
+      ],
+      "creditPolicy": {
+        "inGame": true,
+        "clickableCreatorLinks": true,
+        "retainOnPlatformRemix": true
+      },
+      "fingerprints": "Builder must verify downloaded bytes against expectedContentSha256 before use.",
+      "sha256": "17c22a81c7186ec5d84089997ed47c49f587a3e5bf436db1c7ed7a53c4c7b849"
+    }
+  },
+  "broadcastLive": false,
+  "finalFrame": {
+    "game": {
+      "name": "Community Grove",
+      "desc": "Grow a shared illustrated grove. Chat: !plant 1–6, !water 1–6, !sun. Web: arrows/A-D and SPACE, or click a plot. Art by Kenney · CC0; creator links below the game.",
+      "versionSha256": "1cfce9cb0a18c8c24acfab201255bc864cdd9f0f9a4683ee99051f671c587e75"
+    },
+    "sprites": [
+      {
+        "t": "sprite",
+        "src": "/curated/kenney-background-elements/sky.png",
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 720
+      },
+      {
+        "t": "sprite",
+        "src": "/curated/kenney-background-elements/hills1.png",
+        "x": 0,
+        "y": 290,
+        "w": 1280,
+        "h": 430
+      },
+      {
+        "t": "sprite",
+        "src": "/curated/kenney-background-elements/tree01.png",
+        "x": 114.44959999999999,
+        "y": 480.155,
+        "w": 51.10080000000003,
+        "h": 79.84500000000004
+      },
+      {
+        "t": "sprite",
+        "src": "/curated/kenney-background-elements/tree01.png",
+        "x": 501.20160000000004,
+        "y": 438.7550000000001,
+        "w": 77.59679999999993,
+        "h": 121.24499999999989
+      }
+    ],
+    "hud": [
+      {
+        "t": "text",
+        "x": 640,
+        "y": 48,
+        "text": "COMMUNITY GROVE",
+        "size": 40,
+        "color": "#203b40"
+      },
+      {
+        "t": "text",
+        "x": 640,
+        "y": 94,
+        "text": "An illustration becomes a world we grow together",
+        "size": 23,
+        "color": "#203b40"
+      },
+      {
+        "t": "text",
+        "x": 640,
+        "y": 140,
+        "text": "!plant 1–6 · !water 1–6 · !sun  |  0/6 trees · round 1",
+        "size": 22,
+        "color": "#203b40"
+      },
+      {
+        "t": "text",
+        "x": 640,
+        "y": 197,
+        "text": "gris_96 brought sunshine",
+        "size": 20,
+        "color": "#203b40"
+      }
+    ]
+  },
+  "finishedAt": "2026-11-01T14:02:17.514Z"
+}

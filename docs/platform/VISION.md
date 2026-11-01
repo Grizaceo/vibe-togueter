@@ -27,7 +27,7 @@ All numerical defaults are streamer settings. More than one selected idea is an 
 |9. Public/private catalog and origin credit|Owner policy + actual runtime access control; original channel/version provenance|Hiding a catalog entry does not make an already-public VM endpoint private. Attribution watermark is not DRM|
 |10. Legal original games + optional skills/assets|Per-artifact rights/provenance, dependencies and license records; allowlisted resources|Fan-game labels or rewritten code do not establish rights to names, art or presentation. Publication requires rights review; no licensed assets automatically redistributed|
 |11. Free platform / optional paid hosting|Local trusted mode or cloud provider adapters; future hosting margins separate from community-purpose funds|Business hypothesis; no paid plan or commerce launch claimed|
-|12. Developer/creator discovery tab|Curated entries for games/assets/audio/textures, clear free/paid labels, source/license and submission moderation|Metadata-only free catalog, explicit curator review, featured-contribution reason and creator/license links in selected-pack preview implemented. Three real CC0 curated resources. Paid commerce and final-game credit enforcement remain pending|
+|12. Developer/creator discovery tab|Curated entries for games/assets/audio/textures, clear free/paid labels, source/license and submission moderation|Metadata-only free catalog, explicit curator review, featured-contribution reason and creator/license links in selected-pack preview implemented. Three real CC0 curated resources and a playable Grove example with version-bound creator links. Arbitrary VM-game publication/remix enforcement and paid commerce remain pending|
 
 ## Execution and agent ownership
 

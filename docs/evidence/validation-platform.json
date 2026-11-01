@@ -1,0 +1,65 @@
+{
+  "at": "2026-11-01T14:05:26.787Z",
+  "focused": 50,
+  "integration": 57,
+  "total": 107,
+  "failures": 0,
+  "results": [
+    {
+      "file": "e2e",
+      "exit": 0,
+      "failures": 0,
+      "passes": 10
+    },
+    {
+      "file": "monetization",
+      "exit": 0,
+      "failures": 0,
+      "passes": 7
+    },
+    {
+      "file": "mcp",
+      "exit": 0,
+      "failures": 0,
+      "passes": 10
+    },
+    {
+      "file": "platforms",
+      "exit": 0,
+      "failures": 0,
+      "passes": 11
+    },
+    {
+      "file": "integration",
+      "exit": 0,
+      "failures": 0,
+      "passes": 3
+    },
+    {
+      "file": "round-integration",
+      "exit": 0,
+      "failures": 0,
+      "passes": 5
+    },
+    {
+      "file": "creator-integration",
+      "exit": 0,
+      "failures": 0,
+      "passes": 3
+    },
+    {
+      "file": "tee-integration",
+      "exit": 0,
+      "failures": 0,
+      "passes": 3
+    },
+    {
+      "file": "game-publication-integration",
+      "exit": 0,
+      "failures": 0,
+      "passes": 5
+    }
+  ],
+  "log": "/tmp/vibe-arena-grove-tests.log",
+  "scope": "Local unit/isolated mock checks; real network evidence is separate."
+}

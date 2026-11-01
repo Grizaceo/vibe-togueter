@@ -47,7 +47,7 @@ export class CreatorAssets{
   asset.review={by:actor.name,at:Date.now(),rightsAttested:!!rightsAttested,claim:'Owner-reviewed declaration, not independent proof of authorship.'};
   this.commit(next);return structuredClone(asset);
  }
- catalog(){return this.data.assets.filter(a=>a.status==='published'&&a.tier==='free').map(a=>({...structuredClone(a),uses:this.data.usages.filter(u=>u.assetIds.includes(a.id)).length}));}
+ catalog(){return this.data.assets.filter(a=>a.status==='published'&&a.tier==='free').map(a=>({...structuredClone(a),uses:new Set(this.data.usages.filter(u=>u.assetIds.includes(a.id)).map(u=>u.gameId+':'+u.gameVersion)).size}));}
  manifest(ids){
   if(!Array.isArray(ids)||ids.length>30||new Set(ids).size!==ids.length)throw new Error('Select at most 30 unique resources.');
   const assets=ids.map(id=>{const a=this.data.assets.find(a=>a.id===id);if(!a||a.status!=='published'||a.tier!=='free')throw new Error('Only published licensed free resources are available for this build.');return {id:a.id,title:a.title,kind:a.kind,origin:a.origin||'artist-submitted',sourceURL:a.sourceURL,expectedContentSha256:a.expectedContentSha256,creator:a.creator,license:a.license};}).sort((a,b)=>a.id.localeCompare(b.id));
@@ -59,6 +59,6 @@ export class CreatorAssets{
   const {sha256,...body}=manifest;
   const expected=this.manifest(manifest.assets.map(a=>a.id));if(hash(body)!==sha256||expected.sha256!==sha256)throw new Error('Credit/resource manifest changed; review before publication.');
   const key=hash({gameId,gameVersion,manifest:manifest.sha256});if(this.data.usages.some(u=>u.key===key))return false;
-  const next=structuredClone(this.data);next.usages.push({key,gameId,gameVersion,manifestSha256:manifest.sha256,assetIds:manifest.assets.map(a=>a.id),at:Date.now()});this.commit(next);return true;
+  const next=structuredClone(this.data);next.usages.push({key,gameId,gameVersion,manifestSha256:manifest.sha256,manifest:structuredClone(manifest),assetIds:manifest.assets.map(a=>a.id),at:Date.now()});this.commit(next);return true;
  }
 }

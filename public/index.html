@@ -8,6 +8,7 @@
   body { margin:0; background:#0b0b0f; color:#eee; font:16px system-ui; display:flex; flex-direction:column; height:100vh; }
   header { padding:8px 12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:#14141c; }
   header b { color:#8ef; }
+  #live-credits a { color:#8ef; }
   canvas { flex:1; width:100%; touch-action:none; }
   #bar { padding:6px 12px; background:#14141c; display:flex; gap:10px; font-size:14px; align-items:center; }
   #players { color:#9a9; } #err { color:#f88; }
@@ -24,6 +25,7 @@
 </header>
 <div id="rules" style="padding:6px 12px;color:#91a7ca;font-size:14px;line-height:1.5"></div>
 <canvas id="cv"></canvas>
+<div id="live-credits" hidden style="background:#14141c;padding:8px 12px;max-height:180px;overflow:auto;font-size:14px"></div>
 <div id="bar">
   <span id="players"></span>
   <span id="err"></span>
@@ -33,11 +35,14 @@
 </div>
 <script type="module">
 import { connect } from './client.js';
+import {attachLiveCredits} from './live-credits.js';
+const credits=attachLiveCredits(document.getElementById('live-credits'));
 const c = connect({
   canvas: document.getElementById('cv'),
   onRole: m => {document.getElementById('role-status').textContent=m.ok?'Controls unlocked':'Key rejected / already claimed';document.getElementById('streamer-key').value='';},
   onWelcome: m => { document.getElementById('me').textContent = `eres ${m.name}`; },
   onPlayers: (p, game, err) => {
+    credits.matchGame(game);
     if (game) {document.getElementById('game').textContent=game.name;document.getElementById('rules').textContent=game.desc||'';}
     document.getElementById('players').textContent = `${p.length} jugando`;
     document.getElementById('err').textContent = err || '';

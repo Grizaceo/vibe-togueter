@@ -18,6 +18,7 @@
 import vm from 'node:vm';
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 
 const SAFE_MATH = Object.freeze(Object.create(null, Object.getOwnPropertyDescriptors(Math)));
 
@@ -81,6 +82,7 @@ export class GameHost {
       return false;
     }
     this.game = {
+      versionSha256:crypto.createHash('sha256').update(src).digest('hex'),
       name: mod.meta?.name || path.basename(this.gameDir),
       meta: { world: { w: 1280, h: 720 }, tickRate: 30, ...(mod.meta || {}) },
       fns: mod,

@@ -77,3 +77,9 @@ Second attempt at 13:50 UTC passed nine checks: [success](evidence/tee-twitch-17
 The separate reviewer hit its service usage limit before this bridge review ran. The earlier studio and runtime-adapter reviews remain valid for their increments; this bridge instead received local sequential review, codec golden checks, lifecycle/input unit checks, permission probes and real network rehearsal. Do not describe this last review as independent.
 
 Final bridge suite: 46 focused plus 52 isolated legacy/integration checks = **98 passing checks**, zero failures; `/tmp/vibe-arena-tee-tests.log`. New permission probes confirm a forged web broadcaster cannot enable the socket, missing streamer confirmation is denied, and a local owner can disable it. These tests make no real model/payment calls.
+
+## Curated illustration becomes a cooperative game
+
+[Community Grove evidence](evidence/grove-1793541737514.json): eight checks passed against actual Twitch and public HTTPS/WSS at 14:02 UTC. Real owner commands !plant 3, !water 3 and !sun changed the game-state HUD; automated web input planted a tree sprite. The served version SHA-256 matched the published creator manifest, including Kenney attribution, website and social links. This does not prove canvas rendering or independent human gameplay. The example is original trusted code from this session, not output of a VM coding agent or a public idea vote.
+
+[Creator publication details](platform/CREATOR_GAME_DEMO.md). Final suite: **107 passing checks** = 50 focused + 57 isolated integration, zero failures. Counts generated from the test log in [validation-platform.json](evidence/validation-platform.json). No personal funds, model APIs or payment endpoints were used by those tests. A sequential local review covered publication hash binding, safe paths, immutable credit records and frontend version matching; independent reviewer service remained unavailable.

@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import path from 'node:path';import {WebSocket} from 'ws';
+const base=process.env.VA_ARENA_URL,headers={'Content-Type':'application/json','x-streamer-key':process.env.VA_STREAMER_KEY};
+const post=async(endpoint,data)=>fetch(base+endpoint,{method:'POST',headers,body:JSON.stringify(data)});const check=(name,ok)=>{assert.ok(ok,name);console.log('PASS '+name);};
+const resources=[];for(const key of ['kenney-background-sky','kenney-background-hills1','kenney-background-tree01']){const imported=await post('/admin/assets/import',{key});assert.equal(imported.status,200);const asset=await imported.json();if(asset.status==='pending-review')assert.equal((await post('/admin/assets/review',{id:asset.id,approved:true,rightsAttested:true})).status,200);resources.push(asset.id);}
+const review=await(await post('/admin/game-publication',{action:'review',gameId:'community-grove'})).json();const rejected=await post('/admin/game-publication',{action:'publish',gameId:'community-grove',expectedCodeSha256:'0'.repeat(64),assetIds:resources});check('publication rejects a stale source approval',rejected.status===400);
+const published=await post('/admin/game-publication',{action:'publish',gameId:'community-grove',expectedCodeSha256:review.codeSha256,assetIds:resources});const publication=await published.json();check('publication stores verified resources, creator follow links and exact code hash',published.ok&&publication.manifest.assets.every(a=>a.creator.website==='https://kenney.nl/'&&a.license.id==='CC0-1.0'));
+assert.equal((await post('/admin/load',{game:'community-grove'})).status,200);const credits=await(await fetch(base+'/community/game-credits')).json();check('live game exposes credits for exactly the published version',credits.status==='published'&&credits.codeSha256===review.codeSha256);
+const ws=new WebSocket(base.replace('http:','ws:')+'/play?name=test-gardener');try{
+ let frame;ws.on('message',bytes=>{const m=JSON.parse(bytes);if(m.t==='state')frame=m;});await new Promise((resolve,reject)=>{ws.once('open',resolve);ws.once('error',reject);});ws.send(JSON.stringify({t:'input',data:{kind:'pointer',x:140,y:560,down:true}}));
+ const deadline=Date.now()+3000;while(Date.now()<deadline&&(!frame||!frame.view.layers.some(p=>p.src?.endsWith('tree01.png'))))await new Promise(resolve=>setTimeout(resolve,30));check('real SDK load and browser input produce an illustrated tree frame',frame?.game.versionSha256===review.codeSha256&&frame.view.layers.some(p=>p.src?.endsWith('tree01.png')));
+}finally{ws.terminate();}
+
+// The integration harness runs only in its temporary copy, never the owner repo.
+const sibling=path.join(process.cwd(),'games-prefix-probe');fs.mkdirSync(sibling,{recursive:true});fs.copyFileSync('games/community-grove/game.js',path.join(sibling,'game.js'));
+check('local game loader rejects a sibling path sharing the games prefix',(await post('/admin/load',{game:'../games-prefix-probe'})).status===400);

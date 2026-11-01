@@ -8,7 +8,7 @@ This submission extends an existing prototype. `fab3227` records the inherited c
 
 The product direction is a free-first community game studio, with independent creators visible through clickable credits. Read [the platform vision](docs/platform/VISION.md) and [integration audit](docs/platform/INTEGRATION_AUDIT.md) for the wider scope and the boundaries of this increment.
 
-Open `/studio.html` for proposals, replacement ballots, streamer selection/approval and a reviewed free-resource catalog. Local owner controls require both private admin and streamer keys; public viewers cannot approve builds or resources. Resource submissions currently accept metadata and a public HTTPS URL, not binary uploads. The browser can compute a local file fingerprint without uploading it. Creator names, license notices, website and social links appear in the selected pack's credit preview. That preview is not proof that a published game uses the pack.
+Open `/studio.html` for proposals, replacement ballots, streamer selection/approval and a reviewed free-resource catalog. Local owner controls require both private admin and streamer keys; public viewers cannot approve builds or resources. Resource submissions currently accept metadata and a public HTTPS URL, not binary uploads. The browser can compute a local file fingerprint without uploading it. Creator names, license notices, website and social links appear in the selected pack's credit preview. That preview is not proof that a published game uses the pack. The new Community Grove example separately binds its approved source and bundled art to a published credit manifest, displayed on the actual player/OBS pages; see [creator game evidence](docs/platform/CREATOR_GAME_DEMO.md).
 
 Three bundled Kenney CC0 images can be imported by a local owner through `/admin/assets/import`, with keys listed in `public/curated/kenney-background-elements/provenance.json`, then reviewed through the studio. The importer verifies actual bundled bytes. They are labeled curated public resources: Kenney has not joined or endorsed this platform. Original archive and working files stay outside this repo.
 
@@ -55,7 +55,11 @@ node scripts/arena-admin.mjs status
 
 The studio's Games section lists the two existing public CreateOS Rust demos. Local owner controls can check both runtimes, create a falling-blocks lobby, share its browser link and start after players join. State is journaled with idempotent creation and explicit reconciliation. No automatic start is placed in viewer links. Tee Arena has a browser link, health check and an owner-enabled Twitch crowd bridge: `!tee on`, then viewers use `!tee left|right|jump|hook|fire|stop`; `!tee off` disconnects. The crowd shares one character with latest-command pulses; it is not per-viewer multiplayer or democracy voting. Inputs expire after 350 ms and an idle bridge closes after 60 seconds. The bridge is off after restart. Real Twitch-to-CreateOS movement and acknowledgements were rehearsed with owner-account commands; see docs/EVIDENCE.md. Both remote backends are public and lack platform-enforced private access. See [remote integration and rehearsal](docs/platform/REMOTE_GAMES.md).
 
-## Two implemented SDK formats
+## Illustrated cooperative example
+
+**Community Grove** (`games/community-grove` / `templates/community-grove`): Twitch `!plant 1–6`, `!water 1–6`, `!sun`; web users click a plot or use arrows/A-D and space. Grow six trees together; a completed grove resets after eight seconds. Uses actual Kenney CC0 art with creator website/social and license links on the player and OBS pages. Publication pins the source hash and verifies the bundled images. `node scripts/rehearse-grove.mjs --live` reproduces the authorized network check. This is an original trusted example, not evidence of a functioning VM coding worker.
+
+## Two other implemented SDK formats
 
 **Marble Race** (inherited): `!play` adds your marble; browser players also join. `!race` starts when at least **two** marbles exist. `!reset` clears the race. The HUD's Spanish phrases mean “marbles / play to join / race to start.”
 
