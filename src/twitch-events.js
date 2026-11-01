@@ -11,6 +11,6 @@ export function decodeTwitchEvent(headers,raw,secret,now=Date.now()) {
 export function rewardCommand(event,mapping={}) {
   if(!Object.hasOwn(mapping,event.reward?.title||''))return null;
   const command=mapping[event.reward.title];
-  if(typeof command!=='string' || !/^![a-z][a-z0-9_-]*(?:\s[^\r\n]*)?$/i.test(command) || command.length>200)return null;
+  if(typeof command!=='string' || /[\r\n\0]/.test(command) || !/^![a-z][a-z0-9_-]*(?:\s[^\r\n]*)?$/i.test(command) || command.length>200)return null;
   return command;
 }
