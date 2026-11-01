@@ -97,30 +97,30 @@ Connected as owner; credentials saved mode 600.
 ℹ skipped 0
 ℹ todo 0
 ℹ duration_ms 1253.883163
-PASS welcome alice 
-PASS welcome spectator 
-PASS game loaded 
+PASS welcome alice
+PASS welcome spectator
+PASS game loaded
 PASS state broadcasts (16 states)
 PASS players in state ["alice","bob"]
-PASS view has layers 
+PASS view has layers
 PASS !ball spawned + players (3 circles)
-PASS chat feed relayed 
-PASS idea ack 
-PASS hud has scoreboard 
+PASS chat feed relayed
+PASS idea ack
+PASS hud has scoreboard
 
 10/10 passed
-PASS webhook rechaza secret malo 
-PASS webhook donación aceptada 
-PASS admin fund deposit 
+PASS webhook rechaza secret malo
+PASS webhook donación aceptada
+PASS admin fund deposit
 PASS treasury balance {"balance":2.5,"totalRaised":2.5,"totalSpent":0,"gamesGenerated":0,"lastDeposit":{"at":1793546112167,"kind":"deposit","amountUsd":1,"balance":2.5,"meta":{"source":"test"}}}
 PASS generación vía mock LLM {"ok":true,"game":"auto-mvxz1p6g","costUsd":0}
 PASS spend registrado {"balance":2.5,"totalRaised":2.5,"totalSpent":0,"gamesGenerated":1,"lastDeposit":{"at":1793546112167,"kind":"deposit","amountUsd":1,"balance":2.5,"meta":{"source":"test"}}}
 PASS juego cargado es el generado MockLLM Game
 [vibe-arena-mcp] stdio listo · arena: http://127.0.0.1:46261
 PASS tools/list arena_status,get_sdk_spec,list_templates,get_template,install_game,load_game,generate_game,list_ideas,clear_ideas,treasury_stats,deposit,inject_chat
-PASS list_templates 
-PASS get_sdk_spec 
-PASS get_template 
+PASS list_templates
+PASS get_sdk_spec
+PASS get_template
 (node:3101252) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
 PASS install_game valida {
@@ -128,20 +128,20 @@ PASS install_game valida {
   "validated": true
 }
 PASS install_game rechaza código inválido ERROR: no compila en el sandbox: game.js missing exports: createState, tick, view
-PASS arena_status 
+PASS arena_status
 PASS load_game en vivo Marble Race
-PASS inject_chat 
-PASS treasury_stats 
+PASS inject_chat
+PASS treasury_stats
 PASS twitch challenge handshake 200
-PASS twitch firma mala → 403 
-PASS twitch channel.subscribe 
-PASS twitch bits.use 
+PASS twitch firma mala → 403
+PASS twitch channel.subscribe
+PASS twitch bits.use
 PASS twitch depósitos en fondo +$7.50
-PASS kick chat.message.sent aceptado 
-PASS kick chat en feed 
-PASS kick firma mala → 403 
-PASS kick subscription.new 
-PASS kick kicks.gifted 
+PASS kick chat.message.sent aceptado
+PASS kick chat en feed
+PASS kick firma mala → 403
+PASS kick subscription.new
+PASS kick kicks.gifted
 PASS kick depósitos en fondo +$7.24
 done
 PASS tunneled admin denied

@@ -21,9 +21,9 @@
 test at test/vm-builder-preflight.mjs:65:1
 ✖ journal failure after successful probe cannot retain an unconfirmed login VM (1.462981ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   0 !== 1
-  
+
       at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/vm-builder-preflight.mjs:69:9)
       at async Test.run (node:internal/test_runner/test:1409:7)
       at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {

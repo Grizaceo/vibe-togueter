@@ -16,7 +16,7 @@ test at test/builder-login.mjs:31:1
 ✖ device login helper keeps codes private, verifies subscription status and releases own guest (67.822234ms)
   Error: Command failed: /home/gris96/.local/share/mise/installs/node/26.12.1/bin/node scripts/builder-login.mjs prepare
   Guest login action failed; inspect the protected journal and retained evidence.
-  
+
       at genericNodeError (node:internal/errors:999:15)
       at wrappedFn (node:internal/errors:544:14)
       at ChildProcess.exithandler (node:child_process:420:12)

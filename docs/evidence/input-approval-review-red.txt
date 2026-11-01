@@ -40,9 +40,9 @@ test at test/build-quarantine.mjs:114:1
 test at test/client-input.mjs:11:1
 ✖ blur releases both vertical arrow keys as well as held pointer input (32.125577ms)
   AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
-  
+
     assert.ok(sent.some(e=>e.kind==='key'&&e.key===key&&!e.down))
-  
+
       at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/client-input.mjs:13:63)
       at Test.runInAsyncScope (node:async_hooks:226:14)
       at Test.run (node:internal/test_runner/test:1402:25)
@@ -60,10 +60,10 @@ test at test/client-input.mjs:15:1
 ✖ releasing outside canvas sends a pointer-up and permits the next click (1.383849ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
   + actual - expected
-  
+
   + 'undefined'
   - 'function'
-  
+
       at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/client-input.mjs:17:9)
       at Test.runInAsyncScope (node:async_hooks:226:14)
       at Test.run (node:internal/test_runner/test:1402:25)
@@ -83,10 +83,10 @@ test at test/client-input.mjs:19:1
 ✖ pointer cancellation clears held state without accepting another touch release (0.434766ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
   + actual - expected
-  
+
   + 'undefined'
   - 'function'
-  
+
       at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/client-input.mjs:21:9)
       at Test.runInAsyncScope (node:async_hooks:226:14)
       at Test.run (node:internal/test_runner/test:1402:25)

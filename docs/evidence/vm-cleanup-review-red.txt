@@ -19,9 +19,9 @@
 test at test/vm-builder-preflight.mjs:53:1
 ✖ failed provider VM still needs explicit destruction before release (1.499299ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   0 !== 1
-  
+
       at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/vm-builder-preflight.mjs:55:9)
       at async Test.run (node:internal/test_runner/test:1409:7)
       at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {

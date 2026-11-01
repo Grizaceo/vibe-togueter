@@ -23,9 +23,9 @@
 test at test/build-quarantine.mjs:71:1
 ✖ corrupted source or test report blocks recovery without overwriting evidence (1.773709ms)
   AssertionError [ERR_ASSERTION]: The input did not match the regular expression /integrity/. Input:
-  
+
   'Error: Stale artifact or test attempt.'
-  
+
       at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/build-quarantine.mjs:75:10)
       at Test.runInAsyncScope (node:async_hooks:226:14)
       at Test.run (node:internal/test_runner/test:1402:25)
