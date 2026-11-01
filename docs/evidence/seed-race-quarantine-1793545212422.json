@@ -1,0 +1,450 @@
+{
+  "at": "2026-11-01T14:59:57.339Z",
+  "sessionId": "01a19776-75a5-7e91-b5c1-f108c345dc8c",
+  "kind": "real-isolated-candidate-tests",
+  "checks": [],
+  "cleanupConfirmed": true,
+  "vmId": "sb-01m6bszr2v5c3wgkb1r9h01a7g",
+  "buildVmId": "sb-01m6bs0vnqsx186jvqgygfcqr8",
+  "testNonce": "296bfac808f6667a39f1568b48136363067554b8934bc806",
+  "artifactHash": "5e3855f9cd36bff8174d8e9925c5de1a0bf14ac7b6c27bad750e9a89859d8b39",
+  "report": {
+    "codeSha256": "8f57354ce34173bd5dda24e407e7d44d53287e49a5ffd36f499c51d5efa52799",
+    "artifactHash": "5e3855f9cd36bff8174d8e9925c5de1a0bf14ac7b6c27bad750e9a89859d8b39",
+    "checks": [
+      {
+        "name": "exact source bytes load through the actual SDK host",
+        "passed": true
+      },
+      {
+        "name": "all SDK exports and initial six-seed state",
+        "passed": true
+      },
+      {
+        "name": "real passive SDK commands advance a seed and enforce cooldown",
+        "passed": true
+      },
+      {
+        "name": "malformed chat cannot change seed progress",
+        "passed": true
+      },
+      {
+        "name": "web key edges and pointer input advance selected lanes",
+        "passed": true
+      },
+      {
+        "name": "finite frame uses all three reviewed art paths",
+        "passed": true
+      },
+      {
+        "name": "nonfinite dt is ignored and huge dt is bounded",
+        "passed": true
+      },
+      {
+        "name": "player and passive-actor state stays bounded",
+        "passed": true
+      },
+      {
+        "name": "six finishers celebrate then reset while preserving connected players",
+        "passed": true
+      },
+      {
+        "name": "SDK reload restores clean initial state with the same version",
+        "passed": true
+      },
+      {
+        "name": "transferred Kenney bytes match reviewed resource fingerprints",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "frame": {
+      "bg": "#b8e5ec",
+      "layers": [
+        {
+          "t": "sprite",
+          "x": 0,
+          "y": 0,
+          "w": 1280,
+          "h": 720,
+          "src": "/curated/kenney-background-elements/sky.png"
+        },
+        {
+          "t": "sprite",
+          "x": 0,
+          "y": 310,
+          "w": 1280,
+          "h": 410,
+          "src": "/curated/kenney-background-elements/hills1.png"
+        },
+        {
+          "t": "rect",
+          "x": 0,
+          "y": 0,
+          "w": 1280,
+          "h": 135,
+          "color": "#244f46"
+        },
+        {
+          "t": "text",
+          "x": 40,
+          "y": 47,
+          "text": "COOPERATIVE SEED RACE",
+          "size": 32,
+          "color": "#ffffff"
+        },
+        {
+          "t": "text",
+          "x": 40,
+          "y": 85,
+          "text": "Grow together: bring every seed to the grove!",
+          "size": 20,
+          "color": "#e3f5cd"
+        },
+        {
+          "t": "text",
+          "x": 1235,
+          "y": 50,
+          "text": "ROUND 1",
+          "size": 22,
+          "color": "#ffffff",
+          "align": "right"
+        },
+        {
+          "t": "sprite",
+          "x": 1100,
+          "y": 80,
+          "w": 150,
+          "h": 200,
+          "src": "/curated/kenney-background-elements/tree01.png"
+        },
+        {
+          "t": "rect",
+          "x": 100,
+          "y": 170,
+          "w": 1000,
+          "h": 56,
+          "color": "#f7f5db"
+        },
+        {
+          "t": "rect",
+          "x": 145,
+          "y": 194,
+          "w": 900,
+          "h": 5,
+          "color": "#b2cb95"
+        },
+        {
+          "t": "text",
+          "x": 125,
+          "y": 208,
+          "text": "1",
+          "size": 24,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "circle",
+          "x": 223.51,
+          "y": 196,
+          "r": 19,
+          "color": "#f6bb54"
+        },
+        {
+          "t": "circle",
+          "x": 223.51,
+          "y": 196,
+          "r": 19,
+          "color": "#685845",
+          "fill": false,
+          "w": 2
+        },
+        {
+          "t": "text",
+          "x": 1065,
+          "y": 206,
+          "text": "7%",
+          "size": 18,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "rect",
+          "x": 100,
+          "y": 250,
+          "w": 1000,
+          "h": 56,
+          "color": "#eef4d5"
+        },
+        {
+          "t": "rect",
+          "x": 145,
+          "y": 274,
+          "w": 900,
+          "h": 5,
+          "color": "#b2cb95"
+        },
+        {
+          "t": "text",
+          "x": 125,
+          "y": 288,
+          "text": "2",
+          "size": 24,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "circle",
+          "x": 271.36,
+          "y": 276,
+          "r": 19,
+          "color": "#f08a6c"
+        },
+        {
+          "t": "circle",
+          "x": 271.36,
+          "y": 276,
+          "r": 19,
+          "color": "#685845",
+          "fill": false,
+          "w": 2
+        },
+        {
+          "t": "text",
+          "x": 1065,
+          "y": 286,
+          "text": "12%",
+          "size": 18,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "rect",
+          "x": 100,
+          "y": 330,
+          "w": 1000,
+          "h": 56,
+          "color": "#f7f5db"
+        },
+        {
+          "t": "rect",
+          "x": 145,
+          "y": 354,
+          "w": 900,
+          "h": 5,
+          "color": "#b2cb95"
+        },
+        {
+          "t": "text",
+          "x": 125,
+          "y": 368,
+          "text": "3",
+          "size": 24,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "circle",
+          "x": 175.66,
+          "y": 356,
+          "r": 19,
+          "color": "#d88ec3"
+        },
+        {
+          "t": "circle",
+          "x": 175.66,
+          "y": 356,
+          "r": 19,
+          "color": "#685845",
+          "fill": false,
+          "w": 2
+        },
+        {
+          "t": "text",
+          "x": 1065,
+          "y": 366,
+          "text": "1%",
+          "size": 18,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "rect",
+          "x": 100,
+          "y": 410,
+          "w": 1000,
+          "h": 56,
+          "color": "#eef4d5"
+        },
+        {
+          "t": "rect",
+          "x": 145,
+          "y": 434,
+          "w": 900,
+          "h": 5,
+          "color": "#b2cb95"
+        },
+        {
+          "t": "text",
+          "x": 125,
+          "y": 448,
+          "text": "4",
+          "size": 24,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "circle",
+          "x": 175.66,
+          "y": 436,
+          "r": 19,
+          "color": "#96bde4"
+        },
+        {
+          "t": "circle",
+          "x": 175.66,
+          "y": 436,
+          "r": 19,
+          "color": "#685845",
+          "fill": false,
+          "w": 2
+        },
+        {
+          "t": "text",
+          "x": 1065,
+          "y": 446,
+          "text": "1%",
+          "size": 18,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "rect",
+          "x": 100,
+          "y": 490,
+          "w": 1000,
+          "h": 56,
+          "color": "#f7f5db"
+        },
+        {
+          "t": "rect",
+          "x": 145,
+          "y": 514,
+          "w": 900,
+          "h": 5,
+          "color": "#b2cb95"
+        },
+        {
+          "t": "text",
+          "x": 125,
+          "y": 528,
+          "text": "5",
+          "size": 24,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "circle",
+          "x": 175.66,
+          "y": 516,
+          "r": 19,
+          "color": "#a4d682"
+        },
+        {
+          "t": "circle",
+          "x": 175.66,
+          "y": 516,
+          "r": 19,
+          "color": "#685845",
+          "fill": false,
+          "w": 2
+        },
+        {
+          "t": "text",
+          "x": 1065,
+          "y": 526,
+          "text": "1%",
+          "size": 18,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "rect",
+          "x": 100,
+          "y": 570,
+          "w": 1000,
+          "h": 56,
+          "color": "#eef4d5"
+        },
+        {
+          "t": "rect",
+          "x": 145,
+          "y": 594,
+          "w": 900,
+          "h": 5,
+          "color": "#b2cb95"
+        },
+        {
+          "t": "text",
+          "x": 125,
+          "y": 608,
+          "text": "6",
+          "size": 24,
+          "color": "#42634a",
+          "align": "center"
+        },
+        {
+          "t": "circle",
+          "x": 223.51,
+          "y": 596,
+          "r": 19,
+          "color": "#e4ce73"
+        },
+        {
+          "t": "circle",
+          "x": 223.51,
+          "y": 596,
+          "r": 19,
+          "color": "#685845",
+          "fill": false,
+          "w": 2
+        },
+        {
+          "t": "text",
+          "x": 1065,
+          "y": 606,
+          "text": "7%",
+          "size": 18,
+          "color": "#42634a",
+          "align": "center"
+        }
+      ],
+      "hud": [
+        {
+          "t": "text",
+          "x": 30,
+          "y": 669,
+          "text": "↑ / ↓ choose lane  •  SPACE or click to boost  •  Chat: !seed 1-6  !water 1-6  !wind",
+          "size": 18,
+          "color": "#173d31"
+        },
+        {
+          "t": "text",
+          "x": 30,
+          "y": 703,
+          "text": "Background art: Kenney · CC0 · https://kenney.nl/ · https://creativecommons.org/publicdomain/zero/1.0/",
+          "size": 14,
+          "color": "#173d31"
+        }
+      ]
+    },
+    "execution": "separate-quarantine-vm",
+    "limitations": [
+      "Protocol/state checks; not independent human play or browser visual review.",
+      "node:vm is used only inside this disposable VM; it is not the isolation boundary."
+    ]
+  },
+  "evidenceSha256": "4bf250d59c7cd7d2deed60523029243e2b632cc5da711bc9c80dee528f32ccd2",
+  "codeSha256": "8f57354ce34173bd5dda24e407e7d44d53287e49a5ffd36f499c51d5efa52799",
+  "destroyedAt": "2026-11-01T15:00:11.681496Z"
+}

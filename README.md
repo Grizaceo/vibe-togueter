@@ -12,7 +12,9 @@ Open `/studio.html` for proposals, replacement ballots, streamer selection/appro
 
 Three bundled Kenney CC0 images can be imported by a local owner through `/admin/assets/import`, with keys listed in `public/curated/kenney-background-elements/provenance.json`, then reviewed through the studio. The importer verifies actual bundled bytes. They are labeled curated public resources: Kenney has not joined or endorsed this platform. Original archive and working files stay outside this repo.
 
-Build execution defaults to **cloud VM**, with no fallback to the streamer PC. An isolated coding worker is not connected yet, so generation is intentionally blocked with `isolated_builder_required`. A deliberate `VA_BUILD_MODE=trusted-local` opt-in retains the inherited generator for trusted local use; it also requires an exact approved community round. Paid creator checkout and commission are not configured. Neither a real payment processor nor actual VM/API expense reconciliation is implemented.
+An owner-operated [build artifact quarantine journal](docs/platform/BUILD_QUARANTINE.md) now receives immutable candidate source as data, binds test receipts and approval to hashes, and preserves failed/interrupted attempts. Its HTTP/CLI path is tested locally. A subsequent [real Codex VM trial](docs/platform/VM_TRIAL.md) built Cooperative Seed Race through a fresh subscription login, tested the artifact in a separate guest and received exact owner approval. Reports remain operator-attested; the game is not deployed and this is not a general worker service.
+
+Build execution defaults to **cloud VM**, with no fallback to the streamer PC. The web/MCP generation path does not dispatch the operator VM tools yet, so it is intentionally blocked with `isolated_builder_required`. A deliberate `VA_BUILD_MODE=trusted-local` opt-in retains the inherited generator for trusted local use; it also requires an exact approved community round. Paid creator checkout and commission are not configured. Neither a real payment processor nor actual VM/API expense reconciliation is implemented.
 
 ## Install and private setup
 

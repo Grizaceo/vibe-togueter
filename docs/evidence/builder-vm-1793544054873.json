@@ -1,0 +1,61 @@
+{
+  "at": "2026-11-01T14:40:54.873Z",
+  "sessionId": "01a19776-75a5-7e91-b5c1-f108c345dc8c",
+  "kind": "real-vm-tool-preflight",
+  "result": {
+    "version": 1,
+    "name": "va-build-aaf7539670ba",
+    "id": "sb-01m6brwnd8epmndne2dfm3r942",
+    "requestedAt": 1793544049679,
+    "phase": "released",
+    "profile": {
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "shape": "s-1vcpu-2gb",
+      "rootfs": "devbox:1",
+      "vmBudgetMinor": 300,
+      "paidApiBudgetMinor": 0,
+      "authentication": "chatgpt-subscription",
+      "currency": "USD",
+      "autoPause": "5m",
+      "maxProbeMs": 60000,
+      "ingress": false,
+      "egress": [
+        "api.openai.com",
+        "registry.npmjs.org",
+        "auth.openai.com",
+        "chatgpt.com"
+      ]
+    },
+    "existingIds": [
+      "sb-01m6b6asmqr2znr2zf6xh9wnmb",
+      "sb-01m6b6ary1y2qa645hxc9h8gfd"
+    ],
+    "result": {
+      "node": "v24.21.0",
+      "codex": "codex-cli 0.160.0",
+      "platform": "linux",
+      "arch": "x64",
+      "personalAuthPresent": false,
+      "credentialEnvironmentPresent": false,
+      "modelRequested": "gpt-6.1-terra",
+      "modelAuthenticated": false,
+      "candidateExecuted": false
+    },
+    "probeReceipt": {
+      "node": "v24.21.0",
+      "codex": "codex-cli 0.160.0",
+      "platform": "linux",
+      "arch": "x64",
+      "personalAuthPresent": false,
+      "credentialEnvironmentPresent": false
+    },
+    "releasedAt": 1793544054870,
+    "providerTerminalStatus": "destroyed"
+  },
+  "limitations": [
+    "No approved community round was dispatched.",
+    "No Codex model call, authenticated agent, generated game, isolation test of a candidate or deployment.",
+    "Cost is not settled provider billing; no AI request occurred."
+  ]
+}

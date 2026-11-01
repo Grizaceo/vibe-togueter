@@ -1,0 +1,38 @@
+{
+  "at": "2026-11-01T14:40:18.542Z",
+  "error": "VM preflight incomplete; inspect the protected journal and retained evidence.",
+  "state": {
+    "version": 1,
+    "name": "va-build-5a906aaf32b1",
+    "id": "sb-01m6brvm9756xn2k5104jqvkpe",
+    "requestedAt": 1793544015761,
+    "phase": "released",
+    "profile": {
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "shape": "s-1vcpu-2gb",
+      "rootfs": "devbox:1",
+      "vmBudgetMinor": 300,
+      "paidApiBudgetMinor": 0,
+      "authentication": "chatgpt-subscription",
+      "currency": "USD",
+      "autoPause": "5m",
+      "maxProbeMs": 60000,
+      "ingress": false,
+      "egress": [
+        "api.openai.com",
+        "registry.npmjs.org",
+        "auth.openai.com",
+        "chatgpt.com"
+      ]
+    },
+    "existingIds": [
+      "sb-01m6b6asmqr2znr2zf6xh9wnmb",
+      "sb-01m6b6ary1y2qa645hxc9h8gfd"
+    ],
+    "result": null,
+    "failureKind": "Error",
+    "releasedAt": 1793544018540,
+    "providerTerminalStatus": "destroyed"
+  }
+}

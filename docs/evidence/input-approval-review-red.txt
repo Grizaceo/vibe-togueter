@@ -1,0 +1,103 @@
+✔ tickets require streamer approval and distinct build/runtime VMs (4.59316ms)
+✔ candidate bytes remain inert, private, immutable and idempotent across restart (1.294941ms)
+✔ wrong source hash, UTF-8 byte limit and malformed candidates fail without changing state (0.700236ms)
+✔ approval binds exact source, round, resource manifest and test report (1.978624ms)
+✔ failed checks, missing isolation attestation and runtime/build VM tests cannot approve (1.419818ms)
+✔ restart during testing requires retest and rejects delayed success (1.391044ms)
+✔ retesting revokes approval; cancelled/rejected tickets reject late reports and artifacts (2.247376ms)
+✔ corrupted source or test report blocks recovery without overwriting evidence (1.848019ms)
+✔ persistence failure rolls back the mutation and preserves retry (1.041344ms)
+✔ rejection before artifact receipt is durable and permits a replacement ticket (0.7163ms)
+✔ retest retains failed evidence, interrupted attempts and terminal test decisions (1.635071ms)
+✔ resource manifest is copied into the immutable version and checked after restart (2.056638ms)
+✖ exact completed construction can receive final artifact approval without reopening intake (1.039528ms)
+✖ blur releases both vertical arrow keys as well as held pointer input (32.125577ms)
+✖ releasing outside canvas sends a pointer-up and permits the next click (1.383849ms)
+✖ pointer cancellation clears held state without accepting another touch release (0.434766ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 12
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 100.311141
+
+✖ failing tests:
+
+test at test/build-quarantine.mjs:114:1
+✖ exact completed construction can receive final artifact approval without reopening intake (1.039528ms)
+  Error: Community round approval changed.
+      at BuildQuarantine.approve (file:///home/gris96/vibe-arena/src/build-quarantine.js:120:107)
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/build-quarantine.mjs:116:17)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at test/client-input.mjs:11:1
+✖ blur releases both vertical arrow keys as well as held pointer input (32.125577ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(sent.some(e=>e.kind==='key'&&e.key===key&&!e.down))
+  
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/client-input.mjs:13:63)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/client-input.mjs:15:1
+✖ releasing outside canvas sends a pointer-up and permits the next click (1.383849ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/client-input.mjs:17:9)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/client-input.mjs:19:1
+✖ pointer cancellation clears held state without accepting another touch release (0.434766ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/client-input.mjs:21:9)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

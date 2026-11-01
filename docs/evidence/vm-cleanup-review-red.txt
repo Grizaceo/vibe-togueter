@@ -1,0 +1,34 @@
+✔ fresh private VM preflight runs only fixed probe and confirms destruction (5.224672ms)
+✔ failed guest checks still destroy the exact fresh VM (1.511731ms)
+✔ lost creation response reconciles by unique journaled name without a second create (0.85347ms)
+✔ cleanup failure survives restart and blocks automatic replacement (0.946709ms)
+✔ provider identity mismatch cannot destroy a foreign VM (0.760789ms)
+✔ pre-cancelled preflight makes no provider mutation or journal (0.493015ms)
+✖ failed provider VM still needs explicit destruction before release (1.499299ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.917583
+
+✖ failing tests:
+
+test at test/vm-builder-preflight.mjs:53:1
+✖ failed provider VM still needs explicit destruction before release (1.499299ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/vm-builder-preflight.mjs:55:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

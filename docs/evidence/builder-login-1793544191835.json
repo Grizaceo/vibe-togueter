@@ -1,0 +1,13 @@
+{
+  "at": "2026-11-01T14:43:11.835Z",
+  "sessionId": "01a19776-75a5-7e91-b5c1-f108c345dc8c",
+  "kind": "fresh-guest-device-login-prepared",
+  "vmId": "sb-01m6bs0vnqsx186jvqgygfcqr8",
+  "model": "gpt-6.1-terra",
+  "ingress": false,
+  "authentication": "chatgpt-subscription",
+  "authenticated": false,
+  "cleanupUnit": "vibe-arena-builder-a5845d48d388",
+  "expiresAt": "2026-11-01T15:13:09.782Z",
+  "codeOrTokensRecorded": false
+}

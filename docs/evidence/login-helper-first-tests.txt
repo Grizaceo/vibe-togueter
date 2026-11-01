@@ -1,0 +1,62 @@
+✖ device login helper keeps codes private, verifies subscription status and releases own guest (67.822234ms)
+✖ failed destruction timer installation destroys the retained guest (67.86812ms)
+✖ SIGTERM during timer installation destroys the guest before helper exits (70.515271ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 260.262282
+
+✖ failing tests:
+
+test at test/builder-login.mjs:31:1
+✖ device login helper keeps codes private, verifies subscription status and releases own guest (67.822234ms)
+  Error: Command failed: /home/gris96/.local/share/mise/installs/node/26.12.1/bin/node scripts/builder-login.mjs prepare
+  Guest login action failed; inspect the protected journal and retained evidence.
+  
+      at genericNodeError (node:internal/errors:999:15)
+      at wrappedFn (node:internal/errors:544:14)
+      at ChildProcess.exithandler (node:child_process:420:12)
+      at ChildProcess.emit (node:events:514:20)
+      at maybeClose (node:internal/child_process:1156:16)
+      at ChildProcess._handle.onexit (node:internal/child_process:334:5) {
+    code: 1,
+    killed: false,
+    signal: null,
+    cmd: '/home/gris96/.local/share/mise/installs/node/26.12.1/bin/node scripts/builder-login.mjs prepare',
+    stdout: '',
+    stderr: 'Guest login action failed; inspect the protected journal and retained evidence.\n'
+  }
+
+test at test/builder-login.mjs:39:1
+✖ failed destruction timer installation destroys the retained guest (67.86812ms)
+  Error: ENOENT: no such file or directory, open '/tmp/va-login-Xa0HWI/provider.json'
+      at Object.openSync (node:fs:782:18)
+      at Object.readFileSync (node:fs:628:35)
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/builder-login.mjs:40:117)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/tmp/va-login-Xa0HWI/provider.json'
+  }
+
+test at test/builder-login.mjs:42:1
+✖ SIGTERM during timer installation destroys the guest before helper exits (70.515271ms)
+  Error: ENOENT: no such file or directory, open '/tmp/va-login-l4YVZW/provider.json'
+      at Object.openSync (node:fs:782:18)
+      at Object.readFileSync (node:fs:628:35)
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/builder-login.mjs:43:116)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/tmp/va-login-l4YVZW/provider.json'
+  }

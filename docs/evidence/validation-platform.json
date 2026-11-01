@@ -1,8 +1,9 @@
 {
-  "at": "2026-11-01T14:05:26.787Z",
-  "focused": 50,
-  "integration": 57,
-  "total": 107,
+  "at": "2026-11-01T15:16:24.802900+00:00",
+  "sessionId": "01a19776-75a5-7e91-b5c1-f108c345dc8c",
+  "focused": 80,
+  "integration": 70,
+  "total": 150,
   "failures": 0,
   "results": [
     {
@@ -58,8 +59,15 @@
       "exit": 0,
       "failures": 0,
       "passes": 5
+    },
+    {
+      "file": "quarantine-integration",
+      "exit": 0,
+      "failures": 0,
+      "passes": 13
     }
   ],
-  "log": "/tmp/vibe-arena-grove-tests.log",
-  "scope": "Local unit/isolated mock checks; real network evidence is separate."
+  "log": "/tmp/vibe-arena-seed-trial-tests-final.log",
+  "retainedLog": "docs/evidence/seed-trial-tests.txt",
+  "scope": "Local unit and temporary-copy HTTP/CLI/mock checks only. The 12 real guest checks, static Chromium frame and real VM/Codex receipts are separate evidence; Rust counts remain separate."
 }

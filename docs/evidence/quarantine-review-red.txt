@@ -1,0 +1,46 @@
+✔ tickets require streamer approval and distinct build/runtime VMs (3.545111ms)
+✔ candidate bytes remain inert, private, immutable and idempotent across restart (1.271334ms)
+✔ wrong source hash, UTF-8 byte limit and malformed candidates fail without changing state (0.625925ms)
+✔ approval binds exact source, round, resource manifest and test report (1.652672ms)
+✔ failed checks, missing isolation attestation and runtime/build VM tests cannot approve (1.330002ms)
+✔ restart during testing requires retest and rejects delayed success (1.305766ms)
+✔ retesting revokes approval; cancelled/rejected tickets reject late reports and artifacts (1.544208ms)
+✔ corrupted source or test report blocks recovery without overwriting evidence (1.155816ms)
+✔ persistence failure rolls back the mutation and preserves retry (0.88427ms)
+✖ rejection before artifact receipt is durable and permits a replacement ticket (0.561111ms)
+✖ retest retains failed evidence, interrupted attempts and terminal test decisions (0.874353ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 9
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 80.349208
+
+✖ failing tests:
+
+test at test/build-quarantine.mjs:85:1
+✖ rejection before artifact receipt is durable and permits a replacement ticket (0.561111ms)
+  Error: Missing quarantined source.
+      at validate (file:///home/gris96/vibe-arena/src/build-quarantine.js:38:76)
+      at Array.forEach (<anonymous>)
+      at BuildQuarantine.change (file:///home/gris96/vibe-arena/src/build-quarantine.js:66:43)
+      at BuildQuarantine.close (file:///home/gris96/vibe-arena/src/build-quarantine.js:116:17)
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/build-quarantine.mjs:87:17)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+
+test at test/build-quarantine.mjs:91:1
+✖ retest retains failed evidence, interrupted attempts and terminal test decisions (0.874353ms)
+  TypeError [Error]: Cannot read properties of undefined (reading '0')
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/build-quarantine.mjs:95:27)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

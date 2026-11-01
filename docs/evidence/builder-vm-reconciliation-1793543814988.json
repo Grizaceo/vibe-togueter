@@ -1,0 +1,38 @@
+{
+  "at": "2026-11-01T14:36:54.988Z",
+  "state": {
+    "version": 1,
+    "name": "va-build-probe-98d3b1d7c9e40b0b3f2eaf08",
+    "id": null,
+    "requestedAt": 1793543586372,
+    "phase": "released",
+    "profile": {
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "shape": "s-1vcpu-2gb",
+      "rootfs": "devbox:1",
+      "vmBudgetMinor": 300,
+      "aiBudgetMinor": 500,
+      "currency": "USD",
+      "autoPause": "5m",
+      "maxProbeMs": 60000,
+      "ingress": false,
+      "egress": [
+        "api.openai.com",
+        "registry.npmjs.org"
+      ]
+    },
+    "existingIds": [
+      "sb-01m6b6asmqr2znr2zf6xh9wnmb",
+      "sb-01m6b6ary1y2qa645hxc9h8gfd"
+    ],
+    "result": null,
+    "providerTerminalStatus": "not-created-confirmed-by-complete-inventory",
+    "releasedAt": 1793543814988,
+    "reconciliation": {
+      "method": "complete provider inventory and exact-name CLI lookup",
+      "entries": 43,
+      "matched": 0
+    }
+  }
+}

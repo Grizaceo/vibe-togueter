@@ -1,0 +1,40 @@
+{
+  "at": "2026-11-01T15:05:31.231Z",
+  "sessionId": "01a19776-75a5-7e91-b5c1-f108c345dc8c",
+  "version": 1,
+  "phase": "quarantined",
+  "vmId": "sb-01m6bs0vnqsx186jvqgygfcqr8",
+  "ticketId": "7ec53a78-6842-4a99-9210-2552be9f55ed",
+  "grant": {
+    "roundId": "11346b8c-a624-4d5d-aa81-be359fb94ac3",
+    "approvedInputHash": "704f5dc9736ab883609396961206d598d0a453f4659d2b5c8fcb4e42145bcc8c"
+  },
+  "origin": "explicit-owner-trial-not-twitch-vote",
+  "model": "gpt-6.1-terra",
+  "authentication": "chatgpt-subscription",
+  "startedAt": 1793545515235,
+  "maxWallSeconds": 300,
+  "agent": {
+    "completed": true,
+    "usage": {
+      "input_tokens": 47467,
+      "cached_input_tokens": 28928,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 880,
+      "reasoning_output_tokens": 38
+    },
+    "threadId": "01a197a4-b520-79f0-a679-45bc510547b3",
+    "failed": false
+  },
+  "codeSha256": "f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105",
+  "artifactHash": "e41cdbd68ccad078fb9ab33e35b7c95dadbc44db1177808c81c03f62e914f3f5",
+  "finishedAt": 1793545531231,
+  "revisedFrom": {
+    "ticketId": "b075c85f-8daf-4259-aa76-622f37710f57",
+    "artifactHash": "5e3855f9cd36bff8174d8e9925c5de1a0bf14ac7b6c27bad750e9a89859d8b39",
+    "codeSha256": "8f57354ce34173bd5dda24e407e7d44d53287e49a5ffd36f499c51d5efa52799",
+    "reportHash": "a466809baa39c9fc3c7a3b4c22752454cdd6e86d14a2b1463ab0b4e208666edf"
+  },
+  "candidateExecutedOnHost": false,
+  "scope": "Real guest Codex revision of owner trial; no artifact approval/deployment yet."
+}

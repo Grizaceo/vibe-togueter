@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-01T15:08:55.357Z",
+  "sessionId": "01a19776-75a5-7e91-b5c1-f108c345dc8c",
+  "kind": "explicit-owner-artifact-approval",
+  "codeSha256": "f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105",
+  "artifactHash": "e41cdbd68ccad078fb9ab33e35b7c95dadbc44db1177808c81c03f62e914f3f5",
+  "reportHash": "3dcbc39f0eea93ba2acb134b421afb253227c6d5441163337bbb9656ae71165e",
+  "approval": {
+    "artifactHash": "e41cdbd68ccad078fb9ab33e35b7c95dadbc44db1177808c81c03f62e914f3f5",
+    "reportHash": "3dcbc39f0eea93ba2acb134b421afb253227c6d5441163337bbb9656ae71165e",
+    "rightsAttested": true,
+    "at": 1793545735310
+  },
+  "published": false,
+  "scope": "Exact version approved by owner in this conversation. Deployment remains separate; no visibility decision or public hosting claimed."
+}

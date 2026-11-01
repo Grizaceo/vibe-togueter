@@ -1,0 +1,15 @@
+✔ fresh private VM preflight runs only fixed probe and confirms destruction (4.514518ms)
+✔ failed guest checks still destroy the exact fresh VM (1.250033ms)
+✔ lost creation response reconciles by unique journaled name without a second create (0.871908ms)
+✔ cleanup failure survives restart and blocks automatic replacement (0.88853ms)
+✔ provider identity mismatch cannot destroy a foreign VM (0.750872ms)
+✔ pre-cancelled preflight makes no provider mutation or journal (0.406481ms)
+✔ failed provider VM still needs explicit destruction before release (0.78216ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.990917

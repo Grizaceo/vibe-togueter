@@ -1,0 +1,40 @@
+{
+  "at": "2026-11-01T14:38:10.610Z",
+  "state": {
+    "version": 1,
+    "name": "va-build-def594dd5ba162be5e5d",
+    "id": null,
+    "requestedAt": 1793543835057,
+    "phase": "released",
+    "profile": {
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "shape": "s-1vcpu-2gb",
+      "rootfs": "devbox:1",
+      "vmBudgetMinor": 300,
+      "paidApiBudgetMinor": 0,
+      "authentication": "chatgpt-subscription",
+      "currency": "USD",
+      "autoPause": "5m",
+      "maxProbeMs": 60000,
+      "ingress": false,
+      "egress": [
+        "api.openai.com",
+        "registry.npmjs.org"
+      ]
+    },
+    "existingIds": [
+      "sb-01m6b6asmqr2znr2zf6xh9wnmb",
+      "sb-01m6b6ary1y2qa645hxc9h8gfd"
+    ],
+    "result": null,
+    "providerTerminalStatus": "not-created-name-rejected",
+    "releasedAt": 1793543890610,
+    "reconciliation": {
+      "method": "complete provider inventory after explicit name-length rejection",
+      "entries": 43,
+      "matched": 0
+    }
+  },
+  "diagnostic": "CLI rejected name: 29 characters; max 22. No VM found in complete inventory."
+}

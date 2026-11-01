@@ -1,0 +1,33 @@
+{
+  "at": "2026-11-01T14:37:16.160Z",
+  "error": "VM cleanup requires reconciliation; no further VM may be created by this helper.",
+  "state": {
+    "version": 1,
+    "name": "va-build-def594dd5ba162be5e5d",
+    "id": null,
+    "requestedAt": 1793543835057,
+    "phase": "cleanup-required",
+    "profile": {
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "shape": "s-1vcpu-2gb",
+      "rootfs": "devbox:1",
+      "vmBudgetMinor": 300,
+      "paidApiBudgetMinor": 0,
+      "authentication": "chatgpt-subscription",
+      "currency": "USD",
+      "autoPause": "5m",
+      "maxProbeMs": 60000,
+      "ingress": false,
+      "egress": [
+        "api.openai.com",
+        "registry.npmjs.org"
+      ]
+    },
+    "existingIds": [
+      "sb-01m6b6asmqr2znr2zf6xh9wnmb",
+      "sb-01m6b6ary1y2qa645hxc9h8gfd"
+    ],
+    "result": null
+  }
+}

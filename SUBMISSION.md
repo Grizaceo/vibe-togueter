@@ -8,11 +8,11 @@ Stream communities contain people who want to play actively and people who want 
 
 ## Current platform scope
 
-The expanded product is a free-first community game studio, with independent artist visibility at its core. `/studio.html` implements limited idea rounds, replacement ballots, streamer selection and exact content/resource approval, plus a curator-reviewed free resource catalog with license notices and creator links. Three Kenney CC0 images are curated public resources, not artist signups. The selected pack has a credit preview. An original cooperative Community Grove example uses that real art with version-bound credits and creator links on the player/OBS pages. The arbitrary VM-generated game and remix publication pipeline remains pending.
+The expanded product is a free-first community game studio, with independent artist visibility at its core. `/studio.html` implements limited idea rounds, replacement ballots, streamer selection and exact content/resource approval, plus a curator-reviewed free resource catalog with license notices and creator links. Three Kenney CC0 images are curated public resources, not artist signups. The selected pack has a credit preview. An original cooperative Community Grove example uses that real art with version-bound credits and creator links on the player/OBS pages. A subsequent owner-operated quarantine journal pins candidate source, resource and report hashes and recovers interrupted tests. Reports remain operator-attested; no candidate executes or deploys through this journal. A real owner-selected Codex VM trial subsequently built Cooperative Seed Race using a fresh subscription login, passed 12 separate-VM checks and received exact artifact approval. The final source is retained outside the host games directory; deployment and arbitrary game/remix publication remain pending.
 
 Configured Rust browser demos are listed as external runtimes. The falling-blocks adapter can create, share and start a public lobby; Tee Arena has health inspection, a browser link and an owner-enabled shared-character Twitch bridge. Their game code was built by parallel agents, not this Codex session. Real Twitch commands moved the Tee crowd character and received server input acknowledgements; the falling-blocks runtime does not yet have passive gameplay commands. Backend privacy and distribution rights require further work.
 
-Coding execution defaults to a separate cloud VM with no automatic host fallback. No isolated coding worker is connected yet; generation therefore returns a clear blocked result. The inherited generator remains available only with explicit trusted-local configuration and matching round approval. Paid creator checkout, VM/API budget separation, actual payments, Agent Native connections and the specialized PR safety gate are not complete. This is a working platform increment, not a claim that the full vision ships today.
+Coding execution defaults to a separate cloud VM with no automatic host fallback. Operator CLI tools demonstrated one real isolated build; the web/MCP generator does not dispatch them yet and still returns a blocked result. The inherited generator remains available only with explicit trusted-local configuration and matching round approval. Paid creator checkout, VM/API budget separation, actual payments, Agent Native connections and the specialized PR safety gate are not complete. This is a working platform increment, not a claim that the full vision ships today.
 
 ## What it does
 
@@ -30,7 +30,7 @@ The server restricts administration to authenticated local requests and rejects 
 
 ## How Codex was used
 
-Real Codex Session ID: **01a19536-0f02-7fc3-b030-d6b6fd8e170c**.
+Main build Codex Session ID: **01a19536-0f02-7fc3-b030-d6b6fd8e170c**. Continuation session: **01a19776-75a5-7e91-b5c1-f108c345dc8c**, which added the inert artifact quarantine journal, exact source/report approval, durable test-attempt history, local operator helper and associated tests. It then implemented VM preflight/new subscription login, ran a real Terra build and separate quarantine tests, corrected shared input release behavior and recorded owner approval of the exact Seed Race artifact. This continuation did not author the inherited prototype or the parallel Rust games.
 
 At takeover, the prototype already contained the server, SDK game host, generic client and OBS overlay, chat adapters, signed webhook receivers, treasury, generator, MCP integration and Marble Race. Commit `fab3227` records that inherited source; it is not claimed as newly authored by this Codex session. The owner must confirm the original work's creation dates fall within the event's submission period.
 
@@ -48,7 +48,7 @@ See `docs/EVIDENCE.md` for exact timestamps and command results. `npm test` runs
 
 Signed local EventSub/Kick fixtures verify receiver behavior; real paid events have not been received. The configured channel reports no Affiliate/Partner status, and its existing authorization only grants chat scopes. Extra authorization and an eligible broadcaster are needed to test monetized events. Channel-point routing is implemented, not demonstrated by a real redemption. No real money was spent or real donation claimed during this rehearsal.
 
-The generator-to-fund loop has mock-provider evidence. Actual cloud/local-model generation and actual provider billing remain unverified here. Chat Trivia, subscriber-weighted voting and paid-vote modes remain specs/unimplemented. Browser visual inspection was unavailable in this agent session; the owner must check layout and record the video. There is no Twitch Extension.
+The generator-to-fund loop has mock-provider evidence. The separate authenticated Codex VM trial has real generation evidence; actual provider billing and general automatic worker dispatch remain unverified. Chat Trivia, subscriber-weighted voting and paid-vote modes remain specs/unimplemented. Earlier browser control was unavailable. This continuation rendered and inspected a static quarantine frame through Chromium; interactive play, full UI review and the video remain pending. There is no Twitch Extension.
 
 ## Built with
 

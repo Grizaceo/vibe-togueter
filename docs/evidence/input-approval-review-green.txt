@@ -1,0 +1,35 @@
+✔ tickets require streamer approval and distinct build/runtime VMs (4.701414ms)
+✔ candidate bytes remain inert, private, immutable and idempotent across restart (1.847042ms)
+✔ wrong source hash, UTF-8 byte limit and malformed candidates fail without changing state (0.901241ms)
+✔ approval binds exact source, round, resource manifest and test report (2.428057ms)
+✔ failed checks, missing isolation attestation and runtime/build VM tests cannot approve (1.460047ms)
+✔ restart during testing requires retest and rejects delayed success (1.68424ms)
+✔ retesting revokes approval; cancelled/rejected tickets reject late reports and artifacts (5.539379ms)
+✔ corrupted source or test report blocks recovery without overwriting evidence (1.969614ms)
+✔ persistence failure rolls back the mutation and preserves retry (1.271334ms)
+✔ rejection before artifact receipt is durable and permits a replacement ticket (0.935883ms)
+✔ retest retains failed evidence, interrupted attempts and terminal test decisions (1.990846ms)
+✔ resource manifest is copied into the immutable version and checked after restart (2.129482ms)
+✔ exact completed construction can receive final artifact approval without reopening intake (1.066906ms)
+✔ blur releases both vertical arrow keys as well as held pointer input (28.684042ms)
+✔ releasing outside canvas sends a pointer-up and permits the next click (0.991198ms)
+✔ pointer cancellation clears held state without accepting another touch release (0.513339ms)
+✔ fresh private VM preflight runs only fixed probe and confirms destruction (6.726903ms)
+✔ failed guest checks still destroy the exact fresh VM (2.119635ms)
+✔ lost creation response reconciles by unique journaled name without a second create (1.23767ms)
+✔ cleanup failure survives restart and blocks automatic replacement (1.505444ms)
+✔ provider identity mismatch cannot destroy a foreign VM (1.198838ms)
+✔ pre-cancelled preflight makes no provider mutation or journal (0.57012ms)
+✔ failed provider VM still needs explicit destruction before release (1.325252ms)
+✔ explicit login preparation retains only the fresh VM and restart can release it (1.755758ms)
+✔ journal failure after successful probe cannot retain an unconfirmed login VM (1.401799ms)
+✔ persistent disk outage cannot prevent remote destruction of the verified trial VM (0.862898ms)
+✔ build dispatch rejects absent/nonfinite expiry and unconfirmed timer identity (0.483586ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.692887

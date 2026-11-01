@@ -1,0 +1,5 @@
+{
+  "at": "2026-11-01T15:05:05.806Z",
+  "vmId": "sb-01m6bs0vnqsx186jvqgygfcqr8",
+  "result": "Revision dispatch refused while owner VM was idle-paused; no model call occurred."
+}

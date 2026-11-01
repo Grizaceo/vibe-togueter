@@ -1,0 +1,41 @@
+{
+  "at": "2026-11-01T14:55:31.162Z",
+  "sessionId": "01a19776-75a5-7e91-b5c1-f108c345dc8c",
+  "version": 1,
+  "phase": "quarantined",
+  "vmId": "sb-01m6bs0vnqsx186jvqgygfcqr8",
+  "ticketId": "b075c85f-8daf-4259-aa76-622f37710f57",
+  "grant": {
+    "roundId": "9bcefd74-4ed2-42bc-b439-5e82bf6ab129",
+    "approvedInputHash": "67702f6e8d57696ede90fa2db45fe34d33f377bfbcb702746e220cf56f1bf159"
+  },
+  "origin": "explicit-owner-trial-not-twitch-vote",
+  "model": "gpt-6.1-terra",
+  "authentication": "chatgpt-subscription",
+  "startedAt": 1793544900269,
+  "maxWallSeconds": 300,
+  "agent": {
+    "completed": true,
+    "usage": {
+      "input_tokens": 48266,
+      "cached_input_tokens": 44032,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2605,
+      "reasoning_output_tokens": 26
+    },
+    "threadId": "01a1979b-5da5-77f2-9aa2-865908b2e35e",
+    "toolItems": 2,
+    "failed": false
+  },
+  "codeSha256": "8f57354ce34173bd5dda24e407e7d44d53287e49a5ffd36f499c51d5efa52799",
+  "artifactHash": "5e3855f9cd36bff8174d8e9925c5de1a0bf14ac7b6c27bad750e9a89859d8b39",
+  "finishedAt": 1793544931162,
+  "resourceManifestSha256": "17c22a81c7186ec5d84089997ed47c49f587a3e5bf436db1c7ed7a53c4c7b849",
+  "codeBytes": 6870,
+  "candidateExecutedOnHost": false,
+  "limitations": [
+    "Owner-selected trial, no real Twitch idea/vote.",
+    "No candidate execution, test pass, artifact approval or deployment yet.",
+    "Subscription token usage is not API dollar billing; no paid API key was used."
+  ]
+}

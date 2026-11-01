@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-01T14:49:25.921Z",
+  "sessionId": "01a19776-75a5-7e91-b5c1-f108c345dc8c",
+  "kind": "guest-login-status",
+  "vmId": "sb-01m6bs0vnqsx186jvqgygfcqr8",
+  "authenticated": true,
+  "method": "chatgpt-subscription",
+  "modelUsed": false
+}

@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-01T14:50:36.251Z",
+  "sessionId": "01a19776-75a5-7e91-b5c1-f108c345dc8c",
+  "vmId": "sb-01m6bs0vnqsx186jvqgygfcqr8",
+  "authentication": "chatgpt-subscription",
+  "modelRequested": "gpt-6.1-terra",
+  "completed": true,
+  "ready": true,
+  "usage": {
+    "input_tokens": 13723,
+    "cached_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 11,
+    "reasoning_output_tokens": 0
+  },
+  "threadId": "01a19797-34a1-7a70-a9b5-db4a66700b6c",
+  "eventTypes": [
+    "thread.started",
+    "turn.started",
+    "item.completed",
+    "turn.completed"
+  ],
+  "toolItems": 0,
+  "errorPresent": false,
+  "scope": "Real guest Codex access check only; fixed trusted prompt. No game constructed or deployed; no API key or paid API request."
+}
