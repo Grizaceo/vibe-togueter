@@ -1,5 +1,5 @@
 // Codex-authored SDK game: one ballot per viewer, one action per 3-second window.
-export const meta={name:'Chat vs Streamer · Democracy Duel',description:'Chat: !left !right !fire (también !izq !der !disparar) · Streamer: flechas/A-D y espacio · 3 votos-segundos, una persona/un voto.',world:{w:1280,h:720},tickRate:30};
+export const meta={name:'Chat vs Streamer · Democracy Duel',description:'Chat: !left !right !fire · Streamer: arrows/A-D and space · 3-second ballots, one person/one vote.',world:{w:1280,h:720},tickRate:30};
 const WINDOW=3,LEFT=120,RIGHT=1160,SPEED=440;
 const aliases={left:'left',izq:'left',right:'right',der:'right',fire:'fire',disparar:'fire'};
 export function createState(){return {__players:new Map(),streamerId:null,x:640,chatX:640,keys:{},votes:new Map(),remaining:WINDOW,window:0,lastAction:'Waiting for votes',chatMotion:0,chatMotionT:0,bullets:[],cooldown:0,health:{chat:3,streamer:3},invulnerable:{chat:0,streamer:0},winner:null,restart:0,elapsed:0};}

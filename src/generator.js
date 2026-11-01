@@ -60,11 +60,11 @@ export class Generator {
     let code = data.choices?.[0]?.message?.content || '';
     code = code.replace(/^```(?:js|javascript)?\n?/m, '').replace(/```\s*$/m, '').trim();
     if (!code.includes('export function tick')) {
-      return { ok: false, reason: 'el modelo no devolvió un game.js válido' };
+      return { ok: false, reason: 'The model did not return a valid game.js' };
     }
     const cost = this.estimateCost(data.usage || {});
     if (cost > this.cfg.maxCostUsd) {
-      return { ok: false, reason: `costo $${cost.toFixed(3)} supera máximo por juego $${this.cfg.maxCostUsd}` };
+      return { ok: false, reason: `Cost $${cost.toFixed(3)} exceeds the per-game maximum $${this.cfg.maxCostUsd}` };
     }
     if (!this.treasury.spend(cost, { kind: 'game-gen', model: this.cfg.model, idea, tokens: data.usage })) {
       return { ok: false, reason: 'fondo insuficiente al momento de cobrar' };

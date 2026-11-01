@@ -4,7 +4,7 @@
 
 export const meta = {
   name: 'Bumper Arena',
-  description: 'choca a otros para sumar puntos · chat: !quake !gravity !ball !big !tiny',
+  description: 'Bump others to score points · chat: !quake !gravity !ball !big !tiny',
   world: { w: 1280, h: 720 },
   tickRate: 30,
 };
@@ -165,16 +165,16 @@ export function view(state) {
 
   const hud = [];
   const board = [...state.__players.values()].sort((a, b) => b.score - a.score).slice(0, 5);
-  hud.push({ t: 'text', x: 90, y: 30, text: `RONDA ${state.round}`, size: 20, color: '#8ef', align: 'left' });
+  hud.push({ t: 'text', x: 90, y: 30, text: `ROUND ${state.round}`, size: 20, color: '#8ef', align: 'left' });
   board.forEach((p, i) => hud.push({
     t: 'text', x: 90, y: 60 + i * 24, align: 'left', size: 16,
     text: `${i + 1}. ${p.name} — ${p.score}`, color: p.color,
   }));
   if (state.winner) {
-    hud.push({ t: 'text', x: W / 2, y: H / 2 - 60, text: `🏆 ${state.winner} gana la ronda ${state.round}`, size: 42, color: '#ffe66d' });
+    hud.push({ t: 'text', x: W / 2, y: H / 2 - 60, text: `🏆 ${state.winner} wins round ${state.round}`, size: 42, color: '#ffe66d' });
   }
   if (state.__players.size === 0) {
-    hud.push({ t: 'text', x: W / 2, y: H / 2, text: 'esperando jugadores…', size: 30, color: '#666' });
+    hud.push({ t: 'text', x: W / 2, y: H / 2, text: 'Waiting for players…', size: 30, color: '#666' });
   }
   return { bg: '#0d0d14', layers, hud };
 }

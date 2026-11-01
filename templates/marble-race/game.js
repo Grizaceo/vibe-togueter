@@ -4,7 +4,7 @@
 
 export const meta = {
   name: 'Marble Race',
-  description: '!play para entrar tu canica · !race larga · !reset limpia · carrera plinko',
+  description: '!play joins your marble · !race starts · !reset clears · plinko racing',
   world: { w: 1280, h: 720 },
   tickRate: 30,
 };
@@ -192,7 +192,7 @@ export function view(state) {
   const hud = [];
   hud.push({ t: 'text', x: 20, y: 26, align: 'left', size: 22, color: '#8ef', text: 'MARBLE RACE' });
   if (state.phase === 'lobby') {
-    hud.push({ t: 'text', x: W / 2, y: 40, size: 26, color: '#fff', text: `${state.marbles.size}/${MAX_MARBLES} canicas — !play para entrar · !race para largar` });
+    hud.push({ t: 'text', x: W / 2, y: 40, size: 26, color: '#fff', text: `${state.marbles.size}/${MAX_MARBLES} marbles — !play to join · !race to start` });
   } else if (state.phase === 'countdown') {
     hud.push({ t: 'text', x: W / 2, y: H / 2 - 100, size: 90, color: '#ffe66d', text: Math.ceil(state.phaseT) });
   } else if (state.phase === 'racing') {
@@ -202,7 +202,7 @@ export function view(state) {
   const board = state.placements.slice(0, 5).map((n, i) => `${i + 1}. ${n}`);
   board.forEach((l, i) => hud.push({ t: 'text', x: W - 24, y: 60 + i * 26, align: 'right', size: 20, color: ['#ffe66d', '#ccc', '#cd7f32', '#9ab', '#9ab'][i], text: l }));
   if (state.phase === 'finished' && state.placements[0]) {
-    hud.push({ t: 'text', x: W / 2, y: 120, size: 46, color: '#ffe66d', text: `🏁 gana ${state.placements[0]}` });
+    hud.push({ t: 'text', x: W / 2, y: 120, size: 46, color: '#ffe66d', text: `🏁 ${state.placements[0]} wins` });
   }
   return { bg: '#0b1020', layers, hud };
 }

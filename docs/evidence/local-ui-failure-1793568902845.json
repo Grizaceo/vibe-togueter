@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-01T21:35:02.845Z",
+  "error": "Readiness deadline",
+  "checks": [
+    {
+      "name": "lobby shows game, art and idea credit while details are collapsed",
+      "ok": true
+    },
+    {
+      "name": "creator strip is inside the desktop viewport",
+      "ok": true
+    },
+    {
+      "name": "production browser keyboard handler plants a visible tree",
+      "ok": true
+    },
+    {
+      "name": "overlay keeps all three credit roles in the viewport",
+      "ok": true
+    },
+    {
+      "name": "1080p credit strip is at least 24px and no ledger is shown",
+      "ok": true
+    },
+    {
+      "name": "720p stream credits and activity fit",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "temp": "/tmp/va-ui-5MS3nD"
+}

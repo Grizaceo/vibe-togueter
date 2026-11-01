@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<title>vibe-arena — juega</title>
+<title>vibe-arena — play</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   body { margin:0; background:#0b0b0f; color:#eee; font:16px system-ui; display:flex; flex-direction:column; height:100vh; }
@@ -35,7 +35,7 @@
   <span id="players"></span>
   <span id="err"></span>
   <form id="chat" style="margin-left:auto;display:flex;gap:6px">
-    <input id="ct" placeholder="!comando o idea" size="24" autocomplete="off">
+    <input id="ct" placeholder="!command or idea" size="24" autocomplete="off">
   </form>
 </div>
 <script type="module">
@@ -46,11 +46,11 @@ const c = connect({
   canvas: document.getElementById('cv'),
   onCredits: publication => credits.update(publication),
   onRole: m => {document.getElementById('role-status').textContent=m.ok?'Controls unlocked':'Key rejected / already claimed';document.getElementById('streamer-key').value='';},
-  onWelcome: m => { document.getElementById('me').textContent = `eres ${m.name}`; },
+  onWelcome: m => { document.getElementById('me').textContent = `You are ${m.name}`; },
   onPlayers: (p, game, err) => {
     credits.matchGame(game);
     if (game) {document.getElementById('game').textContent=game.name;document.getElementById('rules').textContent=game.desc||'';}
-    document.getElementById('players').textContent = `${p.length} jugando`;
+    document.getElementById('players').textContent = `${p.length} playing`;
     document.getElementById('err').textContent = err || '';
   },
 });

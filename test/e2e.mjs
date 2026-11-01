@@ -53,12 +53,12 @@ ok('view has layers', st?.view?.layers?.length > 0);
 const circles = st?.view?.layers?.filter(l => l.t === 'circle') || [];
 ok('!ball spawned + players', circles.length >= 3, `(${circles.length} circles)`);
 ok('chat feed relayed', spec.feeds.some(f => f.text.includes('!quake')));
-ok('idea ack', spec.feeds.some(f => f.text.includes('idea guardada')));
+ok('idea ack', spec.feeds.some(f => f.text.includes('Idea saved')));
 
 // spectator cannot inject inputs (no crash = pass), alice moves right
 const st2 = alice.states.at(-1);
 const hud = st2?.view?.hud || [];
-ok('hud has scoreboard', hud.some(h => String(h.text).includes('RONDA')));
+ok('hud has scoreboard', hud.some(h => String(h.text).includes('ROUND')));
 
 alice.ws.close(); bob.ws.close(); spec.ws.close();
 await sleep(200);

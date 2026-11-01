@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-01T21:34:25.003Z",
+  "error": "Unexpected token 'o', \"ok\" is not valid JSON",
+  "checks": [
+    {
+      "name": "lobby shows game, art and idea credit while details are collapsed",
+      "ok": true
+    },
+    {
+      "name": "creator strip is inside the desktop viewport",
+      "ok": true
+    },
+    {
+      "name": "production browser keyboard handler plants a visible tree",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "temp": "/tmp/va-ui-CAaUmZ"
+}

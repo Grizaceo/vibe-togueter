@@ -93,7 +93,7 @@ const host = new GameHost({
   onEvent: (kind, detail) => {
     if (kind === 'game-reloaded') for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
     if (kind === 'game-reloaded') refreshPublication();
-    if (kind === 'game-reloaded') feed('system', `juego recargado: ${host.game?.name}`);
+    if (kind === 'game-reloaded') feed('system', `Game reloaded: ${host.game?.name}`);
     if (kind === 'game-error') {feed('system', `Game stopped: ${detail}`);requestFallback(detail);}
     if (kind === 'log') console.log(detail);
   },
@@ -146,10 +146,10 @@ async function generateFromIdea(idea,grant) {
   const permission=localBuildPermission(executionPolicy);
   if(!permission.ok){feed('system',permission.reason);return permission;}
   if(!ideaRounds.buildPermission(idea,grant))return {ok:false,code:'round_approval_required',reason:'A matching streamer-approved round is required.'};
-  if (generating) return { ok: false, reason: 'ya hay una generación en curso' };
+  if (generating) return { ok: false, reason: 'A build is already in progress' };
   ideaRounds.beginBuild(idea,grant);
   generating = true;
-  feed('system', `generando juego: "${idea}" (${CONFIG.generator.mode}/${CONFIG.generator.model})`);
+  feed('system', `Building game: "${idea}" (${CONFIG.generator.mode}/${CONFIG.generator.model})`);
   try {
     const slug = `auto-${Date.now().toString(36)}`;
     const dir = path.join(ROOT, 'games', slug);
@@ -157,16 +157,16 @@ async function generateFromIdea(idea,grant) {
     try {
       r = await generator.generateGame(idea, dir);
     } catch (e) {
-      r = { ok: false, reason: `error del provider: ${e.message}` };
+      r = { ok: false, reason: `Provider error: ${e.message}` };
     }
     if (r.ok) {
       ideaRounds.finishBuild(grant,true);
       await loadGameDir(dir);
-      feed('system', `nuevo juego generado ($${r.costUsd.toFixed(3)}): "${idea}"`);
+      feed('system', `New game built ($${r.costUsd.toFixed(3)}): "${idea}"`);
       return { ok: true, game: slug, costUsd: r.costUsd };
     }
     ideaRounds.finishBuild(grant,false);
-    feed('system', `generación falló: ${r.reason}`);
+    feed('system', `Build failed: ${r.reason}`);
     return r;
   } finally { generating = false; }
 }
@@ -188,9 +188,9 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
   // meta commands handled by infra
   if (cmd === 'join' || cmd === 'unirse' || cmd === 'entrar' || cmd === 'jugar-link') {
     if (PUBLIC_URL && replies[source]) {
-      replies[source](`entra a jugar: ${PUBLIC_URL}/?name=${encodeURIComponent(user)}`);
+      replies[source](`Join the game: ${PUBLIC_URL}/?name=${encodeURIComponent(user)}`);
     } else if (PUBLIC_URL) {
-      feed('system', `link para jugar: ${PUBLIC_URL}/?name=${encodeURIComponent(user)}`);
+      feed('system', `Game link: ${PUBLIC_URL}/?name=${encodeURIComponent(user)}`);
     }
     return;
   }
@@ -217,7 +217,7 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
         if(!result.duplicate){
           const idea=result.round.ideas.find(i=>i.id===result.ideaId);
           fs.appendFileSync(IDEAS_FILE,JSON.stringify({user,idea:idea.text,source,at:Date.now(),roundId:result.round.id,ideaId:idea.id})+'\n');
-          feed('system',`idea guardada: #${idea.id} by ${user}. ${result.round.ideas.length}/${result.round.settings.maxIdeas}.`);
+          feed('system',`Idea saved: #${idea.id} by ${user}. ${result.round.ideas.length}/${result.round.settings.maxIdeas}.`);
         }
       }else if(cmd==='vote'){
         ideaRounds.vote(actor,Number(args[0]),messageId);feed('system',`${user}: ballot updated.`);
@@ -238,7 +238,7 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
     return;
   }
   const handled = host.safeCall('onChat', { name: user, source }, cmd, args);
-  if (handled) feed('system', `${user} usó !${cmd}`);
+  if (handled) feed('system', `${user} used !${cmd}`);
 }
 
 const localChat = createLocalChat(handleChat);
@@ -466,7 +466,7 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(400); return res.end('unknown game');
       }
       if(!await loadGameDir(dir)){res.writeHead(503);return res.end('Game failed to load; inspect fallback status.');}
-      feed('system', `juego cargado: ${game}`);
+      feed('system', `Game loaded: ${game}`);
       res.writeHead(200); return res.end('ok');
     }
     res.writeHead(404); return res.end();
@@ -489,16 +489,16 @@ const server = http.createServer(async (req, res) => {
         if (text) handleChat({ user, text, source: 'kick' });
       } else if (simulateEventCredits && evType === 'channel.subscription.new') {
         treasury.deposit(M.kickSubUsd, { source: 'kick-sub', user: body.subscriber?.username });
-        feed('system', `sub de ${body.subscriber?.username || '?'} → +$${M.kickSubUsd}`);
+        feed('system', `Subscription from ${body.subscriber?.username || '?'} → +$${M.kickSubUsd}`);
       } else if (simulateEventCredits && evType === 'channel.subscription.gifts') {
         const n = body.giftees?.length || body.amount || 1;
         treasury.deposit(n * M.kickSubUsd, { source: 'kick-sub-gift', user: body.gifter?.username, count: n });
-        feed('system', `${body.gifter?.username || '?'} regaló ${n} subs → +$${(n * M.kickSubUsd).toFixed(2)}`);
+        feed('system', `${body.gifter?.username || '?'} gifted ${n} subs → +$${(n * M.kickSubUsd).toFixed(2)}`);
       } else if (simulateEventCredits && evType === 'kicks.gifted') {
         const amt = (body.kicks?.amount || body.amount || 0) * M.kickUsdPerKick;
         if (amt > 0) {
           treasury.deposit(amt, { source: 'kicks', user: body.sender?.username, kicks: body.kicks?.amount });
-          feed('system', `${body.sender?.username || '?'} donó kicks → +$${amt.toFixed(2)}`);
+          feed('system', `${body.sender?.username || '?'} sent kicks → +$${amt.toFixed(2)}`);
         }
       }
       res.writeHead(200); res.end('ok');
@@ -524,17 +524,17 @@ const server = http.createServer(async (req, res) => {
         if (simulateEventCredits && body.subscription?.type === 'channel.subscribe') {
           const mult = { '1000': 1, '2000': 2, '3000': 5 }[ev.tier] || 1;
           treasury.deposit(M.twitchSubUsd * mult, { source: 'twitch-sub', user: ev.user_name, tier: ev.tier });
-          feed('system', `sub T${ev.tier?.[0]} de ${ev.user_name} → +$${(M.twitchSubUsd * mult).toFixed(2)}`);
+          feed('system', `sub T${ev.tier?.[0]} from ${ev.user_name} → +$${(M.twitchSubUsd * mult).toFixed(2)}`);
         } else if (simulateEventCredits && body.subscription?.type === 'channel.subscription.gift') {
           const n = ev.total || 1;
           treasury.deposit(M.twitchSubUsd * n, { source: 'twitch-sub-gift', user: ev.user_name, count: n });
-          feed('system', `${ev.user_name} regaló ${n} subs → +$${(M.twitchSubUsd * n).toFixed(2)}`);
+          feed('system', `${ev.user_name} gifted ${n} subs → +$${(M.twitchSubUsd * n).toFixed(2)}`);
         } else if (simulateEventCredits && (body.subscription?.type === 'channel.bits.use' || body.subscription?.type === 'channel.cheer')) {
           const bits = ev.bits || ev.cheer?.bits || 0;
           const usd = bits * M.bitUsd;
           if (usd > 0) {
             treasury.deposit(usd, { source: 'twitch-bits', user: ev.user_name, bits });
-            feed('system', `${bits} bits de ${ev.user_name} → +$${usd.toFixed(2)}`);
+            feed('system', `${bits} bits from ${ev.user_name} → +$${usd.toFixed(2)}`);
           }
         } else if (body.subscription?.type === 'channel.channel_points_custom_reward_redemption.add') {
           const command=rewardCommand(ev,CONFIG.twitch?.rewardCommands);
@@ -564,7 +564,7 @@ const server = http.createServer(async (req, res) => {
       const amt = Number(body.amountUsd ?? body.amount);
       if (!(amt > 0)) { res.writeHead(400); return res.end('amount required'); }
       treasury.deposit(amt, { source: body.source || 'donation', user: body.user, raw: undefined });
-      feed('system', `donación${body.user ? ` de ${body.user}` : ''}: $${amt.toFixed(2)}`);
+      feed('system', `Demo deposit${body.user ? ` from ${body.user}` : ''}: $${amt.toFixed(2)}`);
       res.writeHead(200); res.end('ok');
     });
     return;
@@ -605,7 +605,7 @@ wss.on('connection', (ws, req) => {
 
   if (kind === 'player') {
     host.safeCall('onJoin', { id: client.id, name });
-    feed('system', `${name} se unió`);
+    feed('system', `${name} joined`);
   }
 
   ws.on('message', raw => {
@@ -632,7 +632,7 @@ wss.on('connection', (ws, req) => {
     clients.delete(ws);
     if (kind === 'player') {
       host.safeCall('onLeave', { id: client.id, name });
-      feed('system', `${name} salió`);
+      feed('system', `${name} left`);
     }
   });
 });

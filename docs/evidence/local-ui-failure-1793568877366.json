@@ -1,0 +1,36 @@
+{
+  "at": "2026-11-01T21:34:37.366Z",
+  "error": "overlay shows a real local proposal and ballot from WS state",
+  "checks": [
+    {
+      "name": "lobby shows game, art and idea credit while details are collapsed",
+      "ok": true
+    },
+    {
+      "name": "creator strip is inside the desktop viewport",
+      "ok": true
+    },
+    {
+      "name": "production browser keyboard handler plants a visible tree",
+      "ok": true
+    },
+    {
+      "name": "overlay keeps all three credit roles in the viewport",
+      "ok": true
+    },
+    {
+      "name": "1080p credit strip is at least 24px and no ledger is shown",
+      "ok": true
+    },
+    {
+      "name": "720p stream credits and activity fit",
+      "ok": true
+    },
+    {
+      "name": "overlay shows a real local proposal and ballot from WS state",
+      "ok": false
+    }
+  ],
+  "errors": [],
+  "temp": "/tmp/va-ui-PK2qCP"
+}
