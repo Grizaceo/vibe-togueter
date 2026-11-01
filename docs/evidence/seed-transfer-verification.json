@@ -1,0 +1,10 @@
+{
+  "sourceBytes": 7468,
+  "resourceCount": 3,
+  "historicalGuestChecks": 12,
+  "manifestSha256": "1ceffa68636a062e712173f11a607c01ca5b9aeb9d4c1da2a080216d1c8e43fe",
+  "files": 13,
+  "kind": "inert-seed-race-transfer-v1",
+  "published": false,
+  "candidateExecuted": false
+}

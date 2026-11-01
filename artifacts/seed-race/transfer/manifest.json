@@ -1,0 +1,60 @@
+{
+  "kind": "inert-seed-race-transfer-v1",
+  "pins": {
+    "codeSha256": "f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105",
+    "artifactHash": "e41cdbd68ccad078fb9ab33e35b7c95dadbc44db1177808c81c03f62e914f3f5",
+    "reportHash": "3dcbc39f0eea93ba2acb134b421afb253227c6d5441163337bbb9656ae71165e"
+  },
+  "published": false,
+  "execution": "Separate runtime VM only; no host import or execution. SDK/harness included as transfer material, not a connected runtime.",
+  "files": {
+    "candidate/game.js": {
+      "bytes": 7468,
+      "sha256": "f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105"
+    },
+    "evidence/approval.json": {
+      "bytes": 810,
+      "sha256": "8f8b099b61af97e427623930f2bbe9b8d76dbf847f9d504662fcc6b9a3d68858"
+    },
+    "evidence/quarantine.json": {
+      "bytes": 10671,
+      "sha256": "65f7671851fa5e6974194f82078165734458d3876b09e347f1fb159754d48676"
+    },
+    "guest/check.mjs": {
+      "bytes": 6016,
+      "sha256": "fc202d8dc8ffcadaff4d47716c57e3d68de8958c5e856f84b6d9da48cbf96720"
+    },
+    "provenance.json": {
+      "bytes": 4284,
+      "sha256": "6c82766c5e6ac0cc6a2da58c11759d3655660ac84835c9375b896d7b3139e563"
+    },
+    "public/curated/kenney-background-elements/License.txt": {
+      "bytes": 623,
+      "sha256": "1cef3b5b7e9e7aac47ec0967077134b2ebbe221b2e3eaa1afeee0815eab57e2e"
+    },
+    "public/curated/kenney-background-elements/hills1.png": {
+      "bytes": 2577,
+      "sha256": "1264021ed5a69b214d22dfa6562a6bed54ee0f9c374bfafa5f9165cabdf63800"
+    },
+    "public/curated/kenney-background-elements/provenance.json": {
+      "bytes": 1218,
+      "sha256": "4167c8d6281020ca3d1df7e15a1c19aff5f09892e0b1a425f931579f7bd1cb8a"
+    },
+    "public/curated/kenney-background-elements/sky.png": {
+      "bytes": 5762,
+      "sha256": "3dda74eb9caad5148dc8e7f8010ee97592be266f218c23e2763a723fb57e4465"
+    },
+    "public/curated/kenney-background-elements/tree01.png": {
+      "bytes": 2018,
+      "sha256": "ea3a81fb7078dfc9e60e2a46ce338ff2534c7cd80edcc7b150d710ee264c7e25"
+    },
+    "sdk/gamehost.mjs": {
+      "bytes": 4891,
+      "sha256": "b692b7659af65e86a200bf9b2193ea6cd3e68e50ab3c18fb142ef27fe11a4a13"
+    },
+    "task.json": {
+      "bytes": 2424,
+      "sha256": "1bdd9437f4565eba3dd416443ddcbb253ae8a9fffe786b01b6b463779fb2f52c"
+    }
+  }
+}
