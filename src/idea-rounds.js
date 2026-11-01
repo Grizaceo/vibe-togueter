@@ -101,7 +101,7 @@ export class IdeaRounds{
   this.owner(actor);this.tick();const r=this.current();if(!r||r.phase!=='awaiting-approval'||!r.selected.length)throw new Error('Select an idea before approving.');
   if(expected?.roundId!==r.id||expected?.reviewToken!==this.reviewToken())throw new Error('Review changed or missing; refresh the round before approving.');
   r.approvedInputHash=this.inputHash();r.phase='approved';
-  this.event(r,'streamer-approved',actor,{inputHash:r.approvedInputHash});this.save();return this.public();
+  this.event(r,'streamer-approved',actor,{inputHash:r.approvedInputHash,approvalAuthority:actor.approvalAuthority||'streamer'});this.save();return this.public();
  }
  buildPermission(idea,grant){const r=this.current();const text=r?.selected.map(id=>r.ideas.find(i=>i.id===id).text).join('\n\n');return !!(r?.phase==='approved'&&grant?.roundId===r.id&&grant?.approvedInputHash===r.approvedInputHash&&this.inputHash()===r.approvedInputHash&&idea===text);}
  beginBuild(idea,grant){if(!this.buildPermission(idea,grant))throw new Error('An approved matching round is required.');const r=this.current();r.phase='building';this.event(r,'build-started',null,{inputHash:r.approvedInputHash});this.save();}

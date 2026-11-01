@@ -2,6 +2,7 @@
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from 'node:http';
+import {ApprovalDelegation,roundApprovalActor} from './approval-delegation.js';
 import {ChatPredictions} from './chat-predictions.js';
 import {CrowdBursts} from './crowd-bursts.js';
 import {FallbackPolicy} from './fallback-policy.js';
@@ -60,6 +61,7 @@ if(process.env.VA_WEBHOOK_SECRET)CONFIG.monetization.webhookSecret=process.env.V
 // Synthetic event accounting is opt-in for isolated fixtures only; never provider settlement.
 const simulateEventCredits = process.env.VA_SIMULATE_EVENT_CREDITS === '1';
 
+const approvalDelegation=new ApprovalDelegation({enabled:CONFIG.features?.approvalDelegation});
 const predictions=new ChatPredictions({enabled:CONFIG.features?.chatPredictions});
 const crowdBursts=new CrowdBursts({enabled:CONFIG.features?.distinctPersonBursts});
 const fallbackPolicy=new FallbackPolicy(path.join(ROOT,'runtime','fallback-preferences.json'),{enabled:CONFIG.features?.configuredFallback,order:CONFIG.fallback?.order});
@@ -223,6 +225,9 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
     return;
   }
   const actor={id:participantId||user,name:user,source,owner:source==='twitch'&&user.toLowerCase()===TWITCH_CHANNEL?.toLowerCase()};
+  if(cmd==='delegate'){
+    try{if(args[0]==='off')approvalDelegation.revoke(actor);else approvalDelegation.set(actor,args[0],Number(args[1])*60);const grant=approvalDelegation.public();feed('system',grant?'Round input approval delegated to @'+grant.name+' for '+args[1]+' minutes.':'Round approval delegation revoked.');}catch(error){feed('system',user+': '+error.message);}return;
+  }
   if(cmd==='predict'||cmd==='prediction'){
     try{if(cmd==='predict'){predictions.vote(actor,args.join(' '));feed('system',user+': prediction saved.');}
       else{const action=args.shift();if(action==='open')predictions.open(actor,args.join(' ').split('|'));else if(action==='lock')predictions.lock(actor);else if(action==='resolve')predictions.resolve(actor,args.join(' '));else if(action==='cancel')predictions.cancel(actor);else throw Error('Use !prediction open choice|choice, lock, resolve choice, or cancel.');feed('system','Chat prediction: '+predictions.public()?.phase);}
@@ -260,7 +265,7 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
         else if(action==='vote')ideaRounds.startVoting(actor);
         else if(action==='close')ideaRounds.finishVoting(actor);
         else if(action==='choose')ideaRounds.select(actor,args.slice(1).map(Number));
-        else if(action==='approve')ideaRounds.approve(actor,{roundId:ideaRounds.current()?.id,reviewToken:args[1]});
+        else if(action==='approve')ideaRounds.approve(roundApprovalActor(actor,isModerator,approvalDelegation),{roundId:ideaRounds.current()?.id,reviewToken:args[1]});
         else if(action==='cancel')ideaRounds.cancel(actor);
         else if(action!=='status')throw new Error('Use !build open|vote|close|choose IDs|approve|cancel|status.');
         const round=ideaRounds.public();const state=round?`${round.phase}: ${round.ideas.length} ideas, ${round.voters} voters`:'no round';
@@ -340,7 +345,7 @@ function streamActivity(){
   activityRound=r?{phase:r.phase,ideas:r.ideas.length,voters:r.voters,voteEndsAt:r.voteEndsAt,
    highlights:r.ideas.slice().sort((a,b)=>b.votes-a.votes||a.id-b.id).slice(0,3).map(i=>({id:i.id,text:i.text.slice(0,100),author:i.author.slice(0,40),votes:i.votes}))}:null;
  }
- return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked,prediction:predictions.public(),crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
+ return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked,prediction:predictions.public(),delegation:approvalDelegation.public(),crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
 }
 
 // ---------- broadcast loop (view @ 10Hz; slow recipients skip obsolete frames) ----------
@@ -370,7 +375,7 @@ if(fs.existsSync(deliveryFile))for(const line of fs.readFileSync(deliveryFile,'u
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
-  if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({round:ideaRounds.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,workerConnected:false}}));}
+  if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({round:ideaRounds.public(),delegation:approvalDelegation.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,workerConnected:false}}));}
   let bodyBytes=0;req.on('data',chunk=>{bodyBytes+=chunk.length;if(bodyBytes>262144){res.writeHead(413);res.end('request too large');req.destroy();}});
   if(url.pathname==='/community/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({assets:creatorAssets.catalog(),policy:{defaultTier:'free',paidCheckoutEnabled:false,platformCommission:null,creditPolicy:'Creator links stay in official game credits.'}}));}
   if(url.pathname==='/community/games'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({...remoteGames.catalog(),teeBridge:teeBridge.status()}));}
@@ -390,6 +395,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/approval-delegate'&&['GET','POST'].includes(req.method)){
+      if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
+      try{const actor={owner:true,source:'streamer-ui',name:TWITCH_CHANNEL||'local streamer'};if(req.method==='POST'){const body=JSON.parse(await readBody()||'{}');if(body.action==='revoke')approvalDelegation.revoke(actor);else if(body.action==='grant')approvalDelegation.set(actor,body.name,body.seconds);else throw Error('Unknown delegation action.');}res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({enabled:approvalDelegation.enabled,grant:approvalDelegation.public()}));}catch(error){res.writeHead(400);return res.end(error.message);}
+    }
     if(url.pathname==='/admin/prediction'&&req.method==='POST'){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
       try{const data=JSON.parse(await readBody()||'{}'),actor={owner:true,source:'streamer-ui',name:TWITCH_CHANNEL||'local streamer'};if(data.action==='open')predictions.open(actor,data.choices);else if(data.action==='lock')predictions.lock(actor);else if(data.action==='resolve')predictions.resolve(actor,data.choice);else if(data.action==='cancel')predictions.cancel(actor);else throw Error('Unknown prediction action.');res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(predictions.public()));}catch(error){res.writeHead(400);return res.end(error.message);}

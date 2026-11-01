@@ -50,6 +50,12 @@ Enter the private streamer key in the player page to control the streamer side o
 
 The [privacy notice](public/privacy.html) is served at `/privacy.html`, linked from all three pages. **Operator/contact were supplied by Cristóbal Muñoz; complete the visible hosting/recording placeholder and retention/deletion procedure before public operation.** Persistent ideas, ballots, creator and quarantine records currently require operator-managed retention/deletion.
 
+## Temporary moderator approval
+
+With `features.approvalDelegation: true`, the broadcaster can use `!delegate trusted_mod 10` to delegate **selected round-input approval** for ten minutes, or `!delegate off` to revoke it. Local Studio controls offer the same grant (maximum 30 minutes). The named account must still carry Twitch's moderator tag when sending `!build approve REVIEW_TOKEN`; it should inspect the current selected ideas/resources in the Studio first. Expiry, revocation, loss of mod status, web aliases and stale review tokens deny approval. The round history records the actual approver and delegated authority.
+
+The grant is memory-only and expires on controller restart. It does not grant round editing, artifact rights attestation, final artifact approval or other private owner controls. Disable the flag and restart to remove it. The overlay shows the delegate and expiry.
+
 ## Free chat predictions
 
 With `features.chatPredictions: true`, the broadcaster opens a 60-second prediction with `!prediction open Sun|Rain` (2–6 choices). Viewers use `!predict Sun`; their latest ballot replaces the previous one. The broadcaster uses `!prediction lock`, then `!prediction resolve Sun`, or `!prediction cancel`. The overlay recognizes correct predictions and labels the outcome as **reported by the streamer**. This is a chat-only feature: no money, Channel Points, Twitch Predictions API, scopes or eligibility dependency. Web sessions can also predict; winner labels distinguish web names from Twitch logins. Disable the flag and restart to remove it.

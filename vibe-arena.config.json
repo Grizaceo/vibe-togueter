@@ -49,7 +49,8 @@
     "chatPause": true,
     "configuredFallback": true,
     "distinctPersonBursts": true,
-    "chatPredictions": true
+    "chatPredictions": true,
+    "approvalDelegation": true
   },
   "fallback": {
     "order": []
