@@ -1,7 +1,7 @@
 // Shared client: connects over WS, forwards inputs, renders states.
 import { drawFrame } from './render.js';
 
-export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayers } = {}) {
+export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayers, onRole } = {}) {
   const params = new URLSearchParams(location.search);
   const name = params.get('name') || localStorage.getItem('va-name') || `anon-${Math.floor(1000 + Math.random() * 9000)}`;
   localStorage.setItem('va-name', name);
@@ -22,6 +22,7 @@ export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayer
         drawFrame(ctx, msg.view, canvas, msg.view.world || world);
       }
     }
+    if (msg.t === 'role') onRole?.(msg);
     if (msg.t === 'feed') onFeed?.(msg);
   };
 
@@ -29,7 +30,7 @@ export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayer
   if (!spectator && canvas) {
     const send = data => { if (ws.readyState === 1) ws.send(JSON.stringify({ t: 'input', data })); };
     const KEYS = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'a', 's', 'd', 'W', 'A', 'S', 'D']);
-    addEventListener('keydown', e => { if (KEYS.has(e.key)) { e.preventDefault(); send({ kind: 'key', key: norm(e.key), down: true }); } });
+    addEventListener('keydown', e => { if (!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName) && KEYS.has(e.key)) { e.preventDefault(); send({ kind: 'key', key: norm(e.key), down: true }); } });
     addEventListener('keyup', e => { if (KEYS.has(e.key)) send({ kind: 'key', key: norm(e.key), down: false }); });
     canvas.addEventListener('pointerdown', e => send({ kind: 'pointer', ...toWorld(e, canvas, world), down: true }));
     canvas.addEventListener('pointermove', e => { if (e.buttons) send({ kind: 'pointer', ...toWorld(e, canvas, world), down: true }); });
@@ -50,6 +51,7 @@ export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayer
 
   return {
     sendChat: text => ws.readyState === 1 && ws.send(JSON.stringify({ t: 'chat', text })),
+    claimStreamer: key => ws.readyState===1 && ws.send(JSON.stringify({t:'claim-streamer',key})),
     name,
   };
 }

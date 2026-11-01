@@ -75,6 +75,7 @@ async function loadGameDir(dir) {
   host.stop();
   host.gameDir = dir;
   await host.load();
+  for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
   host.start();
   host.startWatching();
 }
@@ -413,7 +414,7 @@ wss.on('connection', (ws, req) => {
   const kind = url.pathname === '/spectate' ? 'spectator' : 'player';
   const name = (url.searchParams.get('name') || `anon-${Math.floor(1000 + Math.random() * 9000)}`).slice(0, 20);
 
-  const client = { id: nextId++, name, kind };
+  const client = { id: nextId++, name, kind, role:'viewer' };
   clients.set(ws, client);
 
   ws.send(JSON.stringify({
@@ -432,6 +433,12 @@ wss.on('connection', (ws, req) => {
     let msg;
     try { msg = JSON.parse(raw); } catch { return; }
     if (kind !== 'player' && msg.t !== 'chat') return;
+    if(msg.t==='claim-streamer'){
+      const expected=process.env.VA_STREAMER_KEY;
+      if(!expected || typeof msg.key!=='string' || Buffer.byteLength(msg.key)!==Buffer.byteLength(expected) || !crypto.timingSafeEqual(Buffer.from(msg.key),Buffer.from(expected))){ws.send(JSON.stringify({t:'role',ok:false}));return;}
+      if([...clients.values()].some(c=>c!==client && c.role==='streamer')){ws.send(JSON.stringify({t:'role',ok:false}));return;}
+      client.role='streamer';host.safeCall('onJoin',{id:client.id,name,role:client.role});ws.send(JSON.stringify({t:'role',ok:true}));return;
+    }
     if (msg.t === 'input') {
       host.safeCall('onInput', client.id, msg.data);
     } else if (msg.t === 'chat' && typeof msg.text === 'string') {
