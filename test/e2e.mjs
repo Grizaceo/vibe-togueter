@@ -38,7 +38,9 @@ ok('game loaded', alice.welcome?.game?.name === 'Bumper Arena');
 // inputs + chat command
 alice.send({ t: 'input', data: { kind: 'key', key: 'right', down: true } });
 alice.send({ t: 'chat', text: '!ball' });
+await sleep(300);
 alice.send({ t: 'chat', text: '!quake' });
+await sleep(300);
 alice.send({ t: 'chat', text: '!idea un juego de naves con el chat' });
 await sleep(700);
 

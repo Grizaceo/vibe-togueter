@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WebSocketServer } from 'ws';
+import {STATE_INTERVAL_MS,WS_COMPRESSION,encodeMessage,sendRoom,ChatGate} from './traffic.js';
 import {IsolatedGameHost as GameHost} from './isolated-gamehost.js';
 import { CreatorAssets } from './creator-assets.js';
 import { importCuratedResource } from './curated-resources.js';
@@ -57,9 +58,9 @@ const clients = new Map(); // ws -> {id,name,kind:'player'|'spectator'}
 let nextId = 1;
 
 function broadcast(msg, except = null) {
-  const data = JSON.stringify(msg);
+  const data = encodeMessage(msg);
   for (const ws of clients.keys()) {
-    if (ws !== except && ws.readyState === 1) ws.send(data);
+    if (ws !== except) sendRoom(ws,data,{state:msg.t==='state'});
   }
 }
 
@@ -167,11 +168,12 @@ async function generateFromIdea(idea,grant) {
 setInterval(tickRounds,1000);
 
 // ---------- chat pipeline ----------
-const cmdCooldown = new Map(); // user -> last ts
-const COOLDOWN_MS = 250;
-const communityCooldown=new Map();let communitySecond=0,communityWrites=0;
+const chatGate=new ChatGate();
 
 function handleChat({ user, text, source, messageId, participantId, isModerator=false }) {
+  text=String(text).slice(0,text.startsWith('!idea ')?10000:200);user=String(user).slice(0,100);
+  if(source==='twitch'&&text.trim()==='!fallback'&&(isModerator||user.toLowerCase()===TWITCH_CHANNEL?.toLowerCase())){requestFallback('Requested by Twitch moderator '+user);return;}
+  if(!chatGate.accept(source,participantId||user))return;
   feed('chat', `${user}: ${text}`);
   if (!text.startsWith('!')) return;
   const [cmd, ...args] = text.slice(1).split(/\s+/);
@@ -201,12 +203,6 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
     return;
   }
   if(['idea','vote','build'].includes(cmd)){
-    const now=Date.now(),key=source+':'+(participantId||user);
-    if(now-(communityCooldown.get(key)||0)<250)return;
-    if(communityCooldown.size>=20000){for(const [id,at] of communityCooldown)if(now-at>60000)communityCooldown.delete(id);if(communityCooldown.size>=20000)return;}
-    communityCooldown.set(key,now);
-    if(Math.floor(now/1000)!==communitySecond){communitySecond=Math.floor(now/1000);communityWrites=0;}
-    if(!actor.owner && ++communityWrites>30)return;
     try{
       if(cmd==='idea'){
         const result=ideaRounds.propose(actor,args.join(' '),messageId);
@@ -233,9 +229,6 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
     }catch(error){feed('system',`${user}: ${error.message}`);if(replies[source])replies[source](error.message);}
     return;
   }
-  const last = cmdCooldown.get(user) || 0;
-  if (Date.now() - last < COOLDOWN_MS) return;
-  cmdCooldown.set(user, Date.now());
   const handled = host.safeCall('onChat', { name: user, source }, cmd, args);
   if (handled) feed('system', `${user} usó !${cmd}`);
 }
@@ -296,7 +289,7 @@ function verifyKickSignature(req, rawBody) {
   } catch { return false; }
 }
 
-// ---------- broadcast loop (view @ 15Hz) ----------
+// ---------- broadcast loop (view @ 10Hz; slow recipients skip obsolete frames) ----------
 setInterval(() => {
   const players = [...clients.values()]
     .filter(c => c.kind === 'player')
@@ -310,7 +303,7 @@ setInterval(() => {
     fallback,
     fund: { balance: treasury.balance, goal: CONFIG.generator.gameCostUsd, generating },
   });
-}, 66);
+}, STATE_INTERVAL_MS);
 
 // ---------- http ----------
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
@@ -570,7 +563,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 // ---------- ws ----------
-const wss = new WebSocketServer({ server, maxPayload:64*1024 });
+const wss = new WebSocketServer({ server, maxPayload:16*1024, perMessageDeflate:WS_COMPRESSION });
 
 wss.on('connection', (ws, req) => {
   ws.on('error',()=>ws.terminate());
@@ -594,6 +587,8 @@ wss.on('connection', (ws, req) => {
   }
 
   ws.on('message', raw => {
+    const second=Math.floor(Date.now()/1000);if(client.inputSecond!==second){client.inputSecond=second;client.inputCount=0;}
+    if(++client.inputCount>120)return;
     let msg;
     try { msg = JSON.parse(raw); } catch { return; }
     if(!msg||typeof msg!=='object'||Array.isArray(msg))return;
@@ -607,7 +602,7 @@ wss.on('connection', (ws, req) => {
     if (msg.t === 'input') {
       host.safeCall('onInput', client.id, msg.data);
     } else if (msg.t === 'chat' && typeof msg.text === 'string') {
-      handleChat({ user: name, text: msg.text.slice(0, 10000), source: 'web', participantId:client.communityId });
+      handleChat({ user: name, text: msg.text.slice(0, msg.text.startsWith('!idea ')?10000:200), source: 'web', participantId:client.communityId });
     }
   });
 

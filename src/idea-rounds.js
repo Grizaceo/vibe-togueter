@@ -31,7 +31,7 @@ export class IdeaRounds{
   if(this.data.version!==1||!Array.isArray(this.data.rounds))throw new Error('Invalid round store; preserve the file and recover explicitly.');
   for(const round of this.data.rounds)validateStoredRound(round);
   this.transactionDepth=0;this.dirty=false;
-  for(const name of ['open','propose','startVoting','vote','tick','finishVoting','select','approve','cancel','beginBuild','finishBuild','recoverInterrupted','chooseResources']){const method=this[name].bind(this);this[name]=(...args)=>this.transaction(()=>method(...args));}
+  for(const name of ['open','propose','startVoting','vote','tick','finishVoting','select','approve','cancel','beginBuild','finishBuild','recoverInterrupted','chooseResources']){const method=this[name].bind(this);this[name]=(...args)=>{if(name==='tick'){const r=this.current();if(r?.phase!=='voting'||this.now()<r.voteEndsAt)return;}return this.transaction(()=>method(...args));};}
  }
  transaction(operation){
   if(this.transactionDepth)return operation();const before=structuredClone(this.data);this.transactionDepth=1;this.dirty=false;

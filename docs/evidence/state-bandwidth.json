@@ -1,0 +1,69 @@
+{
+  "at": "2026-11-01T16:01:19.310Z",
+  "kind": "local-synthetic-serialized-state-comparison",
+  "node": "v26.12.1",
+  "webPlayers": 20,
+  "chatActors": 20,
+  "baselineIntervalMs": 66,
+  "newIntervalMs": 100,
+  "deflate": {
+    "level": 3,
+    "serverNoContextTakeover": true
+  },
+  "results": [
+    {
+      "id": "marble-race",
+      "initialBaselineBytes": 19287,
+      "samples": 100,
+      "meanFrameBytes": {
+        "before": 21825.59,
+        "after": 19325.61,
+        "deflated": 2283.74
+      },
+      "GBPerClientHour": {
+        "before": 1.1904867272727273,
+        "afterUncompressed": 0.69572196,
+        "afterDeflated": 0.08221464
+      },
+      "deflatedReductionPercent": 93.09403136410059
+    },
+    {
+      "id": "chat-vs-streamer",
+      "initialBaselineBytes": 3382,
+      "samples": 100,
+      "meanFrameBytes": {
+        "before": 3386.1,
+        "after": 3386.1,
+        "deflated": 1060.66
+      },
+      "GBPerClientHour": {
+        "before": 0.18469636363636366,
+        "afterUncompressed": 0.1218996,
+        "afterDeflated": 0.03818376
+      },
+      "deflatedReductionPercent": 79.32619828120848
+    },
+    {
+      "id": "community-grove",
+      "initialBaselineBytes": 4958,
+      "samples": 100,
+      "meanFrameBytes": {
+        "before": 5601,
+        "after": 5589,
+        "deflated": 973
+      },
+      "GBPerClientHour": {
+        "before": 0.30550909090909095,
+        "afterUncompressed": 0.201204,
+        "afterDeflated": 0.035028
+      },
+      "deflatedReductionPercent": 88.5345474022496
+    }
+  ],
+  "limits": [
+    "Includes the state envelope and the same seeded actors in both paths.",
+    "Deflate payload estimate excludes WebSocket framing/TLS, handshake, credits/feed messages and ingress.",
+    "Clients that do not negotiate permessage-deflate receive the reported uncompressed path.",
+    "This is not measured provider egress or a cost forecast."
+  ]
+}
