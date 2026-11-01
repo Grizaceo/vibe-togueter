@@ -32,6 +32,7 @@ export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayer
     const KEYS = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'a', 's', 'd', 'W', 'A', 'S', 'D']);
     addEventListener('keydown', e => { if (!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName) && KEYS.has(e.key)) { e.preventDefault(); send({ kind: 'key', key: norm(e.key), down: true }); } });
     addEventListener('keyup', e => { if (KEYS.has(e.key)) send({ kind: 'key', key: norm(e.key), down: false }); });
+    addEventListener('blur',()=>{for(const key of ['left','right','w','a','s','d','space'])send({kind:'key',key,down:false});});
     canvas.addEventListener('pointerdown', e => send({ kind: 'pointer', ...toWorld(e, canvas, world), down: true }));
     canvas.addEventListener('pointermove', e => { if (e.buttons) send({ kind: 'pointer', ...toWorld(e, canvas, world), down: true }); });
     canvas.addEventListener('pointerup', e => send({ kind: 'pointer', ...toWorld(e, canvas, world), down: false }));

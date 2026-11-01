@@ -1,7 +1,7 @@
 // E2E smoke test: 2 players + spectator, inputs, chat commands, state broadcasts.
 import WebSocket from 'ws';
 
-const URL = 'ws://localhost:8420';
+const URL = (process.env.VA_ARENA_URL || 'http://localhost:8420').replace(/^http/,'ws');
 const results = [];
 const ok = (name, cond, extra = '') => { results.push([name, !!cond]); console.log(`${cond ? 'PASS' : 'FAIL'} ${name} ${extra}`); };
 
@@ -20,7 +20,7 @@ function client(name, spectate = false) {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ensure the demo game is the live one (idempotent)
-await fetch('http://localhost:8420/admin/load', {
+await fetch((process.env.VA_ARENA_URL || 'http://localhost:8420')+'/admin/load', {
   method: 'POST', headers: { 'content-type': 'application/json' },
   body: JSON.stringify({ game: 'demo' }),
 });

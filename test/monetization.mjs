@@ -1,5 +1,5 @@
 // Test monetization loop: deposit -> generate via mock LLM -> game loads -> treasury spent.
-const BASE = 'http://localhost:8420';
+const BASE = (process.env.VA_ARENA_URL || 'http://localhost:8420');
 const ok = (n, c, x = '') => console.log(`${c ? 'PASS' : 'FAIL'} ${n} ${x}`);
 const post = (p, body) => fetch(BASE + p, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
 
@@ -27,7 +27,7 @@ ok('spend registrado', stats.gamesGenerated === 1, JSON.stringify(stats));
 // verify the live game switched
 const http = await import('node:http');
 const wsMod = await import('ws');
-const ws = new wsMod.WebSocket('ws://localhost:8420/play?name=checker');
+const ws = new wsMod.WebSocket(BASE.replace(/^http/,'ws')+'/play?name=checker');
 await new Promise(res => ws.on('message', function h(r) {
   const m = JSON.parse(r);
   if (m.t === 'welcome') { ok('juego cargado es el generado', m.game?.name === 'MockLLM Game', m.game?.name); ws.close(); res(); }

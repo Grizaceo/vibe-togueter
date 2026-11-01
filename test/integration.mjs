@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';import crypto from 'node:crypto';import WebSocket from 'ws';
+const base=process.env.VA_ARENA_URL||'http://localhost:8420';const post=(p,data,headers={})=>fetch(base+p,{method:'POST',headers:{'Content-Type':'application/json',...headers},body:JSON.stringify(data)});
+assert.equal((await fetch(base+'/admin/status',{headers:{'cf-connecting-ip':'1.2.3.4'}})).status,403);
+console.log('PASS tunneled admin denied');
+assert.equal((await post('/admin/load',{game:'chat-vs-streamer'})).status,200);
+const ws=new WebSocket(base.replace(/^http/,'ws')+'/play?name=owner');const messages=[];ws.on('message',b=>messages.push(JSON.parse(b)));
+await new Promise(r=>ws.on('open',r));ws.send(JSON.stringify({t:'claim-streamer',key:'wrong'}));await new Promise(r=>setTimeout(r,100));assert.ok(messages.some(m=>m.t==='role'&&!m.ok));
+ws.send(JSON.stringify({t:'claim-streamer',key:process.env.VA_STREAMER_KEY}));await new Promise(r=>setTimeout(r,100));assert.ok(messages.some(m=>m.t==='role'&&m.ok));
+ws.send(JSON.stringify({t:'input',data:{kind:'key',key:'right',down:true}}));await new Promise(r=>setTimeout(r,200));ws.send(JSON.stringify({t:'input',data:{kind:'key',key:'right',down:false}}));
+assert.ok(messages.some(m=>m.t==='state'&&m.view.layers.some(l=>l.t==='rect'&&l.color==='#b596ff'&&l.x>582)));console.log('PASS private web input moves streamer ship');
+const body={subscription:{type:'channel.channel_points_custom_reward_redemption.add'},event:{user_name:'reward-fan',reward:{title:'Vote left'}}};
+const id=crypto.randomUUID(),stamp=new Date().toISOString(),raw=JSON.stringify(body),sig='sha256='+crypto.createHmac('sha256','cambia-esto-tambien').update(id+stamp+raw).digest('hex');
+const headers={'twitch-eventsub-message-id':id,'twitch-eventsub-message-timestamp':stamp,'twitch-eventsub-message-type':'notification','twitch-eventsub-message-signature':sig};
+assert.equal((await post('/webhook/twitch',body,headers)).status,204);assert.equal((await post('/webhook/twitch',body,headers)).status,204);
+await new Promise(r=>setTimeout(r,150));assert.equal(messages.filter(m=>m.t==='feed'&&m.text.includes('redeemed Vote left')).length,1);assert.ok(messages.some(m=>m.t==='state'&&m.view.hud.some(h=>h.text?.includes('!left 1'))));console.log('PASS reward mapping affects vote once across EventSub retry');
+ws.close();

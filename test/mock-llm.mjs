@@ -23,4 +23,4 @@ http.createServer((req, res) => {
       }));
     });
   } else { res.writeHead(404); res.end(); }
-}).listen(11499, '127.0.0.1', () => console.log('mock llm on :11499'));
+}).listen(Number(process.env.VA_MOCK_PORT||11499), '127.0.0.1', () => console.log('mock llm on :11499'));

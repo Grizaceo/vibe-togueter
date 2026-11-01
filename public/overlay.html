@@ -36,7 +36,7 @@ connect({
   onPlayers: (p, game, err, fund) => {
     if (game) document.getElementById('game').textContent = game.name;
     document.getElementById('err').textContent = err || '';
-    document.getElementById('players').innerHTML = p.map(x => `▸ ${x.name}`).join('<br>');
+    document.getElementById('players').replaceChildren(...p.map(x=>{const line=document.createElement('div');line.textContent='▸ '+x.name;return line;}));
     if (fund) {
       const pct = fund.goal > 0 ? Math.min(100, Math.round(fund.balance / fund.goal * 100)) : 0;
       document.getElementById('fund').innerHTML =

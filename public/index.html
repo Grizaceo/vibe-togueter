@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   body { margin:0; background:#0b0b0f; color:#eee; font:16px system-ui; display:flex; flex-direction:column; height:100vh; }
-  header { padding:8px 12px; display:flex; gap:12px; align-items:center; background:#14141c; }
+  header { padding:8px 12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:#14141c; }
   header b { color:#8ef; }
   canvas { flex:1; width:100%; touch-action:none; }
   #bar { padding:6px 12px; background:#14141c; display:flex; gap:10px; font-size:14px; align-items:center; }
@@ -18,9 +18,10 @@
 <header>
   <b id="game">vibe-arena</b>
   <span id="me"></span>
-  <span style="color:#888">WASD/flechas para moverte · chat abajo para comandos</span>
+  
 <form id="streamer" style="margin-left:auto;display:flex;gap:6px"><input id="streamer-key" type="password" placeholder="Streamer key" aria-label="Private streamer key" size="12" autocomplete="off"><button>Unlock controls</button><span id="role-status" role="status"></span></form>
 </header>
+<div id="rules" style="padding:6px 12px;color:#91a7ca;font-size:14px;line-height:1.5"></div>
 <canvas id="cv"></canvas>
 <div id="bar">
   <span id="players"></span>
@@ -36,7 +37,7 @@ const c = connect({
   onRole: m => {document.getElementById('role-status').textContent=m.ok?'Controls unlocked':'Key rejected / already claimed';document.getElementById('streamer-key').value='';},
   onWelcome: m => { document.getElementById('me').textContent = `eres ${m.name}`; },
   onPlayers: (p, game, err) => {
-    if (game) document.getElementById('game').textContent = game.name + (game.desc ? ` — ${game.desc}` : '');
+    if (game) {document.getElementById('game').textContent=game.name;document.getElementById('rules').textContent=game.desc||'';}
     document.getElementById('players').textContent = `${p.length} jugando`;
     document.getElementById('err').textContent = err || '';
   },

@@ -61,6 +61,7 @@ function feed(kind, text) {
 const host = new GameHost({
   gameDir: GAME_DIR,
   onEvent: (kind, detail) => {
+    if (kind === 'game-reloaded') for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
     if (kind === 'game-reloaded') feed('system', `juego recargado: ${host.game?.name}`);
     if (kind === 'game-error') feed('system', `error en game.js: ${detail}`);
     if (kind === 'log') console.log(detail);

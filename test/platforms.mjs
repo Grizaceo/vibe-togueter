@@ -3,7 +3,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 
-const BASE = 'http://localhost:8420';
+const BASE = (process.env.VA_ARENA_URL || 'http://localhost:8420');
 const ok = (n, c, x = '') => console.log(`${c ? 'PASS' : 'FAIL'} ${n} ${x}`);
 const treasury = async () => (await fetch(BASE + '/admin/treasury')).json();
 const SECRET = 'cambia-esto-tambien';
@@ -64,7 +64,7 @@ let after = (await treasury()).balance;
 ok('twitch depósitos en fondo', Math.abs(after - before - 7.5) < 0.01, `+$${(after - before).toFixed(2)}`);
 
 // ---------- Kick webhook (RSA test key) ----------
-const PRIV = fs.readFileSync('/tmp/kick-test-priv.pem', 'utf8');
+const PRIV = fs.readFileSync(process.env.VA_TEST_KICK_PRIVATE_KEY || '/tmp/kick-test-priv.pem', 'utf8');
 function kickHeaders(evType, raw) {
   const msgId = 'kick-' + crypto.randomBytes(8).toString('hex');
   const ts = String(Math.floor(Date.now() / 1000));
@@ -82,7 +82,7 @@ before = after;
 
 // chat.message.sent → debe llegar al pipeline (lo verificamos vía feed en spectate)
 const { WebSocket } = await import('ws');
-const spec = new WebSocket('ws://localhost:8420/spectate');
+const spec = new WebSocket(BASE.replace(/^http/,'ws')+'/spectate');
 const feeds = [];
 spec.on('message', r => { const m = JSON.parse(r); if (m.t === 'feed') feeds.push(m.text); });
 await new Promise(r => setTimeout(r, 300));

@@ -21,12 +21,14 @@ import { z } from 'zod';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadEnv } from './auth/twitch.js';
 import { GameHost } from './gamehost.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const TEMPLATES = path.join(ROOT, 'templates');
 const GAMES = path.join(ROOT, 'games');
+loadEnv(path.join(ROOT,'.env'));
 const ARENA = process.env.VA_ARENA_URL || 'http://localhost:8420';
 
 const text = obj => ({ content: [{ type: 'text', text: typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2) }] });
@@ -34,9 +36,9 @@ const ok = (o = 'done') => text(o);
 const fail = (msg, extra = {}) => ({ content: [{ type: 'text', text: `ERROR: ${msg}` }], isError: true, ...extra });
 
 async function api(p, body) {
-  const res = await fetch(`${ARENA}${p}`, body !== undefined
-    ? { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }
-    : undefined);
+  const headers={'content-type':'application/json'};
+  if(process.env.VA_ADMIN_TOKEN)headers.authorization='Bearer '+process.env.VA_ADMIN_TOKEN;
+  const res=await fetch(`${ARENA}${p}`,{method:body===undefined?'GET':'POST',headers,body:body===undefined?undefined:JSON.stringify(body)});
   const t = await res.text();
   let parsed; try { parsed = JSON.parse(t); } catch { parsed = t; }
   if (!res.ok) throw new Error(`${res.status}: ${t.slice(0, 300)}`);
