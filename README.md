@@ -50,6 +50,10 @@ Enter the private streamer key in the player page to control the streamer side o
 
 The [privacy notice](public/privacy.html) is served at `/privacy.html`, linked from all three pages. **Operator/contact were supplied by Cristóbal Muñoz; complete the visible hosting/recording placeholder and retention/deletion procedure before public operation.** Persistent ideas, ballots, creator and quarantine records currently require operator-managed retention/deletion.
 
+## Grove emote bursts
+
+With `features.distinctPersonBursts: true`, **three different Twitch logins** sending the same ☀️ or 🌧️ within five seconds unlock a Grove bonus. Repeated messages from one login count once; web aliases do not count. Sunshine accelerates growing trees; rain adds growth to planted trees. The overlay shows progress and the game announces each bonus. Each emote has a five-second cooldown. Pausing clears pending bursts; game changes/reloads also reset them. Disable the flag and restart to remove this feature. These are account counts, not verified human identities.
+
 ## Preferred fallback games
 
 Unlock local Studio controls and save **Safety fallback order**, or configure `fallback.order` before first startup. Supported IDs: `community-grove`, `chat-vs-streamer`, `demo`; Marble Race is always appended last. The owner preference persists in `runtime/fallback-preferences.json`. Only bundled source with matching contributor/resource fingerprints is eligible; edited, failed, candidate and external games are skipped. Failed recovery exhausts each candidate once, then stops. Disable `features.configuredFallback` and restart to restore Marble-only recovery.

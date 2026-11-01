@@ -2,6 +2,7 @@
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from 'node:http';
+import {CrowdBursts} from './crowd-bursts.js';
 import {FallbackPolicy} from './fallback-policy.js';
 import {bundledContributorCredits} from './contributor-credits.js';
 import {ChatEffects} from './chat-effects.js';
@@ -58,6 +59,7 @@ if(process.env.VA_WEBHOOK_SECRET)CONFIG.monetization.webhookSecret=process.env.V
 // Synthetic event accounting is opt-in for isolated fixtures only; never provider settlement.
 const simulateEventCredits = process.env.VA_SIMULATE_EVENT_CREDITS === '1';
 
+const crowdBursts=new CrowdBursts({enabled:CONFIG.features?.distinctPersonBursts});
 const fallbackPolicy=new FallbackPolicy(path.join(ROOT,'runtime','fallback-preferences.json'),{enabled:CONFIG.features?.configuredFallback,order:CONFIG.fallback?.order});
 const chatEffects=new ChatEffects({enabled:CONFIG.features?.chatPause,channel:TWITCH_CHANNEL});
 
@@ -113,7 +115,7 @@ const host = new GameHost({
   gameDir: GAME_DIR,
   onEvent: (kind, detail) => {
     if (kind === 'game-reloaded') for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
-    if (kind === 'game-reloaded') refreshPublication();
+    if (kind === 'game-reloaded') {crowdBursts.reset();refreshPublication();}
     if (kind === 'game-reloaded') feed('system', `Game reloaded: ${host.game?.name}`);
     if (kind === 'game-error') {feed('system', `Game stopped: ${detail}`);requestFallback(detail);}
     if (kind === 'log') console.log(detail);
@@ -127,7 +129,7 @@ async function loadGameDir(dir,{isFallback=false}={}) {
   if(transitioning)return false;
   transitioning=true;
   try{
-    host.stop();host.gameDir=dir;
+    crowdBursts.reset();host.stop();host.gameDir=dir;
     if(!await host.load())return false;
     for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
     host.start();host.startWatching();refreshPublication();if(!isFallback)fallback={active:false,reason:null,at:null};return true;
@@ -203,9 +205,10 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
   text=String(text).slice(0,text.startsWith('!idea ')?10000:200);user=String(user).slice(0,100);
   if(source==='twitch'&&text.trim()==='!fallback'&&(isModerator||user.toLowerCase()===TWITCH_CHANNEL?.toLowerCase())){requestFallback('Requested by Twitch moderator '+user);return;}
   const control=chatEffects.command({source,user,isModerator},text);
-  if(control.handled){if(control.changed){if(chatEffects.blocked){teeBridge.pulse=null;teeBridge.tick();}feed('system',chatEffects.blocked?'Chat effects paused by '+user:'Chat effects resumed by '+user);}return;}
+  if(control.handled){if(control.changed){if(chatEffects.blocked){crowdBursts.reset();teeBridge.pulse=null;teeBridge.tick();}feed('system',chatEffects.blocked?'Chat effects paused by '+user:'Chat effects resumed by '+user);}return;}
   if(!chatGate.accept(source,participantId||user))return;
   feed('chat', `${user}: ${text}`);
+  if(!chatEffects.blocked&&!host.error&&host.gameDir===path.join(ROOT,'games','community-grove')){const bonus=crowdBursts.accept({source,user},text);if(bonus){host.safeCall('onCrowdBonus',bonus);feed('system',`${bonus.participants} distinct Twitch viewers unlocked a ${bonus.kind} bonus!`);}}
   if (!text.startsWith('!')) return;
   const [cmd, ...args] = text.slice(1).split(/\s+/);
   // meta commands handled by infra
@@ -330,7 +333,7 @@ function streamActivity(){
   activityRound=r?{phase:r.phase,ideas:r.ideas.length,voters:r.voters,voteEndsAt:r.voteEndsAt,
    highlights:r.ideas.slice().sort((a,b)=>b.votes-a.votes||a.id-b.id).slice(0,3).map(i=>({id:i.id,text:i.text.slice(0,100),author:i.author.slice(0,40),votes:i.votes}))}:null;
  }
- return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked};
+ return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked,crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
 }
 
 // ---------- broadcast loop (view @ 10Hz; slow recipients skip obsolete frames) ----------
@@ -386,7 +389,7 @@ const server = http.createServer(async (req, res) => {
     }
     if(url.pathname==='/admin/chat-effects'&&req.method==='POST'){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
-      try{const body=JSON.parse(await readBody()||'{}');if(typeof body.paused!=='boolean')throw Error('paused must be boolean');const result=chatEffects.setPaused(body.paused);if(result.changed){if(chatEffects.blocked){teeBridge.pulse=null;teeBridge.tick();}feed('system',chatEffects.blocked?'Chat effects paused by local streamer':'Chat effects resumed by local streamer');}res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({enabled:chatEffects.enabled,paused:chatEffects.blocked}));}catch(error){res.writeHead(400);return res.end(error.message);}
+      try{const body=JSON.parse(await readBody()||'{}');if(typeof body.paused!=='boolean')throw Error('paused must be boolean');const result=chatEffects.setPaused(body.paused);if(result.changed){if(chatEffects.blocked){crowdBursts.reset();teeBridge.pulse=null;teeBridge.tick();}feed('system',chatEffects.blocked?'Chat effects paused by local streamer':'Chat effects resumed by local streamer');}res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({enabled:chatEffects.enabled,paused:chatEffects.blocked}));}catch(error){res.writeHead(400);return res.end(error.message);}
     }
     if(url.pathname==='/admin/fallback'&&req.method==='POST'){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}

@@ -1,0 +1,27 @@
+✔ same-account spam cannot trigger; three Twitch logins unlock one emote bonus (4.603435ms)
+✔ expired people, mixed emotes, pause/reset and config disable cannot complete a burst (0.32267ms)
+✔ actual Grove bonuses have visible bounded effects and ignore malformed bonus input (0.709666ms)
+✖ ordinary chat including prototype-property names cannot crash burst admission (0.275388ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 100.855414
+
+✖ failing tests:
+
+test at test/crowd-bursts.mjs:21:1
+✖ ordinary chat including prototype-property names cannot crash burst admission (0.275388ms)
+  TypeError [Error]: this.groups[kind] is not iterable
+      at CrowdBursts.prune (file:///home/gris96/vibe-arena/src/crowd-bursts.js:6:84)
+      at CrowdBursts.accept (file:///home/gris96/vibe-arena/src/crowd-bursts.js:9:54)
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/crowd-bursts.mjs:22:150)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

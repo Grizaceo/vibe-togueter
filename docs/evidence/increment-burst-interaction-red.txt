@@ -1,0 +1,36 @@
+✔ same-account spam cannot trigger; three Twitch logins unlock one emote bonus (2.445104ms)
+✔ expired people, mixed emotes, pause/reset and config disable cannot complete a burst (0.2654ms)
+✔ actual Grove bonuses have visible bounded effects and ignore malformed bonus input (0.677538ms)
+✔ ordinary chat including prototype-property names cannot crash burst admission (0.19912ms)
+✖ ordinary sunshine cannot shorten a previously unlocked crowd bonus (4.452507ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.011304
+
+✖ failing tests:
+
+test at test/crowd-bursts.mjs:25:1
+✖ ordinary sunshine cannot shorten a previously unlocked crowd bonus (4.452507ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(s.sun>=before)
+  
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/crowd-bursts.mjs:27:74)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
