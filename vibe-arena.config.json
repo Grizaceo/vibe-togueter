@@ -46,6 +46,10 @@
   },
   "remoteGames": [],
   "features": {
-    "chatPause": true
+    "chatPause": true,
+    "configuredFallback": true
+  },
+  "fallback": {
+    "order": []
   }
 }

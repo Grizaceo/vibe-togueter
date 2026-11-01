@@ -20,3 +20,14 @@ ok('forced fallback rejects missing streamer confirmation',(await post('/admin/f
 const response=await post('/admin/fallback',{}, {'x-streamer-key':process.env.VA_STREAMER_KEY});
 ok('private owner can force the same fallback',(await response.json()).active&&(await status()).game?.name==='Marble Race');
 ws.close();fs.rmSync(dir,{recursive:true});
+
+const headers={'x-streamer-key':process.env.VA_STREAMER_KEY};
+ok('fallback preferences reject missing owner confirmation',(await post('/admin/fallback-order',{order:['chat-vs-streamer']})).status===403);
+ok('fallback preferences reject candidate or external game IDs',(await post('/admin/fallback-order',{order:['auto-candidate']},headers)).status===400);
+const preferredFile=path.resolve('games/chat-vs-streamer/game.js'),original=fs.readFileSync(preferredFile);
+try{
+ await post('/admin/fallback-order',{order:['chat-vs-streamer']},headers);await post('/admin/load',{game:'community-grove'});await post('/admin/fallback',{},headers);
+ ok('owner-selected reviewed fallback loads before Marble',(await status()).game?.name.includes('Democracy Duel'));
+ await post('/admin/load',{game:'community-grove'});fs.appendFileSync(preferredFile,'\n// unreviewed change\n');await post('/admin/fallback',{},headers);
+ ok('changed preferred source is skipped and Marble remains final fallback',(await status()).game?.name==='Marble Race');
+}finally{fs.writeFileSync(preferredFile,original);await post('/admin/fallback-order',{order:[]},headers);}

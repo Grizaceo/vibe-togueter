@@ -50,6 +50,10 @@ Enter the private streamer key in the player page to control the streamer side o
 
 The [privacy notice](public/privacy.html) is served at `/privacy.html`, linked from all three pages. **Operator/contact were supplied by Cristóbal Muñoz; complete the visible hosting/recording placeholder and retention/deletion procedure before public operation.** Persistent ideas, ballots, creator and quarantine records currently require operator-managed retention/deletion.
 
+## Preferred fallback games
+
+Unlock local Studio controls and save **Safety fallback order**, or configure `fallback.order` before first startup. Supported IDs: `community-grove`, `chat-vs-streamer`, `demo`; Marble Race is always appended last. The owner preference persists in `runtime/fallback-preferences.json`. Only bundled source with matching contributor/resource fingerprints is eligible; edited, failed, candidate and external games are skipped. Failed recovery exhausts each candidate once, then stops. Disable `features.configuredFallback` and restart to restore Marble-only recovery.
+
 ## Streamer chat-effects pause
 
 With `features.chatPause: true` in `vibe-arena.config.json`, the Twitch broadcaster or a moderator can use `!pause` and `!resume`. The overlay shows the pause. Incoming game commands, crowd pulses and mapped reward effects stop; browser play, ideas, votes and safety fallback continue. Game simulation and effects already applied to game state continue. This is a session control and resets on controller restart. Reward notifications received during pause are acknowledged without applying their game effect; this does not refund Channel Points.
@@ -58,7 +62,7 @@ The private local streamer can POST `{ "paused": true }` or `{ "paused": false }
 
 ## Safety and recovery
 
-Reviewed local SDK code runs in a disposable Linux namespace process with an empty credential environment, bounded pipes and deadlines. The controller does not evaluate game callbacks. An unresponsive or failed game switches to Marble Race, retains connected players and displays the cause. A failed fallback stops instead of retrying indefinitely. Twitch broadcaster/moderators can request `!fallback`; the trusted IRC mod tag supplies authority. Local streamer POST `/admin/fallback` requires the confirmation key. [Runtime details and limits](docs/platform/LOCAL_RUNTIME.md).
+Reviewed local SDK code runs in a disposable Linux namespace process with an empty credential environment, bounded pipes and deadlines. The controller does not evaluate game callbacks. An unresponsive or failed game follows the streamer’s reviewed fallback order, retains connected players and displays the cause. Marble Race is always last; its default order contains only Marble. A failed fallback stops instead of retrying indefinitely. Twitch broadcaster/moderators can request `!fallback`; the trusted IRC mod tag supplies authority. Local streamer POST `/admin/fallback` requires the confirmation key. [Runtime details and limits](docs/platform/LOCAL_RUNTIME.md).
 
 Arbitrary generated artifacts still require separate build/test/runtime VMs. Cloud mode is the default, has no host fallback, and rejects automatic construction because the general worker is unconnected. MCP host installation is also blocked in that mode. Explicit `trusted-local` development is for owner-reviewed fixtures, not a substitute for arbitrary-game quarantine. No approved candidate is imported from `artifacts/` onto the host.
 

@@ -2,6 +2,8 @@
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from 'node:http';
+import {FallbackPolicy} from './fallback-policy.js';
+import {bundledContributorCredits} from './contributor-credits.js';
 import {ChatEffects} from './chat-effects.js';
 import {secretMatches,staticFileInside} from './request-boundaries.js';
 import fs from 'node:fs';
@@ -56,6 +58,7 @@ if(process.env.VA_WEBHOOK_SECRET)CONFIG.monetization.webhookSecret=process.env.V
 // Synthetic event accounting is opt-in for isolated fixtures only; never provider settlement.
 const simulateEventCredits = process.env.VA_SIMULATE_EVENT_CREDITS === '1';
 
+const fallbackPolicy=new FallbackPolicy(path.join(ROOT,'runtime','fallback-preferences.json'),{enabled:CONFIG.features?.configuredFallback,order:CONFIG.fallback?.order});
 const chatEffects=new ChatEffects({enabled:CONFIG.features?.chatPause,channel:TWITCH_CHANNEL});
 
 // ---------- room ----------
@@ -79,19 +82,33 @@ function feed(kind, text) {
 
 let transitioning=false;
 let fallback={active:false,reason:null,at:null};
-let fallbackScheduled=false,fallbackRequested=null;
+let fallbackScheduled=false,fallbackRequested=null,recovering=false;
+let fallbackAttempted=new Set();
 function requestFallback(reason){
+  if(recovering)return;
   fallbackRequested=reason;if(fallbackScheduled)return;fallbackScheduled=true;
   setTimeout(async()=>{fallbackScheduled=false;if(transitioning)return;const pending=fallbackRequested;fallbackRequested=null;await activateFallback(pending);},0);
 }
 async function activateFallback(reason){
-  const dir=path.join(ROOT,'games','marble-race');
+  if(recovering||transitioning)return false;
+  recovering=true;
+  if(!fallback.active||!host.error)fallbackAttempted=new Set();
+  if(host.error)fallbackAttempted.add(path.basename(host.gameDir));
   fallback={active:true,reason:String(reason).slice(0,240),at:Date.now()};
-  if(host.gameDir===dir&&host.error){host.stop();feed('system','Fallback failed; gameplay stopped. '+fallback.reason);return false;}
-  const ok=await loadGameDir(dir,{isFallback:true});
-  feed('system',ok?'Safety fallback: Marble Race. '+fallback.reason:'Fallback unavailable; gameplay stopped.');
-  return ok;
+  try{
+    for(const gameId of fallbackPolicy.effective){
+      if(fallbackAttempted.has(gameId))continue;
+      fallbackAttempted.add(gameId);
+      const dir=path.join(ROOT,'games',gameId);
+      try{const review=reviewGame(ROOT,gameId);if(!bundledContributorCredits(ROOT,dir,review.codeSha256))continue;}catch{continue;}
+      if(await loadGameDir(dir,{isFallback:true})){
+        fallback.gameId=gameId;feed('system','Safety fallback: '+host.game.name+'. '+fallback.reason);return true;
+      }
+    }
+    host.stop();feed('system','Fallback unavailable; gameplay stopped. '+fallback.reason);return false;
+  }finally{recovering=false;}
 }
+
 const host = new GameHost({
   gameDir: GAME_DIR,
   onEvent: (kind, detail) => {
@@ -363,6 +380,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/fallback-order'&&['GET','POST'].includes(req.method)){
+      if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
+      try{if(req.method==='POST')fallbackPolicy.set(JSON.parse(await readBody()||'{}').order);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({enabled:fallbackPolicy.enabled,order:fallbackPolicy.effective}));}catch(error){res.writeHead(400);return res.end(error.message);}
+    }
     if(url.pathname==='/admin/chat-effects'&&req.method==='POST'){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
       try{const body=JSON.parse(await readBody()||'{}');if(typeof body.paused!=='boolean')throw Error('paused must be boolean');const result=chatEffects.setPaused(body.paused);if(result.changed){if(chatEffects.blocked){teeBridge.pulse=null;teeBridge.tick();}feed('system',chatEffects.blocked?'Chat effects paused by local streamer':'Chat effects resumed by local streamer');}res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({enabled:chatEffects.enabled,paused:chatEffects.blocked}));}catch(error){res.writeHead(400);return res.end(error.message);}
