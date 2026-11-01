@@ -49,6 +49,9 @@ if (process.env.VA_MODEL) CONFIG.generator.model = process.env.VA_MODEL;
 if(process.env.VA_EVENTSUB_SECRET)CONFIG.monetization.eventsubSecret=process.env.VA_EVENTSUB_SECRET;
 if(process.env.VA_WEBHOOK_SECRET)CONFIG.monetization.webhookSecret=process.env.VA_WEBHOOK_SECRET;
 
+// Synthetic event accounting is opt-in for isolated fixtures only; never provider settlement.
+const simulateEventCredits = process.env.VA_SIMULATE_EVENT_CREDITS === '1';
+
 // ---------- room ----------
 const clients = new Map(); // ws -> {id,name,kind:'player'|'spectator'}
 let nextId = 1;
@@ -94,7 +97,7 @@ async function loadGameDir(dir) {
 // ---------- treasury + generator ----------
 const treasury = new Treasury(path.join(ROOT, 'treasury.jsonl'), {
   onChange: e => {
-    if (e.kind === 'deposit') feed('system', `+ $${e.amountUsd.toFixed(2)} al fondo (${e.meta?.source || 'manual'})`);
+    if (e.kind === 'deposit') feed('system', `Demo build credits +${e.amountUsd.toFixed(2)} (${e.meta?.source || 'manual'}); no payment received.`);
   },
 });
 const generator = new Generator(CONFIG.generator, treasury, console.log);
@@ -445,14 +448,14 @@ const server = http.createServer(async (req, res) => {
         const user = body.sender?.username || 'anon';
         const text = String(body.content || '').slice(0, 200);
         if (text) handleChat({ user, text, source: 'kick' });
-      } else if (evType === 'channel.subscription.new') {
+      } else if (simulateEventCredits && evType === 'channel.subscription.new') {
         treasury.deposit(M.kickSubUsd, { source: 'kick-sub', user: body.subscriber?.username });
         feed('system', `sub de ${body.subscriber?.username || '?'} → +$${M.kickSubUsd}`);
-      } else if (evType === 'channel.subscription.gifts') {
+      } else if (simulateEventCredits && evType === 'channel.subscription.gifts') {
         const n = body.giftees?.length || body.amount || 1;
         treasury.deposit(n * M.kickSubUsd, { source: 'kick-sub-gift', user: body.gifter?.username, count: n });
         feed('system', `${body.gifter?.username || '?'} regaló ${n} subs → +$${(n * M.kickSubUsd).toFixed(2)}`);
-      } else if (evType === 'kicks.gifted') {
+      } else if (simulateEventCredits && evType === 'kicks.gifted') {
         const amt = (body.kicks?.amount || body.amount || 0) * M.kickUsdPerKick;
         if (amt > 0) {
           treasury.deposit(amt, { source: 'kicks', user: body.sender?.username, kicks: body.kicks?.amount });
@@ -479,15 +482,15 @@ const server = http.createServer(async (req, res) => {
         if(twitchDeliveries.has(msgId)){res.writeHead(204);return res.end();}
         const ev = body.event || {};
         const M = CONFIG.monetization;
-        if (body.subscription?.type === 'channel.subscribe') {
+        if (simulateEventCredits && body.subscription?.type === 'channel.subscribe') {
           const mult = { '1000': 1, '2000': 2, '3000': 5 }[ev.tier] || 1;
           treasury.deposit(M.twitchSubUsd * mult, { source: 'twitch-sub', user: ev.user_name, tier: ev.tier });
           feed('system', `sub T${ev.tier?.[0]} de ${ev.user_name} → +$${(M.twitchSubUsd * mult).toFixed(2)}`);
-        } else if (body.subscription?.type === 'channel.subscription.gift') {
+        } else if (simulateEventCredits && body.subscription?.type === 'channel.subscription.gift') {
           const n = ev.total || 1;
           treasury.deposit(M.twitchSubUsd * n, { source: 'twitch-sub-gift', user: ev.user_name, count: n });
           feed('system', `${ev.user_name} regaló ${n} subs → +$${(M.twitchSubUsd * n).toFixed(2)}`);
-        } else if (body.subscription?.type === 'channel.bits.use' || body.subscription?.type === 'channel.cheer') {
+        } else if (simulateEventCredits && (body.subscription?.type === 'channel.bits.use' || body.subscription?.type === 'channel.cheer')) {
           const bits = ev.bits || ev.cheer?.bits || 0;
           const usd = bits * M.bitUsd;
           if (usd > 0) {
@@ -511,6 +514,7 @@ const server = http.createServer(async (req, res) => {
 
   // donation webhook: Streamlabs / Ko-fi / generic POST {amountUsd|amount, source, user} + ?secret=
   if (url.pathname === '/webhook/donation' && req.method === 'POST') {
+    if (!simulateEventCredits) { res.writeHead(410); return res.end('Payments are not supported. This instance uses demo build credits.'); }
     let b = ''; req.on('data', c => b += c);
     req.on('end', () => {
       let body = {};

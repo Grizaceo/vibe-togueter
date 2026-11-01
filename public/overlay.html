@@ -45,7 +45,7 @@ connect({
     if (fund) {
       const pct = fund.goal > 0 ? Math.min(100, Math.round(fund.balance / fund.goal * 100)) : 0;
       document.getElementById('fund').innerHTML =
-        `fondo $${fund.balance.toFixed(2)} / $${fund.goal.toFixed(2)} (${pct}%)` +
+        `Demo build credits ${fund.balance.toFixed(2)} / ${fund.goal.toFixed(2)} (${pct}%) · no payments` +
         (fund.generating ? ' · <b style="color:#ffe66d">generando…</b>' : '');
     }
   },
@@ -59,5 +59,6 @@ function addFeed(ev) {
   feed.scrollTop = feed.scrollHeight;
 }
 </script>
+<a href="/privacy.html" style="position:fixed;bottom:4px;right:8px;color:#9bd;font:12px system-ui;z-index:10">Privacy · operator details pending</a>
 </body>
 </html>

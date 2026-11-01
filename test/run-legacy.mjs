@@ -6,7 +6,7 @@ fs.symlinkSync(path.join(root,'node_modules'),path.join(temp,'node_modules'),'di
 const freePort=()=>new Promise(r=>{const s=net.createServer();s.listen(0,'127.0.0.1',()=>{const p=s.address().port;s.close(()=>r(p));});});
 const port=await freePort(),mockPort=await freePort();
 const keys=crypto.generateKeyPairSync('rsa',{modulusLength:2048});const privateFile=path.join(temp,'kick-private.pem');fs.writeFileSync(privateFile,keys.privateKey.export({type:'pkcs8',format:'pem'}),{mode:0o600});
-const env={...process.env,VA_ARENA_URL:`http://127.0.0.1:${port}`,VA_BASE_URL:`http://127.0.0.1:${mockPort}/v1`,VA_MOCK_PORT:String(mockPort),VA_MODEL:'local',VA_KICK_PUBKEY:keys.publicKey.export({type:'spki',format:'pem'}),VA_TEST_KICK_PRIVATE_KEY:privateFile,VA_ADMIN_TOKEN:'',VA_EVENTSUB_SECRET:'',VA_WEBHOOK_SECRET:'',VA_PUBLIC_URL:'',VA_STREAMER_KEY:'test-streamer-key',VA_BUILD_MODE:'trusted-local'};
+const env={...process.env,VA_ARENA_URL:`http://127.0.0.1:${port}`,VA_BASE_URL:`http://127.0.0.1:${mockPort}/v1`,VA_MOCK_PORT:String(mockPort),VA_MODEL:'local',VA_KICK_PUBKEY:keys.publicKey.export({type:'spki',format:'pem'}),VA_TEST_KICK_PRIVATE_KEY:privateFile,VA_ADMIN_TOKEN:'',VA_EVENTSUB_SECRET:'',VA_WEBHOOK_SECRET:'',VA_PUBLIC_URL:'',VA_STREAMER_KEY:'test-streamer-key',VA_BUILD_MODE:'trusted-local',VA_SIMULATE_EVENT_CREDITS:'1'};
 let logs='';const start=args=>{const p=spawn(process.execPath,args,{cwd:temp,env,stdio:['ignore','pipe','pipe']});p.stdout.on('data',b=>logs+=b);p.stderr.on('data',b=>logs+=b);return p;};
 const mock=start(['test/mock-llm.mjs']),server=start(['--experimental-vm-modules','src/server.js','--port',String(port)]);
 const results=[];
