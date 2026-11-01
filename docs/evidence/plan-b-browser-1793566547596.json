@@ -1,0 +1,87 @@
+{
+  "at": "2026-11-01T20:56:19.560Z",
+  "kind": "automated-local-normal-launcher-browser-rehearsal",
+  "checks": [
+    {
+      "name": "Studio accurately describes empty remote catalog and supplied operator status",
+      "ok": true
+    },
+    {
+      "name": "production Studio form submits browser-authored proposal",
+      "ok": true
+    },
+    {
+      "name": "production Studio vote button counts the browser ballot",
+      "ok": true
+    },
+    {
+      "name": "launcher reviews and approves exactly the browser-proposed input",
+      "ok": true
+    },
+    {
+      "name": "production keyboard input advances Grove through normal launcher",
+      "ok": true
+    },
+    {
+      "name": "terminal fallback reaches the existing browser and exposes its cause",
+      "ok": true
+    },
+    {
+      "name": "both browser players are present after fallback",
+      "ok": true
+    },
+    {
+      "name": "Browser rehearsal observation deadline",
+      "ok": false
+    }
+  ],
+  "exceptions": [],
+  "screenshots": [
+    "plan-b-browser-1793566547596-approved-studio.png",
+    "plan-b-browser-1793566547596-grove.png",
+    "plan-b-browser-1793566547596-fallback.png",
+    "plan-b-browser-1793566547596-failure.png"
+  ],
+  "cleanupConfirmed": true,
+  "diagnostic": {
+    "game": {
+      "name": "Marble Race",
+      "desc": "!play para entrar tu canica · !race larga · !reset limpia · carrera plinko",
+      "versionSha256": "399f28c64fb341ee4e48311021efd194b62a67872d4f56fe903f8823081b1410"
+    },
+    "players": [
+      {
+        "id": 2,
+        "name": "LocalBrowserPlayer"
+      },
+      {
+        "id": 4,
+        "name": "SecondLocalPlayer"
+      }
+    ],
+    "hud": [
+      {
+        "t": "text",
+        "x": 20,
+        "y": 26,
+        "size": 22,
+        "color": "#8ef",
+        "align": "left",
+        "text": "MARBLE RACE"
+      },
+      {
+        "t": "text",
+        "x": 640,
+        "y": 40,
+        "size": 26,
+        "color": "#fff",
+        "text": "2/60 canicas — !play para entrar · !race para largar"
+      }
+    ]
+  },
+  "limits": [
+    "Production browser forms, keyboard and terminal controls on localhost only.",
+    "No human participants, Twitch connection/messages, OBS capture or exported video.",
+    "Approved inputs do not dispatch a worker; Seed Race was not imported or executed."
+  ]
+}

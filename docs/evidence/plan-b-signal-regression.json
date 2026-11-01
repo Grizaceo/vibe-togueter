@@ -1,0 +1,13 @@
+{
+  "at": "2026-11-01T20:57:27Z",
+  "kind": "local-browser-rehearsal-signal-regression",
+  "signal": "SIGTERM",
+  "liveChildrenObservedBeforeSignal": 8,
+  "exitCode": 1,
+  "remainingLiveChildren": [],
+  "passed": true,
+  "limits": [
+    "Only the newly launched rehearsal and its observed descendants were inspected.",
+    "No human/Twitch/OBS evidence."
+  ]
+}

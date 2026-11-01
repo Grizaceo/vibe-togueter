@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-01T20:57:27.844Z",
+  "kind": "automated-local-normal-launcher-browser-rehearsal",
+  "checks": [
+    {
+      "name": "Rehearsal interrupted; cleanup required",
+      "ok": false
+    }
+  ],
+  "exceptions": [],
+  "screenshots": [],
+  "cleanupConfirmed": true,
+  "diagnostic": {},
+  "limits": [
+    "Production browser forms, keyboard and terminal controls on localhost only.",
+    "No human participants, Twitch connection/messages, OBS capture or exported video.",
+    "Approved inputs do not dispatch a worker; Seed Race was not imported or executed."
+  ]
+}
