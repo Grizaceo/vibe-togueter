@@ -2,6 +2,7 @@
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from 'node:http';
+import {ChatPredictions} from './chat-predictions.js';
 import {CrowdBursts} from './crowd-bursts.js';
 import {FallbackPolicy} from './fallback-policy.js';
 import {bundledContributorCredits} from './contributor-credits.js';
@@ -59,6 +60,7 @@ if(process.env.VA_WEBHOOK_SECRET)CONFIG.monetization.webhookSecret=process.env.V
 // Synthetic event accounting is opt-in for isolated fixtures only; never provider settlement.
 const simulateEventCredits = process.env.VA_SIMULATE_EVENT_CREDITS === '1';
 
+const predictions=new ChatPredictions({enabled:CONFIG.features?.chatPredictions});
 const crowdBursts=new CrowdBursts({enabled:CONFIG.features?.distinctPersonBursts});
 const fallbackPolicy=new FallbackPolicy(path.join(ROOT,'runtime','fallback-preferences.json'),{enabled:CONFIG.features?.configuredFallback,order:CONFIG.fallback?.order});
 const chatEffects=new ChatEffects({enabled:CONFIG.features?.chatPause,channel:TWITCH_CHANNEL});
@@ -221,6 +223,11 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
     return;
   }
   const actor={id:participantId||user,name:user,source,owner:source==='twitch'&&user.toLowerCase()===TWITCH_CHANNEL?.toLowerCase()};
+  if(cmd==='predict'||cmd==='prediction'){
+    try{if(cmd==='predict'){predictions.vote(actor,args.join(' '));feed('system',user+': prediction saved.');}
+      else{const action=args.shift();if(action==='open')predictions.open(actor,args.join(' ').split('|'));else if(action==='lock')predictions.lock(actor);else if(action==='resolve')predictions.resolve(actor,args.join(' '));else if(action==='cancel')predictions.cancel(actor);else throw Error('Use !prediction open choice|choice, lock, resolve choice, or cancel.');feed('system','Chat prediction: '+predictions.public()?.phase);}
+    }catch(error){feed('system',user+': '+error.message);}return;
+  }
   if(cmd==='fallback'){
     if(source==='twitch'&&(actor.owner||isModerator))requestFallback('Requested by Twitch moderator '+user);
     return;
@@ -333,7 +340,7 @@ function streamActivity(){
   activityRound=r?{phase:r.phase,ideas:r.ideas.length,voters:r.voters,voteEndsAt:r.voteEndsAt,
    highlights:r.ideas.slice().sort((a,b)=>b.votes-a.votes||a.id-b.id).slice(0,3).map(i=>({id:i.id,text:i.text.slice(0,100),author:i.author.slice(0,40),votes:i.votes}))}:null;
  }
- return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked,crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
+ return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked,prediction:predictions.public(),crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
 }
 
 // ---------- broadcast loop (view @ 10Hz; slow recipients skip obsolete frames) ----------
@@ -383,6 +390,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/prediction'&&req.method==='POST'){
+      if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
+      try{const data=JSON.parse(await readBody()||'{}'),actor={owner:true,source:'streamer-ui',name:TWITCH_CHANNEL||'local streamer'};if(data.action==='open')predictions.open(actor,data.choices);else if(data.action==='lock')predictions.lock(actor);else if(data.action==='resolve')predictions.resolve(actor,data.choice);else if(data.action==='cancel')predictions.cancel(actor);else throw Error('Unknown prediction action.');res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(predictions.public()));}catch(error){res.writeHead(400);return res.end(error.message);}
+    }
     if(url.pathname==='/admin/fallback-order'&&['GET','POST'].includes(req.method)){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
       try{if(req.method==='POST')fallbackPolicy.set(JSON.parse(await readBody()||'{}').order);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({enabled:fallbackPolicy.enabled,order:fallbackPolicy.effective}));}catch(error){res.writeHead(400);return res.end(error.message);}

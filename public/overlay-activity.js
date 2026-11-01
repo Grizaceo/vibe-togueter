@@ -8,9 +8,10 @@ export function attachActivity(container){
   const r=state?.round;
   line('strong',r?'Community round · '+r.phase.replaceAll('-',' '):'Community studio');
   line('p',r?`${r.ideas} ideas · ${r.voters} voters`:'Chat: !idea your game idea');
-  for(const idea of r?.highlights||[])line('p',`#${idea.id} · ${idea.votes} votes · ${idea.author}: ${idea.text}`);
+  for(const idea of (r?.highlights||[]).slice(0,state?.prediction?1:3))line('p',`#${idea.id} · ${idea.votes} votes · ${idea.author}: ${idea.text}`);
   if(!r)line('p','Propose → vote → streamer review');
   line('p',state?.builder||'Waiting for controller');
+  if(state?.prediction){const p=state.prediction;line('strong','Free chat prediction · '+p.phase);line('p',p.choices.map(c=>`${c.label}: ${c.count}`).join(' · '));if(p.phase==='open')line('p','!predict your choice · no points or money');if(p.phase==='resolved'){line('strong','Result: '+p.result+' · reported by streamer');line('p',p.winnerCount+' correct: '+(p.winners.join(', ')||'No correct predictions'));}}
   if(state?.crowd?.enabled&&!state?.chatEffectsPaused)line('p',`Grove burst · 3 viewers in 5s: ☀️ ${state.crowd.sun}/${state.crowd.needed} · 🌧️ ${state.crowd.rain}/${state.crowd.needed}`);
   if(state?.chatEffectsPaused)line('strong','Chat effects paused · proposals and votes stay open');
   if(state?.fallback)line('strong','Safety fallback: '+state.fallback);

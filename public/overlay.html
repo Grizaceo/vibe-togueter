@@ -18,7 +18,7 @@
 #live-credits {grid-column:1 / -1;background:#101018;color:#fff;border-top:2px solid #8ef;padding:10px 18px;}
 .creator-strip {display:flex;flex-wrap:wrap;gap:4px 24px;font-size:clamp(18px,1.5vw,28px);font-weight:650;line-height:1.5;}
 #live-credits > :not(.creator-strip) {display:none;}
-#activity {padding:10px 12px;border-bottom:1px solid #38414d;font-size:17px;line-height:1.5;}
+#activity {max-height:65%;overflow-y:auto;flex-shrink:0;padding:10px 12px;border-bottom:1px solid #38414d;font-size:17px;line-height:1.5;}
 #activity p {margin:6px 0;color:#e0e7ef;}
 #activity strong {color:#ffe598;}
 #feed:empty::before {content:'Waiting for community activity';color:#b4c1d2;}

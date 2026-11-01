@@ -50,6 +50,12 @@ Enter the private streamer key in the player page to control the streamer side o
 
 The [privacy notice](public/privacy.html) is served at `/privacy.html`, linked from all three pages. **Operator/contact were supplied by Cristóbal Muñoz; complete the visible hosting/recording placeholder and retention/deletion procedure before public operation.** Persistent ideas, ballots, creator and quarantine records currently require operator-managed retention/deletion.
 
+## Free chat predictions
+
+With `features.chatPredictions: true`, the broadcaster opens a 60-second prediction with `!prediction open Sun|Rain` (2–6 choices). Viewers use `!predict Sun`; their latest ballot replaces the previous one. The broadcaster uses `!prediction lock`, then `!prediction resolve Sun`, or `!prediction cancel`. The overlay recognizes correct predictions and labels the outcome as **reported by the streamer**. This is a chat-only feature: no money, Channel Points, Twitch Predictions API, scopes or eligibility dependency. Web sessions can also predict; winner labels distinguish web names from Twitch logins. Disable the flag and restart to remove it.
+
+Predictions stay only in controller memory until the next prediction or restart. Recent command text also follows the existing feed policy. Game changes do not resolve predictions automatically; the broadcaster must resolve or cancel them honestly.
+
 ## Grove emote bursts
 
 With `features.distinctPersonBursts: true`, **three different Twitch logins** sending the same ☀️ or 🌧️ within five seconds unlock a Grove bonus. Repeated messages from one login count once; web aliases do not count. Sunshine accelerates growing trees; rain adds growth to planted trees. The overlay shows progress and the game announces each bonus. Each emote has a five-second cooldown. Pausing clears pending bursts; game changes/reloads also reset them. Disable the flag and restart to remove this feature. These are account counts, not verified human identities.

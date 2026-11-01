@@ -1,0 +1,6 @@
+Local Plan B rehearsal — no Twitch connection or human evidence recorded.
+Play: http://127.0.0.1:41303/
+Studio: http://127.0.0.1:41303/studio.html
+Overlay: http://127.0.0.1:41303/overlay.html
+{"kind":"automated-disposable-local-launcher-check","checks":[{"name":"grove","ok":true},{"name":"marble","ok":true},{"name":"duel","ok":true},{"name":"fallback","ok":true},{"name":"pause","ok":true},{"name":"resume","ok":true},{"name":"prediction","ok":true},{"name":"lockprediction","ok":true},{"name":"sunwins","ok":true},{"name":"local studio proposal/vote/review/exact-input approval","ok":true}],"finalCreditsStatus":"unreviewed","ownerConfigRead":false,"twitchConnected":false,"humanRehearsal":false}
+{"cleanupConfirmed":true,"childStopped":true}

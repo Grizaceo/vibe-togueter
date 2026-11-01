@@ -52,7 +52,7 @@ try{
  const roundAction=async body=>request('/admin/round',body);
  const review=async()=>{const state=await request('/community/state');if(state.round?.phase!=='awaiting-approval')throw Error('Close voting and select an idea before review.');reviewed=state.round;return {selected:reviewed.ideas.filter(i=>reviewed.selected.includes(i.id)).map(i=>({id:i.id,text:i.text})),resources:reviewed.resourceManifest?.assets.map(a=>a.title)||[]};};
  const approve=async()=>{if(!reviewed)throw Error('Run review before approve.');const result=await roundAction({action:'approve',roundId:reviewed.id,reviewToken:reviewed.reviewToken});reviewed=null;return result;};
- const commands={grove:['/admin/load',{game:'community-grove'}],marble:['/admin/load',{game:'marble-race'}],duel:['/admin/load',{game:'chat-vs-streamer'}],fallback:['/admin/fallback',{}]};
+ const commands={grove:['/admin/load',{game:'community-grove'}],marble:['/admin/load',{game:'marble-race'}],duel:['/admin/load',{game:'chat-vs-streamer'}],fallback:['/admin/fallback',{}],pause:['/admin/chat-effects',{paused:true}],resume:['/admin/chat-effects',{paused:false}],prediction:['/admin/prediction',{action:'open',choices:['Sun','Rain']}],lockprediction:['/admin/prediction',{action:'lock'}],sunwins:['/admin/prediction',{action:'resolve',choice:'Sun'}]};
  if(check){
   const checks=[];
   for(const [name,[route,body]] of Object.entries(commands)){await request(route,body);checks.push({name,ok:true});}
@@ -72,7 +72,7 @@ try{
  }else{
   terminal=readline.createInterface({input:process.stdin,output:process.stdout});
   console.log('Browser: enter a nickname, then arrows / space / click. Studio proposals and votes are local.');
-  console.log('Terminal: grove, marble, duel, fallback; studio: open, voting, close, select ID, review, approve, cancel; stop exits.');
+  console.log('Terminal: grove, marble, duel, fallback, pause, resume, prediction, lockprediction, sunwins; studio: open, voting, close, select ID, review, approve, cancel; stop exits.');
   console.log('After a browser proposal: voting → browser vote → close → select ID → review → approve. This approves inputs only; no coding worker runs. Duel streamer unlocking uses the normal owner setup during the later real rehearsal.');
   for await(const line of terminal){
    const command=line.trim();if(command==='stop')break;

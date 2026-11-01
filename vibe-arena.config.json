@@ -48,7 +48,8 @@
   "features": {
     "chatPause": true,
     "configuredFallback": true,
-    "distinctPersonBursts": true
+    "distinctPersonBursts": true,
+    "chatPredictions": true
   },
   "fallback": {
     "order": []
