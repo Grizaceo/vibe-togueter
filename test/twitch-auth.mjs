@@ -34,3 +34,9 @@ test('OAuth rejects wrong state including unicode and exchanges only valid callb
 test('network errors cannot echo tokens or raw server errors',async()=>{
  const auth=fixture(async()=>{throw new Error('secret-token-should-not-escape');});await assert.rejects(auth.validate(),e=>!e.message.includes('secret-token'));
 });
+
+
+test('hourly maintenance validates, rotates refreshable tokens, then validates new identity',async()=>{
+ const requests=[];const auth=fixture(async(url)=>{requests.push(url);return url.endsWith('/token')?response({access_token:'hourly-new',refresh_token:'hourly-refresh'}):response(info);});
+ await auth.maintain();assert.equal(requests.length,3);assert.equal(auth.token,'hourly-new');assert.ok(requests[1].endsWith('/token'));
+});

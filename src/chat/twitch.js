@@ -56,7 +56,7 @@ export function connectTwitch(channel,onChat,{auth,oauth,nick,WebSocketImpl=WebS
     connection.on('close',()=>{if(connection!==ws)return;ready=false;queue.length=0;clearTimeout(sendTimer);sendTimer=null;status('disconnected');schedule();});
   }
   if(auth)health=setInterval(async()=>{
-    try{await auth.validate({force:true});if(auth.token!==activeToken)ws?.close();}
+    try{if(auth.maintain)await auth.maintain();else await auth.validate({force:true});if(auth.token!==activeToken)ws?.close();}
     catch{ready=false;ws?.close();status('authorization unavailable');}
   },3500000);
   open();

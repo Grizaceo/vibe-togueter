@@ -76,6 +76,11 @@ export class TwitchAuth {
       this.info=info;this.checkedAt=this.now();return info;
     }
   }
+  async maintain() {
+    await this.validate({force:true});
+    if(this.values.VA_TWITCH_REFRESH_TOKEN){await this.refresh();await this.validate({force:true});}
+    return this.info;
+  }
   async helix(endpoint,{method='GET',body}={}) {
     await this.validate();
     for(let attempt=0;attempt<2;attempt++) {
