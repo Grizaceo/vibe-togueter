@@ -35,13 +35,13 @@ export class Generator {
 
   async generateGame(idea, outDir) {
     if (!this.treasury.canAfford(this.cfg.gameCostUsd)) {
-      return { ok: false, reason: `fondo insuficiente ($${this.treasury.balance} < $${this.cfg.gameCostUsd})` };
+      return { ok: false, reason: `Insufficient demo credits ($${this.treasury.balance} < $${this.cfg.gameCostUsd})` };
     }
     const body = {
       model: this.cfg.model,
       messages: [
         { role: 'system', content: SDK_SPEC },
-        { role: 'user', content: `Genera un juego para esta idea del chat: "${idea}". Devuelve SOLO el contenido de game.js, sin fences ni explicación.` },
+        { role: 'user', content: `Build a game with English UI for this chat idea: "${idea}". Return ONLY game.js contents, without fences or explanation.` },
       ],
       temperature: 0.8,
       max_tokens: 8000,
@@ -67,7 +67,7 @@ export class Generator {
       return { ok: false, reason: `Cost $${cost.toFixed(3)} exceeds the per-game maximum $${this.cfg.maxCostUsd}` };
     }
     if (!this.treasury.spend(cost, { kind: 'game-gen', model: this.cfg.model, idea, tokens: data.usage })) {
-      return { ok: false, reason: 'fondo insuficiente al momento de cobrar' };
+      return { ok: false, reason: 'Insufficient demo credits when recording usage' };
     }
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, 'game.js'), code);

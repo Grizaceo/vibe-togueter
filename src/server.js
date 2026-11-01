@@ -2,6 +2,7 @@
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from 'node:http';
+import {secretMatches,staticFileInside} from './request-boundaries.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -350,18 +351,18 @@ const server = http.createServer(async (req, res) => {
   // admin (localhost only)
   if (url.pathname.startsWith('/admin/')) {
     if(req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.headers.forwarded){res.writeHead(403);return res.end('local admin only');}
-    if(process.env.VA_ADMIN_TOKEN && req.headers.authorization!=='Bearer '+process.env.VA_ADMIN_TOKEN){res.writeHead(403);return res.end('admin authentication required');}
+    if(process.env.VA_ADMIN_TOKEN && !secretMatches('Bearer '+process.env.VA_ADMIN_TOKEN,req.headers.authorization)){res.writeHead(403);return res.end('admin authentication required');}
     const ip = req.socket.remoteAddress;
     if (ip !== '127.0.0.1' && ip !== '::1' && ip !== '::ffff:127.0.0.1') {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
     if(url.pathname==='/admin/fallback'&&req.method==='POST'){
-      if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}
+      if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
       const ok=await activateFallback('Requested by local streamer');res.writeHead(ok?200:503,{'Content-Type':'application/json'});return res.end(JSON.stringify(fallback));
     }
     if(url.pathname==='/admin/build-quarantine'&&(req.method==='GET'||req.method==='POST')){
-      if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}
+      if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
       try {
         const actor={owner:true,name:'streamer',source:'streamer-ui'};
         let result;
@@ -388,27 +389,27 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify(result));
       }catch(error){res.writeHead(400,{'Content-Type':'application/json'});return res.end(JSON.stringify({error:error.message}));}
     }
-    if(url.pathname==='/admin/owner-status'&&req.method==='GET'){const ok=process.env.VA_STREAMER_KEY&&req.headers['x-streamer-key']===process.env.VA_STREAMER_KEY;res.writeHead(ok?200:403,{'Content-Type':'application/json'});return res.end(JSON.stringify({ok:!!ok}));}
+    if(url.pathname==='/admin/owner-status'&&req.method==='GET'){const ok=secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key']);res.writeHead(ok?200:403,{'Content-Type':'application/json'});return res.end(JSON.stringify({ok:!!ok}));}
     if(url.pathname==='/admin/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(creatorAssets.data.assets));}
     if(url.pathname==='/admin/game-publication'&&req.method==='POST'){
-      try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');const result=data.action==='review'?reviewGame(ROOT,data.gameId):data.action==='publish'?publishGameCredits(creatorAssets,ROOT,data):null;if(!result)throw Error('Unknown publication action.');if(data.action==='publish')refreshPublication();res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
+      try{if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');const result=data.action==='review'?reviewGame(ROOT,data.gameId):data.action==='publish'?publishGameCredits(creatorAssets,ROOT,data):null;if(!result)throw Error('Unknown publication action.');if(data.action==='publish')refreshPublication();res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
     }
     if(url.pathname==='/admin/tee-bridge'&&req.method==='POST'){
-      try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');let result;if(data.action==='enable')result=await teeBridge.start(remoteGames.entry(data.gameId),TWITCH_CHANNEL||'local');else if(data.action==='disable')result=teeBridge.stop();else throw Error('Unknown bridge action.');res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
+      try{if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');let result;if(data.action==='enable')result=await teeBridge.start(remoteGames.entry(data.gameId),TWITCH_CHANNEL||'local');else if(data.action==='disable')result=teeBridge.stop();else throw Error('Unknown bridge action.');res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
     }
     if(url.pathname==='/admin/remote-games'&&req.method==='POST'){
-      try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');let result;if(data.action==='inspect')result=await remoteGames.inspect(data.gameId);else if(data.action==='create')result=await remoteGames.create(data.gameId,data.requestId,TWITCH_CHANNEL||'');else if(data.action==='start')result=await remoteGames.start(data.sessionId);else if(data.action==='reconcile')result=await remoteGames.reconcile(data.sessionId);else throw Error('Unknown remote game action.');res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
+      try{if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');let result;if(data.action==='inspect')result=await remoteGames.inspect(data.gameId);else if(data.action==='create')result=await remoteGames.create(data.gameId,data.requestId,TWITCH_CHANNEL||'');else if(data.action==='start')result=await remoteGames.start(data.sessionId);else if(data.action==='reconcile')result=await remoteGames.reconcile(data.sessionId);else throw Error('Unknown remote game action.');res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400);return res.end(error.message);}
     }
     if(url.pathname==='/admin/assets/import'&&req.method==='POST'){
-      try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');const asset=importCuratedResource(creatorAssets,ROOT,data.key);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(asset));}catch(error){res.writeHead(400);return res.end(error.message);}
+      try{if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');const asset=importCuratedResource(creatorAssets,ROOT,data.key);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(asset));}catch(error){res.writeHead(400);return res.end(error.message);}
     }
     if(url.pathname==='/admin/assets/review'&&req.method==='POST'){
-      try{const data=JSON.parse(await readBody()||'{}');if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const asset=creatorAssets.review(data.id,{owner:true,name:'streamer'},data);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(asset));}catch(error){res.writeHead(400);return res.end(error.message);}
+      try{const data=JSON.parse(await readBody()||'{}');if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}const asset=creatorAssets.review(data.id,{owner:true,name:'streamer'},data);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(asset));}catch(error){res.writeHead(400);return res.end(error.message);}
     }
     if(url.pathname==='/admin/round'&&req.method==='POST'){
       try{
         const data=JSON.parse(await readBody()||'{}');
-        if(req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY || !process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}
+        if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
         const actor={name:'streamer',source:'streamer-ui',owner:true};
         if(data.action==='open')ideaRounds.open(actor,data.settings||{});
         else if(data.action==='vote')ideaRounds.startVoting(actor);
@@ -572,12 +573,11 @@ const server = http.createServer(async (req, res) => {
 
   // static — active game's client/ dir wins over public/ (custom-client games)
   let p = url.pathname === '/' ? '/index.html' : url.pathname;
-  let file = path.resolve(host.gameDir, 'client', '.' + p);
-  if (!file.startsWith(path.join(host.gameDir, 'client')) || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
-    file = path.resolve(PUBLIC, '.' + p);
-  }
-  if (!file.startsWith(PUBLIC) || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
-    res.writeHead(404); return res.end('not found');
+  const clientRoot=path.join(host.gameDir,'client');
+  let file=path.resolve(clientRoot,'.'+p);
+  if(!staticFileInside(clientRoot,file)){
+    file=path.resolve(PUBLIC,'.'+p);
+    if(!staticFileInside(PUBLIC,file)){res.writeHead(404);return res.end('not found');}
   }
   res.writeHead(200, { 'content-type': MIME[path.extname(file)] || 'application/octet-stream' });
   fs.createReadStream(file).pipe(res);
@@ -617,7 +617,7 @@ wss.on('connection', (ws, req) => {
     if (kind !== 'player' && msg.t !== 'chat') return;
     if(msg.t==='claim-streamer'){
       const expected=process.env.VA_STREAMER_KEY;
-      if(!expected || typeof msg.key!=='string' || Buffer.byteLength(msg.key)!==Buffer.byteLength(expected) || !crypto.timingSafeEqual(Buffer.from(msg.key),Buffer.from(expected))){ws.send(JSON.stringify({t:'role',ok:false}));return;}
+      if(!secretMatches(expected,msg.key)){ws.send(JSON.stringify({t:'role',ok:false}));return;}
       if([...clients.values()].some(c=>c!==client && c.role==='streamer')){ws.send(JSON.stringify({t:'role',ok:false}));return;}
       client.role='streamer';host.safeCall('onJoin',{id:client.id,name,role:client.role});ws.send(JSON.stringify({t:'role',ok:true}));return;
     }
