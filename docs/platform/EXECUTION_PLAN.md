@@ -2,6 +2,8 @@
 
 Updated 2026-11-01 15:16 UTC. Main session: `01a19536-0f02-7fc3-b030-d6b6fd8e170c`; continuation: `01a19776-75a5-7e91-b5c1-f108c345dc8c`. Full owner vision remains in VISION.md; completed increments do not imply the full platform is finished.
 
+Resume from [HANDOFF_NEXT_SESSION.md](HANDOFF_NEXT_SESSION.md) for the exact approved artifact, owner decisions, cleanup status and deployment-first next step.
+
 Thesis: turn independent creators' freely contributed work into community-built games, with streamer-controlled decisions, cloud-isolated agents, transparent funding and persistent creator visibility.
 
 ## Working increments
