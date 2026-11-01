@@ -54,6 +54,8 @@ Creator credits are outside candidate rendering, tied to the actual source versi
 
 State is sent at 10 Hz with compact drawing coordinates, optional negotiated compression and backpressure. Chat is throttled before broadcast/forwarding; ordinary web text is capped at 200 characters, with separately bounded idea submissions. [Reproducible traffic evidence](docs/platform/TRAFFIC.md).
 
+The full hosting plan keeps cloud VMs as default and allows deliberate self-hosting: platform natively/in Docker/in a local VM, and contributed games in a separate local VM after streamer risk acceptance. Managed VMs need configurable inactivity limits and external cleanup; pausing alone still incurs memory/storage usage. Native Linux demo execution works today; Docker/local-hypervisor integration and the general VM supervisor remain pending. See [hosting/lifecycle requirements](docs/platform/HOSTING_POLICY.md).
+
 ## What is demonstrated
 
 `npm test`: **179 checks = 97 focused + 82 isolated integration**, all passing. Tests use temporary state and mock coding providers. Separately, automated Chromium passed eight local UI checks, including actual browser keyboard input, visible credits and no credit polling. [Evidence index](docs/EVIDENCE.md).
