@@ -1,0 +1,40 @@
+{
+  "sourcePage": "https://kenney.nl/assets/background-elements",
+  "archiveSha256": "31ffecec57bd51263f68e96e288ad06ac28eb1dfb41edb06b006a1b42cc10e41",
+  "license": "CC0-1.0",
+  "creator": {
+    "name": "Kenney",
+    "website": "https://kenney.nl/",
+    "socials": [
+      {
+        "label": "Bluesky",
+        "url": "https://bsky.app/profile/kenney.nl"
+      }
+    ]
+  },
+  "origin": "curated-public-source",
+  "notice": "Curated from the official public pack. Kenney has not joined or endorsed Vibe Arena.",
+  "resources": [
+    {
+      "key": "kenney-background-sky",
+      "file": "sky.png",
+      "archiveEntry": "PNG/Flat/sky.png",
+      "sha256": "3dda74eb9caad5148dc8e7f8010ee97592be266f218c23e2763a723fb57e4465",
+      "bytes": 5762
+    },
+    {
+      "key": "kenney-background-hills1",
+      "file": "hills1.png",
+      "archiveEntry": "PNG/Flat/hills1.png",
+      "sha256": "1264021ed5a69b214d22dfa6562a6bed54ee0f9c374bfafa5f9165cabdf63800",
+      "bytes": 2577
+    },
+    {
+      "key": "kenney-background-tree01",
+      "file": "tree01.png",
+      "archiveEntry": "PNG/Flat/tree01.png",
+      "sha256": "ea3a81fb7078dfc9e60e2a46ce338ff2534c7cd80edcc7b150d710ee264c7e25",
+      "bytes": 2018
+    }
+  ]
+}

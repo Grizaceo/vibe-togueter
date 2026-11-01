@@ -53,3 +53,19 @@ Stripe may provide checkout, signed payment events and (where supported/configur
 6. Agent-Native connection/MCP bridge; curated resource/creator surfaces; private runtime enforcement and attribution.
 
 This order preserves the whole vision while producing an observable complete journey increment by increment. It does not declare the remaining integrations complete.
+
+## Free-first creator economy — owner clarification
+
+The platform is free by default. Creator listings also default to free: games, visual assets, music, textures and other tools earn discoverability, attribution and eligibility for a contribution-based featured-artist category/tag/badge. Featuring must identify the actual contribution and must not silently mean paid placement.
+
+Creators may opt into a separately announced paid listing. Show price, license, platform commission, other payment costs where known and creator net before purchase. The platform can retain a small disclosed maintenance/profit commission on these transactions. **No percentage was specified by the owner:** fee configuration remains unset and real paid checkout must stay disabled until chosen and supported by the processor/account setup.
+
+Keep three economic meanings distinct: free contributions rewarded with visibility; optional paid creator sales with disclosed commission; community-purpose balances reserved for VM hosting and AI builds. A free-download price does not imply CC0/public-domain rights, and a paid listing does not automatically grant resale or modification rights. License and provenance are separate required listing fields.
+
+## Primary social value: independent artists → playable worlds
+
+Owner clarification: creator visibility is the central contribution, especially for independent illustrators. The intended loop is artist contributes an illustration/asset/texture/sound for free → chat and streamer select it → the builder adapts it into a playable experience within its license → the game's HUD credits the creator and links their website/social profiles so viewers can discover and follow them.
+
+Free resources are easy to find and reuse through stable asset IDs. Each selected asset version enters a build manifest with content fingerprint, license and creator profile. Changing the chosen art/sound pack invalidates the previous build approval. Publication checks the credit manifest; official platform remixes retain original credits and source-stream attribution. The official launcher/HUD keeps an accessible creator panel with clickable links, not only a platform logo. This is platform attribution enforcement, not a claim that downloaded files or an external fork can be made impossible to alter.
+
+Featured artists are recognized for actual contributions and use in games, with a distinct curated badge/category and stated reason. Paid placement must not masquerade as this recognition. Free price and reuse permissions remain separate fields. Artists grant the permissions needed for the planned adaptations; the platform does not assume rights merely because a resource was uploaded.

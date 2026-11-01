@@ -47,5 +47,17 @@ test('persistence failure rolls back mutations in memory and cannot leak into la
 });
 test('build must match approved input and can be dispatched once; failures need fresh approval',()=>{
  const {rounds:r}=fixture({maxIdeas:1});r.propose(a,'Chosen game');r.finishVoting(owner);r.select(owner,[1]);approveCurrent(r);const state=r.public(),grant={roundId:state.id,approvedInputHash:state.approvedInputHash};
- const original=r.current().ideas[0].text;r.current().ideas[0].text='tampered';assert.equal(r.buildPermission('tampered',grant),false);r.current().ideas[0].text=original;assert.equal(r.buildPermission('Another game',grant),false);assert.equal(r.buildPermission('Chosen game',grant),true);r.beginBuild('Chosen game',grant);assert.equal(r.buildPermission('Chosen game',grant),false);r.finishBuild(false);assert.equal(r.public().phase,'awaiting-approval');assert.equal(r.public().approvedInputHash,null);
+ const original=r.current().ideas[0].text;r.current().ideas[0].text='tampered';assert.equal(r.buildPermission('tampered',grant),false);r.current().ideas[0].text=original;assert.equal(r.buildPermission('Another game',grant),false);assert.equal(r.buildPermission('Chosen game',grant),true);r.beginBuild('Chosen game',grant);assert.equal(r.buildPermission('Chosen game',grant),false);r.finishBuild(grant,false);assert.equal(r.public().phase,'awaiting-approval');assert.equal(r.public().approvedInputHash,null);
+});
+
+
+test('redundant vote receipts remain deduplicated after restart',()=>{
+ const {rounds:r,file}=fixture({maxIdeas:2});r.propose(a,'A');r.propose(b,'B');r.vote(a,1,'m1');r.vote(a,1,'m2');r.vote(a,2,'m3');const restored=new IdeaRounds(file,{now:()=>1000});assert.equal(restored.vote(a,1,'m2').duplicate,true);assert.equal(restored.public().ideas[1].votes,1);
+});
+test('active construction cannot be cancelled into another round and restart needs reconciliation',()=>{
+ const {rounds:r,file}=fixture({maxIdeas:1});r.propose(a,'A');r.finishVoting(owner);r.select(owner,[1]);approveCurrent(r);const s=r.public(),grant={roundId:s.id,approvedInputHash:s.approvedInputHash};r.beginBuild('A',grant);assert.throws(()=>r.cancel(owner),/in progress/);assert.throws(()=>r.open(owner),/Finish/);
+ const restarted=new IdeaRounds(file);restarted.recoverInterrupted();assert.equal(restarted.public().phase,'reconcile-required');assert.equal(restarted.buildPermission('A',grant),false);
+});
+test('structurally corrupt stored rounds fail at load, not during a later public request',()=>{
+ const {file}=fixture();fs.writeFileSync(file,JSON.stringify({version:1,rounds:[{}]}));assert.throws(()=>new IdeaRounds(file),/Invalid/);
 });

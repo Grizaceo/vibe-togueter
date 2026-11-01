@@ -7,6 +7,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WebSocketServer } from 'ws';
 import { GameHost } from './gamehost.js';
+import { CreatorAssets } from './creator-assets.js';
+import { importCuratedResource } from './curated-resources.js';
 import { IdeaRounds } from './idea-rounds.js';
 import { buildPolicy, localBuildPermission } from './build-policy.js';
 import { Treasury } from './treasury.js';
@@ -19,6 +21,8 @@ import { loadEnv, TwitchAuth } from './auth/twitch.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const PUBLIC = path.join(ROOT, 'public');
+const {acquireController}=await import('./controller-lock.js');
+const releaseController=await acquireController(path.join(ROOT,'runtime','controller.lock'));
 const IDEAS_FILE = path.join(ROOT, 'ideas.jsonl');
 
 const args = process.argv.slice(2);
@@ -93,6 +97,10 @@ const generator = new Generator(CONFIG.generator, treasury, console.log);
 let generating = false;
 const executionPolicy=buildPolicy(CONFIG.build);
 const ideaRounds=new IdeaRounds(path.join(ROOT,'runtime','idea-rounds.json'),{settings:CONFIG.community?.rounds||{}});
+ideaRounds.recoverInterrupted();
+const creatorAssets=new CreatorAssets(path.join(ROOT,'runtime','creator-assets.json'));
+let roundStorageHealthy=true;
+function tickRounds(){try{ideaRounds.tick();roundStorageHealthy=true;return true;}catch{if(roundStorageHealthy)console.error('Round storage unavailable; pending decisions are retained.');roundStorageHealthy=false;return false;}}
 
 function readIdeas() {
   if (!fs.existsSync(IDEAS_FILE)) return [];
@@ -117,12 +125,12 @@ async function generateFromIdea(idea,grant) {
       r = { ok: false, reason: `error del provider: ${e.message}` };
     }
     if (r.ok) {
-      ideaRounds.finishBuild(true);
+      ideaRounds.finishBuild(grant,true);
       await loadGameDir(dir);
       feed('system', `nuevo juego generado ($${r.costUsd.toFixed(3)}): "${idea}"`);
       return { ok: true, game: slug, costUsd: r.costUsd };
     }
-    ideaRounds.finishBuild(false);
+    ideaRounds.finishBuild(grant,false);
     feed('system', `generación falló: ${r.reason}`);
     return r;
   } finally { generating = false; }
@@ -130,7 +138,7 @@ async function generateFromIdea(idea,grant) {
 
 // Community construction waits for a round decision and an isolated worker.
 // A funded latest-message loop must not bypass the streamer's selection.
-setInterval(()=>ideaRounds.tick(),1000);
+setInterval(tickRounds,1000);
 
 // ---------- chat pipeline ----------
 const cmdCooldown = new Map(); // user -> last ts
@@ -272,8 +280,12 @@ if(fs.existsSync(deliveryFile))for(const line of fs.readFileSync(deliveryFile,'u
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
-  if(url.pathname==='/community/state'&&req.method==='GET'){ideaRounds.tick();res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({round:ideaRounds.public(),build:{mode:executionPolicy.mode,fallbackToLocal:false,workerConnected:false}}));}
+  if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({round:ideaRounds.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,workerConnected:false}}));}
   let bodyBytes=0;req.on('data',chunk=>{bodyBytes+=chunk.length;if(bodyBytes>262144){res.writeHead(413);res.end('request too large');req.destroy();}});
+  if(url.pathname==='/community/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({assets:creatorAssets.catalog(),policy:{defaultTier:'free',paidCheckoutEnabled:false,platformCommission:null,creditPolicy:'Creator links stay in official game credits.'}}));}
+  if(url.pathname==='/community/asset-proposals'&&req.method==='POST'){
+    let data='';req.on('data',chunk=>data+=chunk);req.on('end',()=>{try{const asset=creatorAssets.draft(JSON.parse(data));res.writeHead(202,{'Content-Type':'application/json'});res.end(JSON.stringify({id:asset.id,status:asset.status}));}catch(error){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:error.message}));}});return;
+  }
   // admin (localhost only)
   if (url.pathname.startsWith('/admin/')) {
     if(req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.headers.forwarded){res.writeHead(403);return res.end('local admin only');}
@@ -283,6 +295,14 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/owner-status'&&req.method==='GET'){const ok=process.env.VA_STREAMER_KEY&&req.headers['x-streamer-key']===process.env.VA_STREAMER_KEY;res.writeHead(ok?200:403,{'Content-Type':'application/json'});return res.end(JSON.stringify({ok:!!ok}));}
+    if(url.pathname==='/admin/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(creatorAssets.data.assets));}
+    if(url.pathname==='/admin/assets/import'&&req.method==='POST'){
+      try{if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const data=JSON.parse(await readBody()||'{}');const asset=importCuratedResource(creatorAssets,ROOT,data.key);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(asset));}catch(error){res.writeHead(400);return res.end(error.message);}
+    }
+    if(url.pathname==='/admin/assets/review'&&req.method==='POST'){
+      try{const data=JSON.parse(await readBody()||'{}');if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}const asset=creatorAssets.review(data.id,{owner:true,name:'streamer'},data);res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(asset));}catch(error){res.writeHead(400);return res.end(error.message);}
+    }
     if(url.pathname==='/admin/round'&&req.method==='POST'){
       try{
         const data=JSON.parse(await readBody()||'{}');
@@ -292,6 +312,7 @@ const server = http.createServer(async (req, res) => {
         else if(data.action==='vote')ideaRounds.startVoting(actor);
         else if(data.action==='close')ideaRounds.finishVoting(actor);
         else if(data.action==='select')ideaRounds.select(actor,data.ids,data.reason);
+        else if(data.action==='resources')ideaRounds.chooseResources(actor,creatorAssets.manifest(data.assetIds));
         else if(data.action==='approve')ideaRounds.approve(actor,{roundId:data.roundId,reviewToken:data.reviewToken});
         else if(data.action==='cancel')ideaRounds.cancel(actor);
         else throw new Error('Unknown round action.');
@@ -313,10 +334,12 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200); return res.end('ok');
     }
     if (url.pathname === '/admin/generate' && req.method === 'POST') {
-      const { idea, roundId, approvedInputHash } = JSON.parse(await readBody() || '{}');
-      if (!idea) { res.writeHead(400); return res.end('idea required'); }
-      res.writeHead(200, { 'content-type': 'application/json' });
-      return res.end(JSON.stringify(await generateFromIdea(idea,{roundId,approvedInputHash})));
+      try{
+        const {idea,roundId,approvedInputHash}=JSON.parse(await readBody()||'{}');
+        if(typeof idea!=='string'||!idea){res.writeHead(400);return res.end('idea required');}
+        const result=await generateFromIdea(idea,{roundId,approvedInputHash});
+        res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(result));
+      }catch{res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({ok:false,code:'build_state_unavailable',reason:'Build state needs reconciliation; inspect the operator view.'}));}
     }
     if (url.pathname === '/admin/status') {
       res.writeHead(200, { 'content-type': 'application/json' });
@@ -459,6 +482,7 @@ const server = http.createServer(async (req, res) => {
 const wss = new WebSocketServer({ server, maxPayload:64*1024 });
 
 wss.on('connection', (ws, req) => {
+  ws.on('error',()=>ws.terminate());
   const url = new URL(req.url, 'http://x');
   const kind = url.pathname === '/spectate' ? 'spectator' : 'player';
   const name = (url.searchParams.get('name') || `anon-${Math.floor(1000 + Math.random() * 9000)}`).slice(0, 20);
@@ -481,6 +505,7 @@ wss.on('connection', (ws, req) => {
   ws.on('message', raw => {
     let msg;
     try { msg = JSON.parse(raw); } catch { return; }
+    if(!msg||typeof msg!=='object'||Array.isArray(msg))return;
     if (kind !== 'player' && msg.t !== 'chat') return;
     if(msg.t==='claim-streamer'){
       const expected=process.env.VA_STREAMER_KEY;

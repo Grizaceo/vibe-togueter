@@ -16,3 +16,5 @@ try{
  console.log('PASS generation rejects an arbitrary unapproved prompt');
  console.log('PASS community intake and replacement ballots reach streamer decision');console.log('PASS forged web owner cannot approve a round');console.log('PASS approved artifact input has a durable content fingerprint');
 }finally{for(const ws of sockets)ws.close();}
+
+const oversized=new WebSocket(base.replace(/^http/,'ws')+'/spectate');oversized.on('error',()=>{});await new Promise(r=>oversized.once('open',r));oversized.send('null');oversized.send(Buffer.alloc(65537));await new Promise(r=>oversized.once('close',r));assert.equal((await fetch(base+'/community/state')).status,200);console.log('PASS malformed and oversized WebSocket messages do not kill the controller');

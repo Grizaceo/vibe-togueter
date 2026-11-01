@@ -1,0 +1,48 @@
+{
+  "at": "2026-11-01T11:38:55.220Z",
+  "session": "01a19536-0f02-7fc3-b030-d6b6fd8e170c",
+  "resources": [
+    {
+      "id": "88630c1b-5949-46a6-b190-f558ec40f598",
+      "origin": "curated-public-source",
+      "source": "/curated/kenney-background-elements/sky.png",
+      "sha256": "3dda74eb9caad5148dc8e7f8010ee97592be266f218c23e2763a723fb57e4465",
+      "servedBytes": 5762,
+      "matches": true
+    },
+    {
+      "id": "a52e6d18-47d6-46ca-8433-5972a69954a4",
+      "origin": "curated-public-source",
+      "source": "/curated/kenney-background-elements/hills1.png",
+      "sha256": "1264021ed5a69b214d22dfa6562a6bed54ee0f9c374bfafa5f9165cabdf63800",
+      "servedBytes": 2577,
+      "matches": true
+    },
+    {
+      "id": "c5a0410c-00ce-41f6-824f-58c5000bfecd",
+      "origin": "curated-public-source",
+      "source": "/curated/kenney-background-elements/tree01.png",
+      "sha256": "ea3a81fb7078dfc9e60e2a46ce338ff2534c7cd80edcc7b150d710ee264c7e25",
+      "servedBytes": 2018,
+      "matches": true
+    }
+  ],
+  "build": {
+    "mode": "cloud-vm",
+    "fallbackToLocal": false,
+    "workerConnected": false
+  },
+  "twitchConnected": true,
+  "buildProbe": {
+    "status": 200,
+    "result": {
+      "ok": false,
+      "code": "isolated_builder_required",
+      "execution": "cloud-vm",
+      "reason": "Connect an isolated VM builder. Construction on the streamer PC is disabled; there is no local fallback."
+    },
+    "ledgerUnchanged": true
+  },
+  "publicStudioStatus": 200,
+  "publicCatalogCount": 3
+}

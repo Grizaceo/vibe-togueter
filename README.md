@@ -4,6 +4,16 @@ A Twitch/Kick chat-games platform with two participation modes: open the public 
 
 This submission extends an existing prototype. `fab3227` records the inherited code. Codex-authored changes follow it on `feat/twitchcon-codex`; see `SUBMISSION.md` and `docs/EVIDENCE.md`. Runtime dependencies remain **ws + @modelcontextprotocol/sdk**. Tested with Node 26.12.1 and `--experimental-vm-modules`.
 
+## Community studio increment (November 1)
+
+The product direction is a free-first community game studio, with independent creators visible through clickable credits. Read [the platform vision](docs/platform/VISION.md) and [integration audit](docs/platform/INTEGRATION_AUDIT.md) for the wider scope and the boundaries of this increment.
+
+Open `/studio.html` for proposals, replacement ballots, streamer selection/approval and a reviewed free-resource catalog. Local owner controls require both private admin and streamer keys; public viewers cannot approve builds or resources. Resource submissions currently accept metadata and a public HTTPS URL, not binary uploads. The browser can compute a local file fingerprint without uploading it. Creator names, license notices, website and social links appear in the selected pack's credit preview. That preview is not proof that a published game uses the pack.
+
+Three bundled Kenney CC0 images can be imported by a local owner through `/admin/assets/import`, with keys listed in `public/curated/kenney-background-elements/provenance.json`, then reviewed through the studio. The importer verifies actual bundled bytes. They are labeled curated public resources: Kenney has not joined or endorsed this platform. Original archive and working files stay outside this repo.
+
+Build execution defaults to **cloud VM**, with no fallback to the streamer PC. An isolated coding worker is not connected yet, so generation is intentionally blocked with `isolated_builder_required`. A deliberate `VA_BUILD_MODE=trusted-local` opt-in retains the inherited generator for trusted local use; it also requires an exact approved community round. Paid creator checkout and commission are not configured. Neither a real payment processor nor actual VM/API expense reconciliation is implemented.
+
 ## Install and private setup
 
 ```bash
@@ -79,7 +89,7 @@ Redeemers are attributed to their Twitch username; unknown titles are reported a
 
 ## Existing generation fund and MCP
 
-`!idea TEXT` stores an idea. A local operator or MCP tool can request generation when the ledger covers `generator.gameCostUsd`. Existing configuration supports a local OpenAI-compatible endpoint (default Ollama/Qwen) or cloud credentials through `VA_BASE_URL`, `VA_MODEL`, `VA_API_KEY`. The actual configured model provider is not verified in this session; the fund→generation→SDK load loop is tested with a mock. Configure and verify your chosen real provider before showing actual generation or billing in the video. Funds are a local accounting ledger, not a payment processor or proof of actual provider debit.
+`!idea TEXT` enters a durable community round (default 100 words, first 10 ideas, one proposal per actor). `!vote ID` replaces that actor's ballot. The owner controls `!build open|vote|close|choose IDs|approve TOKEN|cancel|status`; the local studio offers the same decisions with a pinned review token. Changing selected resources invalidates approval. Interrupted builds require reconciliation. The generation ledger check remains necessary, together with matching round approval and an explicit execution policy. Existing configuration supports a local OpenAI-compatible endpoint (default Ollama/Qwen) or cloud credentials through `VA_BASE_URL`, `VA_MODEL`, `VA_API_KEY`. The actual configured model provider is not verified in this session; the fund→generation→SDK load loop is tested with a mock. Configure and verify your chosen real provider before showing actual generation or billing in the video. Funds are a local accounting ledger, not a payment processor or proof of actual provider debit.
 
 `src/sdk-prompt.md` is the game contract. `src/gamehost.js` retains the original 30 Hz tick, hot reload and `node:vm` loader. Only trusted games should be loaded: `node:vm` is not hardened isolation. Do not expose admin credentials or activate unreviewed generated code in a production environment.
 
