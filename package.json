@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --experimental-vm-modules --test test/twitch-auth.mjs test/twitch-chat.mjs test/twitch-events.mjs test/chat-vs-streamer.mjs && node test/run-legacy.mjs",
+    "test": "node --experimental-vm-modules --test test/twitch-auth.mjs test/twitch-chat.mjs test/twitch-events.mjs test/chat-vs-streamer.mjs test/build-policy.mjs test/idea-rounds.mjs && node test/run-legacy.mjs",
     "start": "node --experimental-vm-modules src/server.js",
     "dev": "node --experimental-vm-modules --watch src/server.js",
     "mock-llm": "node test/mock-llm.mjs",

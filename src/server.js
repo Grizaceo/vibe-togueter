@@ -7,6 +7,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WebSocketServer } from 'ws';
 import { GameHost } from './gamehost.js';
+import { IdeaRounds } from './idea-rounds.js';
+import { buildPolicy, localBuildPermission } from './build-policy.js';
 import { Treasury } from './treasury.js';
 import { Generator } from './generator.js';
 import { createLocalChat } from './chat/local.js';
@@ -89,14 +91,20 @@ const treasury = new Treasury(path.join(ROOT, 'treasury.jsonl'), {
 });
 const generator = new Generator(CONFIG.generator, treasury, console.log);
 let generating = false;
+const executionPolicy=buildPolicy(CONFIG.build);
+const ideaRounds=new IdeaRounds(path.join(ROOT,'runtime','idea-rounds.json'),{settings:CONFIG.community?.rounds||{}});
 
 function readIdeas() {
   if (!fs.existsSync(IDEAS_FILE)) return [];
   return fs.readFileSync(IDEAS_FILE, 'utf8').split('\n').filter(Boolean).map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
 }
 
-async function generateFromIdea(idea) {
+async function generateFromIdea(idea,grant) {
+  const permission=localBuildPermission(executionPolicy);
+  if(!permission.ok){feed('system',permission.reason);return permission;}
+  if(!ideaRounds.buildPermission(idea,grant))return {ok:false,code:'round_approval_required',reason:'A matching streamer-approved round is required.'};
   if (generating) return { ok: false, reason: 'ya hay una generación en curso' };
+  ideaRounds.beginBuild(idea,grant);
   generating = true;
   feed('system', `generando juego: "${idea}" (${CONFIG.generator.mode}/${CONFIG.generator.model})`);
   try {
@@ -109,31 +117,27 @@ async function generateFromIdea(idea) {
       r = { ok: false, reason: `error del provider: ${e.message}` };
     }
     if (r.ok) {
+      ideaRounds.finishBuild(true);
       await loadGameDir(dir);
       feed('system', `nuevo juego generado ($${r.costUsd.toFixed(3)}): "${idea}"`);
       return { ok: true, game: slug, costUsd: r.costUsd };
     }
+    ideaRounds.finishBuild(false);
     feed('system', `generación falló: ${r.reason}`);
     return r;
   } finally { generating = false; }
 }
 
-// auto-generate when the fund covers it (if enabled)
-setInterval(async () => {
-  if (!CONFIG.monetization.autoGenerate || generating) return;
-  if (!treasury.canAfford(CONFIG.generator.gameCostUsd)) return;
-  const ideas = readIdeas();
-  const next = ideas.at(-1);
-  if (!next) return;
-  fs.writeFileSync(IDEAS_FILE, ''); // consume queue
-  await generateFromIdea(next.idea);
-}, 5000);
+// Community construction waits for a round decision and an isolated worker.
+// A funded latest-message loop must not bypass the streamer's selection.
+setInterval(()=>ideaRounds.tick(),1000);
 
 // ---------- chat pipeline ----------
 const cmdCooldown = new Map(); // user -> last ts
 const COOLDOWN_MS = 250;
+const communityCooldown=new Map();let communitySecond=0,communityWrites=0;
 
-function handleChat({ user, text, source }) {
+function handleChat({ user, text, source, messageId, participantId }) {
   feed('chat', `${user}: ${text}`);
   if (!text.startsWith('!')) return;
   const [cmd, ...args] = text.slice(1).split(/\s+/);
@@ -146,12 +150,38 @@ function handleChat({ user, text, source }) {
     }
     return;
   }
-  if (cmd === 'idea') {
-    const idea = args.join(' ').slice(0, 300);
-    if (idea) {
-      fs.appendFileSync(IDEAS_FILE, JSON.stringify({ user, idea, source, at: Date.now() }) + '\n');
-      feed('system', `idea guardada de ${user}: ${idea}`);
-    }
+  const actor={id:participantId||user,name:user,source,owner:source==='twitch'&&user.toLowerCase()===TWITCH_CHANNEL?.toLowerCase()};
+  if(['idea','vote','build'].includes(cmd)){
+    const now=Date.now(),key=source+':'+(participantId||user);
+    if(now-(communityCooldown.get(key)||0)<250)return;
+    if(communityCooldown.size>=20000){for(const [id,at] of communityCooldown)if(now-at>60000)communityCooldown.delete(id);if(communityCooldown.size>=20000)return;}
+    communityCooldown.set(key,now);
+    if(Math.floor(now/1000)!==communitySecond){communitySecond=Math.floor(now/1000);communityWrites=0;}
+    if(!actor.owner && ++communityWrites>30)return;
+    try{
+      if(cmd==='idea'){
+        const result=ideaRounds.propose(actor,args.join(' '),messageId);
+        if(!result.duplicate){
+          const idea=result.round.ideas.find(i=>i.id===result.ideaId);
+          fs.appendFileSync(IDEAS_FILE,JSON.stringify({user,idea:idea.text,source,at:Date.now(),roundId:result.round.id,ideaId:idea.id})+'\n');
+          feed('system',`idea guardada: #${idea.id} by ${user}. ${result.round.ideas.length}/${result.round.settings.maxIdeas}.`);
+        }
+      }else if(cmd==='vote'){
+        ideaRounds.vote(actor,Number(args[0]),messageId);feed('system',`${user}: ballot updated.`);
+      }else{
+        const action=args[0]||'status';
+        if(action==='open')ideaRounds.open(actor);
+        else if(action==='vote')ideaRounds.startVoting(actor);
+        else if(action==='close')ideaRounds.finishVoting(actor);
+        else if(action==='choose')ideaRounds.select(actor,args.slice(1).map(Number));
+        else if(action==='approve')ideaRounds.approve(actor,{roundId:ideaRounds.current()?.id,reviewToken:args[1]});
+        else if(action==='cancel')ideaRounds.cancel(actor);
+        else if(action!=='status')throw new Error('Use !build open|vote|close|choose IDs|approve|cancel|status.');
+        const round=ideaRounds.public();const state=round?`${round.phase}: ${round.ideas.length} ideas, ${round.voters} voters`:'no round';
+        const review=round?.reviewToken?' · approval token '+round.reviewToken:'';
+        feed('system','Build round '+state+review);if(replies[source])replies[source]('Build round '+state+review);
+      }
+    }catch(error){feed('system',`${user}: ${error.message}`);if(replies[source])replies[source](error.message);}
     return;
   }
   const last = cmdCooldown.get(user) || 0;
@@ -242,6 +272,7 @@ if(fs.existsSync(deliveryFile))for(const line of fs.readFileSync(deliveryFile,'u
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
+  if(url.pathname==='/community/state'&&req.method==='GET'){ideaRounds.tick();res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({round:ideaRounds.public(),build:{mode:executionPolicy.mode,fallbackToLocal:false,workerConnected:false}}));}
   let bodyBytes=0;req.on('data',chunk=>{bodyBytes+=chunk.length;if(bodyBytes>262144){res.writeHead(413);res.end('request too large');req.destroy();}});
   // admin (localhost only)
   if (url.pathname.startsWith('/admin/')) {
@@ -252,6 +283,21 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/round'&&req.method==='POST'){
+      try{
+        const data=JSON.parse(await readBody()||'{}');
+        if(req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY || !process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}
+        const actor={name:'streamer',source:'streamer-ui',owner:true};
+        if(data.action==='open')ideaRounds.open(actor,data.settings||{});
+        else if(data.action==='vote')ideaRounds.startVoting(actor);
+        else if(data.action==='close')ideaRounds.finishVoting(actor);
+        else if(data.action==='select')ideaRounds.select(actor,data.ids,data.reason);
+        else if(data.action==='approve')ideaRounds.approve(actor,{roundId:data.roundId,reviewToken:data.reviewToken});
+        else if(data.action==='cancel')ideaRounds.cancel(actor);
+        else throw new Error('Unknown round action.');
+        res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(ideaRounds.public()));
+      }catch(error){res.writeHead(400);return res.end(error.message);}
+    }
     if (url.pathname === '/admin/ideas') {
       res.writeHead(200, { 'content-type': 'application/json' });
       return res.end(JSON.stringify(readIdeas()));
@@ -267,10 +313,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200); return res.end('ok');
     }
     if (url.pathname === '/admin/generate' && req.method === 'POST') {
-      const { idea } = JSON.parse(await readBody() || '{}');
+      const { idea, roundId, approvedInputHash } = JSON.parse(await readBody() || '{}');
       if (!idea) { res.writeHead(400); return res.end('idea required'); }
       res.writeHead(200, { 'content-type': 'application/json' });
-      return res.end(JSON.stringify(await generateFromIdea(idea)));
+      return res.end(JSON.stringify(await generateFromIdea(idea,{roundId,approvedInputHash})));
     }
     if (url.pathname === '/admin/status') {
       res.writeHead(200, { 'content-type': 'application/json' });
@@ -410,14 +456,14 @@ const server = http.createServer(async (req, res) => {
 });
 
 // ---------- ws ----------
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ server, maxPayload:64*1024 });
 
 wss.on('connection', (ws, req) => {
   const url = new URL(req.url, 'http://x');
   const kind = url.pathname === '/spectate' ? 'spectator' : 'player';
   const name = (url.searchParams.get('name') || `anon-${Math.floor(1000 + Math.random() * 9000)}`).slice(0, 20);
 
-  const client = { id: nextId++, name, kind, role:'viewer' };
+  const client = { id: nextId++, communityId:crypto.randomUUID(), name, kind, role:'viewer' };
   clients.set(ws, client);
 
   ws.send(JSON.stringify({
@@ -445,7 +491,7 @@ wss.on('connection', (ws, req) => {
     if (msg.t === 'input') {
       host.safeCall('onInput', client.id, msg.data);
     } else if (msg.t === 'chat' && typeof msg.text === 'string') {
-      handleChat({ user: name, text: msg.text.slice(0, 200), source: 'web' });
+      handleChat({ user: name, text: msg.text.slice(0, 10000), source: 'web', participantId:client.communityId });
     }
   });
 

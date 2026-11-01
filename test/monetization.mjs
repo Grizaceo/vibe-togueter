@@ -17,7 +17,14 @@ ok('admin fund deposit', r.status === 200);
 let stats = await (await fetch(BASE + '/admin/treasury')).json();
 ok('treasury balance', Math.abs(stats.balance - 2.5) < 0.01, JSON.stringify(stats));
 
-r = await post('/admin/generate', { idea: 'pong del caos controlado por chat' });
+// Owner explicitly reviews the exact input before even a trusted local build.
+const roundAction=async data=>{const response=await fetch(BASE+'/admin/round',{method:'POST',headers:{'content-type':'application/json','x-streamer-key':process.env.VA_STREAMER_KEY||''},body:JSON.stringify(data)});return response.json();};
+await fetch(BASE+'/admin/round',{method:'POST',headers:{'content-type':'application/json','x-streamer-key':process.env.VA_STREAMER_KEY||''},body:JSON.stringify({action:'cancel'})});
+await roundAction({action:'open',settings:{maxIdeas:1}});
+await post('/admin/chat',{user:'reviewed-builder',text:'!idea pong del caos controlado por chat'});
+await roundAction({action:'close'});let approved=await roundAction({action:'select',ids:[1]});
+approved=await roundAction({action:'approve',roundId:approved.id,reviewToken:approved.reviewToken});
+r = await post('/admin/generate', { idea: 'pong del caos controlado por chat',roundId:approved.id,approvedInputHash:approved.approvedInputHash });
 const gen = await r.json();
 ok('generación vía mock LLM', gen.ok === true, JSON.stringify(gen));
 

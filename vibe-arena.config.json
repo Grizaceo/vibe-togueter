@@ -29,5 +29,18 @@
       "Vote right": "!right",
       "Vote fire": "!fire"
     }
+  },
+  "build": {
+    "execution": "cloud-vm",
+    "agentProfile": "owner-default"
+  },
+  "community": {
+    "rounds": {
+      "maxWords": 100,
+      "maxIdeas": 10,
+      "winnerCount": 1,
+      "voteSeconds": 45,
+      "maxIdeasPerPerson": 1
+    }
   }
 }
