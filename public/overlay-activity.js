@@ -11,6 +11,7 @@ export function attachActivity(container){
   for(const idea of r?.highlights||[])line('p',`#${idea.id} · ${idea.votes} votes · ${idea.author}: ${idea.text}`);
   if(!r)line('p','Propose → vote → streamer review');
   line('p',state?.builder||'Waiting for controller');
+  if(state?.chatEffectsPaused)line('strong','Chat effects paused · proposals and votes stay open');
   if(state?.fallback)line('strong','Safety fallback: '+state.fallback);
  }};
 }

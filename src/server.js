@@ -2,6 +2,7 @@
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from 'node:http';
+import {ChatEffects} from './chat-effects.js';
 import {secretMatches,staticFileInside} from './request-boundaries.js';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -54,6 +55,8 @@ if(process.env.VA_WEBHOOK_SECRET)CONFIG.monetization.webhookSecret=process.env.V
 
 // Synthetic event accounting is opt-in for isolated fixtures only; never provider settlement.
 const simulateEventCredits = process.env.VA_SIMULATE_EVENT_CREDITS === '1';
+
+const chatEffects=new ChatEffects({enabled:CONFIG.features?.chatPause,channel:TWITCH_CHANNEL});
 
 // ---------- room ----------
 const clients = new Map(); // ws -> {id,name,kind:'player'|'spectator'}
@@ -182,6 +185,8 @@ const chatGate=new ChatGate();
 function handleChat({ user, text, source, messageId, participantId, isModerator=false }) {
   text=String(text).slice(0,text.startsWith('!idea ')?10000:200);user=String(user).slice(0,100);
   if(source==='twitch'&&text.trim()==='!fallback'&&(isModerator||user.toLowerCase()===TWITCH_CHANNEL?.toLowerCase())){requestFallback('Requested by Twitch moderator '+user);return;}
+  const control=chatEffects.command({source,user,isModerator},text);
+  if(control.handled){if(control.changed){if(chatEffects.blocked){teeBridge.pulse=null;teeBridge.tick();}feed('system',chatEffects.blocked?'Chat effects paused by '+user:'Chat effects resumed by '+user);}return;}
   if(!chatGate.accept(source,participantId||user))return;
   feed('chat', `${user}: ${text}`);
   if (!text.startsWith('!')) return;
@@ -208,7 +213,7 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
       const game=remoteGames.entries.find(g=>g.adapter==='tee');
       if(!game){feed('system','No Tee runtime configured.');return;}
       teeBridge.start(game,TWITCH_CHANNEL).then(()=>{feed('system','Tee crowd ready: !tee left|right|jump|hook|fire|stop');replies.twitch?.('Tee crowd ready: !tee left|right|jump|hook|fire|stop');}).catch(error=>feed('system','Tee bridge: '+error.message));
-    }else if(teeBridge.command(action,{source,user}))feed('system',`${user}: Tee ${action}`);
+    }else if(!chatEffects.blocked&&teeBridge.command(action,{source,user}))feed('system',`${user}: Tee ${action}`);
     return;
   }
   if(['idea','vote','build'].includes(cmd)){
@@ -238,6 +243,7 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
     }catch(error){feed('system',`${user}: ${error.message}`);if(replies[source])replies[source](error.message);}
     return;
   }
+  if(chatEffects.blocked)return;
   const handled = host.safeCall('onChat', { name: user, source }, cmd, args);
   if (handled) feed('system', `${user} used !${cmd}`);
 }
@@ -307,7 +313,7 @@ function streamActivity(){
   activityRound=r?{phase:r.phase,ideas:r.ideas.length,voters:r.voters,voteEndsAt:r.voteEndsAt,
    highlights:r.ideas.slice().sort((a,b)=>b.votes-a.votes||a.id-b.id).slice(0,3).map(i=>({id:i.id,text:i.text.slice(0,100),author:i.author.slice(0,40),votes:i.votes}))}:null;
  }
- return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected'};
+ return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked};
 }
 
 // ---------- broadcast loop (view @ 10Hz; slow recipients skip obsolete frames) ----------
@@ -357,6 +363,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/chat-effects'&&req.method==='POST'){
+      if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
+      try{const body=JSON.parse(await readBody()||'{}');if(typeof body.paused!=='boolean')throw Error('paused must be boolean');const result=chatEffects.setPaused(body.paused);if(result.changed){if(chatEffects.blocked){teeBridge.pulse=null;teeBridge.tick();}feed('system',chatEffects.blocked?'Chat effects paused by local streamer':'Chat effects resumed by local streamer');}res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({enabled:chatEffects.enabled,paused:chatEffects.blocked}));}catch(error){res.writeHead(400);return res.end(error.message);}
+    }
     if(url.pathname==='/admin/fallback'&&req.method==='POST'){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
       const ok=await activateFallback('Requested by local streamer');res.writeHead(ok?200:503,{'Content-Type':'application/json'});return res.end(JSON.stringify(fallback));
@@ -449,7 +459,7 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify({
         game: host.game ? { name: host.game.name, dir: host.gameDir, meta: host.game.meta } : null,
         players: [...clients.values()].filter(c => c.kind === 'player').map(c => c.name),
-        error: host.error, fallback, generating, fund: { balance: treasury.balance, goal: CONFIG.generator.gameCostUsd },
+        error: host.error, fallback, chatEffectsPaused:chatEffects.blocked, generating, fund: { balance: treasury.balance, goal: CONFIG.generator.gameCostUsd },
       }));
     }
     if (url.pathname === '/admin/chat' && req.method === 'POST') {
@@ -541,7 +551,7 @@ const server = http.createServer(async (req, res) => {
           const command=rewardCommand(ev,CONFIG.twitch?.rewardCommands);
           if(command){
             const [cmd,...args]=command.slice(1).split(/\s+/);
-            const handled=host.safeCall('onChat',{name:ev.user_name||ev.user_login||'viewer',source:'twitch-reward'},cmd,args);
+            const handled=!chatEffects.blocked&&host.safeCall('onChat',{name:ev.user_name||ev.user_login||'viewer',source:'twitch-reward'},cmd,args);
             feed('system',`${ev.user_name||'viewer'} redeemed ${ev.reward.title} → ${command}${handled?'':' (not handled by this game)'}`);
           }else feed('system',`Unmapped reward: ${ev.reward?.title||'unknown'}`);
         }

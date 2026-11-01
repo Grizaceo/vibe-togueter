@@ -44,5 +44,8 @@
       "maxIdeasPerPerson": 1
     }
   },
-  "remoteGames": []
+  "remoteGames": [],
+  "features": {
+    "chatPause": true
+  }
 }
