@@ -20,7 +20,7 @@ PRIMITIVAS de render (el cliente dibuja esto, no hay canvas en server):
 - `{t:'rect',x,y,w,h,color,rot?}`
 - `{t:'circle',x,y,r,color,fill?}` (fill:false = solo borde, w = grosor)
 - `{t:'line',x1,y1,x2,y2,color?,w?}`
-- `{t:'text',x,y,text,size?,color?,align?}` (align: 'left'|'center'|'right')
+- `{t:'text',x,y,text,size?,color?,align?}` (align: 'left'|'center'|'right'; defaults to 'center' — explicitly use 'left' for text near the left edge)
 - `{t:'sprite',x,y,w,h,src,rot?}` (src = URL absoluta https)
 
 REGLAS:

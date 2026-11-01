@@ -32,10 +32,22 @@ export function connect({ spectator = false, canvas, onWelcome, onFeed, onPlayer
     const KEYS = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'a', 's', 'd', 'W', 'A', 'S', 'D']);
     addEventListener('keydown', e => { if (!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName) && KEYS.has(e.key)) { e.preventDefault(); send({ kind: 'key', key: norm(e.key), down: true }); } });
     addEventListener('keyup', e => { if (KEYS.has(e.key)) send({ kind: 'key', key: norm(e.key), down: false }); });
-    addEventListener('blur',()=>{for(const key of ['left','right','w','a','s','d','space'])send({kind:'key',key,down:false});});
-    canvas.addEventListener('pointerdown', e => send({ kind: 'pointer', ...toWorld(e, canvas, world), down: true }));
-    canvas.addEventListener('pointermove', e => { if (e.buttons) send({ kind: 'pointer', ...toWorld(e, canvas, world), down: true }); });
-    canvas.addEventListener('pointerup', e => send({ kind: 'pointer', ...toWorld(e, canvas, world), down: false }));
+    let activePointer=null;
+    const releasePointer=e=>{
+      if(activePointer===null||(e?.pointerId!==undefined&&e.pointerId!==activePointer))return;
+      activePointer=null;
+      send({kind:'pointer',...(e?toWorld(e,canvas,world):{x:0,y:0}),down:false});
+    };
+    addEventListener('blur',()=>{for(const key of ['up','down','left','right','w','a','s','d','space'])send({kind:'key',key,down:false});releasePointer();});
+    canvas.addEventListener('pointerdown',e=>{
+      if(activePointer!==null)return;activePointer=e.pointerId??0;
+      try{canvas.setPointerCapture?.(e.pointerId);}catch{}
+      send({kind:'pointer',...toWorld(e,canvas,world),down:true});
+    });
+    canvas.addEventListener('pointermove',e=>{if(activePointer===(e.pointerId??0)&&e.buttons)send({kind:'pointer',...toWorld(e,canvas,world),down:true});});
+    addEventListener('pointerup',releasePointer);
+    addEventListener('pointercancel',releasePointer);
+    canvas.addEventListener('lostpointercapture',releasePointer);
   }
 
   function norm(k) {
