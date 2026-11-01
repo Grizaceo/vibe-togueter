@@ -1,0 +1,21 @@
+{
+  "capturedAt": "2026-11-01T21:01:25Z",
+  "kind": "explicit-participant-rights-and-creation-period-confirmation",
+  "participant": "Cristóbal Muñoz",
+  "source": "Direct owner reply in the active conversation to the rights/creation-period confirmation question.",
+  "questionScope": "Necessary rights to the inherited prototype and its resources, and submitted work created during the contest submission period.",
+  "originalStatementSpanish": "si confirmo por completo vibe arena como idea surgio en la madrugada de hoy ni siquiera ayer lol",
+  "englishTranslation": "Yes, I confirm completely. Vibe Arena as an idea arose in the early hours of today, not even yesterday.",
+  "confirmed": {
+    "necessaryPrototypeAndResourceRights": true,
+    "creationDuringSubmissionPeriod": true,
+    "ideaOriginLocalDate": "2026-11-01",
+    "ideaOriginDescription": "Early hours of that day, as stated by the participant; no exact time supplied."
+  },
+  "limits": [
+    "Participant attestation, not an independent legal or source/asset ownership audit.",
+    "Does not reattribute the inherited Devin-assisted prototype or parallel games to Codex.",
+    "Does not authorize spending, hosting deployment, publication, push, external messages or submission.",
+    "Does not change the exact Seed Race artifact, approval or unpublished status."
+  ]
+}
