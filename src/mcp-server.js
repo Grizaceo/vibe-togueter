@@ -21,8 +21,9 @@ import { z } from 'zod';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {buildPolicy} from './build-policy.js';
 import { loadEnv } from './auth/twitch.js';
-import { GameHost } from './gamehost.js';
+import {IsolatedGameHost as GameHost} from './isolated-gamehost.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -103,6 +104,7 @@ server.registerTool('install_game', {
     activate: z.boolean().default(false),
   },
 }, async ({ name, code, activate }) => {
+  if(!buildPolicy(JSON.parse(fs.readFileSync(path.join(ROOT,'vibe-arena.config.json'),'utf8')).build).localAllowed)return fail('Use the isolated VM quarantine workflow; host installation is disabled in cloud-vm mode.');
   const dir = path.resolve(GAMES, name);
   if (!dir.startsWith(GAMES)) return fail('nombre inválido');
   fs.mkdirSync(dir, { recursive: true });
@@ -110,6 +112,7 @@ server.registerTool('install_game', {
   // validación real: compilar en el sandbox sin tocar el juego en vivo
   const probe = new GameHost({ gameDir: dir, onEvent: () => {} });
   await probe.load();
+  probe.stop();
   if (probe.error) return fail(`no compila en el sandbox: ${probe.error}`);
   if (activate) {
     try {

@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WebSocketServer } from 'ws';
-import { GameHost } from './gamehost.js';
+import {IsolatedGameHost as GameHost} from './isolated-gamehost.js';
 import { CreatorAssets } from './creator-assets.js';
 import { importCuratedResource } from './curated-resources.js';
 import { RemoteGames } from './remote-games.js';
@@ -71,27 +71,43 @@ function feed(kind, text) {
   broadcast(ev);
 }
 
+let transitioning=false;
+let fallback={active:false,reason:null,at:null};
+let fallbackScheduled=false,fallbackRequested=null;
+function requestFallback(reason){
+  fallbackRequested=reason;if(fallbackScheduled)return;fallbackScheduled=true;
+  setTimeout(async()=>{fallbackScheduled=false;if(transitioning)return;const pending=fallbackRequested;fallbackRequested=null;await activateFallback(pending);},0);
+}
+async function activateFallback(reason){
+  const dir=path.join(ROOT,'games','marble-race');
+  fallback={active:true,reason:String(reason).slice(0,240),at:Date.now()};
+  if(host.gameDir===dir&&host.error){host.stop();feed('system','Fallback failed; gameplay stopped. '+fallback.reason);return false;}
+  const ok=await loadGameDir(dir,{isFallback:true});
+  feed('system',ok?'Safety fallback: Marble Race. '+fallback.reason:'Fallback unavailable; gameplay stopped.');
+  return ok;
+}
 const host = new GameHost({
   gameDir: GAME_DIR,
   onEvent: (kind, detail) => {
     if (kind === 'game-reloaded') for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
     if (kind === 'game-reloaded') feed('system', `juego recargado: ${host.game?.name}`);
-    if (kind === 'game-error') feed('system', `error en game.js: ${detail}`);
+    if (kind === 'game-error') {feed('system', `Game stopped: ${detail}`);requestFallback(detail);}
     if (kind === 'log') console.log(detail);
   },
 });
 
 if (!(await host.load())) console.error(`[boot] ${host.error}`);
-host.start();
-host.startWatching();
+if(host.game){host.start();host.startWatching();}
 
-async function loadGameDir(dir) {
-  host.stop();
-  host.gameDir = dir;
-  await host.load();
-  for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
-  host.start();
-  host.startWatching();
+async function loadGameDir(dir,{isFallback=false}={}) {
+  if(transitioning)return false;
+  transitioning=true;
+  try{
+    host.stop();host.gameDir=dir;
+    if(!await host.load())return false;
+    for(const player of clients.values())if(player.kind==='player')host.safeCall('onJoin',{id:player.id,name:player.name,role:player.role});
+    host.start();host.startWatching();if(!isFallback)fallback={active:false,reason:null,at:null};return true;
+  }finally{transitioning=false;if(fallbackRequested)requestFallback(fallbackRequested);}
 }
 
 // ---------- treasury + generator ----------
@@ -155,7 +171,7 @@ const cmdCooldown = new Map(); // user -> last ts
 const COOLDOWN_MS = 250;
 const communityCooldown=new Map();let communitySecond=0,communityWrites=0;
 
-function handleChat({ user, text, source, messageId, participantId }) {
+function handleChat({ user, text, source, messageId, participantId, isModerator=false }) {
   feed('chat', `${user}: ${text}`);
   if (!text.startsWith('!')) return;
   const [cmd, ...args] = text.slice(1).split(/\s+/);
@@ -169,6 +185,10 @@ function handleChat({ user, text, source, messageId, participantId }) {
     return;
   }
   const actor={id:participantId||user,name:user,source,owner:source==='twitch'&&user.toLowerCase()===TWITCH_CHANNEL?.toLowerCase()};
+  if(cmd==='fallback'){
+    if(source==='twitch'&&(actor.owner||isModerator))requestFallback('Requested by Twitch moderator '+user);
+    return;
+  }
   if(cmd==='tee'){
     const action=args[0]||'status';
     if(action==='on'||action==='off'){
@@ -287,6 +307,7 @@ setInterval(() => {
     players,
     game: host.game ? { name: host.game.name, desc: host.game.meta.description || '',versionSha256:host.game.versionSha256 } : null,
     error: host.error,
+    fallback,
     fund: { balance: treasury.balance, goal: CONFIG.generator.gameCostUsd, generating },
   });
 }, 66);
@@ -321,6 +342,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/fallback'&&req.method==='POST'){
+      if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}
+      const ok=await activateFallback('Requested by local streamer');res.writeHead(ok?200:503,{'Content-Type':'application/json'});return res.end(JSON.stringify(fallback));
+    }
     if(url.pathname==='/admin/build-quarantine'&&(req.method==='GET'||req.method==='POST')){
       if(!process.env.VA_STREAMER_KEY||req.headers['x-streamer-key']!==process.env.VA_STREAMER_KEY){res.writeHead(403);return res.end('streamer confirmation required');}
       try {
@@ -409,7 +434,7 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify({
         game: host.game ? { name: host.game.name, dir: host.gameDir, meta: host.game.meta } : null,
         players: [...clients.values()].filter(c => c.kind === 'player').map(c => c.name),
-        error: host.error, generating, fund: { balance: treasury.balance, goal: CONFIG.generator.gameCostUsd },
+        error: host.error, fallback, generating, fund: { balance: treasury.balance, goal: CONFIG.generator.gameCostUsd },
       }));
     }
     if (url.pathname === '/admin/chat' && req.method === 'POST') {
@@ -426,7 +451,7 @@ const server = http.createServer(async (req, res) => {
       if (!game || outside(relative) || !fs.existsSync(path.join(dir, 'game.js')) || outside(path.relative(fs.realpathSync(gamesRoot),fs.realpathSync(dir)))) {
         res.writeHead(400); return res.end('unknown game');
       }
-      await loadGameDir(dir);
+      if(!await loadGameDir(dir)){res.writeHead(503);return res.end('Game failed to load; inspect fallback status.');}
       feed('system', `juego cargado: ${game}`);
       res.writeHead(200); return res.end('ok');
     }

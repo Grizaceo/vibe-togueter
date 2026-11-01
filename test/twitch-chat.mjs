@@ -17,3 +17,8 @@ test('stable sender reconnects, deduplicates, sanitizes and throttles messages',
   ws.close();await new Promise(r=>setTimeout(r,15));ws=sockets[1];ws.emit('open');ws.emit('message',Buffer.from(':tmi 001 owner :welcome\r\n'));assert.ok(controller.send('after reconnect'));assert.ok(ws.sent.some(x=>x.includes('after reconnect')));
  }finally{controller.close();}
 });
+test('only Twitch moderator tags grant moderator fallback authority',()=>{
+ const message=parseTwitchMessage('@mod=1;room-id=7;id=mod-msg :real_mod!real_mod@real_mod.tmi.twitch.tv PRIVMSG #test :!fallback','test');
+ assert.equal(message.isModerator,true);
+ assert.equal(parseTwitchMessage(':fake_mod!fake_mod@fake_mod.tmi.twitch.tv PRIVMSG #test :!fallback','test').isModerator,undefined);
+});

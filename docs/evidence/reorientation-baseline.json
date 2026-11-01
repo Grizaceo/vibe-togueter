@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-01T15:39:11Z",
+  "baselineCommit": "7fc4f88",
+  "scope": "Local disposable probes; no real Twitch traffic or provider spend",
+  "tests": {"command": "npm test", "exit": 0, "focused": 80, "integration": 70, "total": 150, "log": "/tmp/vibe-arena-baseline-test.log"},
+  "constructorProbe": {"expression": "Object.constructor('return process')().pid > 0", "observed": true, "env": "PATH only", "process": "discarded child"},
+  "infiniteTick": {"externalTimeoutMs": 1000, "observedError": "ETIMEDOUT", "signal": "SIGTERM"},
+  "state": {"webPlayers": 20, "chatPlayers": 20, "intervalMs": 66, "bytes": {"marble-race": 19287, "chat-vs-streamer": 3382, "community-grove": 4958}, "GBPerClientHour": {"marble-race": 1.052018, "chat-vs-streamer": 0.184473, "community-grove": 0.270436}, "limitation": "Serialized state estimate, not measured network egress"},
+  "currentProviderInventory": {"command": "createos sandbox list --limit 20", "activeIds": ["sb-01m6b6asmqr2znr2zf6xh9wnmb", "sb-01m6b6ary1y2qa645hxc9h8gfd"], "trialGuestsActive": false},
+  "localController": {"port8420Listener": false, "cloudflaredProcess": false},
+  "failedInventoryAttempt": "createos sandbox list --limit 20 --format json rejected the unsupported format flag; plain list returned JSON"
+}

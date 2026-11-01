@@ -7,7 +7,7 @@ export function parseTwitchMessage(line,channel) {
   const match=line.match(/^:([^ !]+)![^ ]+ PRIVMSG #([^ ]+) :(.*)$/);
   if(!match || match[2].toLowerCase()!==channel.toLowerCase())return null;
   if(tags['source-room-id'] && tags['source-room-id']!==tags['room-id'])return null;
-  return {user:match[1],text:match[3],source:'twitch',messageId:tags.id};
+  return {user:match[1],text:match[3],source:'twitch',messageId:tags.id,...(tags.mod==='1'?{isModerator:true}:{})};
 }
 export function connectTwitch(channel,onChat,{auth,oauth,nick,WebSocketImpl=WebSocket,retryMs=5000,sendIntervalMs=1600,onStatus=()=>{}}={}) {
   channel=channel.toLowerCase();if(!/^[a-z0-9_]{1,25}$/.test(channel))throw new Error('Invalid Twitch channel.');

@@ -1,165 +1,75 @@
-// GameHost: loads a vibe-coded game.js into a vm sandbox and runs the tick loop.
-// SDK contract (what the agent generates against):
-//   export const meta = { name, description, world: {w,h}, tickRate }
-//   export function createState() -> state
-//   export function onJoin(state, player)          player: {id,name}
-//   export function onLeave(state, player)
-//   export function onInput(state, playerId, input) input: {kind:'key',key,down} | {kind:'pointer',x,y,down}
-//   export function onChat(state, user, cmd, args)  passive mode; return truthy if handled
-//   export function tick(state, dt)                dt in seconds
-//   export function view(state) -> { bg, layers:[primitives], hud:[primitives] }
-//     primitives: {t:'rect'|'circle'|'text'|'line'|'sprite', ...}
-// Optional:
-//   export function destroy(state)
-//
-// NOTE: node:vm is an accident barrier, not a hard security boundary.
-// For real streams run the whole server inside docker (see docker-compose).
-
+// SDK executor for a disposable game guest. Never use node:vm as a security boundary.
+// The controller uses IsolatedGameHost; separate build/test VMs may use this executor.
 import vm from 'node:vm';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-
-const SAFE_MATH = Object.freeze(Object.create(null, Object.getOwnPropertyDescriptors(Math)));
-
-function makeSandbox(consoleProxy) {
-  return vm.createContext(Object.freeze({
-    Math: SAFE_MATH,
-    JSON, Object, Array, Map, Set, WeakMap, WeakSet, Number, String, Boolean,
-    Date, RegExp, Error, TypeError, RangeError, Symbol, Promise, Intl,
-    Uint8Array, Int8Array, Uint16Array, Int16Array, Uint32Array, Int32Array,
-    Float32Array, Float64Array, ArrayBuffer, DataView, structuredClone,
-    isNaN, isFinite, parseInt, parseFloat, NaN, Infinity, undefined,
-    console: consoleProxy,
-  }), { name: 'vibe-game' });
-}
-
+const timeout=50;
 export class GameHost {
-  constructor({ gameDir, onEvent }) {
-    this.gameDir = gameDir;
-    this.onEvent = onEvent || (() => {});
-    this.game = null;      // { meta, fns, name }
-    this.state = null;
-    this.error = null;
-    this._acc = 0;
-    this._last = 0;
-    this._timer = null;
-    this._watchTimer = null;
+  constructor({gameDir,onEvent=()=>{}}){
+    Object.assign(this,{gameDir,onEvent,game:null,state:null,error:null,_timer:null});
   }
-
-  async load() {
-    const file = path.join(this.gameDir, 'game.js');
-    let src;
-    try {
-      src = fs.readFileSync(file, 'utf8');
-    } catch (e) {
-      this.error = `cannot read ${file}: ${e.message}`;
-      return false;
-    }
-    const logs = [];
-    const consoleProxy = new Proxy({}, {
-      get: (_, m) => (...a) => logs.push(`[game] ${m}: ${a.map(String).join(' ')}`),
-    });
-    const sandbox = makeSandbox(consoleProxy);
-    let mod;
-    try {
-      const compiled = new vm.SourceTextModule(src, {
-        identifier: file,
-        context: sandbox,
-      });
-      await compiled.link(() => { throw new Error('imports are not allowed inside game.js'); });
-      await compiled.evaluate();
-      mod = compiled.namespace;
-    } catch (e) {
-      this.error = `game.js failed to compile: ${e.message}`;
-      logs.forEach(l => this.onEvent('log', l));
-      return false;
-    }
-    const required = ['createState', 'tick', 'view'];
-    const missing = required.filter(k => typeof mod[k] !== 'function');
-    if (missing.length) {
-      this.error = `game.js missing exports: ${missing.join(', ')}`;
-      return false;
-    }
-    this.game = {
-      versionSha256:crypto.createHash('sha256').update(src).digest('hex'),
-      name: mod.meta?.name || path.basename(this.gameDir),
-      meta: { world: { w: 1280, h: 720 }, tickRate: 30, ...(mod.meta || {}) },
-      fns: mod,
-    };
-    this.resetState();
-    this.error = null;
-    logs.forEach(l => this.onEvent('log', l));
-    return true;
+  async load(){
+    try{return await this.loadSource(fs.readFileSync(path.join(this.gameDir,'game.js'),'utf8'));}
+    catch(error){this.error=error.message;return false;}
   }
-
-  resetState() {
-    if (this.state && this.game?.fns.destroy) {
-      try { this.game.fns.destroy(this.state); } catch {}
-    }
-    try {
-      this.state = this.game.fns.createState() || {};
-    } catch (e) {
-      this.state = {};
-      this.error = `createState threw: ${e.message}`;
-    }
-    if (!this.state.__players) this.state.__players = new Map();
+  async loadSource(source){
+    try{
+      this.context=vm.createContext(Object.create(null), {name:'vibe-game',codeGeneration:{strings:false,wasm:false},microtaskMode:'afterEvaluate'});
+      // Only realm-native values enter the guest. Host functions/constructors are not injected.
+      vm.runInContext('globalThis.console=Object.freeze({log(){},warn(){},error(){},info(){}})',this.context,{timeout});
+      const mod=new vm.SourceTextModule(source,{context:this.context,identifier:'game.js'});
+      await mod.link(()=>{throw Error('Game imports are disabled.');});
+      await mod.evaluate({timeout});
+      this.context.__module=mod.namespace;
+      const json=vm.runInContext(`JSON.stringify({meta:__module.meta||{},exports:Object.keys(__module).filter(k=>typeof __module[k]==='function')})`,this.context,{timeout});
+      const descriptor=JSON.parse(json);
+      for(const fn of ['createState','tick','view'])if(!descriptor.exports.includes(fn))throw Error('Missing SDK export '+fn);
+      const meta={world:{w:1280,h:720},tickRate:30,...descriptor.meta};
+      if(!Number.isFinite(meta.tickRate)||meta.tickRate<1||meta.tickRate>60)throw Error('Invalid tick rate.');
+      if(!Number.isFinite(meta.world?.w)||!Number.isFinite(meta.world?.h)||meta.world.w<=0||meta.world.h<=0)throw Error('Invalid world dimensions.');
+      this.game={name:meta.name||path.basename(this.gameDir||'game'),meta,fns:mod.namespace,exports:descriptor.exports,versionSha256:crypto.createHash('sha256').update(source).digest('hex')};
+      this.error=null;this.resetState();return !this.error;
+    }catch(error){this.error='Game load failed: '+error.message;return false;}
   }
-
-  start() {
-    const rate = this.game?.meta.tickRate || 30;
-    const step = 1000 / rate;
-    this._last = Date.now();
+  resetState(){
+    try{
+      vm.runInContext(`if(globalThis.__state&&typeof __module.destroy==='function')__module.destroy(__state);globalThis.__state=__module.createState()||{};if(!__state.__players)__state.__players=new Map()`,this.context,{timeout});
+      this.state=this.context.__state;
+    }catch(error){this.fail('createState',error);}
+  }
+  fail(fn,error){
+    if(this.error)return;
+    this.error=fn+': '+error.message;
     clearInterval(this._timer);
-    this._timer = setInterval(() => {
-      const now = Date.now();
-      let dt = (now - this._last) / 1000;
-      this._last = now;
-      if (dt > 0.25) dt = step / 1000; // clamp after hiccups
-      if (!this.game) return;
-      try {
-        this.game.fns.tick(this.state, dt);
-      } catch (e) {
-        this.error = `tick threw: ${e.message}`;
-        this.onEvent('log', `[game] tick error: ${e.stack || e}`);
-      }
-    }, step);
+    this.onEvent('game-error',this.error);
   }
-
-  startWatching() {
-    let debounce = null;
-    this._watcher = fs.watch(this.gameDir, () => {
-      clearTimeout(debounce);
-      debounce = setTimeout(async () => {
-        const ok = await this.load();
-        this.onEvent(ok ? 'game-reloaded' : 'game-error', this.error);
-      }, 150);
-    });
+  safeCall(fn,...args){
+    if(!this.game?.exports.includes(fn)||this.error)return;
+    try{
+      // Parse arguments in the realm; no object supplied by a player retains a host prototype.
+      const call=`__module[${JSON.stringify(fn)}](__state,...JSON.parse(${JSON.stringify(JSON.stringify(args))}))`;
+      return vm.runInContext(call,this.context,{timeout});
+    }catch(error){this.fail(fn,error);}
   }
-
-  stop() {
-    clearInterval(this._timer);
-    this._watcher?.close();
+  getView(){
+    const empty={bg:'#111',world:this.game?.meta.world||{w:1280,h:720},layers:[],hud:[]};
+    if(!this.game||this.error)return empty;
+    try{
+      // Serialize under the same deadline, including getters/proxies/toJSON from the guest.
+      const json=vm.runInContext('JSON.stringify(__module.view(__state)||{})',this.context,{timeout});
+      if(json.length>524288)throw Error('Frame exceeds 512 KiB.');
+      const v=JSON.parse(json);return {...empty,bg:v.bg||empty.bg,layers:Array.isArray(v.layers)?v.layers:[],hud:Array.isArray(v.hud)?v.hud:[]};
+    }catch(error){this.fail('view',error);return empty;}
   }
-
-  safeCall(fn, ...args) {
-    if (!this.game || typeof this.game.fns[fn] !== 'function') return undefined;
-    try { return this.game.fns[fn](this.state, ...args); }
-    catch (e) {
-      this.error = `${fn} threw: ${e.message}`;
-      this.onEvent('log', `[game] ${fn} error: ${e.stack || e}`);
-      return undefined;
-    }
+  start(){
+    clearInterval(this._timer);let last=Date.now();
+    this._timer=setInterval(()=>{const now=Date.now();this.safeCall('tick',Math.min(.25,(now-last)/1000));last=now;},1000/(this.game?.meta.tickRate||30));
   }
-
-  getView() {
-    if (!this.game) return { bg: '#111', layers: [], hud: [{ t: 'text', x: 640, y: 360, text: 'no game loaded', size: 32, color: '#888' }] };
-    const v = this.safeCall('view') || {};
-    return {
-      bg: v.bg || '#111',
-      world: this.game.meta.world,
-      layers: Array.isArray(v.layers) ? v.layers : [],
-      hud: Array.isArray(v.hud) ? v.hud : [],
-    };
+  startWatching(){
+    this._watcher?.close();let debounce;
+    this._watcher=fs.watch(this.gameDir,()=>{clearTimeout(debounce);debounce=setTimeout(async()=>{const ok=await this.load();this.onEvent(ok?'game-reloaded':'game-error',this.error);},150);});
+    this._clearDebounce=()=>clearTimeout(debounce);
   }
+  stop(){clearInterval(this._timer);this._watcher?.close();this._clearDebounce?.();}
 }
