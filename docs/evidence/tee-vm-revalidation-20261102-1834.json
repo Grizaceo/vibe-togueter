@@ -1,0 +1,44 @@
+{
+  "recordedAt": "2026-11-02T18:34:03.529108+00:00",
+  "observationWindowUTC": [
+    "2026-11-02T18:19:46Z",
+    "2026-11-02T18:23:40Z"
+  ],
+  "kind": "read-only revalidation of documented external Tee VM",
+  "documentedVM": "existing owner validation VM from external DEPLOY-CREATEOS.md",
+  "health": {
+    "httpStatus": 200,
+    "body": {
+      "status": "success",
+      "data": {
+        "up": true
+      }
+    },
+    "establishesGameAvailability": false
+  },
+  "gameRoot": {
+    "httpStatus": 404,
+    "message": "This sandbox no longer exists (destroyed)."
+  },
+  "wss": {
+    "connected": false,
+    "observation": "handshake did not complete before timeout"
+  },
+  "providerReadOnlyInspection": {
+    "executedInGuest": false,
+    "result": "sandbox is destroyed; exec requires a running sandbox"
+  },
+  "executingSourceRevision": null,
+  "decision": "Plan B: local adapter",
+  "decisionCutoffUTC": "2026-11-02T18:40:00Z",
+  "officialRulesReopened": "https://twitchcon-codex.devpost.com/rules",
+  "officialDeadlineUTC": "2026-11-02T22:00:00Z",
+  "vmMutations": 0,
+  "modelCalls": 0,
+  "cloudBuilds": 0,
+  "limits": [
+    "Historical deploy notes do not prove current availability or source revision.",
+    "Provider health alone is not backend health.",
+    "No other VM was reused or changed."
+  ]
+}

@@ -1,0 +1,942 @@
+{
+  "at": "2026-11-02T18:31:12.695Z",
+  "kind": "local external-game adapter prototype",
+  "contract": {
+    "version": 1,
+    "schema": "teeworlds-rs/172cfef",
+    "sourcePin": "172cfef66565af00f75e865c60e3c91859beb039"
+  },
+  "runtime": {
+    "binarySha256": "85eb8ed241e1ce0f44b7ee866cd43f280574b396cbf7e90fcce6539fde427dc1",
+    "sourceRevision": null,
+    "endpoint": "ws://127.0.0.1:8304/ws",
+    "health": {
+      "status": 200,
+      "body": "ok",
+      "registryCompatible": false
+    }
+  },
+  "checks": [
+    {
+      "name": "real local server snapshots and input acknowledgements",
+      "ok": true
+    }
+  ],
+  "commands": [
+    {
+      "at": "2026-11-02T18:32:47.201Z",
+      "source": "real Twitch transport",
+      "action": "!tee on",
+      "connected": true
+    },
+    {
+      "at": "2026-11-02T18:33:29.302Z",
+      "source": "real Twitch transport",
+      "action": "!tee right",
+      "accepted": true,
+      "before": {
+        "position": {
+          "x": 336,
+          "y": 978.0098876953125
+        },
+        "alive": true,
+        "score": 0
+      },
+      "expectedSeq": 2097,
+      "samples": [
+        {
+          "at": "2026-11-02T18:33:29.344Z",
+          "ack": 2097,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 338,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.384Z",
+          "ack": 2099,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 348,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.424Z",
+          "ack": 2101,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 366,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.464Z",
+          "ack": 2103,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 386,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.505Z",
+          "ack": 2105,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 406,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.546Z",
+          "ack": 2107,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 426,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.586Z",
+          "ack": 2109,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 446,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.626Z",
+          "ack": 2111,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 466,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.666Z",
+          "ack": 2113,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 486,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.707Z",
+          "ack": 2115,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.5,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.747Z",
+          "ack": 2117,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.375,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.787Z",
+          "ack": 2119,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.84375,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.827Z",
+          "ack": 2121,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.921875,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.867Z",
+          "ack": 2123,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.921875,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.907Z",
+          "ack": 2125,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.921875,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.947Z",
+          "ack": 2127,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.921875,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:29.987Z",
+          "ack": 2129,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.921875,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:30.027Z",
+          "ack": 2131,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.921875,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:30.067Z",
+          "ack": 2133,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.921875,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:30.107Z",
+          "ack": 2135,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 495.921875,
+            "y": 978.0098876953125
+          }
+        }
+      ]
+    },
+    {
+      "at": "2026-11-02T18:33:42.589Z",
+      "source": "real Twitch transport",
+      "action": "!tee jump",
+      "accepted": true,
+      "before": {
+        "position": {
+          "x": 493.3653564453125,
+          "y": 978.0098876953125
+        },
+        "alive": true,
+        "score": 0
+      },
+      "expectedSeq": 2759,
+      "samples": [
+        {
+          "at": "2026-11-02T18:33:42.629Z",
+          "ack": 2758,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 978.0098876953125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:42.669Z",
+          "ack": 2760,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 952.10986328125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:42.709Z",
+          "ack": 2762,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 928.2098388671875
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:42.749Z",
+          "ack": 2764,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 906.309814453125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:42.789Z",
+          "ack": 2766,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 886.4097900390625
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:42.829Z",
+          "ack": 2768,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 868.509765625
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:42.869Z",
+          "ack": 2770,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 852.6097412109375
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:42.909Z",
+          "ack": 2772,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 838.709716796875
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:42.949Z",
+          "ack": 2774,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 826.8096923828125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:42.989Z",
+          "ack": 2776,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 816.90966796875
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.029Z",
+          "ack": 2778,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 809.0096435546875
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.069Z",
+          "ack": 2780,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 803.109619140625
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.109Z",
+          "ack": 2782,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 799.2095947265625
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.150Z",
+          "ack": 2784,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 797.3095703125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.192Z",
+          "ack": 2786,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 797.4095458984375
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.232Z",
+          "ack": 2788,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 799.509521484375
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.272Z",
+          "ack": 2790,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 803.6094970703125
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.312Z",
+          "ack": 2792,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 809.70947265625
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.352Z",
+          "ack": 2794,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 817.8094482421875
+          }
+        },
+        {
+          "at": "2026-11-02T18:33:43.392Z",
+          "ack": 2796,
+          "connected": true,
+          "paused": false,
+          "position": {
+            "x": 493.3653564453125,
+            "y": 827.909423828125
+          }
+        }
+      ]
+    }
+  ],
+  "samples": [
+    {
+      "at": "2026-11-02T18:33:29.302Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 336,
+        "y": 978.0098876953125
+      },
+      "ack": 2095,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.344Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 338,
+        "y": 978.0098876953125
+      },
+      "ack": 2097,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.384Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 348,
+        "y": 978.0098876953125
+      },
+      "ack": 2099,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.424Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 366,
+        "y": 978.0098876953125
+      },
+      "ack": 2101,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.464Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 386,
+        "y": 978.0098876953125
+      },
+      "ack": 2103,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.505Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 406,
+        "y": 978.0098876953125
+      },
+      "ack": 2105,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.546Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 426,
+        "y": 978.0098876953125
+      },
+      "ack": 2107,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.586Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 446,
+        "y": 978.0098876953125
+      },
+      "ack": 2109,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.626Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 466,
+        "y": 978.0098876953125
+      },
+      "ack": 2111,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.666Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 486,
+        "y": 978.0098876953125
+      },
+      "ack": 2113,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.706Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.5,
+        "y": 978.0098876953125
+      },
+      "ack": 2115,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.747Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.375,
+        "y": 978.0098876953125
+      },
+      "ack": 2117,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.787Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.84375,
+        "y": 978.0098876953125
+      },
+      "ack": 2119,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.827Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.921875,
+        "y": 978.0098876953125
+      },
+      "ack": 2121,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.867Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.921875,
+        "y": 978.0098876953125
+      },
+      "ack": 2123,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.907Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.921875,
+        "y": 978.0098876953125
+      },
+      "ack": 2125,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.947Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.921875,
+        "y": 978.0098876953125
+      },
+      "ack": 2127,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:29.987Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.921875,
+        "y": 978.0098876953125
+      },
+      "ack": 2129,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:30.027Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.921875,
+        "y": 978.0098876953125
+      },
+      "ack": 2131,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:30.067Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.921875,
+        "y": 978.0098876953125
+      },
+      "ack": 2133,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:30.107Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 495.921875,
+        "y": 978.0098876953125
+      },
+      "ack": 2135,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.589Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 978.0098876953125
+      },
+      "ack": 2756,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.629Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 978.0098876953125
+      },
+      "ack": 2758,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.669Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 952.10986328125
+      },
+      "ack": 2760,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.709Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 928.2098388671875
+      },
+      "ack": 2762,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.749Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 906.309814453125
+      },
+      "ack": 2764,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.789Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 886.4097900390625
+      },
+      "ack": 2766,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.829Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 868.509765625
+      },
+      "ack": 2768,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.869Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 852.6097412109375
+      },
+      "ack": 2770,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.909Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 838.709716796875
+      },
+      "ack": 2772,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.949Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 826.8096923828125
+      },
+      "ack": 2774,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:42.989Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 816.90966796875
+      },
+      "ack": 2776,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.029Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 809.0096435546875
+      },
+      "ack": 2778,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.069Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 803.109619140625
+      },
+      "ack": 2780,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.109Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 799.2095947265625
+      },
+      "ack": 2782,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.150Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 797.3095703125
+      },
+      "ack": 2784,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.192Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 797.4095458984375
+      },
+      "ack": 2786,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.232Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 799.509521484375
+      },
+      "ack": 2788,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.272Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 803.6094970703125
+      },
+      "ack": 2790,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.312Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 809.70947265625
+      },
+      "ack": 2792,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.352Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 817.8094482421875
+      },
+      "ack": 2794,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:33:43.392Z",
+      "connected": true,
+      "playerId": 23,
+      "position": {
+        "x": 493.3653564453125,
+        "y": 827.909423828125
+      },
+      "ack": 2796,
+      "paused": false
+    }
+  ],
+  "limitations": [
+    "External game by Cristóbal Muñoz with Devin and Hermes; separate from judged platform code.",
+    "Native helper contract is versioned locally; external server has no negotiated wire version. Exact schema decoding and trailing-byte rejection are required.",
+    "Runtime binary identity is a hash, not a proven source revision.",
+    "One collective tee; no per-viewer characters or spectator effects.",
+    "No VM deployment, external network, human streamer interaction or real Twitch effect established by automated verification.",
+    "Received Twitch messages need manual action and observed effect review before claiming real Twitch success."
+  ],
+  "codecSha256": "9ed099f305cd5232c624f557d3794498751c1475e19b224a8ae85e476f284f00",
+  "entryURL": "http://127.0.0.1:46581/",
+  "finishedAt": "2026-11-02T18:35:05.645Z"
+}

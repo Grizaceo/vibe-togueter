@@ -1,0 +1,82 @@
+{
+  "at": "2026-11-02T18:28:18.597Z",
+  "kind": "automated Chromium external-game local integration",
+  "entryURL": "http://127.0.0.1:39281/",
+  "checks": [
+    {
+      "name": "external game credits visible",
+      "ok": true
+    },
+    {
+      "name": "collective scope and pending VM disclosed",
+      "ok": true
+    },
+    {
+      "name": "platform entry link opens real local game",
+      "ok": true
+    },
+    {
+      "name": "two actual browser clients receive authoritative snapshots",
+      "ok": true
+    },
+    {
+      "name": "browser input changes authoritative position",
+      "ok": true
+    },
+    {
+      "name": "no browser or schema errors",
+      "ok": true
+    }
+  ],
+  "clients": [
+    {
+      "url": "ws://127.0.0.1:8304/ws",
+      "snapshots": 228,
+      "sent": 253,
+      "closed": false,
+      "position": {
+        "x": 2128,
+        "y": 978.0098876953125
+      },
+      "playerId": 17,
+      "ack": 248,
+      "players": 13
+    },
+    {
+      "url": "ws://127.0.0.1:8304/ws",
+      "snapshots": 127,
+      "sent": 259,
+      "closed": false,
+      "position": {
+        "x": 1333.2501220703125,
+        "y": 434.0099182128906
+      },
+      "playerId": 18,
+      "ack": 247,
+      "players": 13
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Automated browser participants, not humans.",
+    "Local WS only, no VM/TLS/WSS or external network verification.",
+    "No streamer authentication or human streamer interaction established.",
+    "Native schema pin does not prove binary/WASM source revision."
+  ],
+  "browserMovement": {
+    "before": {
+      "x": 1193.3282470703125,
+      "y": 434.00994873046875
+    },
+    "after": {
+      "x": 1330.8282470703125,
+      "y": 434.00994873046875
+    }
+  },
+  "screenshots": [
+    "docs/evidence/tee-local-browser-1793644107066-credits.png",
+    "docs/evidence/tee-local-browser-1793644107066-game.png"
+  ],
+  "servedWasmSha256": "ed7eb06c66ab471362fdcc91185d9abbae1621d0dd95db815ceefba10f20360c",
+  "finishedAt": "2026-11-02T18:28:28.565Z"
+}

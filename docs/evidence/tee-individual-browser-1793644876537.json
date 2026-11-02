@@ -1,0 +1,82 @@
+{
+  "at": "2026-11-02T18:41:05.282Z",
+  "kind": "automated Chromium individual entry flow; no collective tee",
+  "entryURL": "http://127.0.0.1:40661/",
+  "checks": [
+    {
+      "name": "external game credits visible",
+      "ok": true
+    },
+    {
+      "name": "individual controls and pending VM disclosed",
+      "ok": true
+    },
+    {
+      "name": "platform entry link opens real local game",
+      "ok": true
+    },
+    {
+      "name": "two actual browser clients receive authoritative snapshots",
+      "ok": true
+    },
+    {
+      "name": "browser input changes authoritative position",
+      "ok": true
+    },
+    {
+      "name": "individual disconnect closes its game socket",
+      "ok": false
+    }
+  ],
+  "clients": [
+    {
+      "url": "ws://127.0.0.1:8304/ws",
+      "snapshots": 260,
+      "sent": 367,
+      "closed": false,
+      "position": {
+        "x": 560,
+        "y": 978.0098876953125
+      },
+      "playerId": 26,
+      "ack": 352,
+      "players": 11
+    },
+    {
+      "url": "ws://127.0.0.1:8304/ws",
+      "snapshots": 157,
+      "sent": 282,
+      "closed": false,
+      "position": {
+        "x": 2077.307861328125,
+        "y": 338.0098876953125
+      },
+      "playerId": 27,
+      "ack": 266,
+      "players": 12
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Automated browser participants, not humans.",
+    "Local WS only, no VM/TLS/WSS or external network verification.",
+    "No streamer authentication or human streamer interaction established.",
+    "Native schema pin does not prove binary/WASM source revision."
+  ],
+  "browserMovement": {
+    "before": {
+      "x": 1936,
+      "y": 338.0098876953125
+    },
+    "after": {
+      "x": 2066,
+      "y": 338.0098876953125
+    }
+  },
+  "screenshots": [
+    "docs/evidence/tee-individual-browser-1793644874210-credits.png",
+    "docs/evidence/tee-individual-browser-1793644874210-game.png"
+  ],
+  "error": "individual disconnect closes its game socket",
+  "finishedAt": "2026-11-02T18:41:16.537Z"
+}

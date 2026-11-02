@@ -1,0 +1,37 @@
+{
+  "at": "2026-11-02T18:27:28.769Z",
+  "kind": "local external-game adapter prototype",
+  "contract": {
+    "version": 1,
+    "schema": "teeworlds-rs/172cfef",
+    "sourcePin": "172cfef66565af00f75e865c60e3c91859beb039"
+  },
+  "runtime": {
+    "binarySha256": "85eb8ed241e1ce0f44b7ee866cd43f280574b396cbf7e90fcce6539fde427dc1",
+    "sourceRevision": null,
+    "endpoint": "ws://127.0.0.1:8304/ws",
+    "health": {
+      "status": 200,
+      "body": "ok",
+      "registryCompatible": false
+    }
+  },
+  "checks": [
+    {
+      "name": "real local server snapshots and input acknowledgements",
+      "ok": true
+    }
+  ],
+  "commands": [],
+  "samples": [],
+  "limitations": [
+    "External game by Cristóbal Muñoz with Devin and Hermes; separate from judged platform code.",
+    "Native helper contract is versioned locally; external server has no negotiated wire version. Exact schema decoding and trailing-byte rejection are required.",
+    "Runtime binary identity is a hash, not a proven source revision.",
+    "One collective tee; no per-viewer characters or spectator effects.",
+    "No VM deployment, external network, human streamer interaction or real Twitch effect established by automated verification."
+  ],
+  "codecSha256": "5552493d99568388d4da58763b4894707581984504d53019ec37cd7bf358b17d",
+  "entryURL": "http://127.0.0.1:39281/",
+  "finishedAt": "2026-11-02T18:29:46.625Z"
+}
