@@ -942,6 +942,11 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403);
       return res.end("localhost only");
     }
+    // Local admin authentication and streamer confirmation remain separate gates.
+    const streamerConfirmed = secretMatches(
+      process.env.VA_STREAMER_KEY,
+      req.headers["x-streamer-key"],
+    );
     const readBody = () =>
       new Promise((r) => {
         let b = "";
@@ -952,12 +957,7 @@ const server = http.createServer(async (req, res) => {
       url.pathname === "/admin/builder-session" &&
       ["GET", "POST"].includes(req.method)
     ) {
-      if (
-        !secretMatches(
-          process.env.VA_STREAMER_KEY,
-          req.headers["x-streamer-key"],
-        )
-      ) {
+      if (!streamerConfirmed) {
         res.writeHead(403);
         return res.end("streamer confirmation required");
       }
@@ -998,12 +998,7 @@ const server = http.createServer(async (req, res) => {
       url.pathname === "/admin/studio-builds" &&
       ["GET", "POST"].includes(req.method)
     ) {
-      if (
-        !secretMatches(
-          process.env.VA_STREAMER_KEY,
-          req.headers["x-streamer-key"],
-        )
-      ) {
+      if (!streamerConfirmed) {
         res.writeHead(403);
         return res.end("streamer confirmation required");
       }
@@ -1049,12 +1044,7 @@ const server = http.createServer(async (req, res) => {
       url.pathname === "/admin/approval-delegate" &&
       ["GET", "POST"].includes(req.method)
     ) {
-      if (
-        !secretMatches(
-          process.env.VA_STREAMER_KEY,
-          req.headers["x-streamer-key"],
-        )
-      ) {
+      if (!streamerConfirmed) {
         res.writeHead(403);
         return res.end("streamer confirmation required");
       }
@@ -1084,12 +1074,7 @@ const server = http.createServer(async (req, res) => {
       }
     }
     if (url.pathname === "/admin/prediction" && req.method === "POST") {
-      if (
-        !secretMatches(
-          process.env.VA_STREAMER_KEY,
-          req.headers["x-streamer-key"],
-        )
-      ) {
+      if (!streamerConfirmed) {
         res.writeHead(403);
         return res.end("streamer confirmation required");
       }
@@ -1117,12 +1102,7 @@ const server = http.createServer(async (req, res) => {
       url.pathname === "/admin/fallback-order" &&
       ["GET", "POST"].includes(req.method)
     ) {
-      if (
-        !secretMatches(
-          process.env.VA_STREAMER_KEY,
-          req.headers["x-streamer-key"],
-        )
-      ) {
+      if (!streamerConfirmed) {
         res.writeHead(403);
         return res.end("streamer confirmation required");
       }
@@ -1142,12 +1122,7 @@ const server = http.createServer(async (req, res) => {
       }
     }
     if (url.pathname === "/admin/chat-effects" && req.method === "POST") {
-      if (
-        !secretMatches(
-          process.env.VA_STREAMER_KEY,
-          req.headers["x-streamer-key"],
-        )
-      ) {
+      if (!streamerConfirmed) {
         res.writeHead(403);
         return res.end("streamer confirmation required");
       }
@@ -1182,12 +1157,7 @@ const server = http.createServer(async (req, res) => {
       }
     }
     if (url.pathname === "/admin/fallback" && req.method === "POST") {
-      if (
-        !secretMatches(
-          process.env.VA_STREAMER_KEY,
-          req.headers["x-streamer-key"],
-        )
-      ) {
+      if (!streamerConfirmed) {
         res.writeHead(403);
         return res.end("streamer confirmation required");
       }
@@ -1199,12 +1169,7 @@ const server = http.createServer(async (req, res) => {
       url.pathname === "/admin/build-quarantine" &&
       (req.method === "GET" || req.method === "POST")
     ) {
-      if (
-        !secretMatches(
-          process.env.VA_STREAMER_KEY,
-          req.headers["x-streamer-key"],
-        )
-      ) {
+      if (!streamerConfirmed) {
         res.writeHead(403);
         return res.end("streamer confirmation required");
       }
@@ -1279,12 +1244,10 @@ const server = http.createServer(async (req, res) => {
       }
     }
     if (url.pathname === "/admin/owner-status" && req.method === "GET") {
-      const ok = secretMatches(
-        process.env.VA_STREAMER_KEY,
-        req.headers["x-streamer-key"],
-      );
-      res.writeHead(ok ? 200 : 403, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify({ ok: !!ok }));
+      res.writeHead(streamerConfirmed ? 200 : 403, {
+        "Content-Type": "application/json",
+      });
+      return res.end(JSON.stringify({ ok: streamerConfirmed }));
     }
     if (url.pathname === "/admin/assets" && req.method === "GET") {
       res.writeHead(200, { "Content-Type": "application/json" });
@@ -1292,12 +1255,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === "/admin/game-publication" && req.method === "POST") {
       try {
-        if (
-          !secretMatches(
-            process.env.VA_STREAMER_KEY,
-            req.headers["x-streamer-key"],
-          )
-        ) {
+        if (!streamerConfirmed) {
           res.writeHead(403);
           return res.end("streamer confirmation required");
         }
@@ -1319,12 +1277,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === "/admin/tee-bridge" && req.method === "POST") {
       try {
-        if (
-          !secretMatches(
-            process.env.VA_STREAMER_KEY,
-            req.headers["x-streamer-key"],
-          )
-        ) {
+        if (!streamerConfirmed) {
           res.writeHead(403);
           return res.end("streamer confirmation required");
         }
@@ -1346,12 +1299,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === "/admin/remote-games" && req.method === "POST") {
       try {
-        if (
-          !secretMatches(
-            process.env.VA_STREAMER_KEY,
-            req.headers["x-streamer-key"],
-          )
-        ) {
+        if (!streamerConfirmed) {
           res.writeHead(403);
           return res.end("streamer confirmation required");
         }
@@ -1379,12 +1327,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === "/admin/assets/import" && req.method === "POST") {
       try {
-        if (
-          !secretMatches(
-            process.env.VA_STREAMER_KEY,
-            req.headers["x-streamer-key"],
-          )
-        ) {
+        if (!streamerConfirmed) {
           res.writeHead(403);
           return res.end("streamer confirmation required");
         }
@@ -1400,12 +1343,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/admin/assets/review" && req.method === "POST") {
       try {
         const data = JSON.parse((await readBody()) || "{}");
-        if (
-          !secretMatches(
-            process.env.VA_STREAMER_KEY,
-            req.headers["x-streamer-key"],
-          )
-        ) {
+        if (!streamerConfirmed) {
           res.writeHead(403);
           return res.end("streamer confirmation required");
         }
@@ -1424,12 +1362,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/admin/round" && req.method === "POST") {
       try {
         const data = JSON.parse((await readBody()) || "{}");
-        if (
-          !secretMatches(
-            process.env.VA_STREAMER_KEY,
-            req.headers["x-streamer-key"],
-          )
-        ) {
+        if (!streamerConfirmed) {
           res.writeHead(403);
           return res.end("streamer confirmation required");
         }

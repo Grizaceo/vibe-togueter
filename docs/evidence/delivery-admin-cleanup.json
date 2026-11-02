@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-02T08:17:06.429483+00:00",
+  "kind": "behavior-preserving-admin-deduplication",
+  "sourceSha256": "e50466ce4630a86cafbfbd52eed84fa1625c4c2eac42de490ce9c63aa540b7d4",
+  "focused": 161,
+  "integration": 110,
+  "failed": 0,
+  "log": "delivery-admin-cleanup-tests.txt",
+  "scope": "One request-local streamer confirmation replaces fifteen identical comparisons. Every existing route gate, status and response remains in place. Local admin authentication remains separate."
+}
