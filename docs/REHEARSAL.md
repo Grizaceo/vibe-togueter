@@ -50,7 +50,7 @@ Keep a browser player, the actual Twitch channel and OBS overlay visible. A part
 | Studio `!idea` / `!vote`, local streamer review | Actual Twitch messages, matching proposal/ballot and exact approval | Pending |
 | `!plant 3`, `!water 3`, `!sun` alongside browser click/space | Same live game state responds to both people | Pending |
 | Broadcaster or real moderator `!fallback` | Sender role, selected reviewed fallback and visible cause | Pending |
-| Set preferred fallback order in Studio, then real mod `!fallback` | Selected reviewed fallback, cause, and eventual Marble final choice | Pending |
+| Set preferred fallback order in Studio, then real mod `!fallback` | First available reviewed fallback and visible cause; confirm Marble is last in the saved order | Pending |
 | Real mod `!pause`, viewer game command, browser action, then `!resume` | Chat effect blocked while browser play continues; chat effect returns | Pending |
 | Three distinct Twitch logins send ☀️ or 🌧️ within five seconds | Single visible Grove bonus; repeated messages from one account do not trigger it | Pending |
 | Broadcaster `!delegate trusted_mod 1`; selected-input review token; moderator `!build approve TOKEN`; `!delegate off` | Correct exact-input approval, actual approver credit, expiry/revoke and rejection afterward | Pending |
