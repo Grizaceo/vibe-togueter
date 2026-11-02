@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-02T08:29:58.348930+00:00",
+  "kind": "synthetic-sidebar-layout-regression",
+  "before": [
+    "overlay-sidebar-ten-authors-failure.json",
+    "overlay-sidebar-one-author-failure.json"
+  ],
+  "after": "local-ui-1793608089799-rehearsal.json",
+  "suite": {
+    "focused": 161,
+    "integration": 110,
+    "failed": 0,
+    "log": "overlay-sidebar-tests.txt"
+  },
+  "sources": {
+    "public/overlay-activity.js": "d77fffd35d8e571ea831cb53a13bd11ffd0f4348dd10860037c50b773ae3345e",
+    "public/overlay.html": "2a8db609276bcae1a7136d7e0c92bbdd62522a72109223b6816124b815d3e0e3",
+    "scripts/rehearse-ui-local.mjs": "a8b03e71df6e51c7e43262edcce4478fc130ae530f097387b7e707666fdf1b72"
+  },
+  "scope": "One and ten selected authors, large bounded fields, prediction, delegation, pause and fallback at 720p and 1080p. Synthetic data through the production renderer; no Twitch/VM/model operation. Multiple input authors are summarized by count; full names remain in Studio. Game-version creator credits are unchanged."
+}

@@ -43,7 +43,7 @@ These administration commands are local. A second controller cannot acquire the 
 
 The streamer/controller host targets **Linux** with bubblewrap and user namespaces; macOS and Windows native controller execution are unsupported. Players use a browser against that host. No stable hosted judging URL is available yet; the owner will arrange a Linux VM with a fixed HTTPS address using the [deployment checklist](docs/platform/JUDGE_DEPLOYMENT.md). Do not treat a temporary rehearsal link as judging access.
 
-Without installing, inspect the [720p overlay](docs/evidence/local-ui-1793607080646-overlay.png), [lobby](docs/evidence/local-ui-1793607080646-lobby.png), [studio](docs/evidence/local-ui-1793607080646-studio.png), [local browser checks](docs/evidence/local-ui-1793607080646-rehearsal.json), and [real isolated-build evidence](docs/platform/VM_TRIAL.md). These are evidence, not a playable hosted service. **Video URL: owner must add the public English YouTube recording before submission.** Linux judges can use the clean-install commands above; an existing Linux remote host can serve browser players on other operating systems. Hosting and video remain owner delivery actions.
+Without installing, inspect the [720p overlay](docs/evidence/local-ui-1793608089799-overlay.png), [lobby](docs/evidence/local-ui-1793608089799-lobby.png), [studio](docs/evidence/local-ui-1793608089799-studio.png), [local browser checks](docs/evidence/local-ui-1793608089799-rehearsal.json), and [real isolated-build evidence](docs/platform/VM_TRIAL.md). These are evidence, not a playable hosted service. **Video URL: owner must add the public English YouTube recording before submission.** Linux judges can use the clean-install commands above; an existing Linux remote host can serve browser players on other operating systems. Hosting and video remain owner delivery actions.
 
 ## Connect an operator-owned Twitch channel
 
@@ -109,7 +109,7 @@ The conditional [rotating-role revision](docs/platform/LANTERN_ROLES_REVIEW.md) 
 
 ## What is demonstrated
 
-`npm test`: **271 checks = 161 focused + 110 isolated integration**, all passing. Tests use temporary state and mock coding providers. Separately, automated Chromium passed **31 local UI checks** and **14 normal-launcher browser checks**, including production input and visible credits. A disposable checkout also passed `npm ci`, the full suite, 10 launcher checks and six inert Seed-transfer checks. These separate checks are not added to the npm total. [Evidence index](docs/EVIDENCE.md).
+`npm test`: **271 checks = 161 focused + 110 isolated integration**, all passing. Tests use temporary state and mock coding providers. Separately, automated Chromium passed **35 local UI checks** and **14 normal-launcher browser checks**, including production input and visible credits. A disposable checkout also passed `npm ci`, the full suite, 10 launcher checks and six inert Seed-transfer checks. These separate checks are not added to the npm total. [Evidence index](docs/EVIDENCE.md).
 
 Earlier saved network rehearsals establish actual Twitch commands/replies and public WSS effects for Marble Race, Democracy Duel and Grove. They used owner-account automation while offline; they are not independent audience or OBS evidence, and were not replayed in this revision.
 

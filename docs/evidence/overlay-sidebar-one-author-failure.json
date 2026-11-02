@@ -1,0 +1,80 @@
+{
+  "at": "2026-11-02T08:23:31.065Z",
+  "error": "720p 1-author maximum-field synthetic overlay keeps activity and sidebar in bounds",
+  "checks": [
+    {
+      "name": "lobby shows game, art and idea credit while details are collapsed",
+      "ok": true
+    },
+    {
+      "name": "creator strip is inside the desktop viewport",
+      "ok": true
+    },
+    {
+      "name": "production browser keyboard handler plants a visible tree",
+      "ok": true
+    },
+    {
+      "name": "overlay keeps all three credit roles in the viewport",
+      "ok": true
+    },
+    {
+      "name": "1080p credit strip is at least 24px and no ledger is shown",
+      "ok": true
+    },
+    {
+      "name": "720p stream credits and activity fit",
+      "ok": true
+    },
+    {
+      "name": "overlay shows a real local proposal and ballot from WS state",
+      "ok": true
+    },
+    {
+      "name": "overlay renders streamer-reported prediction winner",
+      "ok": true
+    },
+    {
+      "name": "overlay renders actual effects pause",
+      "ok": true
+    },
+    {
+      "name": "overlay shows the actual local fallback reason",
+      "ok": true
+    },
+    {
+      "name": "overlay separates current approved input co-credit from live game attribution",
+      "ok": true
+    },
+    {
+      "name": "720p crowded sidebar has no scrollbars, overlap or clipped activity",
+      "ok": true
+    },
+    {
+      "name": "720p Marble credit names its owner and inherited prototype",
+      "ok": true
+    },
+    {
+      "name": "1080p crowded sidebar has no scrollbars, overlap or clipped activity",
+      "ok": true
+    },
+    {
+      "name": "1080p Marble credit names its owner and inherited prototype",
+      "ok": true
+    },
+    {
+      "name": "720p 10-author maximum-field synthetic overlay keeps activity and sidebar in bounds",
+      "ok": true
+    },
+    {
+      "name": "1080p 10-author maximum-field synthetic overlay keeps activity and sidebar in bounds",
+      "ok": true
+    },
+    {
+      "name": "720p 1-author maximum-field synthetic overlay keeps activity and sidebar in bounds",
+      "ok": false
+    }
+  ],
+  "errors": [],
+  "temp": "/tmp/va-ui-tPAa6s"
+}

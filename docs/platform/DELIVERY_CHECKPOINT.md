@@ -4,7 +4,7 @@ This is an intermediate checkpoint. The feature freeze remains **12:00 Santiago 
 
 | Priority | Current state | Evidence / next action |
 | --- | --- | --- |
-| 1. Visible polish and attribution | Done | O14/O15/O16/O21: [720p](../evidence/local-ui-1793607080646-overlay-crowded-720p.png), [1080p](../evidence/local-ui-1793607080646-overlay-crowded-1080p.png), [Studio](../evidence/local-ui-1793607080646-studio-owner.png), [31 browser checks](../evidence/local-ui-1793607080646-rehearsal.json). |
+| 1. Visible polish and attribution | Done | O14/O15/O16/O21: [720p](../evidence/local-ui-1793608089799-overlay-crowded-720p.png), [1080p](../evidence/local-ui-1793608089799-overlay-crowded-1080p.png), [Studio](../evidence/local-ui-1793608089799-studio-owner.png), [35 browser checks](../evidence/local-ui-1793608089799-rehearsal.json). |
 | 2. Working story first | Done | README Start here links and working flow; SUBMISSION roadmap and explicit pre-hackathon/Codex attribution. Owner must add actual video/judge URLs. |
 | 3. External Tee | Plan A pending; Plan B ready | [Pinned source, bounded request and 09:30 Santiago gate](TEE_DEMO_DECISION.md). No VM created. No guest/model spending, external repository edits or local server execution. The public remote catalog stays empty. |
 | 4. Format, cleanup, architecture | Done within current scope | Separate format/cleanup commits, [architecture](../ARCHITECTURE.md), 271 green tests. Broad route extraction remains deferred; only proven unused bindings were removed. |

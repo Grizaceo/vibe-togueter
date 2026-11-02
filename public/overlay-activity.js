@@ -39,8 +39,10 @@ export function attachActivity(container) {
       if (r?.credit)
         line(
           "p",
-          "Approved input credit · Idea by " +
-            r.credit.ideaAuthors.map((a) => a.name).join(", ") +
+          "Approved input credit · " +
+            (r.credit.ideaAuthors.length === 1
+              ? "Idea by " + r.credit.ideaAuthors[0].name
+              : r.credit.ideaAuthors.length + " idea authors") +
             " · " +
             communityCreditText(r.credit),
         ).className = "input-credit";
@@ -73,7 +75,7 @@ export function attachActivity(container) {
           `Grove burst · 3 viewers in 5s: ☀️ ${state.crowd.sun}/${state.crowd.needed} · 🌧️ ${state.crowd.rain}/${state.crowd.needed}`,
         );
       if (state?.chatEffectsPaused)
-        line("strong", "Chat effects paused · proposals and votes stay open");
+        line("strong", "Chat effects paused");
     },
   };
 }

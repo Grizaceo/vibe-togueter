@@ -44,7 +44,7 @@ The Twitch OAuth port was informed by the sibling `stream-to-shorts/twitchcon-ap
 
 ## Evidence and limitations
 
-The current local suite passes **271 checks: 161 focused tests and 110 isolated integration checks**. Separate automated Chromium evidence passes 31 local UI checks and 14 normal-launcher browser checks. A fresh disposable checkout passes installation, the complete suite, 10 launcher checks and six inert Seed-transfer checks. Separate real VM quarantine evidence is nine checks for Lantern Table, fourteen controlled gameplay checks for its roles revision and twelve historical Seed Race checks, not added to the npm total. Failed intermediate attempts remain documented. See docs/EVIDENCE.md.
+The current local suite passes **271 checks: 161 focused tests and 110 isolated integration checks**. Separate automated Chromium evidence passes 35 local UI checks and 14 normal-launcher browser checks. A fresh disposable checkout passes installation, the complete suite, 10 launcher checks and six inert Seed-transfer checks. Separate real VM quarantine evidence is nine checks for Lantern Table, fourteen controlled gameplay checks for its roles revision and twelve historical Seed Race checks, not added to the npm total. Failed intermediate attempts remain documented. See docs/EVIDENCE.md.
 
 Saved real Twitch/WSS rehearsals verify commands, bot replies and effects in the existing games. Those runs used owner-account automation while the channel was offline. We have not represented them as independent audience play, a real OBS broadcast, or new Twitch evidence from this revision. Paid events, actual reward redemptions and payment settlement have not been demonstrated. Default tests use mock coding providers.
 
