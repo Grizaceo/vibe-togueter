@@ -1,0 +1,34 @@
+{
+  "at": "2026-11-02T12:07:14.031690+00:00",
+  "kind": "studio-resource-count-wording-check",
+  "browser": {
+    "exit": 0,
+    "passed": 36,
+    "failed": 0,
+    "errors": []
+  },
+  "targetCheck": {
+    "name": "studio shows supporting ballots, approver and singular round/resource counts",
+    "ok": true
+  },
+  "capture": "studio-resource-counts.png",
+  "sources": {
+    "public/studio.js": "43aa647726072238b754a23559e481213740fb01930b79e73500d1f413f996e3",
+    "scripts/rehearse-ui-local.mjs": "331168235bdf9aad471da2df6c9a482336b6f594bfda97e9b7f20446de2227e5"
+  },
+  "scope": [
+    "Full existing local Chromium rehearsal in a disposable archive with current modified files.",
+    "Resource use counts retain the registry count of distinct game/version pairs.",
+    "Only the targeted capture retained; other temporary captures discarded.",
+    "No private .env, Twitch, VM/model/provider operation or candidate execution."
+  ],
+  "tempRemoved": true,
+  "suite": {
+    "exit": 0,
+    "focused": 161,
+    "integration": 110,
+    "failed": 0,
+    "isolatedCheckoutRemoved": true,
+    "logSha256": "d04425a37eb30a6a7a8796694788eaca8a586c987a8fc29e7d377ff114b59bd9"
+  }
+}

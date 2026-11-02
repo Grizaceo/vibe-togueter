@@ -518,12 +518,16 @@ try {
     ),
   );
   check(
-    "studio shows supporting ballots, approver and singular round counts",
+    "studio shows supporting ballots, approver and singular round/resource counts",
     await evaluate(
-      "document.querySelector('#community-credit').textContent.includes('Voted by 1 · Approved by local streamer')&&document.querySelector('#round-info').textContent.includes('1 voting session · 1 selection slot')",
+      "document.querySelector('#community-credit').textContent.includes('Voted by 1 · Approved by local streamer')&&document.querySelector('#round-info').textContent.includes('1 voting session · 1 selection slot')&&document.querySelector('#assets').textContent.includes('Used in 1 published version')&&!document.querySelector('#assets').textContent.includes('Used in 1 published versions')",
     ),
   );
   await capture("local-ui-studio");
+  await evaluate(
+    "document.getElementById('assets').scrollIntoView({block:'center'})",
+  );
+  await capture("local-ui-studio-resources");
   await evaluate(
     "document.getElementById('round-info').scrollIntoView({block:'center'})",
   );

@@ -146,7 +146,7 @@ function renderAssets(data) {
       link(asset.creator.name, asset.creator.website),
       el(
         "p",
-        `${asset.license.id} · ${asset.uses} published version uses`,
+        `${asset.license.id} · Used in ${asset.uses} published version${asset.uses === 1 ? "" : "s"}`,
         "tiny muted",
       ),
     );
