@@ -96,6 +96,7 @@
         margin: 2px 0;
         color: #e0e7ef;
       }
+      #err,
       #activity p,
       #activity strong {
         display: -webkit-box;
@@ -161,6 +162,17 @@
         document.getElementById("live-credits"),
       );
       const feed = document.getElementById("feed");
+      new ResizeObserver(fitFeed).observe(feed);
+      function fitFeed() {
+        const rows = Math.floor(
+          feed.getBoundingClientRect().height /
+            parseFloat(getComputedStyle(feed).lineHeight),
+        );
+        feed.style.visibility = rows ? "" : "hidden";
+        [...feed.children].forEach((line, index) => {
+          line.hidden = index < feed.children.length - rows;
+        });
+      }
       connect({
         spectator: true,
         canvas: document.getElementById("cv"),
@@ -189,7 +201,7 @@
         d.textContent = ev.text;
         feed.appendChild(d);
         while (feed.children.length > 80) feed.firstChild.remove();
-        feed.scrollTop = feed.scrollHeight;
+        fitFeed();
       }
     </script>
   </body>

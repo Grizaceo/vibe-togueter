@@ -388,7 +388,7 @@ try {
     check(
       `${height}p crowded sidebar has no scrollbars, overlap or clipped activity`,
       await evaluate(
-        `(()=>{const side=document.querySelector('#side'),a=document.querySelector('#activity'),feed=document.querySelector('#feed'),players=document.querySelector('#players'),ar=a.getBoundingClientRect(),fr=feed.getBoundingClientRect(),pr=players.getBoundingClientRect();return a.scrollHeight<=a.clientHeight&&ar.bottom<=fr.top+1&&fr.bottom<=pr.top+1&&pr.bottom<=side.getBoundingClientRect().bottom&&[a,feed,players].every(e=>getComputedStyle(e).overflowY==='hidden')})()`,
+        `(()=>{const side=document.querySelector('#side'),a=document.querySelector('#activity'),feed=document.querySelector('#feed'),players=document.querySelector('#players'),ar=a.getBoundingClientRect(),fr=feed.getBoundingClientRect(),pr=players.getBoundingClientRect();return a.scrollHeight<=a.clientHeight&&ar.bottom<=fr.top+1&&fr.bottom<=pr.top+1&&pr.bottom<=side.getBoundingClientRect().bottom&&[a,feed,players].every(e=>getComputedStyle(e).overflowY==='hidden')&&[...feed.children].filter(e=>!e.hidden).every(e=>{const r=e.getBoundingClientRect();return r.top>=fr.top&&r.bottom<=fr.bottom+0.1})})()`,
       ),
     );
     check(
@@ -407,7 +407,59 @@ try {
   });
   // Synthetic maximum-field fixture: exercise the real overlay layout without Twitch/provider calls.
   await evaluate(
-    `(async()=>{const original=document.getElementById('activity');original.id='ws-activity';const fixture=original.cloneNode(false);fixture.id='activity';original.replaceWith(fixture);window.restoreActivity=()=>{fixture.replaceWith(original);original.id='activity';};const {attachActivity}=await import('/overlay-activity.js');window.maxActivityRenderer=attachActivity(fixture);window.maxActivityState={round:{phase:'approved',ideas:100,voters:10000,highlights:[{id:100,votes:10000,author:'viewer'.repeat(6),text:'A cooperative lantern garden with a long proposal that fills the stream summary for this layout fixture.'.slice(0,100)}],credit:{ideaAuthors:Array.from({length:10},(_,i)=>({name:'Selected author '+i+' with a fifty character name.....'})),voterCount:10000,approvedBy:{name:'trusted_moderator_fixture',authority:'delegated-moderator'}}},fallback:'Requested by moderator: '+ 'recovery reason '.repeat(13),builder:'Studio builder: off — enabled per approved run',delegation:{name:'trusted_moderator_fixture',expiresAt:Date.now()+60000},prediction:{phase:'resolved',choices:Array.from({length:6},(_,i)=>({label:'A thirty-two-character choice '+i,count:10000})),result:'A thirty-two-character choice 0',winnerCount:10000,winners:Array.from({length:6},(_,i)=>('Winner '+i+' with a long public display name................').slice(0,50))},chatEffectsPaused:true};window.maxActivityRenderer.update(window.maxActivityState);})()`,
+    `(async () => {
+      const original = document.getElementById('activity');
+      original.id = 'ws-activity';
+      const fixture = original.cloneNode(false);
+      fixture.id = 'activity';
+      original.replaceWith(fixture);
+      const { attachActivity } = await import('/overlay-activity.js');
+      window.maxActivityRenderer = attachActivity(fixture);
+      window.maxActivityState = {
+        round: {
+          phase: 'approved', ideas: 100, voters: 10000,
+          highlights: [{
+            id: 100, votes: 10000, author: 'viewer'.repeat(6),
+            text: 'A cooperative lantern garden with a long proposal that fills the stream summary for this layout fixture.'.slice(0, 100)
+          }],
+          credit: {
+            ideaAuthors: Array.from({ length: 10 }, (_, i) => ({
+              name: 'Selected author ' + i + ' with a fifty character name.....'
+            })),
+            voterCount: 10000,
+            approvedBy: { name: 'trusted_moderator_fixture', authority: 'delegated-moderator' }
+          }
+        },
+        fallback: 'Requested by moderator: ' + 'recovery reason '.repeat(13),
+        builder: 'Studio builder: off — enabled per approved run',
+        delegation: { name: 'trusted_moderator_fixture', expiresAt: Date.now() + 60000 },
+        prediction: {
+          phase: 'resolved',
+          choices: Array.from({ length: 6 }, (_, i) => ({
+            label: 'A thirty-two-character choice ' + i, count: 10000
+          })),
+          result: 'A thirty-two-character choice 0', winnerCount: 10000,
+          winners: Array.from({ length: 6 }, (_, i) =>
+            ('Winner ' + i + ' with a long public display name................').slice(0, 50))
+        },
+        chatEffectsPaused: true
+      };
+      window.maxActivityRenderer.update(window.maxActivityState);
+      const error = document.getElementById('err');
+      const previousError = error.textContent;
+      const fixtureError = 'Fallback: ' + window.maxActivityState.fallback;
+      const keepFixtureError = new MutationObserver(() => {
+        if (error.textContent !== fixtureError) error.textContent = fixtureError;
+      });
+      error.textContent = fixtureError;
+      keepFixtureError.observe(error, { childList: true });
+      window.restoreActivity = () => {
+        keepFixtureError.disconnect();
+        error.textContent = previousError;
+        fixture.replaceWith(original);
+        original.id = 'activity';
+      };
+    })()`,
   );
   for (const authors of [10, 1]) {
     await evaluate(
@@ -431,7 +483,7 @@ try {
         "(()=>{const box=id=>{const r=document.getElementById(id).getBoundingClientRect();return {top:r.top,bottom:r.bottom};};const p=document.querySelector('#side > a').getBoundingClientRect();return {side:box('side'),activity:box('activity'),players:box('players'),privacy:{top:p.top,bottom:p.bottom}}})()",
       );
       check(
-        `${height}p ${authors}-author maximum-field synthetic overlay keeps activity and sidebar in bounds: ${JSON.stringify(bounds)}`,
+        `${height}p ${authors}-author maximum-field synthetic overlay with a long fallback banner keeps activity and sidebar in bounds: ${JSON.stringify(bounds)}`,
         bounds.activity.bottom <= bounds.side.bottom &&
           bounds.activity.top >= bounds.side.top &&
           bounds.players.bottom <= bounds.side.bottom &&
@@ -449,6 +501,15 @@ try {
     deviceScaleFactor: 1,
     mobile: false,
   });
+  await wait(() =>
+    evaluate(
+      "(()=>{const feed=document.getElementById('feed'),last=feed.lastElementChild;if(!last||last.hidden||getComputedStyle(feed).visibility==='hidden')return false;return last.getBoundingClientRect().bottom<=feed.getBoundingClientRect().bottom+0.1})()",
+    ),
+  );
+  check(
+    "feed shows its latest event again after the crowded layout expands",
+    true,
+  );
   await navigate("/studio.html");
   check(
     "studio renders its selected Plan B boundary and privacy link",
@@ -463,6 +524,11 @@ try {
     ),
   );
   await capture("local-ui-studio");
+  await evaluate(
+    "document.getElementById('games').scrollIntoView({block:'center'})",
+  );
+  await capture("local-ui-studio-games");
+  await evaluate("window.scrollTo(0,0)");
   await evaluate(
     "document.getElementById('admin-key').value='local-fixture-admin';document.getElementById('streamer-key').value='local-ui-fixture-key'",
   );
@@ -635,7 +701,7 @@ try {
           "Disposable checkout without owner configuration.",
           "No real Twitch traffic, human gameplay, OBS recording or submission video.",
           "Warm-session controls and interrupted artifact publication UI use mocked HTTP; no real VM or candidate runs.",
-          "Maximum-field sidebar shots use synthetic input through the production activity renderer, not actual audience data.",
+          "Maximum-field sidebar shots use synthetic activity and long fallback-banner text in the real overlay DOM, not actual audience or backend-failure evidence.",
           "Lobby 1600x900, overlay 1920x1080 and 1280x720; not a mobile usability claim.",
         ],
       },
