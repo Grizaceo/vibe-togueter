@@ -1,0 +1,69 @@
+{
+  "at": "2026-11-02T10:38:50.999006+00:00",
+  "commit": "592b8d0d0bb94521d92b7a757d4a8ad981fcc6bf",
+  "kind": "disposable-current-head-installation-check",
+  "checks": [
+    {
+      "name": "install",
+      "command": [
+        "npm",
+        "ci"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T10:38:33.759612+00:00",
+      "log": "delivery-current-install.txt"
+    },
+    {
+      "name": "suite",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T10:38:34.826149+00:00",
+      "log": "delivery-current-suite.txt"
+    },
+    {
+      "name": "launcher",
+      "command": [
+        "node",
+        "scripts/demo-local.mjs",
+        "--check"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T10:38:50.173819+00:00",
+      "log": "delivery-current-launcher.txt"
+    },
+    {
+      "name": "seed-transfer",
+      "command": [
+        "node",
+        "--test",
+        "test/seed-transfer.mjs"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T10:38:50.739804+00:00",
+      "log": "delivery-current-seed-transfer.txt"
+    }
+  ],
+  "suite": {
+    "focused": 161,
+    "integration": 110,
+    "failed": 0,
+    "isolatedCheckoutRemoved": true
+  },
+  "launcherChecks": 10,
+  "inertTransferChecks": 6,
+  "tempRemoved": true,
+  "artifactIntegrity": {
+    "artifacts/lantern-table-e21fef6b/game.js": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+    "artifacts/lantern-table-roles-draft/game.js": "449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075"
+  },
+  "browserReceipt": "studio-round-counts-check.json",
+  "limits": [
+    "No private .env or live journals copied.",
+    "Only reviewed bundled games execute; candidate artifact transfer is inert.",
+    "No Twitch, provider/VM/model operation, hosting, publication or human recording.",
+    "Browser receipt is the separate latest run of the same current UI/script source hashes."
+  ]
+}
