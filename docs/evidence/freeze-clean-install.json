@@ -1,0 +1,194 @@
+{
+  "at": "2026-11-02T14:26:12.682071+00:00",
+  "testedCommit": "8a58ad30ad03fd0575d067622a96fdc65b7d6144",
+  "kind": "final-pre-freeze-clean-installation-audit",
+  "controllerNode": "v26.12.1",
+  "systemNode": "v26.12.0",
+  "checks": [
+    {
+      "name": "install",
+      "args": [
+        "npm",
+        "ci"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T14:25:06.493894+00:00",
+      "log": "freeze-install.txt"
+    },
+    {
+      "name": "suite",
+      "args": [
+        "npm",
+        "test"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T14:25:07.811114+00:00",
+      "log": "freeze-suite.txt"
+    },
+    {
+      "name": "system-node-suite",
+      "args": [
+        "npm",
+        "test"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T14:25:22.709648+00:00",
+      "log": "freeze-system-node-suite.txt"
+    },
+    {
+      "name": "launcher",
+      "args": [
+        "node",
+        "scripts/demo-local.mjs",
+        "--check"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T14:25:38.256580+00:00",
+      "log": "freeze-launcher.txt"
+    },
+    {
+      "name": "seed-transfer",
+      "args": [
+        "node",
+        "--test",
+        "test/seed-transfer.mjs"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T14:25:38.822079+00:00",
+      "log": "freeze-seed-transfer.txt"
+    },
+    {
+      "name": "browser",
+      "args": [
+        "node",
+        "scripts/rehearse-ui-local.mjs"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T14:25:38.987342+00:00",
+      "log": "freeze-browser.txt"
+    },
+    {
+      "name": "normal-browser",
+      "args": [
+        "node",
+        "scripts/rehearse-plan-b.mjs"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T14:25:55.391977+00:00",
+      "log": "freeze-normal-browser.txt"
+    },
+    {
+      "name": "format",
+      "args": [
+        "npm",
+        "exec",
+        "--yes",
+        "--package=prettier@3.6.2",
+        "--",
+        "prettier",
+        "--check",
+        "src/**/*.{js,md}",
+        "public/**/*.{js,html,css}",
+        "scripts/rehearse-ui-local.mjs",
+        "test/run-legacy.mjs"
+      ],
+      "exit": 0,
+      "startedAt": "2026-11-02T14:26:10.993219+00:00",
+      "log": "freeze-format.txt"
+    }
+  ],
+  "suite": {
+    "focused": 161,
+    "integration": 110,
+    "failed": 0,
+    "isolatedCheckoutRemoved": true
+  },
+  "systemNodeSuite": {
+    "focused": 161,
+    "integration": 110,
+    "failed": 0,
+    "isolatedCheckoutRemoved": true
+  },
+  "launcherChecks": 10,
+  "inertTransferChecks": 6,
+  "browser": {
+    "passed": 36,
+    "failed": 0,
+    "receipt": "freeze-ui-checks.json",
+    "captures": [
+      "freeze-ui-lobby.png",
+      "freeze-ui-overlay-1080p.png",
+      "freeze-ui-overlay-crowded-1080p.png",
+      "freeze-ui-overlay-crowded-720p.png",
+      "freeze-ui-overlay-paused.png",
+      "freeze-ui-overlay-prediction.png",
+      "freeze-ui-overlay-round-credit.png",
+      "freeze-ui-overlay-synthetic-max-10authors-1080p.png",
+      "freeze-ui-overlay-synthetic-max-10authors-720p.png",
+      "freeze-ui-overlay-synthetic-max-1authors-1080p.png",
+      "freeze-ui-overlay-synthetic-max-1authors-720p.png",
+      "freeze-ui-overlay.png",
+      "freeze-ui-privacy.png",
+      "freeze-ui-studio-games.png",
+      "freeze-ui-studio-owner.png",
+      "freeze-ui-studio-resources.png",
+      "freeze-ui-studio-round.png",
+      "freeze-ui-studio-warm-mocked.png",
+      "freeze-ui-studio.png"
+    ]
+  },
+  "normalBrowser": {
+    "passed": 14,
+    "failed": 0,
+    "receipt": "freeze-normal-browser-checks.json"
+  },
+  "artifactIntegrity": {
+    "artifacts/lantern-table-e21fef6b/game.js": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+    "artifacts/lantern-table-roles-draft/game.js": "449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075"
+  },
+  "sourceTree": {
+    "files": 145,
+    "sha256": "6431d1c7550ebffad98b8e48a68e0cabb7085c508fdb70afab63c2bdc62068ff",
+    "prefixes": [
+      "src/",
+      "public/",
+      "scripts/",
+      "test/",
+      "games/",
+      "templates/"
+    ],
+    "filesOutsidePrefixes": [
+      "vibe-arena.config.json",
+      "package.json",
+      "package-lock.json"
+    ]
+  },
+  "longestSourceUiLine": {
+    "length": 791,
+    "file": "src/createos-studio-worker.js",
+    "line": 329
+  },
+  "limits": [
+    "No owner .env or live journals copied; minimal environment and isolated QA HOME.",
+    "Only reviewed bundled games and synthetic fixtures execute; approved Lantern sources only hashed and Seed transfer remains inert.",
+    "No Twitch, provider/VM/model operation, hosting, push, publication, human rehearsal or finished video.",
+    "This is pre-freeze verification; final freeze status is recorded separately at 15:00 UTC."
+  ],
+  "tempRemoved": true,
+  "assistantVisualReview": {
+    "captures": [
+      "freeze-ui-overlay-crowded-720p.png",
+      "freeze-ui-overlay-synthetic-max-1authors-720p.png",
+      "freeze-ui-overlay-crowded-1080p.png",
+      "freeze-ui-studio-owner.png",
+      "freeze-ui-studio-resources.png"
+    ],
+    "checked": [
+      "Creator strip and prototype attribution visible at both output sizes.",
+      "Sidebar sections stay separated; maximum-field fixture uses bounded summaries.",
+      "Disabled worker buttons use neutral gray.",
+      "Resource use count reads singular published version."
+    ],
+    "scope": "Assistant inspection of automated local captures; no human/OBS/audience rehearsal."
+  }
+}

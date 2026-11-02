@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-02T14:21:31.904215+00:00",
+  "narrationWords": 320,
+  "captionCues": 39,
+  "plannedDurationMs": 165000,
+  "maxCaptionLines": 2,
+  "longestCaptionLine": 47,
+  "narrationMatchesCaptions": true,
+  "sourceHashes": {
+    "docs/recording/narration-en.txt": "d678852f279a6ae0e6a9a9e7d73012793a58081658960cbd8ee14b2e3b94453f",
+    "docs/recording/captions-en.srt": "3a5211b74dbf1bfb8214aedc079516685523a6a9e480679fd5e239c0aa810671"
+  },
+  "scope": "Draft structure/text only. Actual voice, footage, retiming, full human review and measured export remain pending."
+}
