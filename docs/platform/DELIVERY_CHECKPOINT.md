@@ -11,7 +11,7 @@ This is an intermediate checkpoint. The feature freeze remains **12:00 Santiago 
 | 5. Judge hosting preparation | Checklist ready; deployment pending owner | [Runbook](JUDGE_DEPLOYMENT.md): persistent Linux VM, HTTPS/WSS, admin 403, isolation/recovery/reboot acceptance. Provider, URL, budget and actual acceptance are still unknown. |
 | 6. English video preparation | Draft ready; recording pending owner | [Shot list](../recording/SHOT_LIST.md), 328-word narration, caption track ends at 2:45. Actual speech, human/Twitch footage and measured export still need review. |
 
-The validated implementation snapshot is `c8ff84c7d258d473b704e3006af20dd05dcc5338`. [Clean-install receipt](../evidence/delivery-polish-clean-install.json) records npm ci, 271 checks, the launcher and six inert-transfer checks. Browser results are separate. Later documentation-only commits do not imply another cloud run.
+The clean-install snapshot is `c8ff84c7d258d473b704e3006af20dd05dcc5338`. [Clean-install receipt](../evidence/delivery-polish-clean-install.json) records npm ci, 271 checks, the launcher and six inert-transfer checks. Browser results are separate. The subsequent source simplification in `8e5894e` also passed the full 271-check suite; [its receipt](../evidence/delivery-admin-cleanup.json) pins the tested server hash. No additional cloud run is implied.
 
 The original Lantern Table source remains `6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900`; the approved roles revision remains `449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075`. Both match the starting HEAD and saved owner receipts. Neither was edited or executed on the PC.
 
