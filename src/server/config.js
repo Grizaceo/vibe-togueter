@@ -27,7 +27,8 @@ export async function loadServerConfig() {
     fs.readFileSync(path.join(ROOT, "vibe-arena.config.json"), "utf8"),
   );
   // env overrides for cloud mode: VA_BASE_URL, VA_API_KEY, VA_MODEL
-  if (process.env.VA_BASE_URL) CONFIG.generator.baseUrl = process.env.VA_BASE_URL;
+  if (process.env.VA_BASE_URL)
+    CONFIG.generator.baseUrl = process.env.VA_BASE_URL;
   if (process.env.VA_API_KEY) CONFIG.generator.apiKey = process.env.VA_API_KEY;
   if (process.env.VA_MODEL) CONFIG.generator.model = process.env.VA_MODEL;
 
@@ -39,5 +40,17 @@ export async function loadServerConfig() {
   // Synthetic event accounting is opt-in for isolated fixtures only; never provider settlement.
   const simulateEventCredits = process.env.VA_SIMULATE_EVENT_CREDITS === "1";
 
-  return { ROOT, PUBLIC, IDEAS_FILE, arg, PORT, LISTEN_HOST, TWITCH_CHANNEL, KICK_CHANNEL, GAME_DIR, CONFIG, simulateEventCredits };
+  return {
+    ROOT,
+    PUBLIC,
+    IDEAS_FILE,
+    arg,
+    PORT,
+    LISTEN_HOST,
+    TWITCH_CHANNEL,
+    KICK_CHANNEL,
+    GAME_DIR,
+    CONFIG,
+    simulateEventCredits,
+  };
 }
