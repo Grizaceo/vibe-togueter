@@ -1,6 +1,7 @@
 # Vibe Togueter — temporary Railway game trial
 
-Status: preparing; no Railway resource created and no remote Rust build started.
+Status: **Railway trial blocked for this account**. The one authorized creation
+attempt was rejected before any resource or remote Rust build existed.
 
 The platform implementation remains Vibe Arena. The owner's separately developed
 teeworlds-rs game (Cristóbal Muñoz with Devin and Hermes) is an external example,
@@ -67,10 +68,39 @@ created as a diagnostic, and no upgrade/card/top-up is authorized.
   that exact trial project. Deletion acceptance is not terminal; poll inventory
   until its absence is verified. Unknown creation/cleanup blocks another trial.
 
-Proposed authorization, **not yet received**: one cloud build/deployment, at most
+Owner authorization received November 2: one cloud build/deployment, at most
 30 minutes total from project creation, at most USD 1 of the existing USD 5 trial
 credit, USD 0 paid charges, no upgrade/recharge/card. Stop and clean up if account
 restrictions or the build gate fail; no replacement provider/VM or automatic retry.
 The USD 1 threshold is an operator stop limit, not a provider-enforced per-project
 cap or a settled invoice. Workspace-wide billing settings are not changed because
 they may affect unrelated services.
+
+## Actual attempt and result — 19:13 UTC November 2
+
+Independent cleanup supervision was armed before a unique project creation intent.
+The authenticated CLI then rejected project creation:
+
+> Trials are temporarily paused for new accounts. Upgrade to a paid plan to start deploying.
+
+No service/domain/VM was created; no source was uploaded and no remote build ran.
+Authenticated inventories before and after the attempt were both empty. The cleanup
+check independently confirmed the intended project absent, marked the private lease
+terminal, and only then stopped its timer. There is no pending guest/project cleanup.
+The credit API still reported USD 5 after the attempt; no settled invoice is claimed.
+
+No paid upgrade, recharge, card, replacement provider or automatic retry occurred.
+The provider restriction overrides the apparently available trial metadata. A new
+provider/account or paid-plan decision requires a separate explicit authorization.
+
+Prepared platform source is `9897e40` on `feat/tee-vm-trial-20261102`; the isolated
+external game revision is `0c6250d86c59d7ec166ded0785baef51529fb9ec` on
+`feat/vt-remote-demo-20261102`, based on `172cfef`. The inert package under `/tmp`
+was assembled from committed source and contains no host auth/environment files.
+Local validation passed 282 npm checks (172 focused + 110 integration), 36 Chromium
+checks, a Rust server compile check and one strict-codec Rust test. Gateway fixtures
+verify boundaries only; none constitutes a deployed VM/WSS game trial.
+
+The dedicated platform URL/domain remains **pending**. The verified human local
+Twitch-entry result from the earlier increment remains valid and is not promoted
+to a remote deployment claim by this failed provider attempt.
