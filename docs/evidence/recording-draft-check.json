@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-02T09:30:51.104713+00:00",
+  "kind": "recording-draft-text-and-timing-check",
+  "narrationWords": 320,
+  "captionCues": 39,
+  "plannedDurationMs": 165000,
+  "maxCaptionLines": 2,
+  "longestCaptionLine": 47,
+  "narrationMatchesCaptions": true,
+  "segments": 8,
+  "scope": [
+    "Phrase-based caption cues on a 2:45 draft timeline.",
+    "10-second hook, 70-second live participation/approval path, 30-second Codex/VM evidence, 15-second fallback, 20-second external-game vision and 20-second roadmap.",
+    "Text/timing consistency only; actual voice, footage, retiming, human review and measured export remain owner work."
+  ]
+}

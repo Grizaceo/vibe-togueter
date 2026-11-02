@@ -1,177 +1,179 @@
 1
 00:00:00,000 --> 00:00:03,846
-What if your Twitch chat could invent the next
-game?
+What if your Twitch chat
+could invent the next game?
 
 2
-00:00:03,846 --> 00:00:07,692
-Vibe Arena brings their ideas, their votes and
-the people
+00:00:03,846 --> 00:00:10,000
+Vibe Arena brings their ideas, their votes
+and the people behind the game onto the stream.
 
 3
-00:00:07,692 --> 00:00:10,000
-behind the game onto the stream.
+00:00:10,000 --> 00:00:14,891
+Here is the live path.
+Viewers join from Twitch,
 
 4
-00:00:10,000 --> 00:00:15,435
-Here is the live path. Viewers join from Twitch,
-or
+00:00:14,891 --> 00:00:18,696
+or stay in chat and send commands.
 
 5
-00:00:15,435 --> 00:00:20,870
-stay in chat and send commands. In Community
-Grove, browser
+00:00:18,696 --> 00:00:24,674
+In Community Grove, browser players and chat
+grow the same garden.
 
 6
-00:00:20,870 --> 00:00:26,304
-players and chat grow the same garden. The
-credit strip
+00:00:24,674 --> 00:00:31,196
+The credit strip keeps the game creator,
+artist and idea author visible.
 
 7
-00:00:26,304 --> 00:00:31,739
-keeps the game creator, artist and idea author
-visible. This
+00:00:31,196 --> 00:00:35,000
+This art is from Kenney's CC0 collection.
 
 8
-00:00:31,739 --> 00:00:35,000
-art is from Kenney's CC0 collection.
+00:00:35,000 --> 00:00:39,182
+In the Studio, viewers propose ideas and vote.
 
 9
-00:00:35,000 --> 00:00:40,349
-In the Studio, viewers propose ideas and vote.
-The streamer
+00:00:39,182 --> 00:00:43,364
+The streamer reviews the selected idea
+and resources,
 
 10
-00:00:40,349 --> 00:00:45,698
-reviews the selected idea and resources, then
-approves that exact
+00:00:43,364 --> 00:00:45,977
+then approves that exact input.
 
 11
-00:00:45,698 --> 00:00:51,047
-input. Changing the selection means reviewing
-again. Input-round credits show
+00:00:45,977 --> 00:00:49,114
+Changing the selection means reviewing again.
 
 12
-00:00:51,047 --> 00:00:56,395
-who proposed, who voted and who approved,
-separately from the
+00:00:49,114 --> 00:00:54,864
+Input-round credits show the idea authors,
+supporting vote count and approver,
 
 13
-00:00:56,395 --> 00:00:58,000
-game already playing.
+00:00:54,864 --> 00:00:58,000
+separately from the game already playing.
 
 14
-00:00:58,000 --> 00:01:03,000
-Codex wrote the hackathon code. I built the
-inherited prototype
+00:00:58,000 --> 00:01:03,657
+The chat participates;
+the streamer keeps the final decision.
 
 15
-00:01:03,000 --> 00:01:08,000
-with Devin CLI before the hackathon; Devin
-helped with review
+00:01:03,657 --> 00:01:07,429
+Credits follow the version actually playing.
 
 16
-00:01:08,000 --> 00:01:13,000
-and ideas during it. You can see the
-implementation thread
+00:01:07,429 --> 00:01:13,714
+I built the prototype with Devin CLI
+before the hackathon.
 
 17
-00:01:13,000 --> 00:01:18,000
-and tests here. The platform connects
-participation, approval, construction and
+00:01:13,714 --> 00:01:20,000
+Codex wrote the hackathon code;
+Devin reviewed and discussed ideas.
 
 18
-00:01:18,000 --> 00:01:20,000
-recovery while preserving attribution.
+00:01:20,000 --> 00:01:23,559
+This is our real Lantern Table trial.
 
 19
-00:01:20,000 --> 00:01:25,085
-This is our real Lantern Table trial. I selected
-its
+00:01:23,559 --> 00:01:28,136
+I selected its idea;
+it had zero audience votes.
 
 20
-00:01:25,085 --> 00:01:30,169
-idea; it had zero audience votes. Codex built it
-in
+00:01:28,136 --> 00:01:31,695
+Codex built it in one isolated VM,
 
 21
-00:01:30,169 --> 00:01:35,254
-one isolated VM, another VM passed nine protocol
-checks, and
+00:01:31,695 --> 00:01:36,780
+another VM passed nine protocol checks,
+and both were destroyed.
 
 22
-00:01:35,254 --> 00:01:40,339
-both were destroyed. I approved the exact
-version as reviewed
+00:01:36,780 --> 00:01:40,847
+I approved the exact version
+as reviewed evidence.
 
 23
-00:01:40,339 --> 00:01:45,424
-evidence. Dispatch through testing and cleanup
+00:01:40,847 --> 00:01:45,424
+Dispatch through testing and cleanup
 took about sixty-three seconds.
 
 24
 00:01:45,424 --> 00:01:50,000
-This preview is static; the runtime VM comes
-next.
+This preview is static;
+the runtime VM comes next.
 
 25
 00:01:50,000 --> 00:01:54,545
-If something fails, the watchdog switches to a
-reviewed fallback.
+If something fails, the watchdog
+switches to a reviewed fallback.
 
 26
 00:01:54,545 --> 00:01:59,091
-A real Twitch moderator can also request it with
-fallback.
+A real Twitch moderator can also request it
+with fallback.
 
 27
-00:01:59,091 --> 00:02:03,636
-Here is that requested recovery, with the reason
-visible and
+00:01:59,091 --> 00:02:03,182
+Here is that requested recovery,
+with the reason visible
 
 28
-00:02:03,636 --> 00:02:05,000
-players still connected.
+00:02:03,182 --> 00:02:05,000
+and players still connected.
 
 29
-00:02:05,000 --> 00:02:10,556
-This is my separate teeworlds-rs game, built
-with Devin and
+00:02:05,000 --> 00:02:08,333
+This is my separate teeworlds-rs game,
 
 30
-00:02:10,556 --> 00:02:16,111
-Hermes, outside this submission. The next
-experience is streamer versus
+00:02:08,333 --> 00:02:12,778
+built with Devin and Hermes,
+outside this submission.
 
 31
-00:02:16,111 --> 00:02:21,667
-chat: players join as tees, while spectators
-send buffs and
+00:02:12,778 --> 00:02:16,667
+The next experience is streamer versus chat:
 
 32
-00:02:21,667 --> 00:02:25,000
-hazards through an isolated game adapter.
+00:02:16,667 --> 00:02:18,889
+players join as tees,
 
 33
-00:02:25,000 --> 00:02:29,878
-Next are isolated runtime VMs and a general
-adapter for
+00:02:18,889 --> 00:02:25,000
+while spectators send buffs and hazards
+through an isolated game adapter.
 
 34
-00:02:29,878 --> 00:02:34,756
-verified external games, including community
-submissions with behavior reports. Then
+00:02:25,000 --> 00:02:29,390
+Next are isolated runtime VMs
+and a general adapter
 
 35
-00:02:34,756 --> 00:02:39,634
-live repair with regression checks and exact
-approval, stream statistics,
+00:02:29,390 --> 00:02:31,341
+for verified external games,
 
 36
-00:02:39,634 --> 00:02:44,512
-and lasting credits for artists, musicians,
-writers and every creative
+00:02:31,341 --> 00:02:34,268
+including community submissions
+with behavior reports.
 
 37
-00:02:44,512 --> 00:02:45,000
-role.
+00:02:34,268 --> 00:02:38,659
+Then live repair with regression checks
+and exact approval,
+
+38
+00:02:38,659 --> 00:02:41,098
+stream statistics, and lasting credits
+
+39
+00:02:41,098 --> 00:02:45,000
+for artists, musicians, writers
+and every creative role.

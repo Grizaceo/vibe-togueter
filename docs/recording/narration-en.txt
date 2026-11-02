@@ -8,10 +8,10 @@ What if your Twitch chat could invent the next game? Vibe Arena brings their ide
 Here is the live path. Viewers join from Twitch, or stay in chat and send commands. In Community Grove, browser players and chat grow the same garden. The credit strip keeps the game creator, artist and idea author visible. This art is from Kenney's CC0 collection.
 
 00:00:35,000–00:00:58,000
-In the Studio, viewers propose ideas and vote. The streamer reviews the selected idea and resources, then approves that exact input. Changing the selection means reviewing again. Input-round credits show who proposed, who voted and who approved, separately from the game already playing.
+In the Studio, viewers propose ideas and vote. The streamer reviews the selected idea and resources, then approves that exact input. Changing the selection means reviewing again. Input-round credits show the idea authors, supporting vote count and approver, separately from the game already playing.
 
 00:00:58,000–00:01:20,000
-Codex wrote the hackathon code. I built the inherited prototype with Devin CLI before the hackathon; Devin helped with review and ideas during it. You can see the implementation thread and tests here. The platform connects participation, approval, construction and recovery while preserving attribution.
+The chat participates; the streamer keeps the final decision. Credits follow the version actually playing. I built the prototype with Devin CLI before the hackathon. Codex wrote the hackathon code; Devin reviewed and discussed ideas.
 
 00:01:20,000–00:01:50,000
 This is our real Lantern Table trial. I selected its idea; it had zero audience votes. Codex built it in one isolated VM, another VM passed nine protocol checks, and both were destroyed. I approved the exact version as reviewed evidence. Dispatch through testing and cleanup took about sixty-three seconds. This preview is static; the runtime VM comes next.
