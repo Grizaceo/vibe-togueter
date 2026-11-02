@@ -1,139 +1,177 @@
 1
-00:00:00,000 --> 00:00:07,200
-Vibe Arena helps a stream community shape
-games and play together. Some
+00:00:00,000 --> 00:00:03,846
+What if your Twitch chat could invent the next
+game?
 
 2
-00:00:07,200 --> 00:00:15,000
-people open the game. Others stay in
-Twitch chat. The creators remain visible.
+00:00:03,846 --> 00:00:07,692
+Vibe Arena brings their ideas, their votes and
+the people
 
 3
-00:00:15,000 --> 00:00:21,250
-The Studio collects ideas and ballots.
-This recorded trial
+00:00:07,692 --> 00:00:10,000
+behind the game onto the stream.
 
 4
-00:00:21,250 --> 00:00:26,806
-used an owner-selected proposal, with zero
-audience votes.
+00:00:10,000 --> 00:00:15,435
+Here is the live path. Viewers join from Twitch,
+or
 
 5
-00:00:26,806 --> 00:00:33,056
-After exact input approval and fresh guest
-login, the
+00:00:15,435 --> 00:00:20,870
+stay in chat and send commands. In Community
+Grove, browser
 
 6
-00:00:33,056 --> 00:00:40,000
-controller sent Lantern Table to Codex in
-a private VM.
+00:00:20,870 --> 00:00:26,304
+players and chat grow the same garden. The
+credit strip
 
 7
-00:00:40,000 --> 00:00:46,000
-Codex returned source in about forty-eight
-seconds. Another VM ran
+00:00:26,304 --> 00:00:31,739
+keeps the game creator, artist and idea author
+visible. This
 
 8
-00:00:46,000 --> 00:00:52,000
-nine protocol checks, then both guests
-were destroyed. Dispatch through
+00:00:31,739 --> 00:00:35,000
+art is from Kenney's CC0 collection.
 
 9
-00:00:52,000 --> 00:00:58,000
-testing and cleanup took about sixty-three
-seconds. The owner reviewed
+00:00:35,000 --> 00:00:40,349
+In the Studio, viewers propose ideas and vote.
+The streamer
 
 10
-00:00:58,000 --> 00:01:04,600
-that exact version. A later roles revision
-passed fourteen targeted guest
+00:00:40,349 --> 00:00:45,698
+reviews the selected idea and resources, then
+approves that exact
 
 11
-00:01:04,600 --> 00:01:10,000
-checks. These previews are static; human
-gameplay remains unverified.
+00:00:45,698 --> 00:00:51,047
+input. Changing the selection means reviewing
+again. Input-round credits show
 
 12
-00:01:10,000 --> 00:01:15,192
-Game, art and idea credits stay outside
-game-controlled drawing.
+00:00:51,047 --> 00:00:56,395
+who proposed, who voted and who approved,
+separately from the
 
 13
-00:01:15,192 --> 00:01:19,808
-Grove uses curated Kenney CC0 artwork,
-without endorsement.
+00:00:56,395 --> 00:00:58,000
+game already playing.
 
 14
-00:01:19,808 --> 00:01:25,000
-Lantern Table uses code-drawn art and no
-external assets.
+00:00:58,000 --> 00:01:03,000
+Codex wrote the hackathon code. I built the
+inherited prototype
 
 15
-00:01:25,000 --> 00:01:30,500
-While chat votes, the streamer can prepare
-a VM, extend its
+00:01:03,000 --> 00:01:08,000
+with Devin CLI before the hackathon; Devin
+helped with review
 
 16
-00:01:30,500 --> 00:01:35,000
-bounded deadline, or close it. Real
-provider preparation, renewal,
+00:01:08,000 --> 00:01:13,000
+and ideas during it. You can see the
+implementation thread
 
 17
-00:01:35,000 --> 00:01:40,000
-pause, resume and cleanup checks passed
-without a model call.
+00:01:13,000 --> 00:01:18,000
+and tests here. The platform connects
+participation, approval, construction and
 
 18
-00:01:40,000 --> 00:01:45,385
-Grove remains a reviewed playable example.
-Browser actions
+00:01:18,000 --> 00:01:20,000
+recovery while preserving attribution.
 
 19
-00:01:45,385 --> 00:01:51,442
-and Twitch commands grow the same garden.
-Three distinct
+00:01:20,000 --> 00:01:25,085
+This is our real Lantern Table trial. I selected
+its
 
 20
-00:01:51,442 --> 00:01:56,827
-accounts can trigger a weather bonus.
-Moderators can
+00:01:25,085 --> 00:01:30,169
+idea; it had zero audience votes. Codex built it
+in
 
 21
-00:01:56,827 --> 00:02:02,212
-pause chat effects while browser play
-continues. This
+00:01:30,169 --> 00:01:35,254
+one isolated VM, another VM passed nine protocol
+checks, and
 
 22
-00:02:02,212 --> 00:02:08,269
-shot shows a requested fallback, with
-Marble Race last
+00:01:35,254 --> 00:01:40,339
+both were destroyed. I approved the exact
+version as reviewed
 
 23
-00:02:08,269 --> 00:02:15,000
-in the configured order. Two entrants can
-start a race.
+00:01:40,339 --> 00:01:45,424
+evidence. Dispatch through testing and cleanup
+took about sixty-three seconds.
 
 24
-00:02:15,000 --> 00:02:21,286
-The initial prototype was Devin-assisted.
-Codex implemented the later Twitch, studio
+00:01:45,424 --> 00:01:50,000
+This preview is static; the runtime VM comes
+next.
 
 25
-00:02:21,286 --> 00:02:28,714
-and isolation work. The local suite passes
-271 checks. Browser and guest checks
+00:01:50,000 --> 00:01:54,545
+If something fails, the watchdog switches to a
+reviewed fallback.
 
 26
-00:02:28,714 --> 00:02:35,000
-are recorded separately; automated checks
-do not establish human gameplay quality.
+00:01:54,545 --> 00:01:59,091
+A real Twitch moderator can also request it with
+fallback.
 
 27
-00:02:35,000 --> 00:02:40,556
-Next are gameplay validation and a
-separate approved runtime. Creator
+00:01:59,091 --> 00:02:03,636
+Here is that requested recovery, with the reason
+visible and
 
 28
-00:02:40,556 --> 00:02:45,000
-discovery and clips preserving attribution
-remain future work.
+00:02:03,636 --> 00:02:05,000
+players still connected.
+
+29
+00:02:05,000 --> 00:02:10,556
+This is my separate teeworlds-rs game, built
+with Devin and
+
+30
+00:02:10,556 --> 00:02:16,111
+Hermes, outside this submission. The next
+experience is streamer versus
+
+31
+00:02:16,111 --> 00:02:21,667
+chat: players join as tees, while spectators
+send buffs and
+
+32
+00:02:21,667 --> 00:02:25,000
+hazards through an isolated game adapter.
+
+33
+00:02:25,000 --> 00:02:29,878
+Next are isolated runtime VMs and a general
+adapter for
+
+34
+00:02:29,878 --> 00:02:34,756
+verified external games, including community
+submissions with behavior reports. Then
+
+35
+00:02:34,756 --> 00:02:39,634
+live repair with regression checks and exact
+approval, stream statistics,
+
+36
+00:02:39,634 --> 00:02:44,512
+and lasting credits for artists, musicians,
+writers and every creative
+
+37
+00:02:44,512 --> 00:02:45,000
+role.

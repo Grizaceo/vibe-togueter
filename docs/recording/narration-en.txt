@@ -1,26 +1,26 @@
-DRAFT — not a recording or evidence of Twitch/human participation.
-Target 2:45. Retiming to actual English narration and footage, human review and a measured export duration remain required.
+DRAFT narration — target 2:45; measure the actual spoken export.
+Only describe live actions actually captured. The external-game segment is Plan B.
 
-00:00:00,000–00:00:15,000
-Vibe Arena helps a stream community shape games and play together. Some people open the game. Others stay in Twitch chat. The creators remain visible.
+00:00:00,000–00:00:10,000
+What if your Twitch chat could invent the next game? Vibe Arena brings their ideas, their votes and the people behind the game onto the stream.
 
-00:00:15,000–00:00:40,000
-The Studio collects ideas and ballots. This recorded trial used an owner-selected proposal, with zero audience votes. After exact input approval and fresh guest login, the controller sent Lantern Table to Codex in a private VM.
+00:00:10,000–00:00:35,000
+Here is the live path. Viewers join from Twitch, or stay in chat and send commands. In Community Grove, browser players and chat grow the same garden. The credit strip keeps the game creator, artist and idea author visible. This art is from Kenney's CC0 collection.
 
-00:00:40,000–00:01:10,000
-Codex returned source in about forty-eight seconds. Another VM ran nine protocol checks, then both guests were destroyed. Dispatch through testing and cleanup took about sixty-three seconds. The owner reviewed that exact version. A later roles revision passed fourteen targeted guest checks. These previews are static; human gameplay remains unverified.
+00:00:35,000–00:00:58,000
+In the Studio, viewers propose ideas and vote. The streamer reviews the selected idea and resources, then approves that exact input. Changing the selection means reviewing again. Input-round credits show who proposed, who voted and who approved, separately from the game already playing.
 
-00:01:10,000–00:01:25,000
-Game, art and idea credits stay outside game-controlled drawing. Grove uses curated Kenney CC0 artwork, without endorsement. Lantern Table uses code-drawn art and no external assets.
+00:00:58,000–00:01:20,000
+Codex wrote the hackathon code. I built the inherited prototype with Devin CLI before the hackathon; Devin helped with review and ideas during it. You can see the implementation thread and tests here. The platform connects participation, approval, construction and recovery while preserving attribution.
 
-00:01:25,000–00:01:40,000
-While chat votes, the streamer can prepare a VM, extend its bounded deadline, or close it. Real provider preparation, renewal, pause, resume and cleanup checks passed without a model call.
+00:01:20,000–00:01:50,000
+This is our real Lantern Table trial. I selected its idea; it had zero audience votes. Codex built it in one isolated VM, another VM passed nine protocol checks, and both were destroyed. I approved the exact version as reviewed evidence. Dispatch through testing and cleanup took about sixty-three seconds. This preview is static; the runtime VM comes next.
 
-00:01:40,000–00:02:15,000
-Grove remains a reviewed playable example. Browser actions and Twitch commands grow the same garden. Three distinct accounts can trigger a weather bonus. Moderators can pause chat effects while browser play continues. This shot shows a requested fallback, with Marble Race last in the configured order. Two entrants can start a race.
+00:01:50,000–00:02:05,000
+If something fails, the watchdog switches to a reviewed fallback. A real Twitch moderator can also request it with fallback. Here is that requested recovery, with the reason visible and players still connected.
 
-00:02:15,000–00:02:35,000
-The initial prototype was Devin-assisted. Codex implemented the later Twitch, studio and isolation work. The local suite passes 271 checks. Browser and guest checks are recorded separately; automated checks do not establish human gameplay quality.
+00:02:05,000–00:02:25,000
+This is my separate teeworlds-rs game, built with Devin and Hermes, outside this submission. The next experience is streamer versus chat: players join as tees, while spectators send buffs and hazards through an isolated game adapter.
 
-00:02:35,000–00:02:45,000
-Next are gameplay validation and a separate approved runtime. Creator discovery and clips preserving attribution remain future work.
+00:02:25,000–00:02:45,000
+Next are isolated runtime VMs and a general adapter for verified external games, including community submissions with behavior reports. Then live repair with regression checks and exact approval, stream statistics, and lasting credits for artists, musicians, writers and every creative role.
