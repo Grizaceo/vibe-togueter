@@ -1,9 +1,12 @@
 {
   "kind": "current-increment-boundary-audit",
-  "sourceCommit": "30153159e9f56161ba5ed726ece9dbaac2cdeb0a",
+  "at": "2026-11-02T07:51:36.837883+00:00",
+  "sourceCommit": "5883a5b9b9d1857db787a1040a7dab74c4b931b3",
   "cleanFingerprintsMatch": true,
   "workerAndPrewarmDefaultOff": true,
-  "npmChecks": 270,
+  "npmChecks": 271,
+  "focused": 161,
+  "integration": 110,
   "localUI": 26,
   "normalLauncherBrowser": 14,
   "launcher": 10,
@@ -11,9 +14,15 @@
   "realLanternProtocolChecks": 9,
   "realLanternOwnerApproval": true,
   "realLanternGuestsDestroyed": true,
+  "rolesGuestChecks": 14,
+  "rolesExactOwnerApproval": true,
+  "warmRealControlStages": 5,
+  "warmVerifiedSeconds": 46.249,
+  "projectGuestsDestroyed": 14,
   "liveGeneratedRuntime": false,
   "candidateExecutedOnHost": false,
-  "knownLanternGameplayIssues": 2,
+  "originalLanternKnownGameplayIssues": 2,
+  "rolesNaturalFullGameProved": false,
   "checkedDeliveryLinks": [
     "README.md",
     "SUBMISSION.md",
@@ -23,13 +32,22 @@
     "docs/platform/NEXT_INCREMENT.md",
     "docs/platform/STUDIO_WORKER.md",
     "docs/platform/BUILDER_PREWARM.md",
-    "docs/platform/LANTERN_TABLE_REVIEW.md"
+    "docs/platform/LANTERN_TABLE_REVIEW.md",
+    "docs/platform/LANTERN_ROLES_REVIEW.md"
   ],
-  "remaining": [
-    "C inert role draft prepared and text-reviewed; exact inputs and one bounded test-VM allocation pending in ROTATING_ROLES_PROPOSAL.md",
-    "Actual provider warm-session idle/renewal verification",
-    "Human Twitch/mod/three-account and OBS rehearsal",
-    "Owner hosting/disclosure/video/YouTube/private push/judge access/Devpost"
+  "validLocalLinks": 145,
+  "remainingAuthorizedTechnicalWork": [],
+  "ownerActions": [
+    "Durable free judging access and hosting/recording disclosure",
+    "Human Twitch/mod/three-account and OBS rehearsal using prepared checklist",
+    "English recording/export, YouTube upload",
+    "Private push, testing@devpost.com access and Devpost form"
   ],
-  "goalComplete": false
+  "limits": [
+    "Targeted guest checks do not certify human gameplay or natural five-round balance.",
+    "No settled provider invoice or credit-to-dollar conversion established.",
+    "No generated runtime, external publication, push, upload or submission performed."
+  ],
+  "assignedTechnicalScopeComplete": true,
+  "goalComplete": true
 }

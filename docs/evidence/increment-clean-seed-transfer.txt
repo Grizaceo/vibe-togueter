@@ -1,11 +1,11 @@
-Checkout commit: 30153159e9f56161ba5ed726ece9dbaac2cdeb0a
+Checkout commit: 5883a5b9b9d1857db787a1040a7dab74c4b931b3
 Command: ["node", "--test", "test/seed-transfer.mjs"]
-✔ exact approved source, historical report and PNGs package as inert data (10.2346ms)
-✔ transfer corruption and missing files fail verification (9.235369ms)
-✔ manifest rehash cannot replace approved code, resources or report (12.693463ms)
-✔ extra secret-like files and linked entries are rejected (6.435466ms)
-✔ historical frame cannot be rewritten with a matching transfer manifest (4.102388ms)
-✔ trusted external manifest digest pins SDK and harness transfer bytes (4.454882ms)
+✔ exact approved source, historical report and PNGs package as inert data (8.659159ms)
+✔ transfer corruption and missing files fail verification (8.154201ms)
+✔ manifest rehash cannot replace approved code, resources or report (12.236399ms)
+✔ extra secret-like files and linked entries are rejected (6.055517ms)
+✔ historical frame cannot be rewritten with a matching transfer manifest (3.589114ms)
+✔ trusted external manifest digest pins SDK and harness transfer bytes (5.245977ms)
 ℹ tests 6
 ℹ suites 0
 ℹ pass 6
@@ -13,4 +13,4 @@ Command: ["node", "--test", "test/seed-transfer.mjs"]
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 127.358437
+ℹ duration_ms 116.687372
