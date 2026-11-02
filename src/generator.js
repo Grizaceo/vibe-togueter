@@ -1,9 +1,6 @@
-// Generator: turns an idea + the SDK contract into a game.js via an LLM.
-// Providers are OpenAI-compatible chat endpoints:
-//   mode 'local' -> http://<dgx-spark>:11434/v1  (Ollama / vLLM / llama.cpp server)
-//   mode 'cloud' -> api.deepseek.com / openrouter.ai / any compatible API
-// Cost per generation is metered from token usage against provider pricing,
-// or 0 for local (hardware cost is the streamer's, amortized).
+// Legacy trusted-local generator for OpenAI-compatible chat endpoints.
+// The default cloud-vm build policy uses Studio instead of this adapter.
+// Usage-based amounts are demo estimates, not settled provider bills.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -13,7 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SDK_SPEC = fs.readFileSync(path.join(__dirname, "sdk-prompt.md"), "utf8");
 
 const PRICING = {
-  // USD per 1M tokens [input, output] — edit as prices move
+  // Historical USD/1M-token estimates [input, output], not live rates or spending caps.
   "deepseek-chat": [0.27, 1.1],
   "deepseek-reasoner": [0.55, 2.19],
   "google/gemini-2.5-flash": [0.3, 2.5],

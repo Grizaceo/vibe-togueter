@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-02T09:07:58.182302+00:00",
+  "command": "npm test",
+  "exit": 0,
+  "focused": 161,
+  "integration": 110,
+  "failed": 0,
+  "temporaryCheckoutRemoved": true,
+  "log": "reload-cleanup-tests.txt",
+  "sources": {
+    "src/server.js": "bd8fb051518641bd8df768a55d78cbdd46765f13b1ea951579494b1149d18854",
+    "src/treasury.js": "0d497c40b9c319e66c793f62d06db86ddb39b8b0e91ea80e97cb3789199043e7",
+    "src/generator.js": "037eb7e81b6e7689ffb3f3ef4c85d6923cd31f2e249f9e8815f4200ea47db4a6"
+  },
+  "scope": "Combine three identical reload conditions while retaining action order. Clarify legacy simulated accounting comments; no pricing values or behavior changed."
+}

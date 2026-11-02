@@ -184,7 +184,7 @@ async function activateFallback(reason) {
 const host = new GameHost({
   gameDir: GAME_DIR,
   onEvent: (kind, detail) => {
-    if (kind === "game-reloaded")
+    if (kind === "game-reloaded") {
       for (const player of clients.values())
         if (player.kind === "player")
           host.safeCall("onJoin", {
@@ -192,12 +192,10 @@ const host = new GameHost({
             name: player.name,
             role: player.role,
           });
-    if (kind === "game-reloaded") {
       crowdBursts.reset();
       refreshPublication();
-    }
-    if (kind === "game-reloaded")
       feed("system", `Game reloaded: ${host.game?.name}`);
+    }
     if (kind === "game-error") {
       feed("system", `Game stopped: ${detail}`);
       requestFallback(detail);

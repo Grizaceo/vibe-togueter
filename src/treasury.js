@@ -1,6 +1,5 @@
-// Treasury: el fondo alimentado por subs/donaciones que paga las generaciones.
-// Ledger append-only en treasury.jsonl: {at, kind, amountUsd, balance, meta}
-// kinds: 'deposit' (sub/bits/donation/manual), 'spend' (generación), 'adjust'
+// Simulated build-credit ledger; entries do not settle payments or provider bills.
+// Append-only records: {at, kind, amountUsd, balance, meta}.
 
 import fs from "node:fs";
 
