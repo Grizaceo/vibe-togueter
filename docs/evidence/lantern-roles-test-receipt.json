@@ -1,0 +1,32 @@
+{
+  "kind": "owner-approved-one-guest-role-verification",
+  "at": "2026-11-02T06:57:33.799Z",
+  "finishedAt": "2026-11-02T06:57:47.564Z",
+  "approvalId": "owner-role-test-20261102",
+  "vmBudgetMinor": 5,
+  "sourceSha256": "449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075",
+  "jobId": "6d438cee-ffc9-40ab-b384-ded19cc23af5",
+  "ticketId": "27b0685d-58b4-4cb2-b602-91334b366a4e",
+  "artifactHash": "2ace765e1afe180f79c9bbee2d79382c8d5ac56b769d2f49de16ceffffd1255e",
+  "reportHash": "4887b956295ead670534337770a059f020f749ba5a81086c69b5802c14967797",
+  "roundId": "1ebfb955-b508-4602-a10d-936192d35c8f",
+  "testVmId": "sb-01m6dgs6pxn932qp4gtw0rrtg6",
+  "passed": true,
+  "cleanup": {
+    "confirmed": true,
+    "testVmId": "sb-01m6dgs6pxn932qp4gtw0rrtg6",
+    "testDestroyed": true
+  },
+  "failure": null,
+  "modelUsed": false,
+  "openAILoginUsed": false,
+  "candidateExecutedOnHost": false,
+  "ownerExactArtifactApproval": "confirmed in lantern-roles-reviewed-publication.json",
+  "limits": [
+    "Inert controller-authored revision of the earlier VM-built game.",
+    "Controlled guest fixtures, not human/Twitch gameplay or a natural five-round playthrough.",
+    "Original approved game and its publication remain unchanged."
+  ],
+  "operatorControllerText": "lantern-roles-operator-controller.mjs.txt",
+  "operatorControllerSha256": "2d4ecedd1b5738834c6c26fe919d6a2321f00cc116b2021a094958038855a36a"
+}

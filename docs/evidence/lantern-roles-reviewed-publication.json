@@ -1,0 +1,171 @@
+{
+  "kind": "reviewed-controller-role-revision-evidence",
+  "at": "2026-11-02T07:06:43.918Z",
+  "codeSha256": "449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075",
+  "artifactHash": "2ace765e1afe180f79c9bbee2d79382c8d5ac56b769d2f49de16ceffffd1255e",
+  "reportHash": "4887b956295ead670534337770a059f020f749ba5a81086c69b5802c14967797",
+  "ticketId": "27b0685d-58b4-4cb2-b602-91334b366a4e",
+  "roundId": "1ebfb955-b508-4602-a10d-936192d35c8f",
+  "parentApprovedSourceSha256": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+  "provenance": "Current Codex authored an inert text revision of the VM-built parent; this revision executed only in a separate test guest. No additional coding-model call.",
+  "contributors": {
+    "gameAuthors": [
+      {
+        "name": "Cristóbal Muñoz · Codex-assisted"
+      }
+    ],
+    "ideaAuthors": [
+      {
+        "name": "Cristóbal Muñoz"
+      }
+    ],
+    "artNote": "Code-drawn art; no external image assets selected.",
+    "communityCredit": {
+      "roundId": "1ebfb955-b508-4602-a10d-936192d35c8f",
+      "approvedInputHash": "48808a4b8936526d9db63ab769a08660148046c203027e5772b9c0ea341ef870",
+      "ideaAuthors": [
+        {
+          "name": "Cristóbal Muñoz"
+        }
+      ],
+      "voterCount": 0,
+      "approvedBy": {
+        "name": "Cristóbal Muñoz",
+        "source": "owner-chat-confirmation",
+        "authority": "streamer"
+      }
+    }
+  },
+  "contributorCreditsSha256": "b3c0b5d8ffad7ab0b8d9896786f4194fba9f17b7851563149407d30ccdec2cff",
+  "manifest": {
+    "version": 1,
+    "assets": [],
+    "creditPolicy": {
+      "inGame": true,
+      "clickableCreatorLinks": true,
+      "retainOnPlatformRemix": true
+    },
+    "fingerprints": "Builder must verify downloaded bytes against expectedContentSha256 before use.",
+    "sha256": "c5eb93e7c74c4807caa325149003d4dec531afdc23ef1a952dabd2755955e634"
+  },
+  "artifactApproval": {
+    "artifactHash": "2ace765e1afe180f79c9bbee2d79382c8d5ac56b769d2f49de16ceffffd1255e",
+    "reportHash": "4887b956295ead670534337770a059f020f749ba5a81086c69b5802c14967797",
+    "rightsAttested": true,
+    "at": 1793603203914,
+    "by": {
+      "name": "Cristóbal Muñoz",
+      "source": "owner-chat-confirmation"
+    },
+    "contributors": {
+      "gameAuthors": [
+        {
+          "name": "Cristóbal Muñoz · Codex-assisted"
+        }
+      ],
+      "ideaAuthors": [
+        {
+          "name": "Cristóbal Muñoz"
+        }
+      ],
+      "artNote": "Code-drawn art; no external image assets selected.",
+      "communityCredit": {
+        "roundId": "1ebfb955-b508-4602-a10d-936192d35c8f",
+        "approvedInputHash": "48808a4b8936526d9db63ab769a08660148046c203027e5772b9c0ea341ef870",
+        "ideaAuthors": [
+          {
+            "name": "Cristóbal Muñoz"
+          }
+        ],
+        "voterCount": 0,
+        "approvedBy": {
+          "name": "Cristóbal Muñoz",
+          "source": "owner-chat-confirmation",
+          "authority": "streamer"
+        }
+      }
+    },
+    "contributorCreditsSha256": "b3c0b5d8ffad7ab0b8d9896786f4194fba9f17b7851563149407d30ccdec2cff"
+  },
+  "report": {
+    "artifactHash": "2ace765e1afe180f79c9bbee2d79382c8d5ac56b769d2f49de16ceffffd1255e",
+    "testNonce": "4bb475b16043ad617005d14c5b473a3824d4a92ada3a6180",
+    "testVmId": "sb-01m6dgs6pxn932qp4gtw0rrtg6",
+    "isolatedVmAttested": true,
+    "evidenceSha256": "928410a1388ec9f597d9ea211ebcaf51fa36f1709a606df2b6a754ae01726fd6",
+    "checks": [
+      {
+        "name": "Exact role-draft source bytes",
+        "passed": true
+      },
+      {
+        "name": "Role draft loads under bounded SDK callbacks",
+        "passed": true
+      },
+      {
+        "name": "Three empty role seats perform bounded bot actions",
+        "passed": true
+      },
+      {
+        "name": "Three distinct people get three distinct role seats",
+        "passed": true
+      },
+      {
+        "name": "Role commands enforce assignment and account cooldowns",
+        "passed": true
+      },
+      {
+        "name": "Human roles rotate after a completed round",
+        "passed": true
+      },
+      {
+        "name": "A one-person chat leaves two bot seats",
+        "passed": true
+      },
+      {
+        "name": "Explicit opt-out returns the seat to a bot",
+        "passed": true
+      },
+      {
+        "name": "Inactive role seats return to bots after sixty simulated seconds",
+        "passed": true
+      },
+      {
+        "name": "Player admission and reset remain inside the finite board",
+        "passed": true
+      },
+      {
+        "name": "A defeated enemy cannot deal its next-tick hit",
+        "passed": true
+      },
+      {
+        "name": "Join-leave chatter cannot indefinitely delay the bot clocks",
+        "passed": true
+      },
+      {
+        "name": "Roles players collections and frame stay bounded",
+        "passed": true
+      },
+      {
+        "name": "Final static frame labels role holders without external sprites",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "verification": "operator-attested"
+  },
+  "cleanup": {
+    "confirmed": true,
+    "testVmId": "sb-01m6dgs6pxn932qp4gtw0rrtg6",
+    "testDestroyed": true
+  },
+  "modelInvocationForThisRevision": false,
+  "openAILoginForThisRevision": false,
+  "candidateExecutedOnHost": false,
+  "liveRuntime": false,
+  "limits": [
+    "Fourteen controlled guest checks passed; not a natural full five-round playthrough or human/Twitch playtest.",
+    "Cosmetic die roll; no runtime or external publication deployed.",
+    "Parent version remains unchanged and retains its documented gameplay findings."
+  ]
+}

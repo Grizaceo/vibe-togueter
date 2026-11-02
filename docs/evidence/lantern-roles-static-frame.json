@@ -1,0 +1,233 @@
+{
+  "report": {
+    "passed": true,
+    "codeSha256": "449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075",
+    "frame": {
+      "bg": "#171720",
+      "world": {
+        "w": 1280,
+        "h": 720
+      },
+      "layers": [
+        {
+          "t": "rect",
+          "x": 0,
+          "y": 0,
+          "w": 1280,
+          "h": 720,
+          "color": "#171720"
+        },
+        {
+          "t": "rect",
+          "x": 32,
+          "y": 95,
+          "w": 1216,
+          "h": 520,
+          "color": "#5c4035"
+        },
+        {
+          "t": "rect",
+          "x": 46,
+          "y": 109,
+          "w": 1188,
+          "h": 492,
+          "color": "#293d38"
+        },
+        {
+          "t": "circle",
+          "x": 640,
+          "y": 355,
+          "r": 108,
+          "color": "#344b40"
+        },
+        {
+          "t": "circle",
+          "x": 640,
+          "y": 355,
+          "r": 68,
+          "color": "#4c5c42"
+        },
+        {
+          "t": "circle",
+          "x": 640,
+          "y": 355,
+          "r": 24,
+          "color": "#e0ad56"
+        },
+        {
+          "t": "circle",
+          "x": 640,
+          "y": 355,
+          "r": 12,
+          "color": "#fff0ae"
+        },
+        {
+          "t": "circle",
+          "x": 132.31226516519257,
+          "y": 425.0326405874428,
+          "r": 18,
+          "color": "#29283a"
+        },
+        {
+          "t": "circle",
+          "x": 126.31226516519257,
+          "y": 422.0326405874428,
+          "r": 3,
+          "color": "#f47d88"
+        },
+        {
+          "t": "circle",
+          "x": 138.31226516519257,
+          "y": 422.0326405874428,
+          "r": 3,
+          "color": "#f47d88"
+        },
+        {
+          "t": "circle",
+          "x": 479.5624684481039,
+          "y": 149.08910558625826,
+          "r": 18,
+          "color": "#29283a"
+        },
+        {
+          "t": "circle",
+          "x": 473.5624684481039,
+          "y": 146.08910558625826,
+          "r": 3,
+          "color": "#f47d88"
+        },
+        {
+          "t": "circle",
+          "x": 485.5624684481039,
+          "y": 146.08910558625826,
+          "r": 3,
+          "color": "#f47d88"
+        },
+        {
+          "t": "circle",
+          "x": 600,
+          "y": 345,
+          "r": 19,
+          "color": "#ffcf70"
+        },
+        {
+          "t": "circle",
+          "x": 600,
+          "y": 341,
+          "r": 7,
+          "color": "#fff3d8"
+        },
+        {
+          "t": "text",
+          "x": 600,
+          "y": 316,
+          "text": "Hero 1 10/10",
+          "size": 13,
+          "color": "#fff4db"
+        }
+      ],
+      "hud": [
+        {
+          "t": "text",
+          "x": 40,
+          "y": 42,
+          "text": "LANTERN TABLE",
+          "size": 28,
+          "color": "#ffdf9a",
+          "align": "left"
+        },
+        {
+          "t": "text",
+          "x": 40,
+          "y": 71,
+          "text": "ROUND 1 / 5   \u2022   SHADOWS 3",
+          "size": 16,
+          "color": "#e8e1cc",
+          "align": "left"
+        },
+        {
+          "t": "text",
+          "x": 1240,
+          "y": 43,
+          "text": "Move: WASD / arrows   \u2022   Attack: Space / click",
+          "size": 16,
+          "color": "#e8e1cc",
+          "align": "right"
+        },
+        {
+          "t": "text",
+          "x": 1240,
+          "y": 70,
+          "text": "Chat: !role joins \u00b7 !role off leaves \u00b7 roles rotate each round",
+          "size": 16,
+          "color": "#a9d8c4",
+          "align": "right"
+        },
+        {
+          "t": "text",
+          "x": 42,
+          "y": 624,
+          "text": "DIE: Alice   |   MONSTER: Bob   |   HEALER: Cara",
+          "size": 13,
+          "color": "#a9d8c4",
+          "align": "left"
+        },
+        {
+          "t": "text",
+          "x": 42,
+          "y": 642,
+          "text": "RECENT ACTIONS",
+          "size": 15,
+          "color": "#ffdf9a",
+          "align": "left"
+        },
+        {
+          "t": "text",
+          "x": 42,
+          "y": 662,
+          "text": "Cara: healer role; use !heal.",
+          "size": 14,
+          "color": "#ded8c8",
+          "align": "left"
+        },
+        {
+          "t": "text",
+          "x": 42,
+          "y": 680,
+          "text": "Bob: monster role; use !enemy.",
+          "size": 14,
+          "color": "#ded8c8",
+          "align": "left"
+        },
+        {
+          "t": "text",
+          "x": 42,
+          "y": 698,
+          "text": "Alice: die role; use !roll.",
+          "size": 14,
+          "color": "#ded8c8",
+          "align": "left"
+        },
+        {
+          "t": "text",
+          "x": 652,
+          "y": 662,
+          "text": "Hero 1 joins the table.",
+          "size": 14,
+          "color": "#ded8c8",
+          "align": "left"
+        },
+        {
+          "t": "text",
+          "x": 652,
+          "y": 680,
+          "text": "The lantern is lit. Clear five rounds together.",
+          "size": 14,
+          "color": "#ded8c8",
+          "align": "left"
+        }
+      ]
+    }
+  },
+  "scope": "Static frame produced in the separate test VM; role holders are synthetic test participants."
+}

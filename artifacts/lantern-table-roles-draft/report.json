@@ -1,0 +1,67 @@
+{
+  "artifactHash": "2ace765e1afe180f79c9bbee2d79382c8d5ac56b769d2f49de16ceffffd1255e",
+  "testNonce": "4bb475b16043ad617005d14c5b473a3824d4a92ada3a6180",
+  "testVmId": "sb-01m6dgs6pxn932qp4gtw0rrtg6",
+  "isolatedVmAttested": true,
+  "evidenceSha256": "928410a1388ec9f597d9ea211ebcaf51fa36f1709a606df2b6a754ae01726fd6",
+  "checks": [
+    {
+      "name": "Exact role-draft source bytes",
+      "passed": true
+    },
+    {
+      "name": "Role draft loads under bounded SDK callbacks",
+      "passed": true
+    },
+    {
+      "name": "Three empty role seats perform bounded bot actions",
+      "passed": true
+    },
+    {
+      "name": "Three distinct people get three distinct role seats",
+      "passed": true
+    },
+    {
+      "name": "Role commands enforce assignment and account cooldowns",
+      "passed": true
+    },
+    {
+      "name": "Human roles rotate after a completed round",
+      "passed": true
+    },
+    {
+      "name": "A one-person chat leaves two bot seats",
+      "passed": true
+    },
+    {
+      "name": "Explicit opt-out returns the seat to a bot",
+      "passed": true
+    },
+    {
+      "name": "Inactive role seats return to bots after sixty simulated seconds",
+      "passed": true
+    },
+    {
+      "name": "Player admission and reset remain inside the finite board",
+      "passed": true
+    },
+    {
+      "name": "A defeated enemy cannot deal its next-tick hit",
+      "passed": true
+    },
+    {
+      "name": "Join-leave chatter cannot indefinitely delay the bot clocks",
+      "passed": true
+    },
+    {
+      "name": "Roles players collections and frame stay bounded",
+      "passed": true
+    },
+    {
+      "name": "Final static frame labels role holders without external sprites",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "verification": "operator-attested"
+}
