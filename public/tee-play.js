@@ -8,6 +8,8 @@ try{
   const url=new URL(game.baseURL);
   const local=game.localPrototype===true&&['127.0.0.1','localhost','[::1]'].includes(location.hostname)&&url.protocol==='http:'&&url.hostname==='127.0.0.1';
   if((url.protocol!=='https:'&&!local)||url.username||url.password||url.search||url.hash||url.pathname!=='/')throw Error('Invalid game endpoint.');
+  if(game.playPath!==undefined&&game.playPath!=='/game')throw Error('Unknown game entry path.');
+  if(game.playPath)url.pathname=game.playPath;
   url.hash=encodeURIComponent(name.slice(0,25));
   document.querySelector('#boundary').textContent=local
     ?'Verified local integration prototype. VM deployment and external access testing pending.'
