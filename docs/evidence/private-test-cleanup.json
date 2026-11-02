@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-02T08:48:28.783446+00:00",
+  "kind": "private-test-runner-cleanup",
+  "focused": 161,
+  "integration": 110,
+  "failed": 0,
+  "temporaryCheckoutRemoved": true,
+  "log": "private-test-cleanup-tests.txt",
+  "runnerSha256": "674457cc3944a4b8f1126d8c795b0870a7aa79e1d916f318f168d4012d3e2bdc",
+  "scope": "Existing suite uses an explicit loopback controller, waits for owned child processes to stop and removes its temporary tree, including its generated test-only key."
+}

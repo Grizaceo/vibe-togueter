@@ -49,6 +49,8 @@ const server = spawn(
   [
     "--experimental-vm-modules",
     "src/server.js",
+    "--host",
+    "127.0.0.1",
     "--port",
     String(port),
     "--game-dir",
