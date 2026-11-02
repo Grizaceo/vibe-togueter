@@ -2,6 +2,8 @@
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from 'node:http';
+import {StudioBuilds} from './studio-builds.js';
+import {CreateOSStudioWorker} from './createos-studio-worker.js';
 import {ApprovalDelegation,roundApprovalActor} from './approval-delegation.js';
 import {ChatPredictions} from './chat-predictions.js';
 import {CrowdBursts} from './crowd-bursts.js';
@@ -152,6 +154,7 @@ const executionPolicy=buildPolicy(CONFIG.build);
 const ideaRounds=new IdeaRounds(path.join(ROOT,'runtime','idea-rounds.json'),{settings:CONFIG.community?.rounds||{}});
 ideaRounds.recoverInterrupted();
 const buildQuarantine=new BuildQuarantine(path.join(ROOT,'runtime','build-quarantine.json'));
+const studioBuilds=new StudioBuilds(path.join(ROOT,'runtime','studio-builds.json'),{enabled:executionPolicy.mode==='cloud-vm'&&CONFIG.build?.studioWorker?.enabled===true,adapter:new CreateOSStudioWorker(ROOT,CONFIG.build?.studioWorker||{}),rounds:ideaRounds,quarantine:buildQuarantine,evidenceDir:path.join(ROOT,'docs','evidence'),onChange:job=>{if(job)feed('system','Isolated build: '+job.phase+'. '+job.message);}});
 const creatorAssets=new CreatorAssets(path.join(ROOT,'runtime','creator-assets.json'));
 const publicationSnapshot=new GameCreditsSnapshot({registry:creatorAssets,root:ROOT});
 function clientCredits(){return {...publicationSnapshot.get(),showCommunityCredit:CONFIG.features?.communityCredit===true};}
@@ -164,6 +167,8 @@ const remoteGames=new RemoteGames(CONFIG.remoteGames,path.join(ROOT,'runtime','r
 const teeBridge=new TeeChatBridge();
 let roundStorageHealthy=true;
 function tickRounds(){try{ideaRounds.tick();roundStorageHealthy=true;return true;}catch{if(roundStorageHealthy)console.error('Round storage unavailable; pending decisions are retained.');roundStorageHealthy=false;return false;}}
+
+function requireNoPendingArtifact(){studioBuilds.assertRoundCanAdvance();}
 
 function readIdeas() {
   if (!fs.existsSync(IDEAS_FILE)) return [];
@@ -262,7 +267,7 @@ function handleChat({ user, text, source, messageId, participantId, isModerator=
         ideaRounds.vote(actor,Number(args[0]),messageId);feed('system',`${user}: ballot updated.`);
       }else{
         const action=args[0]||'status';
-        if(action==='open')ideaRounds.open(actor);
+        if(action==='open'){requireNoPendingArtifact();ideaRounds.open(actor);}
         else if(action==='vote')ideaRounds.startVoting(actor);
         else if(action==='close')ideaRounds.finishVoting(actor);
         else if(action==='choose')ideaRounds.select(actor,args.slice(1).map(Number));
@@ -346,7 +351,7 @@ function streamActivity(){
   activityRound=r?{credit:CONFIG.features?.communityCredit===true?r.credit:null,phase:r.phase,ideas:r.ideas.length,voters:r.voters,voteEndsAt:r.voteEndsAt,
    highlights:r.ideas.slice().sort((a,b)=>b.votes-a.votes||a.id-b.id).slice(0,3).map(i=>({id:i.id,text:i.text.slice(0,100),author:i.author.slice(0,40),votes:i.votes}))}:null;
  }
- return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked,prediction:predictions.public(),delegation:approvalDelegation.public(),crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
+ return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:studioBuilds.public()?'Isolated build · '+studioBuilds.public().phase+' · no live runtime':studioBuilds.status().workerConnected?'Isolated worker ready for approved inputs':'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked,prediction:predictions.public(),delegation:approvalDelegation.public(),crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
 }
 
 // ---------- broadcast loop (view @ 10Hz; slow recipients skip obsolete frames) ----------
@@ -376,7 +381,7 @@ if(fs.existsSync(deliveryFile))for(const line of fs.readFileSync(deliveryFile,'u
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
-  if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({features:{communityCredit:CONFIG.features?.communityCredit===true},round:ideaRounds.public(),delegation:approvalDelegation.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,workerConnected:false}}));}
+  if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({features:{communityCredit:CONFIG.features?.communityCredit===true},round:ideaRounds.public(),delegation:approvalDelegation.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,...studioBuilds.status()}}));}
   let bodyBytes=0;req.on('data',chunk=>{bodyBytes+=chunk.length;if(bodyBytes>262144){res.writeHead(413);res.end('request too large');req.destroy();}});
   if(url.pathname==='/community/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({assets:creatorAssets.catalog(),policy:{defaultTier:'free',paidCheckoutEnabled:false,platformCommission:null,creditPolicy:'Creator links stay in official game credits.'}}));}
   if(url.pathname==='/community/games'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({...remoteGames.catalog(),teeBridge:teeBridge.status()}));}
@@ -396,6 +401,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/studio-builds'&&['GET','POST'].includes(req.method)){
+      if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
+      try{let result;if(req.method==='GET')result=studioBuilds.status();else{const data=JSON.parse(await readBody()||'{}');if(data.action==='check')result=await studioBuilds.check();else if(data.action==='dispatch'){if(!tickRounds())throw Error('Round storage unavailable');result=await studioBuilds.dispatch({roundId:data.roundId,approvedInputHash:data.approvedInputHash});}else if(data.action==='cancel')result=await studioBuilds.cancel(data.id);else if(data.action==='reconcile')result=await studioBuilds.reconcile(data.id);else if(data.action==='inspect')result=studioBuilds.inspect(data.id);else if(data.action==='publish-review')result=studioBuilds.publish(data.id,data,{owner:true,name:TWITCH_CHANNEL||'local streamer',source:'streamer-ui'});else throw Error('Unknown studio build action.');}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400,{'Content-Type':'application/json'});return res.end(JSON.stringify({error:error.message}));}
+    }
     if(url.pathname==='/admin/approval-delegate'&&['GET','POST'].includes(req.method)){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
       try{const actor={owner:true,source:'streamer-ui',name:TWITCH_CHANNEL||'local streamer'};if(req.method==='POST'){const body=JSON.parse(await readBody()||'{}');if(body.action==='revoke')approvalDelegation.revoke(actor);else if(body.action==='grant')approvalDelegation.set(actor,body.name,body.seconds);else throw Error('Unknown delegation action.');}res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({enabled:approvalDelegation.enabled,grant:approvalDelegation.public()}));}catch(error){res.writeHead(400);return res.end(error.message);}
@@ -466,7 +475,7 @@ const server = http.createServer(async (req, res) => {
         const data=JSON.parse(await readBody()||'{}');
         if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
         const actor={name:TWITCH_CHANNEL||'local streamer',source:'streamer-ui',owner:true};
-        if(data.action==='open')ideaRounds.open(actor,data.settings||{});
+        if(data.action==='open'){requireNoPendingArtifact();ideaRounds.open(actor,data.settings||{});}
         else if(data.action==='vote')ideaRounds.startVoting(actor);
         else if(data.action==='close')ideaRounds.finishVoting(actor);
         else if(data.action==='select')ideaRounds.select(actor,data.ids,data.reason);
@@ -701,5 +710,6 @@ server.listen(PORT, LISTEN_HOST, () => {
   if (KICK_CHANNEL) console.log(`[vibe-arena] kick webhook -> POST /webhook/kick`);
 });
 
-const shutdown=()=>{resourceWatcher.close();clearTimeout(resourceDebounce);teeBridge.stop();twitch?.close();host.stop();localChat.close();server.close();process.exit(0);};
+let shuttingDown=false;
+const shutdown=async()=>{if(shuttingDown)return;shuttingDown=true;resourceWatcher.close();clearTimeout(resourceDebounce);teeBridge.stop();twitch?.close();host.stop();localChat.close();server.close();if(studioBuilds.running){const running=studioBuilds.running;try{await studioBuilds.cancel(running.id);let timer;try{await Promise.race([running.promise,new Promise(resolve=>{timer=setTimeout(resolve,45000);})]);}finally{clearTimeout(timer);}}catch{}if(studioBuilds.running)console.error('Managed guest cleanup still requires reconciliation; independent lease timers remain.');}process.exit(0);};
 process.on('SIGINT',shutdown);process.on('SIGTERM',shutdown);

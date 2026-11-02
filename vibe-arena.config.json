@@ -33,7 +33,12 @@
   },
   "build": {
     "execution": "cloud-vm",
-    "agentProfile": "owner-default"
+    "agentProfile": "owner-default",
+    "studioWorker": {
+      "enabled": false,
+      "approvalId": null,
+      "vmBudgetMinor": 0
+    }
   },
   "community": {
     "rounds": {

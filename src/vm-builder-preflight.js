@@ -44,6 +44,7 @@ export class VMBuilderPreflight {
   }
   async release() {
     if(!this.state||this.state.phase==='released')return this.state;
+    if(this.state.id===null&&this.state.creationRequested===false){this.state.phase='released';this.state.releasedAt=Date.now();this.state.providerTerminalStatus='not-created';this.save();return structuredClone(this.state);}
     this.state.phase='cleanup-required';try{this.save();}catch{}
     // Exact fresh ID or unique random name only. Never touch existing game VMs.
     let vm;
@@ -61,17 +62,19 @@ export class VMBuilderPreflight {
     this.state.phase='released';this.state.releasedAt=Date.now();this.state.providerTerminalStatus=ended.status;try{this.save();}catch{this.state.phase='cleanup-required';throw Error('VM destroyed but journal persistence needs reconciliation.');}
     return structuredClone(this.state);
   }
-  async preflight({signal,retainForLogin=false}={}) {
+  async preflight({signal,retainForLogin=false,beforeCreate}={}) {
     if(this.state&&this.state.phase!=='released')throw Error('Unreconciled VM probe exists; recover it before creating another.');
     signal?.throwIfAborted();
     // Inventory is read-only. No existing VM is reused as a builder.
     const inventory=JSON.parse(await this.cli(['sandbox','list','--limit','100']));
     if(!Array.isArray(inventory))throw Error('Invalid provider inventory.');
     signal?.throwIfAborted();
-    this.state={version:1,name:'va-build-'+crypto.randomBytes(6).toString('hex'),id:null,requestedAt:Date.now(),phase:'creating',profile:TRIAL_PROFILE,existingIds:inventory.map(vm=>vm.id),result:null};this.save();
+    this.state={version:1,name:'va-build-'+crypto.randomBytes(6).toString('hex'),id:null,requestedAt:Date.now(),phase:'creating',creationRequested:false,profile:TRIAL_PROFILE,existingIds:inventory.map(vm=>vm.id),result:null};this.save();
     let failure;let fullyPrepared=false;
     try {
       signal?.throwIfAborted();
+      if(beforeCreate)await beforeCreate(structuredClone(this.state));
+      signal?.throwIfAborted();if(Number.isFinite(this.state.expiresAt)&&Date.now()>=this.state.expiresAt)throw Error('VM cleanup lease expired before creation.');this.state.creationRequested=true;this.save();
       const created=JSON.parse(await this.cli(['sandbox','create','--shape',TRIAL_PROFILE.shape,'--rootfs',TRIAL_PROFILE.rootfs,'--name',this.state.name,'--auto-pause',TRIAL_PROFILE.autoPause,...TRIAL_PROFILE.egress.flatMap(host=>['--egress',host])],{signal}));
       if(!ownId(created.id)||this.state.existingIds.includes(created.id))throw Error('Provider did not return a fresh VM identity.');
       this.state.id=created.id;this.save();

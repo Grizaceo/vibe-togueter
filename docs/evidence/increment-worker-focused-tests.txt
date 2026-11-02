@@ -1,0 +1,42 @@
+✔ device login helper keeps codes private, verifies subscription status and releases own guest (931.109392ms)
+✔ failed destruction timer installation prevents guest creation (297.998034ms)
+✔ SIGTERM during timer installation leaves no created guest (383.534618ms)
+✔ pre-armed per-lease cleanup recovers a guest without the create reply ID and clears only its own session (869.362139ms)
+✔ builder supervisor receives durable creation intent before its timer can fire (981.609955ms)
+✔ unapproved worker cannot query credentials, provider or model (4.273204ms)
+✔ read-only preflight checks owned lease, active cleanup, auth boolean and equivalent egress order (2.815534ms)
+✔ managed process observation failure re-polls the same handle without another creation (504.85649ms)
+✔ operator adapter keeps model/source inert and verifies builder terminal state (8.654384ms)
+✔ test-VM ownership rejects foreign inventory IDs and changed isolation before destruction (1.792701ms)
+✔ independent recurring test cleanup is armed before any VM creation request (2.462205ms)
+✔ an in-progress pre-create journal cannot stop its own independent supervision (1.021996ms)
+✔ disabled worker and stale approval cannot spend, issue a ticket or change the live round (10.598432ms)
+✔ approved inputs flow to inert quarantine, separate tests and exact reviewed evidence with explicit mock label (16.141501ms)
+✔ cancel remains pending until actual cleanup confirmation and rejects another writer (6.292472ms)
+✔ unknown cleanup blocks replacement; restart observation never reruns a model (7.969306ms)
+✔ failed journal write does not start construction or lose canonical input approval (5.064233ms)
+✔ notification failure cannot undo a committed job; failed tests never publish (8.79302ms)
+✔ reconciliation is idempotent across a terminal quarantine ticket and an interrupted round write (5.110608ms)
+✔ one owner spending approval cannot silently fund another job (7.291281ms)
+✔ cancellation can retry after quarantine closure succeeded but the worker journal write failed (8.249302ms)
+✔ exact approval survives evidence-write interruption without requiring a different artifact approval (9.051295ms)
+✔ fresh private VM preflight runs only fixed probe and confirms destruction (9.841905ms)
+✔ failed guest checks still destroy the exact fresh VM (3.15336ms)
+✔ lost creation response reconciles by unique journaled name without a second create (2.331042ms)
+✔ cleanup failure survives restart and blocks automatic replacement (4.101952ms)
+✔ provider identity mismatch cannot destroy a foreign VM (2.427214ms)
+✔ pre-cancelled preflight makes no provider mutation or journal (1.151063ms)
+✔ failed provider VM still needs explicit destruction before release (1.901444ms)
+✔ explicit login preparation retains only the fresh VM and restart can release it (3.160414ms)
+✔ journal failure after successful probe cannot retain an unconfirmed login VM (6.529515ms)
+✔ persistent disk outage cannot prevent remote destruction of the verified trial VM (1.501251ms)
+✔ build dispatch rejects absent/nonfinite expiry and unconfirmed timer identity (0.927361ms)
+✔ a trusted independent-lease hook runs before provider creation and a failed hook creates nothing (3.88621ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3575.275697

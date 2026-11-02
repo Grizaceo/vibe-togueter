@@ -95,3 +95,11 @@ Read-only review found a legacy blank-alias compatibility case; demonstrated red
 ### Block B closing status
 
 All six B items are implemented behind separate config flags, with small green commits and local evidence. O1–O12 remain as the Block 0 closing audit: no new rights/privacy/hosting claims. A has no complete current run and stays off/Plan B primary; live VM budget/auth prerequisites remain unresolved. C is not eligible until A succeeds and all B gates pass before November 2 13:00. Owner still supplies hosting/account facts, real Twitch/mod/three-account rehearsal, OBS, English video/YouTube, private push/access and Devpost form. Stabilization/install/documentation refresh follows the A decision.
+
+### Block A code checkpoint — November 2
+
+Experimental Studio dispatch/status/cancel, inert receipt, separate-VM protocol tests, exact review and local publication evidence are implemented, **default off**. No runtime or host candidate execution was added. Current full suite: **244 = 138 focused + 106 integration**, green. Thirty-four mocked lease/lifecycle checks and the read-only safety review pass; sixteen automated local Chromium checks retain Plan B. See STUDIO_WORKER.md for the precise implemented boundary.
+
+The review reproduced and fixed terminal-ticket/round-write reconciliation splits, creation-before-cleanup supervision and suspended-producer timing. Both guest types now use pre-armed recurring reconcilers with durable ownership/creation intent. Added regressions preserve failed evidence. Installed CLI result contracts were checked against commit 6b33b67673ab20e8f8babb2aff755f70f9cc322c; no CLI upgrade or real provider mutation occurred.
+
+**Real-run gate: pending / no current go.** Owner asked to inspect the existing CLI and documentation for balance. The CLI exposes the general Free plan but no remaining balance; docs show web Billing → Balance → Total Credits. Account browser access is unavailable in this tool session. Sandbox usable credit/capacity and new guest login remain unverified, so no new VM/model request is authorized or performed. The concrete one-run proposal remains pending. Mocks do not satisfy the November 2 10:00 UTC gate. C stays ineligible. O1–O12/owner actions remain as recorded above; clean-install and delivery-document stabilization follow this checkpoint.

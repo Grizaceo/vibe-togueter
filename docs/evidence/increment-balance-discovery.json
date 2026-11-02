@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-02T01:41:19Z",
+  "kind": "read-only-createos-balance-discovery",
+  "cliVersion": "v0.0.31",
+  "installedCommit": "6b33b67673ab20e8f8babb2aff755f70f9cc322c",
+  "generalPlan": "Free",
+  "usableSandboxBalance": null,
+  "sandboxPlanCapacity": null,
+  "autoTopupVerified": false,
+  "cliWhoamiProvidesBalance": false,
+  "cliWhoamiHonorsJSON": false,
+  "browserAccess": "unavailable host; no account page opened",
+  "documentedBalanceLocation": "CreateOS web Billing > Balance > Total Credits",
+  "references": [
+    "https://createos.sh/docs/CLI/Command-Reference/",
+    "https://createos.sh/docs/Account-Billing/Pricing/",
+    "https://createos.sh/docs/Sandbox/REST-API/Metrics/"
+  ],
+  "vmMutations": 0,
+  "modelInvocations": 0,
+  "paymentGatewayCalls": 0,
+  "limits": [
+    "General profile plan is not verified Sandbox capacity.",
+    "Metrics describe resource usage, not remaining credit.",
+    "No personal account/profile fields or credentials retained."
+  ]
+}

@@ -1,0 +1,59 @@
+✔ device login helper keeps codes private, verifies subscription status and releases own guest (1376.236456ms)
+✔ failed destruction timer installation prevents guest creation (185.830206ms)
+✔ SIGTERM during timer installation leaves no created guest (206.334854ms)
+✔ pre-armed per-lease cleanup recovers a guest without the create reply ID and clears only its own session (934.895888ms)
+✖ builder supervisor receives durable creation intent before its timer can fire (181.947687ms)
+✔ unapproved worker cannot query credentials, provider or model (8.327966ms)
+✔ read-only preflight checks owned lease, active cleanup, auth boolean and equivalent egress order (2.278527ms)
+✔ managed process observation failure re-polls the same handle without another creation (513.874608ms)
+✔ operator adapter keeps model/source inert and verifies builder terminal state (14.930274ms)
+✔ test-VM ownership rejects foreign inventory IDs and changed isolation before destruction (1.841875ms)
+✔ independent recurring test cleanup is armed before any VM creation request (2.077522ms)
+✖ an in-progress pre-create journal cannot stop its own independent supervision (4.351299ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 10
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3006.522317
+
+✖ failing tests:
+
+test at test/builder-login.mjs:54:1
+✖ builder supervisor receives durable creation intent before its timer can fire (181.947687ms)
+  Error: Command failed: /home/gris96/.local/share/mise/installs/node/26.12.1/bin/node scripts/builder-login.mjs prepare
+  Guest login action failed; inspect the protected journal and retained evidence.
+  
+      at genericNodeError (node:internal/errors:999:15)
+      at wrappedFn (node:internal/errors:544:14)
+      at ChildProcess.exithandler (node:child_process:420:12)
+      at ChildProcess.emit (node:events:514:20)
+      at maybeClose (node:internal/child_process:1156:16)
+      at ChildProcess._handle.onexit (node:internal/child_process:334:5) {
+    code: 1,
+    killed: false,
+    signal: null,
+    cmd: '/home/gris96/.local/share/mise/installs/node/26.12.1/bin/node scripts/builder-login.mjs prepare',
+    stdout: '',
+    stderr: 'Guest login action failed; inspect the protected journal and retained evidence.\n'
+  }
+
+test at test/createos-studio-worker.mjs:20:1
+✖ an in-progress pre-create journal cannot stop its own independent supervision (4.351299ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/createos-studio-worker.mjs:22:56)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

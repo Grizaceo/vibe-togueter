@@ -21,12 +21,17 @@ if(process.argv.length!==3||!['prepare','status','release'].includes(action)){
  const worker=new VMBuilderPreflight(file);let prepared=false;let retained=false;
  try {
   if(action==='prepare') {
-   const result=await worker.preflight({retainForLogin:true,signal:AbortSignal.any([controller.signal,AbortSignal.timeout(60000)])});prepared=true;
-   // A separate user-manager timer survives this helper exiting or being interrupted.
-   const unit='vibe-arena-builder-'+result.name.slice(-12);
-   worker.state.cleanupUnit=unit;worker.state.expiresAt=Date.now()+30*60*1000;worker.save();
+   const result=await worker.preflight({retainForLogin:true,signal:AbortSignal.any([controller.signal,AbortSignal.timeout(60000)]),beforeCreate:async state=>{
+    const unit='vibe-arena-builder-'+state.name.slice(-12),leaseDir=path.join(root,'runtime','builder-leases'),leaseFile=path.join(leaseDir,state.name+'.json');
+    worker.state.cleanupUnit=unit;worker.state.cleanupLeaseVersion=2;worker.state.expiresAt=Date.now()+30*60*1000;worker.save();fs.mkdirSync(leaseDir,{recursive:true,mode:0o700});
+    const writeLease=record=>{const tmp=leaseFile+'.tmp';const fd=fs.openSync(tmp,'w',0o600);try{fs.writeFileSync(fd,JSON.stringify(record)+'\n');fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(tmp,leaseFile);};
+    writeLease({...worker.state,creationRequested:true});
+    await run('systemd-run',['--user','--unit='+unit,'--on-active=30m','--on-unit-active=30s','--timer-property=AccuracySec=1s',process.execPath,path.join(root,'scripts','cleanup-builder-session.mjs'),state.name],{timeout:10000,signal:controller.signal});
+    await run('systemctl',['--user','is-active',unit+'.timer'],{timeout:10000,signal:controller.signal});
+    writeLease({...worker.state,creationRequested:true});
+   }});prepared=true;
+   const unit=result.cleanupUnit;
    controller.signal.throwIfAborted();
-   await run('systemd-run',['--user','--unit='+unit,'--on-active=30m','--timer-property=AccuracySec=1s',path.join(process.env.HOME,'.local','bin','createos'),'sandbox','rm',result.id,'--force'],{timeout:10000,signal:controller.signal});
    await run('systemctl',['--user','is-active',unit+'.timer'],{timeout:10000,signal:controller.signal});
    const login='umask 077; mkdir -p /opt/vibe-codex; chmod 700 /opt/vibe-codex; export CODEX_HOME=/opt/vibe-codex; exec codex -c \'forced_login_method="chatgpt"\' -c \'cli_auth_credentials_store="file"\' login --device-auth > /opt/vibe-codex/device-login.txt 2>&1';
    controller.signal.throwIfAborted();
@@ -56,7 +61,7 @@ if(process.argv.length!==3||!['prepare','status','release'].includes(action)){
    evidence({kind:'guest-login-status',vmId:vm.id,...result,modelUsed:false});console.log(JSON.stringify(result));
   } else {
    const result=await worker.release();
-   if(result?.cleanupUnit)await run('systemctl',['--user','stop',result.cleanupUnit+'.timer'],{timeout:10000,signal:controller.signal});
+   if(result?.cleanupUnit==='vibe-arena-builder-'+result?.name?.slice(-12))await run('systemctl',['--user','stop',result.cleanupUnit+'.timer'],{timeout:10000,signal:controller.signal});
    if(fs.existsSync(deviceFile))fs.unlinkSync(deviceFile);
    evidence({kind:'guest-login-released',vmId:result?.id,phase:result?.phase,providerTerminalStatus:result?.providerTerminalStatus});console.log(JSON.stringify({phase:result?.phase,id:result?.id}));
   }
@@ -64,5 +69,5 @@ if(process.argv.length!==3||!['prepare','status','release'].includes(action)){
   if(prepared){try{await worker.release();}catch{}}
   evidence({kind:'guest-login-failure',vmId:worker.state?.id||null,phase:worker.state?.phase||null,message:'Login preparation/status failed; inspect protected diagnostics. No model call attempted.'});
   console.error('Guest login action failed; inspect the protected journal and retained evidence.');process.exitCode=1;
- } finally {if(prepared&&!retained&&worker.state?.phase!=='released'){try{await worker.release();}catch{}}process.off('SIGINT',stop);process.off('SIGTERM',stop);await unlock();}
+ } finally {if(action==='prepare'&&worker.state?.phase==='released'&&worker.state.providerTerminalStatus==='not-created'&&worker.state.creationRequested===false){try{const leaseFile=path.join(root,'runtime','builder-leases',worker.state.name+'.json');if(fs.existsSync(leaseFile)){const lease=new VMBuilderPreflight(leaseFile);if(lease.state?.name===worker.state.name){lease.state.creationRequested=false;await lease.release();}}if(worker.state.cleanupUnit==='vibe-arena-builder-'+worker.state.name.slice(-12))await run('systemctl',['--user','stop',worker.state.cleanupUnit+'.timer'],{timeout:10000});}catch{}}if(prepared&&!retained&&worker.state?.phase!=='released'){try{await worker.release();}catch{}}process.off('SIGINT',stop);process.off('SIGTERM',stop);await unlock();}
 }

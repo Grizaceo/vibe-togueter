@@ -6,11 +6,11 @@ const run=promisify(execFile),root=path.resolve(new URL('..',import.meta.url).pa
 function fixture(t,extra={}) {
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'va-login-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
  for(const folder of ['src','scripts','docs/evidence','runtime','bin'])fs.mkdirSync(path.join(dir,folder),{recursive:true});
- for(const file of ['src/vm-builder-preflight.js','src/controller-lock.js','scripts/builder-login.mjs','package.json'])fs.copyFileSync(path.join(root,file),path.join(dir,file));
+ for(const file of ['src/vm-builder-preflight.js','src/controller-lock.js','scripts/builder-login.mjs','scripts/cleanup-builder-session.mjs','package.json'])fs.copyFileSync(path.join(root,file),path.join(dir,file));
  const fake=`#!${process.execPath}
 import fs from 'node:fs';import path from 'node:path';
 function main(){const a=process.argv.slice(2),kind=path.basename(process.argv[1]),file=process.env.FAKE_STATE;
-if(kind==='systemd-run'){if(process.env.FAKE_INTERRUPT){process.kill(process.ppid,'SIGTERM');setTimeout(()=>process.exit(1),100);return;}if(process.env.FAKE_TIMER_FAIL)process.exit(1);console.log('timer installed');return;}
+if(kind==='systemd-run'){if(process.env.FAKE_REQUIRE_INTENT){const lease=JSON.parse(fs.readFileSync(path.join(process.env.HOME,'runtime','builder-leases',a.at(-1)+'.json')));if(lease.creationRequested!==true)process.exit(2);}if(process.env.FAKE_INTERRUPT){process.kill(process.ppid,'SIGTERM');setTimeout(()=>process.exit(1),100);return;}if(process.env.FAKE_TIMER_FAIL)process.exit(1);console.log('timer installed');return;}
 if(kind==='systemctl'){console.log('active');return;}
 let vm=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):null;let result;
 if(a[1]==='list')result=vm?[vm]:[];
@@ -28,7 +28,7 @@ main();
  for(const name of ['createos','systemd-run','systemctl'])fs.writeFileSync(path.join(dir,'bin',name),fake,{mode:0o700});
  const env={PATH:path.join(dir,'bin')+':/usr/bin:/bin',HOME:dir,FAKE_STATE:path.join(dir,'provider.json'),...extra};
  const call=action=>run(process.execPath,['scripts/builder-login.mjs',action],{cwd:dir,env,timeout:10000});
- return {dir,call};
+ const cleanup=name=>run(process.execPath,['scripts/cleanup-builder-session.mjs',name],{cwd:dir,env,timeout:10000});return {dir,call,cleanup};
 }
 test('device login helper keeps codes private, verifies subscription status and releases own guest',async t=>{
  const {dir,call}=fixture(t);const prepared=await call('prepare');assert.ok(!prepared.stdout.includes('FAKE-DEVICE-CODE'));
@@ -38,9 +38,19 @@ test('device login helper keeps codes private, verifies subscription status and 
  assert.equal(JSON.parse((await call('status')).stdout).authenticated,true);assert.equal(fs.existsSync(file),false);
  await call('release');assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'provider.json'))).status,'destroyed');
 });
-test('failed destruction timer installation destroys the retained guest',async t=>{
- const {dir,call}=fixture(t,{FAKE_TIMER_FAIL:'1'});await assert.rejects(call('prepare'));assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'provider.json'))).status,'destroyed');
+test('failed destruction timer installation prevents guest creation',async t=>{
+ const {dir,call}=fixture(t,{FAKE_TIMER_FAIL:'1'});await assert.rejects(call('prepare'));assert.equal(fs.existsSync(path.join(dir,'provider.json')),false);assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'runtime','builder-session.json'))).providerTerminalStatus,'not-created');
 });
-test('SIGTERM during timer installation destroys the guest before helper exits',async t=>{
- const {dir,call}=fixture(t,{FAKE_INTERRUPT:'1'});await assert.rejects(call('prepare'));assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'provider.json'))).status,'destroyed');
+test('SIGTERM during timer installation leaves no created guest',async t=>{
+ const {dir,call}=fixture(t,{FAKE_INTERRUPT:'1'});await assert.rejects(call('prepare'));assert.equal(fs.existsSync(path.join(dir,'provider.json')),false);assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'runtime','builder-session.json'))).providerTerminalStatus,'not-created');
+});
+
+test('pre-armed per-lease cleanup recovers a guest without the create reply ID and clears only its own session',async t=>{
+ const {dir,call,cleanup}=fixture(t);await call('prepare');const file=path.join(dir,'runtime','builder-session.json'),session=JSON.parse(fs.readFileSync(file));
+ const lease=JSON.parse(fs.readFileSync(path.join(dir,'runtime','builder-leases',session.name+'.json')));assert.equal(lease.id,null);assert.equal(lease.creationRequested,true);assert.equal(lease.cleanupLeaseVersion,2);
+ await cleanup(session.name);assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'provider.json'))).status,'destroyed');assert.equal(JSON.parse(fs.readFileSync(file)).phase,'released');assert.equal(fs.existsSync(path.join(dir,'runtime','codex-vm-device-login.txt')),false);
+});
+
+test('builder supervisor receives durable creation intent before its timer can fire',async t=>{
+ const {call}=fixture(t,{FAKE_REQUIRE_INTENT:'1'});await call('prepare');await call('release');
 });

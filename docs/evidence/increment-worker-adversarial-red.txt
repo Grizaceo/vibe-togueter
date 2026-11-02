@@ -1,0 +1,63 @@
+✔ unapproved worker cannot query credentials, provider or model (5.466049ms)
+✔ read-only preflight checks owned lease, active cleanup, auth boolean and equivalent egress order (3.7765ms)
+✔ managed process observation failure re-polls the same handle without another creation (505.789556ms)
+✔ operator adapter keeps model/source inert and verifies builder terminal state (16.45102ms)
+✔ test-VM ownership rejects foreign inventory IDs and changed isolation before destruction (1.677257ms)
+✖ independent recurring test cleanup is armed before any VM creation request (2.95418ms)
+✔ disabled worker and stale approval cannot spend, issue a ticket or change the live round (11.093854ms)
+✔ approved inputs flow to inert quarantine, separate tests and exact reviewed evidence with explicit mock label (10.184929ms)
+✔ cancel remains pending until actual cleanup confirmation and rejects another writer (4.491404ms)
+✔ unknown cleanup blocks replacement; restart observation never reruns a model (6.052234ms)
+✔ failed journal write does not start construction or lose canonical input approval (2.51655ms)
+✔ notification failure cannot undo a committed job; failed tests never publish (9.606707ms)
+✖ reconciliation is idempotent across a terminal quarantine ticket and an interrupted round write (3.280552ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 11
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 682.098664
+
+✖ failing tests:
+
+test at test/createos-studio-worker.mjs:13:1
+✖ independent recurring test cleanup is armed before any VM creation request (2.95418ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /stop after verified pre-create lease/. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n' +
+    '\n' +
+    'false !== true\n'
+  
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/createos-studio-worker.mjs:17:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+    
+    false !== true
+    
+        at f.worker.json (file:///home/gris96/vibe-arena/test/createos-studio-worker.mjs:16:89)
+        at CreateOSStudioWorker.test (file:///home/gris96/vibe-arena/src/createos-studio-worker.js:72:28)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25)
+        at async TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/createos-studio-worker.mjs:17:2)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    expected: /stop after verified pre-create lease/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at test/studio-builds.mjs:31:1
+✖ reconciliation is idempotent across a terminal quarantine ticket and an interrupted round write (3.280552ms)
+  Error: Choose a live ticket and terminal decision.
+      at BuildQuarantine.close (file:///home/gris96/vibe-arena/src/build-quarantine.js:128:81)
+      at StudioBuilds.reconcile (file:///home/gris96/vibe-arena/src/studio-builds.js:85:19)
+      at async TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/studio-builds.mjs:34:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

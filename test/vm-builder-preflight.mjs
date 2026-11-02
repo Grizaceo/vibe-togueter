@@ -81,3 +81,8 @@ test('build dispatch rejects absent/nonfinite expiry and unconfirmed timer ident
  assert.equal(validateBuildSession(good,now),good.cleanupUnit);
  for(const extra of [{expiresAt:undefined},{expiresAt:NaN},{expiresAt:Infinity},{expiresAt:now+100},{phase:'released'},{cleanupUnit:'other-service'}])assert.throws(()=>validateBuildSession({...good,...extra},now));
 });
+
+test('a trusted independent-lease hook runs before provider creation and a failed hook creates nothing',async t=>{
+ const first=fixture(t);let armed=false;const run=first.worker.run;first.worker.run=async(command,args,options)=>{if(args[1]==='create')assert.equal(armed,true);return run(command,args,options);};await first.worker.preflight({beforeCreate:async state=>{assert.equal(state.creationRequested,false);assert.equal(first.calls.some(c=>c[1]==='create'),false);armed=true;}});
+ const second=fixture(t);await assert.rejects(second.worker.preflight({beforeCreate:async()=>{throw Error('lease supervisor unavailable');}}),/incomplete/);assert.equal(second.calls.some(c=>c[1]==='create'),false);assert.equal(second.worker.state.phase,'released');assert.equal(second.worker.state.providerTerminalStatus,'not-created');
+});
