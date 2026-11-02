@@ -1,19 +1,40 @@
 {
-  "at": "2026-11-02T08:40:36.841966+00:00",
+  "at": "2026-11-02T09:05:31.378762+00:00",
   "kind": "local-deployment-template-check",
-  "configGate": {
-    "exit": 0,
-    "result": "Public host gates OK"
-  },
+  "bashBlocksParsed": 5,
+  "configGateCases": [
+    {
+      "case": "safe-fixture",
+      "exit": 0,
+      "expectedExit": 0,
+      "expectedMessageObserved": true,
+      "passed": true
+    },
+    {
+      "case": "local-build-override",
+      "exit": 1,
+      "expectedExit": 1,
+      "expectedMessageObserved": true,
+      "passed": true
+    },
+    {
+      "case": "event-credit-override",
+      "exit": 1,
+      "expectedExit": 1,
+      "expectedMessageObserved": true,
+      "passed": true
+    }
+  ],
   "systemdSyntax": {
     "exit": 0,
     "diagnostics": ""
   },
+  "oauthNotes": "Checked against the current localhost-only auth helper and .env.example; no SSH connection or Twitch login was performed.",
   "limits": [
-    "Read-only assertions against the public repository configuration.",
-    "Temporary unit parsed locally; no unit installed or service started.",
+    "Synthetic .env and public JSON with the required package metadata in a disposable directory; no owner secrets read.",
+    "Gate checks the effective build policy and rejects environment overrides for local builds or simulated event credits.",
+    "Temporary service unit parsed locally; no unit installed or service started.",
     "No purchased host, Caddy/TLS/WSS, AppArmor or remote acceptance is verified."
   ],
-  "bashBlocksParsed": 5,
-  "oauthNotes": "Checked against the current localhost-only auth helper and .env.example; no SSH connection or Twitch login was performed."
+  "temporaryDirectoryRemoved": true
 }

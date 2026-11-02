@@ -19,7 +19,7 @@ Community Grove, Marble Race and Democracy Duel are playable examples. Game, art
 
 For a disposable practice session without owner configuration, run `node scripts/demo-local.mjs` after installing dependencies. It prints loopback player/studio/overlay URLs and provides terminal controls for game switching, fallback and proposal/vote/review/approval. `stop` cleans up its temporary state. See [the later human/Twitch rehearsal checklist](docs/REHEARSAL.md). This session has no Twitch connection or coding worker.
 
-Requirements: Linux with bubblewrap/user namespaces and `/usr/bin/node`, tested with Node 26.12.1. The local guest uses usr-merged library paths. Missing isolation support fails closed. Runtime dependencies are `ws` and `@modelcontextprotocol/sdk` and their locked dependencies.
+Requirements: Linux with bubblewrap/user namespaces and `/usr/bin/node`. The local suite passes with the usual Node 26.12.1 controller and with the [system Node 26.12.0 profile](docs/evidence/system-node-check.json). The namespace worker always executes `/usr/bin/node` (26.12.0 on this machine). The local guest uses usr-merged library paths. Missing isolation support fails closed. Runtime dependencies are `ws` and `@modelcontextprotocol/sdk` and their locked dependencies.
 
 ```bash
 npm ci

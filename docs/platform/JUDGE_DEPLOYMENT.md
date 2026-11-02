@@ -5,7 +5,7 @@ Prepared for a Linux VM with a fixed HTTPS address and persistent disk. No host 
 ## 1. Select and prepare the VM
 
 - Use **Debian 12**, or **Ubuntu 24.04** with the restricted bubblewrap AppArmor profile below. Start with 2 GiB RAM, then check actual CPU/memory and concurrent-client behavior before sharing the URL.
-- Install Git, bubblewrap, CA certificates, Node and npm. Match the tested Node 26.12.1 installation at `/usr/bin/node`: the guest explicitly executes that path and needs `--permission` and `--experimental-vm-modules`. Do not assume the distribution's default Node has those features. Use the [official Node distribution instructions](https://nodejs.org/en/download), then verify that `/usr/bin/node` resolves to the intended version.
+- Install Git, bubblewrap, CA certificates, Node and npm. The service and namespace guest execute `/usr/bin/node`, which needs `--permission` and `--experimental-vm-modules`. Local full-suite checks pass with the usual Node 26.12.1 controller and with the [system Node 26.12.0 profile](../evidence/system-node-check.json). Do not assume the distribution's default Node has those features. Use the [official Node distribution instructions](https://nodejs.org/en/download), then verify that `/usr/bin/node` resolves to the intended version.
 - Use an unprivileged `vibe-arena` service account and a persistent directory such as `/srv/vibe-arena`. The service account needs to write `runtime/`, its private `.env` and the operator-managed journals. Do not put the application on an ephemeral root disk or a tmpfs.
 - Firewall public ingress to HTTPS/HTTP and restricted SSH. Port 8420 stays loopback only. Keep an existing SSH session open while applying firewall rules and confirm a second connection before closing it.
 - Transfer the reviewed repository using the owner's authorized source-access method. Do not copy local `.env`, live journals, `node_modules` or unrelated game repositories from the PC.
@@ -24,9 +24,10 @@ Do not turn off AppArmor or the system-wide unprivileged-user-namespace protecti
 As the service account in `/srv/vibe-arena`:
 
 ```bash
+node --version
 /usr/bin/node --version
-npm ci
-npm test
+env PATH=/usr/bin:/bin npm ci
+env PATH=/usr/bin:/bin npm test
 npm run setup:local
 ```
 
@@ -52,8 +53,12 @@ Confirm the deployed configuration before launch:
 node --input-type=module <<'JS'
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
+import { loadEnv } from './src/auth/twitch.js';
+import { buildPolicy } from './src/build-policy.js';
+loadEnv();
 const config = JSON.parse(fs.readFileSync('vibe-arena.config.json'));
 assert.equal(config.build.execution, 'cloud-vm');
+assert.equal(buildPolicy(config.build).mode, 'cloud-vm', 'Public demo requires cloud-vm execution');
 assert.equal(config.build.studioWorker.enabled, false);
 assert.equal(config.build.studioWorker.prewarmEnabled, false);
 assert.equal(config.build.studioWorker.approvalId, null);
@@ -61,11 +66,20 @@ assert.equal(config.build.studioWorker.vmBudgetMinor, 0);
 assert.deepEqual(config.remoteGames, []);
 assert.equal(config.monetization.autoGenerate, false);
 assert.equal(config.monetization.simulateEventCredits, false);
+assert.notEqual(process.env.VA_SIMULATE_EVENT_CREDITS, '1', 'Disable simulated event credits before hosting');
+const secretNames = ['VA_ADMIN_TOKEN', 'VA_STREAMER_KEY', 'VA_EVENTSUB_SECRET', 'VA_WEBHOOK_SECRET'];
+assert.ok(secretNames.every(name => {
+  const value = process.env[name];
+  return typeof value === 'string' && value.trim() && !value.startsWith('cambia-');
+}), 'Run setup:local and configure private secrets first');
+const publicUrl = new URL(process.env.VA_PUBLIC_URL || config.publicUrl);
+assert.equal(publicUrl.protocol, 'https:');
+assert.ok(!publicUrl.username && !publicUrl.password && !publicUrl.search && !publicUrl.hash);
 console.log('Public host gates OK');
 JS
 ```
 
-Leave `VA_SIMULATE_EVENT_CREDITS` unset. Worker, warm preparation and public Tee remain off. Never load a quarantined artifact as a local bundled game.
+Leave `VA_BUILD_MODE` and `VA_SIMULATE_EVENT_CREDITS` unset. This check loads the private `.env` and checks the effective build policy as well as the public JSON; it never prints secret values. Worker, warm preparation and public Tee remain off. Never load a quarantined artifact as a local bundled game.
 
 ## 3. Keep the service and journals persistent
 
@@ -128,7 +142,7 @@ For local owner controls, use an SSH forward (`ssh -N -L 127.0.0.1:18420:127.0.0
 
 Record commit, OS/Node/bubblewrap versions, UTC time and actual results in a private deployment receipt. This checklist alone is not deployment evidence.
 
-- [ ] `npm ci` and `npm test` pass on the host as the service user. Run `node --experimental-vm-modules --test test/game-isolation.mjs` there to check constructor escape, hung callbacks and recovery. A startup failure is a failed gate, not a reason to bypass isolation.
+- [ ] `npm ci` and `npm test` pass on the host as the service user using the service binary profile (`env PATH=/usr/bin:/bin npm test`). Run `node --experimental-vm-modules --test test/game-isolation.mjs` there to check constructor escape, hung callbacks and recovery. A startup failure is a failed gate, not a reason to bypass isolation.
 - [ ] The real service renders Grove and its game/art/idea strip. Inspect the child with `ps` and `/proc` to confirm the expected bubblewrap process, separate network namespace and no owner home/configuration mounts. Do not print environment values.
 - [ ] An authenticated real Twitch moderator sends `!fallback`; the visible fallback reason and the reviewed fallback game appear while browser clients remain connected. A web nickname is not sufficient. This is requested recovery, not a simulated crash claim.
 - [ ] From a second device/network, `https://YOUR_HOSTNAME/`, `/studio.html`, `/overlay.html` and `/privacy.html` load. DevTools shows an active **WSS** connection delivering game frames; actually join and play. Repeat after an idle interval.

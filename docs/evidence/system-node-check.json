@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-02T09:09:54.489097+00:00",
+  "commit": "c7f76657fdb8964e051db62745ef42feeb753bac",
+  "command": "env PATH=/usr/bin:/bin npm test",
+  "node": {
+    "path": "/usr/bin/node",
+    "version": "v26.12.0"
+  },
+  "exit": 0,
+  "focused": 161,
+  "integration": 110,
+  "failed": 0,
+  "temporaryCheckoutRemoved": true,
+  "log": "system-node-tests.txt",
+  "limits": [
+    "Local Linux host and installed dependencies only.",
+    "Verifies the service template binary profile, not a new Debian/Ubuntu deployment or real cloud/Twitch traffic."
+  ]
+}
