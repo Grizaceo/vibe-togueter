@@ -1,0 +1,108 @@
+{
+  "kind": "inert-owner-review-package",
+  "jobId": "e21fef6b-03c9-4946-812f-5f618e4f1877",
+  "ticketId": "8d2a43d9-390f-4272-a97b-934bc135f59a",
+  "codeSha256": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+  "artifactHash": "c152396d80920759fe935bcf1b49331ee7ed3655643942bb85e7b36ff8f79ac8",
+  "reportHash": "108f942432e4b131d2e6d82060f95adde863aed1911ff01712e87219c0cc3a96",
+  "construction": {
+    "kind": "real-createos-subscription-construction",
+    "vmId": "sb-01m6d2ssj47f5c8pbfwc6rvxa3",
+    "model": "gpt-6.1-terra",
+    "completed": true,
+    "failed": false,
+    "threadId": "01a19a2f-90b2-7363-a930-e1eedbf9214b",
+    "usage": {
+      "input_tokens": 47474,
+      "output_tokens": 3751,
+      "cached_input_tokens": 44288
+    },
+    "candidateExecutedOnHost": false
+  },
+  "testEvidence": {
+    "kind": "real-separate-createos-protocol-tests",
+    "testVmId": "sb-01m6d30dhtbk16k552w3vj7pga",
+    "buildVmId": "sb-01m6d2ssj47f5c8pbfwc6rvxa3",
+    "evidenceSha256": "f955941593479916608da219947e1ea46b94cce2b109018efabbf3cc102a9a51",
+    "checks": [
+      {
+        "name": "Exact quarantined source bytes",
+        "passed": true
+      },
+      {
+        "name": "Distinct build and test VM identities",
+        "passed": true
+      },
+      {
+        "name": "Pinned reviewed resource bytes",
+        "passed": true
+      },
+      {
+        "name": "SDK interface loads under finite callback deadlines",
+        "passed": true
+      },
+      {
+        "name": "Bounded join/input/chat/tick protocol",
+        "passed": true
+      },
+      {
+        "name": "Bounded player leave callback",
+        "passed": true
+      },
+      {
+        "name": "Bounded serializable view",
+        "passed": true
+      },
+      {
+        "name": "Sprites use approved local resource paths",
+        "passed": true
+      },
+      {
+        "name": "Selected art appears in the test frame",
+        "passed": true
+      }
+    ],
+    "limitations": [
+      "Trusted SDK protocol checks only; independent human gameplay is not established."
+    ]
+  },
+  "cleanup": {
+    "confirmed": true,
+    "testVmId": "sb-01m6d30dhtbk16k552w3vj7pga",
+    "testDestroyed": true,
+    "buildVmId": "sb-01m6d2ssj47f5c8pbfwc6rvxa3",
+    "buildDestroyed": true
+  },
+  "communityCredit": {
+    "roundId": "289577d6-66ff-4d42-8b3a-eb5dfcd15838",
+    "approvedInputHash": "0c1919c6400ebf69ce9f62090b8583f7bc2118bd39c812db124768af32504bc6",
+    "ideaAuthors": [
+      {
+        "name": "Owner-selected-trial"
+      }
+    ],
+    "voterCount": 0,
+    "approvedBy": {
+      "name": "local streamer",
+      "source": "streamer-ui",
+      "authority": "streamer"
+    }
+  },
+  "candidateExecutedOnHost": false,
+  "liveRuntime": false,
+  "approval": "owner exact-version/rights approval confirmed for local reviewed evidence with known limitations",
+  "publicationFile": "studio-build-e21fef6b-03c9-4946-812f-5f618e4f1877.json",
+  "publicationSha256": "54122a4cee9bf87a61fe92ef11bfbc479ba70c936dba4edd447c47fbdec29575",
+  "knownIssues": [
+    {
+      "severity": "P2",
+      "sourceLine": 36,
+      "finding": "The 53rd player can reset below the viewport; static review, not guest gameplay reproduction."
+    },
+    {
+      "severity": "P2",
+      "sourceLine": 116,
+      "finding": "A defeated enemy can damage a hero before its next-tick removal; static review, not guest gameplay reproduction."
+    }
+  ]
+}

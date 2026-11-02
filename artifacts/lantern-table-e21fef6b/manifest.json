@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "assets": [],
+  "creditPolicy": {
+    "inGame": true,
+    "clickableCreatorLinks": true,
+    "retainOnPlatformRemix": true
+  },
+  "fingerprints": "Builder must verify downloaded bytes against expectedContentSha256 before use.",
+  "sha256": "c5eb93e7c74c4807caa325149003d4dec531afdc23ef1a952dabd2755955e634"
+}

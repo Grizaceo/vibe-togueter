@@ -1,0 +1,240 @@
+{
+  "report": {
+    "artifactHash": "c152396d80920759fe935bcf1b49331ee7ed3655643942bb85e7b36ff8f79ac8",
+    "testNonce": "6d105b1a16e6845cd403da51357b519515134795d2e45270",
+    "testVmId": "sb-01m6d30dhtbk16k552w3vj7pga",
+    "isolatedVmAttested": true,
+    "evidenceSha256": "f955941593479916608da219947e1ea46b94cce2b109018efabbf3cc102a9a51",
+    "checks": [
+      {
+        "name": "Exact quarantined source bytes",
+        "passed": true
+      },
+      {
+        "name": "Distinct build and test VM identities",
+        "passed": true
+      },
+      {
+        "name": "Pinned reviewed resource bytes",
+        "passed": true
+      },
+      {
+        "name": "SDK interface loads under finite callback deadlines",
+        "passed": true
+      },
+      {
+        "name": "Bounded join/input/chat/tick protocol",
+        "passed": true
+      },
+      {
+        "name": "Bounded player leave callback",
+        "passed": true
+      },
+      {
+        "name": "Bounded serializable view",
+        "passed": true
+      },
+      {
+        "name": "Sprites use approved local resource paths",
+        "passed": true
+      },
+      {
+        "name": "Selected art appears in the test frame",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "verification": "operator-attested",
+    "codeSha256": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+    "frame": {
+      "bg": "#171720",
+      "world": {
+        "w": 1280,
+        "h": 720
+      },
+      "layers": [
+        {
+          "t": "rect",
+          "x": 0,
+          "y": 0,
+          "w": 1280,
+          "h": 720,
+          "color": "#171720"
+        },
+        {
+          "t": "rect",
+          "x": 32,
+          "y": 95,
+          "w": 1216,
+          "h": 520,
+          "color": "#5c4035"
+        },
+        {
+          "t": "rect",
+          "x": 46,
+          "y": 109,
+          "w": 1188,
+          "h": 492,
+          "color": "#293d38"
+        },
+        {
+          "t": "circle",
+          "x": 640,
+          "y": 355,
+          "r": 108,
+          "color": "#344b40"
+        },
+        {
+          "t": "circle",
+          "x": 640,
+          "y": 355,
+          "r": 68,
+          "color": "#4c5c42"
+        },
+        {
+          "t": "circle",
+          "x": 640,
+          "y": 355,
+          "r": 24,
+          "color": "#e0ad56"
+        },
+        {
+          "t": "circle",
+          "x": 640,
+          "y": 355,
+          "r": 12,
+          "color": "#fff0ae"
+        },
+        {
+          "t": "circle",
+          "x": 791.8,
+          "y": 222.5,
+          "r": 18,
+          "color": "#29283a"
+        },
+        {
+          "t": "circle",
+          "x": 785.8,
+          "y": 219.5,
+          "r": 3,
+          "color": "#f47d88"
+        },
+        {
+          "t": "circle",
+          "x": 797.8,
+          "y": 219.5,
+          "r": 3,
+          "color": "#f47d88"
+        },
+        {
+          "t": "circle",
+          "x": 562.8,
+          "y": 242.7,
+          "r": 18,
+          "color": "#29283a"
+        },
+        {
+          "t": "circle",
+          "x": 556.8,
+          "y": 239.7,
+          "r": 3,
+          "color": "#f47d88"
+        },
+        {
+          "t": "circle",
+          "x": 568.8,
+          "y": 239.7,
+          "r": 3,
+          "color": "#f47d88"
+        },
+        {
+          "t": "circle",
+          "x": 147.9,
+          "y": 258.5,
+          "r": 18,
+          "color": "#29283a"
+        },
+        {
+          "t": "circle",
+          "x": 141.9,
+          "y": 255.5,
+          "r": 3,
+          "color": "#f47d88"
+        },
+        {
+          "t": "circle",
+          "x": 153.9,
+          "y": 255.5,
+          "r": 3,
+          "color": "#f47d88"
+        }
+      ],
+      "hud": [
+        {
+          "t": "text",
+          "x": 40,
+          "y": 42,
+          "size": 28,
+          "color": "#ffdf9a",
+          "align": "left",
+          "text": "LANTERN TABLE"
+        },
+        {
+          "t": "text",
+          "x": 40,
+          "y": 71,
+          "size": 16,
+          "color": "#e8e1cc",
+          "align": "left",
+          "text": "ROUND 1 / 5   \u2022   SHADOWS 3"
+        },
+        {
+          "t": "text",
+          "x": 1240,
+          "y": 43,
+          "size": 16,
+          "color": "#e8e1cc",
+          "align": "right",
+          "text": "Move: WASD / arrows   \u2022   Attack: Space / click"
+        },
+        {
+          "t": "text",
+          "x": 1240,
+          "y": 70,
+          "size": 16,
+          "color": "#a9d8c4",
+          "align": "right",
+          "text": "Chat: !enemy   !heal   !roll"
+        },
+        {
+          "t": "text",
+          "x": 42,
+          "y": 642,
+          "size": 15,
+          "color": "#ffdf9a",
+          "align": "left",
+          "text": "RECENT ACTIONS"
+        },
+        {
+          "t": "text",
+          "x": 42,
+          "y": 662,
+          "size": 14,
+          "color": "#ded8c8",
+          "align": "left",
+          "text": "Quarantine tester joins the table."
+        },
+        {
+          "t": "text",
+          "x": 42,
+          "y": 680,
+          "size": 14,
+          "color": "#ded8c8",
+          "align": "left",
+          "text": "The lantern is lit. Clear five rounds together."
+        }
+      ]
+    }
+  },
+  "scope": "Static frame from separate VM; trusted renderer only, no candidate host execution."
+}

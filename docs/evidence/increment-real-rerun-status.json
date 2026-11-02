@@ -1,0 +1,72 @@
+{
+  "kind": "real-local-controller-with-createos-worker",
+  "observations": [
+    {
+      "at": "2026-11-02T02:56:04.840Z",
+      "kind": "actual-controller-observation",
+      "roundPhase": "building",
+      "job": {
+        "id": "e21fef6b-03c9-4946-812f-5f618e4f1877",
+        "ticketId": "8d2a43d9-390f-4272-a97b-934bc135f59a",
+        "roundId": "289577d6-66ff-4d42-8b3a-eb5dfcd15838",
+        "phase": "building",
+        "at": 1793588164472,
+        "message": "Codex construction in the isolated VM.",
+        "adapter": "createos-subscription",
+        "codeSha256": null,
+        "artifactHash": null,
+        "reportHash": null,
+        "cleanupConfirmed": false,
+        "liveRuntime": false
+      },
+      "liveGame": "Community Grove",
+      "twitchConnected": false
+    },
+    {
+      "at": "2026-11-02T02:56:52.840Z",
+      "kind": "actual-controller-observation",
+      "roundPhase": "building",
+      "job": {
+        "id": "e21fef6b-03c9-4946-812f-5f618e4f1877",
+        "ticketId": "8d2a43d9-390f-4272-a97b-934bc135f59a",
+        "roundId": "289577d6-66ff-4d42-8b3a-eb5dfcd15838",
+        "phase": "testing",
+        "at": 1793588164472,
+        "message": "Protocol tests in a distinct VM.",
+        "adapter": "createos-subscription",
+        "codeSha256": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+        "artifactHash": "c152396d80920759fe935bcf1b49331ee7ed3655643942bb85e7b36ff8f79ac8",
+        "reportHash": null,
+        "cleanupConfirmed": false,
+        "liveRuntime": false
+      },
+      "liveGame": "Community Grove",
+      "twitchConnected": false
+    },
+    {
+      "at": "2026-11-02T02:57:07.841Z",
+      "kind": "actual-controller-observation",
+      "roundPhase": "completed",
+      "job": {
+        "id": "e21fef6b-03c9-4946-812f-5f618e4f1877",
+        "ticketId": "8d2a43d9-390f-4272-a97b-934bc135f59a",
+        "roundId": "289577d6-66ff-4d42-8b3a-eb5dfcd15838",
+        "phase": "tested",
+        "at": 1793588164472,
+        "message": "Separate-VM checks passed; review exact source/report before approval.",
+        "adapter": "createos-subscription",
+        "codeSha256": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+        "artifactHash": "c152396d80920759fe935bcf1b49331ee7ed3655643942bb85e7b36ff8f79ac8",
+        "reportHash": "108f942432e4b131d2e6d82060f95adde863aed1911ff01712e87219c0cc3a96",
+        "cleanupConfirmed": true,
+        "liveRuntime": false
+      },
+      "liveGame": "Community Grove",
+      "twitchConnected": false
+    }
+  ],
+  "limits": [
+    "Operator-selected inputs; no Twitch ballots or human gameplay claimed.",
+    "Live game remains bundled Grove; generated candidate is inert."
+  ]
+}

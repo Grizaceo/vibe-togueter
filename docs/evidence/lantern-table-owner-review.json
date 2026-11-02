@@ -1,0 +1,44 @@
+{
+  "kind": "owner-exact-artifact-review-confirmed",
+  "at": "2026-11-02T03:24:47.470165+00:00",
+  "ownerDecision": "Guardar evidencia revisada con esas limitaciones",
+  "scope": "Local reviewed evidence only; no runtime, external publication or candidate host execution.",
+  "sourceSha256": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+  "artifactHash": "c152396d80920759fe935bcf1b49331ee7ed3655643942bb85e7b36ff8f79ac8",
+  "reportHash": "108f942432e4b131d2e6d82060f95adde863aed1911ff01712e87219c0cc3a96",
+  "publicationFile": "studio-build-e21fef6b-03c9-4946-812f-5f618e4f1877.json",
+  "publicationSha256": "54122a4cee9bf87a61fe92ef11bfbc479ba70c936dba4edd447c47fbdec29575",
+  "gameCredit": [
+    {
+      "name": "Crist\u00f3bal Mu\u00f1oz \u00b7 Codex-assisted"
+    }
+  ],
+  "rightsAndCreditReviewedByOwner": true,
+  "knownIssues": [
+    {
+      "severity": "P2",
+      "sourceLine": 36,
+      "finding": "The 53rd player can reset below the viewport; static review, not guest gameplay reproduction."
+    },
+    {
+      "severity": "P2",
+      "sourceLine": 116,
+      "finding": "A defeated enemy can damage a hero before its next-tick removal; static review, not guest gameplay reproduction."
+    }
+  ],
+  "protocolChecks": 9,
+  "humanGameplayValidated": false,
+  "resourceCoverage": "No external assets selected; three resource checks are vacuous.",
+  "controllerSourceCommit": "70c0fa7",
+  "timing": {
+    "dispatchAt": "2026-11-02T02:56:04.472Z",
+    "testStageAt": "2026-11-02T02:56:52.840Z",
+    "testedCleanupAt": "2026-11-02T02:57:07.841Z",
+    "approxSecondsDispatchToTested": 63.369
+  },
+  "remaining": [
+    "Separate runtime decision and deployment",
+    "Gameplay-specific reproduction/fixes and human rehearsal",
+    "Stable free judging access and owner delivery actions"
+  ]
+}
