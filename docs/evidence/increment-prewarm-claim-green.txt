@@ -1,0 +1,19 @@
+✔ unapproved worker cannot query credentials, provider or model (3.25695ms)
+✔ read-only preflight checks owned lease, active cleanup, auth boolean and equivalent egress order (2.174048ms)
+✔ managed process observation failure re-polls the same handle without another creation (504.124977ms)
+✔ operator adapter keeps model/source inert and verifies builder terminal state (6.987152ms)
+✔ test-VM ownership rejects foreign inventory IDs and changed isolation before destruction (1.000698ms)
+✔ independent recurring test cleanup is armed before any VM creation request (1.72601ms)
+✔ an in-progress pre-create journal cannot stop its own independent supervision (0.585207ms)
+✔ managed noninteractive commands receive EOF without waiting for manager stdin (504.868865ms)
+✔ explicit warm-session close intent blocks worker readiness before model admission (2.23928ms)
+✔ readiness rechecks a close that wins during asynchronous guest verification (2.142898ms)
+✔ cleanup recovers an exact durable lease claim after the session-claim write failed (2.202403ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1112.750895

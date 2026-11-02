@@ -1,0 +1,39 @@
+✔ unapproved worker cannot query credentials, provider or model (3.873856ms)
+✔ read-only preflight checks owned lease, active cleanup, auth boolean and equivalent egress order (4.591692ms)
+✔ managed process observation failure re-polls the same handle without another creation (504.064516ms)
+✔ operator adapter keeps model/source inert and verifies builder terminal state (33.939435ms)
+✔ test-VM ownership rejects foreign inventory IDs and changed isolation before destruction (4.509767ms)
+✔ independent recurring test cleanup is armed before any VM creation request (4.26092ms)
+✔ an in-progress pre-create journal cannot stop its own independent supervision (2.487702ms)
+✔ managed noninteractive commands receive EOF without waiting for manager stdin (510.050393ms)
+✔ explicit warm-session close intent blocks worker readiness before model admission (1.832374ms)
+✔ readiness rechecks a close that wins during asynchronous guest verification (2.901585ms)
+✖ cleanup recovers an exact durable lease claim after the session-claim write failed (6.267899ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1224.062305
+
+✖ failing tests:
+
+test at test/createos-studio-worker.mjs:44:1
+✖ cleanup recovers an exact durable lease claim after the session-claim write failed (6.267899ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/createos-studio-worker.mjs:44:529)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

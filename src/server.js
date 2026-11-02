@@ -2,6 +2,7 @@
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from 'node:http';
+import {BuilderWarmSessions} from './builder-warm-sessions.js';
 import {StudioBuilds} from './studio-builds.js';
 import {CreateOSStudioWorker} from './createos-studio-worker.js';
 import {ApprovalDelegation,roundApprovalActor} from './approval-delegation.js';
@@ -155,6 +156,8 @@ const ideaRounds=new IdeaRounds(path.join(ROOT,'runtime','idea-rounds.json'),{se
 ideaRounds.recoverInterrupted();
 const buildQuarantine=new BuildQuarantine(path.join(ROOT,'runtime','build-quarantine.json'));
 const studioBuilds=new StudioBuilds(path.join(ROOT,'runtime','studio-builds.json'),{enabled:executionPolicy.mode==='cloud-vm'&&CONFIG.build?.studioWorker?.enabled===true,adapter:new CreateOSStudioWorker(ROOT,CONFIG.build?.studioWorker||{}),rounds:ideaRounds,quarantine:buildQuarantine,evidenceDir:path.join(ROOT,'docs','evidence'),onChange:job=>{if(job)feed('system','Isolated build: '+job.phase+'. '+job.message);}});
+const builderWarm=new BuilderWarmSessions(ROOT,{...CONFIG.build?.studioWorker,decisionUsed:()=>studioBuilds.data.jobs.some(j=>j.approvalId===CONFIG.build?.studioWorker?.approvalId),enabled:executionPolicy.mode==='cloud-vm'&&CONFIG.build?.studioWorker?.enabled===true&&CONFIG.build?.studioWorker?.prewarmEnabled===true});
+const builderWarmHeartbeat=setInterval(()=>{void builderWarm.heartbeat().catch(()=>{});},60000);
 const creatorAssets=new CreatorAssets(path.join(ROOT,'runtime','creator-assets.json'));
 const publicationSnapshot=new GameCreditsSnapshot({registry:creatorAssets,root:ROOT});
 function clientCredits(){return {...publicationSnapshot.get(),showCommunityCredit:CONFIG.features?.communityCredit===true};}
@@ -381,7 +384,7 @@ if(fs.existsSync(deliveryFile))for(const line of fs.readFileSync(deliveryFile,'u
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
-  if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({features:{communityCredit:CONFIG.features?.communityCredit===true},round:ideaRounds.public(),delegation:approvalDelegation.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,...studioBuilds.status()}}));}
+  if(url.pathname==='/community/state'&&req.method==='GET'){if(!tickRounds()){res.writeHead(503,{'Content-Type':'application/json'});return res.end(JSON.stringify({code:'round_store_unavailable'}));}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({features:{communityCredit:CONFIG.features?.communityCredit===true},round:ideaRounds.public(),delegation:approvalDelegation.public(),channel:TWITCH_CHANNEL,twitchConnected:!!twitch?.ready,liveGame:host.game?.name,build:{mode:executionPolicy.mode,fallbackToLocal:false,...studioBuilds.status(),warm:builderWarm.summary()}}));}
   let bodyBytes=0;req.on('data',chunk=>{bodyBytes+=chunk.length;if(bodyBytes>262144){res.writeHead(413);res.end('request too large');req.destroy();}});
   if(url.pathname==='/community/assets'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({assets:creatorAssets.catalog(),policy:{defaultTier:'free',paidCheckoutEnabled:false,platformCommission:null,creditPolicy:'Creator links stay in official game credits.'}}));}
   if(url.pathname==='/community/games'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({...remoteGames.catalog(),teeBridge:teeBridge.status()}));}
@@ -401,9 +404,13 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(403); return res.end('localhost only');
     }
     const readBody = () => new Promise(r => { let b = ''; req.on('data', c => b += c); req.on('end', () => r(b)); });
+    if(url.pathname==='/admin/builder-session'&&['GET','POST'].includes(req.method)){
+      if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
+      try{let result;if(req.method==='GET')result=builderWarm.privateSummary();else{const data=JSON.parse(await readBody()||'{}');if(data.action==='prepare'){const j=studioBuilds.public();if(j&&!['failed','cancelled','tests-failed','reviewed-publication'].includes(j.phase))throw Error('Finish or cancel the existing artifact/job first.');result=await builderWarm.prepare();}else if(data.action==='extend')result=await builderWarm.extend();else if(data.action==='close')result=await builderWarm.close();else throw Error('Use prepare, extend or close.');}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400,{'Content-Type':'application/json'});return res.end(JSON.stringify({error:error.message}));}
+    }
     if(url.pathname==='/admin/studio-builds'&&['GET','POST'].includes(req.method)){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
-      try{let result;if(req.method==='GET')result=studioBuilds.status();else{const data=JSON.parse(await readBody()||'{}');if(data.action==='check')result=await studioBuilds.check();else if(data.action==='dispatch'){if(!tickRounds())throw Error('Round storage unavailable');result=await studioBuilds.dispatch({roundId:data.roundId,approvedInputHash:data.approvedInputHash});}else if(data.action==='cancel')result=await studioBuilds.cancel(data.id);else if(data.action==='reconcile')result=await studioBuilds.reconcile(data.id);else if(data.action==='inspect')result=studioBuilds.inspect(data.id);else if(data.action==='publish-review')result=studioBuilds.publish(data.id,data,{owner:true,name:TWITCH_CHANNEL||'local streamer',source:'streamer-ui'});else throw Error('Unknown studio build action.');}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400,{'Content-Type':'application/json'});return res.end(JSON.stringify({error:error.message}));}
+      try{let result;if(req.method==='GET')result=studioBuilds.status();else{const data=JSON.parse(await readBody()||'{}');if(['check','dispatch'].includes(data.action))await builderWarm.heartbeat();if(data.action==='check')result=await studioBuilds.check();else if(data.action==='dispatch'){if(!tickRounds())throw Error('Round storage unavailable');result=await studioBuilds.dispatch({roundId:data.roundId,approvedInputHash:data.approvedInputHash});}else if(data.action==='cancel')result=await studioBuilds.cancel(data.id);else if(data.action==='reconcile')result=await studioBuilds.reconcile(data.id);else if(data.action==='inspect')result=studioBuilds.inspect(data.id);else if(data.action==='publish-review')result=studioBuilds.publish(data.id,data,{owner:true,name:TWITCH_CHANNEL||'local streamer',source:'streamer-ui'});else throw Error('Unknown studio build action.');}res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify(result));}catch(error){res.writeHead(400,{'Content-Type':'application/json'});return res.end(JSON.stringify({error:error.message}));}
     }
     if(url.pathname==='/admin/approval-delegate'&&['GET','POST'].includes(req.method)){
       if(!secretMatches(process.env.VA_STREAMER_KEY,req.headers['x-streamer-key'])){res.writeHead(403);return res.end('streamer confirmation required');}
@@ -711,5 +718,5 @@ server.listen(PORT, LISTEN_HOST, () => {
 });
 
 let shuttingDown=false;
-const shutdown=async()=>{if(shuttingDown)return;shuttingDown=true;resourceWatcher.close();clearTimeout(resourceDebounce);teeBridge.stop();twitch?.close();host.stop();localChat.close();server.close();if(studioBuilds.running){const running=studioBuilds.running;try{await studioBuilds.cancel(running.id);let timer;try{await Promise.race([running.promise,new Promise(resolve=>{timer=setTimeout(resolve,45000);})]);}finally{clearTimeout(timer);}}catch{}if(studioBuilds.running)console.error('Managed guest cleanup still requires reconciliation; independent lease timers remain.');}process.exit(0);};
+const shutdown=async()=>{if(shuttingDown)return;shuttingDown=true;clearInterval(builderWarmHeartbeat);resourceWatcher.close();clearTimeout(resourceDebounce);teeBridge.stop();twitch?.close();host.stop();localChat.close();server.close();if(studioBuilds.running){const running=studioBuilds.running;try{await studioBuilds.cancel(running.id);let timer;try{await Promise.race([running.promise,new Promise(resolve=>{timer=setTimeout(resolve,45000);})]);}finally{clearTimeout(timer);}}catch{}if(studioBuilds.running)console.error('Managed guest cleanup still requires reconciliation; independent lease timers remain.');}process.exit(0);};
 process.on('SIGINT',shutdown);process.on('SIGTERM',shutdown);

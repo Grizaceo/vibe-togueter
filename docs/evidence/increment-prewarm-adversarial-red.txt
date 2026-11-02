@@ -1,0 +1,51 @@
+✔ warm renewal is bounded, durable and independent of the cleanup timer (7.472538ms)
+✔ explicit close wins and a delayed writer cannot acknowledge an extension (3.716364ms)
+✔ a suspended renewal writer cannot confirm a deadline that has already passed (1.575007ms)
+✔ append-only renewal records cannot be shortened by an older delayed record (2.596587ms)
+✔ the final minute, foreign decisions and altered maximum cannot renew (1.779366ms)
+✖ the allowed 30-minute maximum accepts an initial arm-time jitter (1.002512ms)
+✔ unapproved worker cannot query credentials, provider or model (5.332508ms)
+✔ read-only preflight checks owned lease, active cleanup, auth boolean and equivalent egress order (3.582965ms)
+✔ managed process observation failure re-polls the same handle without another creation (508.449652ms)
+✔ operator adapter keeps model/source inert and verifies builder terminal state (23.939541ms)
+✔ test-VM ownership rejects foreign inventory IDs and changed isolation before destruction (1.550493ms)
+✔ independent recurring test cleanup is armed before any VM creation request (9.414216ms)
+✔ an in-progress pre-create journal cannot stop its own independent supervision (3.82853ms)
+✔ managed noninteractive commands receive EOF without waiting for manager stdin (516.536659ms)
+✖ explicit warm-session close intent blocks worker readiness before model admission (9.412819ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 13
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1285.407173
+
+✖ failing tests:
+
+test at test/builder-lease-control.mjs:9:1
+✖ the allowed 30-minute maximum accepts an initial arm-time jitter (1.002512ms)
+  Error: Warm limit cannot be shorter than initial lease.
+      at BuilderLeaseControl.bind (file:///home/gris96/vibe-arena/src/builder-lease-control.js:8:506)
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/builder-lease-control.mjs:9:254)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at test/createos-studio-worker.mjs:39:1
+✖ explicit warm-session close intent blocks worker readiness before model admission (9.412819ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/createos-studio-worker.mjs:40:170)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /clos|cleanup/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }

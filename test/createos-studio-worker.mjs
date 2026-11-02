@@ -36,3 +36,9 @@ test('managed noninteractive commands receive EOF without waiting for manager st
  await f.worker.managed(buildId,`node -e 'process.stdin.resume();process.stdin.on("end",()=>process.exit(0))'`,f.job,{...f.ownedState},'stdinProbe',{signal:new AbortController().signal,maxMs:1500});
  assert.equal(starts,1);assert.equal(child.exitCode,0);
 });
+test('explicit warm-session close intent blocks worker readiness before model admission',async t=>{
+ const f=fixture(t);const {BuilderLeaseControl}=await import('../src/builder-lease-control.js');new BuilderLeaseControl(f.root,f.state.name).beginClose({explicit:true});await assert.rejects(f.worker.ready(),/clos|cleanup/i);assert.equal(f.calls.filter(c=>c.args[1]==='process'&&c.args[2]==='start').length,0);
+});
+
+test('readiness rechecks a close that wins during asynchronous guest verification',async t=>{const f=fixture(t),run=f.worker.run;const {BuilderLeaseControl}=await import('../src/builder-lease-control.js');let closed=false;f.worker.run=async(cmd,args,options)=>{const result=await run(cmd,args,options);if(!closed&&cmd==='createos'&&args[1]==='get'){closed=true;new BuilderLeaseControl(f.root,f.state.name).beginClose({explicit:true});}return result;};await assert.rejects(f.worker.ready(),/cleanup|closing/i);assert.equal(f.calls.some(c=>c.args[1]==='process'),false);});
+test('cleanup recovers an exact durable lease claim after the session-claim write failed',async t=>{const f=fixture(t),session=f.worker.session.bind(f.worker);let fail=true;f.worker.session=()=>{const builder=session(),save=builder.save.bind(builder);builder.save=()=>{if(fail){fail=false;throw Error('session claim disk failure');}return save();};return builder;};await assert.rejects(f.worker.build(f.job,{signal:new AbortController().signal}),/disk failure/);assert.equal(f.calls.some(c=>c.args[1]==='process'),false);assert.equal((await f.worker.cleanup(f.job)).confirmed,true);assert.equal(f.vm.status,'destroyed');});

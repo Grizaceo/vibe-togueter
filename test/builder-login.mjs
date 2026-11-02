@@ -6,11 +6,11 @@ const run=promisify(execFile),root=path.resolve(new URL('..',import.meta.url).pa
 function fixture(t,extra={}) {
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'va-login-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
  for(const folder of ['src','scripts','docs/evidence','runtime','bin'])fs.mkdirSync(path.join(dir,folder),{recursive:true});
- for(const file of ['src/vm-builder-preflight.js','src/controller-lock.js','scripts/builder-login.mjs','scripts/cleanup-builder-session.mjs','package.json'])fs.copyFileSync(path.join(root,file),path.join(dir,file));
+ for(const file of ['src/vm-builder-preflight.js','src/controller-lock.js','src/builder-lease-control.js','scripts/builder-login.mjs','scripts/cleanup-builder-session.mjs','package.json'])fs.copyFileSync(path.join(root,file),path.join(dir,file));
  const fake=`#!${process.execPath}
 import fs from 'node:fs';import path from 'node:path';
 function main(){const a=process.argv.slice(2),kind=path.basename(process.argv[1]),file=process.env.FAKE_STATE;
-if(kind==='systemd-run'){if(process.env.FAKE_REQUIRE_INTENT){const lease=JSON.parse(fs.readFileSync(path.join(process.env.HOME,'runtime','builder-leases',a.at(-1)+'.json')));if(lease.creationRequested!==true)process.exit(2);}if(process.env.FAKE_INTERRUPT){process.kill(process.ppid,'SIGTERM');setTimeout(()=>process.exit(1),100);return;}if(process.env.FAKE_TIMER_FAIL)process.exit(1);console.log('timer installed');return;}
+if(kind==='systemd-run'){if(process.env.FAKE_REQUIRE_INTENT){const lease=JSON.parse(fs.readFileSync(path.join(process.env.HOME,'runtime','builder-leases',a.find(x=>/^va-build-[a-f0-9]{12}$/.test(x))+'.json')));if(lease.creationRequested!==true)process.exit(2);}if(process.env.FAKE_INTERRUPT){process.kill(process.ppid,'SIGTERM');setTimeout(()=>process.exit(1),100);return;}if(process.env.FAKE_TIMER_FAIL)process.exit(1);console.log('timer installed');return;}
 if(kind==='systemctl'){console.log('active');return;}
 let vm=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):null;let result;
 if(a[1]==='list')result=vm?[vm]:[];
@@ -28,7 +28,7 @@ main();
  for(const name of ['createos','systemd-run','systemctl'])fs.writeFileSync(path.join(dir,'bin',name),fake,{mode:0o700});
  const env={PATH:path.join(dir,'bin')+':/usr/bin:/bin',HOME:dir,FAKE_STATE:path.join(dir,'provider.json'),...extra};
  const call=action=>run(process.execPath,['scripts/builder-login.mjs',action],{cwd:dir,env,timeout:10000});
- const cleanup=name=>run(process.execPath,['scripts/cleanup-builder-session.mjs',name],{cwd:dir,env,timeout:10000});return {dir,call,cleanup};
+ const cleanup=(name,due=false)=>run(process.execPath,['scripts/cleanup-builder-session.mjs',name,...(due?['--due']:[])],{cwd:dir,env,timeout:10000});return {dir,call,cleanup};
 }
 test('device login helper keeps codes private, verifies subscription status and releases own guest',async t=>{
  const {dir,call}=fixture(t);const prepared=await call('prepare');assert.ok(!prepared.stdout.includes('FAKE-DEVICE-CODE'));
@@ -54,3 +54,5 @@ test('pre-armed per-lease cleanup recovers a guest without the create reply ID a
 test('builder supervisor receives durable creation intent before its timer can fire',async t=>{
  const {call}=fixture(t,{FAKE_REQUIRE_INTENT:'1'});await call('prepare');await call('release');
 });
+
+test('a scheduled cleanup retains a prepared guest until its durable lease is due',async t=>{const {dir,call,cleanup}=fixture(t);await call('prepare');const state=JSON.parse(fs.readFileSync(path.join(dir,'runtime','builder-session.json')));const result=await cleanup(state.name,true);assert.match(result.stdout,/retained/);assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'provider.json'))).status,'running');await call('release');});

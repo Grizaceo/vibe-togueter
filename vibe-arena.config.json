@@ -37,7 +37,9 @@
     "studioWorker": {
       "enabled": false,
       "approvalId": null,
-      "vmBudgetMinor": 0
+      "vmBudgetMinor": 0,
+      "prewarmEnabled": false,
+      "maxWarmMinutes": 60
     }
   },
   "community": {
