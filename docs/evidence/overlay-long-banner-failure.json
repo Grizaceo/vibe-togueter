@@ -1,0 +1,72 @@
+{
+  "at": "2026-11-02T09:49:57.401Z",
+  "error": "720p 10-author maximum-field synthetic overlay with a long fallback banner keeps activity and sidebar in bounds: {\"side\":{\"top\":0,\"bottom\":669.203125},\"activity\":{\"top\":121,\"bottom\":636.328125},\"players\":{\"top\":636.328125,\"bottom\":667.328125},\"privacy\":{\"top\":667.328125,\"bottom\":693.328125}}",
+  "checks": [
+    {
+      "name": "lobby shows game, art and idea credit while details are collapsed",
+      "ok": true
+    },
+    {
+      "name": "creator strip is inside the desktop viewport",
+      "ok": true
+    },
+    {
+      "name": "production browser keyboard handler plants a visible tree",
+      "ok": true
+    },
+    {
+      "name": "overlay keeps all three credit roles in the viewport",
+      "ok": true
+    },
+    {
+      "name": "1080p credit strip is at least 24px and no ledger is shown",
+      "ok": true
+    },
+    {
+      "name": "720p stream credits and activity fit",
+      "ok": true
+    },
+    {
+      "name": "overlay shows a real local proposal and ballot from WS state",
+      "ok": true
+    },
+    {
+      "name": "overlay renders streamer-reported prediction winner",
+      "ok": true
+    },
+    {
+      "name": "overlay renders actual effects pause",
+      "ok": true
+    },
+    {
+      "name": "overlay shows the actual local fallback reason",
+      "ok": true
+    },
+    {
+      "name": "overlay separates current approved input co-credit from live game attribution",
+      "ok": true
+    },
+    {
+      "name": "720p crowded sidebar has no scrollbars, overlap or clipped activity",
+      "ok": true
+    },
+    {
+      "name": "720p Marble credit names its owner and inherited prototype",
+      "ok": true
+    },
+    {
+      "name": "1080p crowded sidebar has no scrollbars, overlap or clipped activity",
+      "ok": true
+    },
+    {
+      "name": "1080p Marble credit names its owner and inherited prototype",
+      "ok": true
+    },
+    {
+      "name": "720p 10-author maximum-field synthetic overlay with a long fallback banner keeps activity and sidebar in bounds: {\"side\":{\"top\":0,\"bottom\":669.203125},\"activity\":{\"top\":121,\"bottom\":636.328125},\"players\":{\"top\":636.328125,\"bottom\":667.328125},\"privacy\":{\"top\":667.328125,\"bottom\":693.328125}}",
+      "ok": false
+    }
+  ],
+  "errors": [],
+  "temp": "/tmp/va-ui-7o313M"
+}

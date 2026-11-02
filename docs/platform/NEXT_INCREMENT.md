@@ -1,4 +1,6 @@
-# Submission increment — final technical checkpoint
+# Delivery work log and earlier increment results
+
+See [the current delivery checkpoint](DELIVERY_CHECKPOINT.md) for this pre-freeze pass. Earlier Studio workstream results follow; Tee alternatives use their own separate gate.
 
 Blocks 0, A, B and conditional C are complete within their stated evidence boundaries. Plan B remains runnable. A completed the real reviewed-publication route before the 10:00 UTC gate; no generated runtime is deployed. Worker and VM preparation ship disabled pending a new allocation. Detailed chronological failures, decisions and intermediate counts remain in [history](INCREMENT_HISTORY.md).
 
@@ -77,3 +79,5 @@ Follow [human rehearsal](../REHEARSAL.md), including real-mod !fallback, !pause/
 09:11 UTC — Combined the three reload-event branches without changing action order; existing reload/credit integration and the full 271-check suite pass. Corrected legacy accounting comments to describe estimates/simulated credits. Deployment preflight now reads private env plus JSON and rejects trusted-local or event-credit overrides; synthetic positive/negative cases and systemd syntax pass. Also verified the full suite with /usr/bin/node 26.12.0, matching the service profile, and corrected the docs' earlier single-version shorthand (usual controller is 26.12.1). No paid/provider or public action occurred.
 
 09:21 UTC — Tee preparation advanced through read-only provider discovery: inventory access works and returns two existing running guests, both untouched. Receipt omits names/IDs/addresses. Zero VM mutations/model calls; available balance, capacity and new spend approval remain unverified. Plan A is pending until its 09:30 Santiago gate; Plan B remains ready. Next: continue cleanup/explainability and preserve the noon freeze.
+
+10:23 UTC — Recording copy now describes supporting vote counts accurately, keeps 70 seconds on the live Twitch/approval path and uses 39 phrase-based cues matching 320 words on a 2:45 draft track. Studio text leads with reviewed resources/live games. A long fallback banner exposed another 720p overflow; bounded error text plus whole feed rows fix it, and a resize recovery check confirms recent events return. Suite 271/271 and browser 36/36 pass. Consolidated current evidence/captures and effective local flags; the configured TryCloudflare origin is not a verified judge host. Next: continue cleanup/review, preserve the Tee gate and noon freeze; owner spending/hosting/recording decisions remain pending.

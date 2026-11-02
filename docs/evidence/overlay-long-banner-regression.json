@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-02T10:20:10.076343+00:00",
+  "kind": "long-banner-and-whole-feed-row-regression",
+  "before": "overlay-long-banner-failure.json",
+  "after": "local-ui-1793614056771-rehearsal.json",
+  "suite": {
+    "focused": 161,
+    "integration": 110,
+    "failed": 0,
+    "log": "overlay-long-banner-tests.txt"
+  },
+  "sources": {
+    "public/overlay.html": "901a1ae130fa7d02412c49fd82397c37415e81aa0b98001a2266737555422a82",
+    "scripts/rehearse-ui-local.mjs": "add6ba75b5606c4461794e4594155d65a59a866a00bf865417bbe1dea6c779f4",
+    "public/studio.html": "3569079e670964e3a75ac3d78bf6171fd517b643641f898efe9749bfe8fb0664",
+    "public/studio.js": "12dbaa61790b84471fc3e186e47c0407d6322739d1ef0ae7947343c82a4b0342"
+  },
+  "scope": [
+    "Long fallback text held in the real error node during synthetic activity layouts.",
+    "Banner limited to two lines; recent feed retains its 80-event buffer and displays complete rows.",
+    "Real resize observation restores latest events when space grows; no polling or extra network request.",
+    "Synthetic layout evidence only; no audience, real backend failure, Twitch, VM/model or deployment claim."
+  ]
+}

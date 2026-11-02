@@ -35,7 +35,7 @@ This establishes read access only. Available credits, currency conversion, concu
 
 ## Plan B — recording ready
 
-Reserve 15–20 seconds near the end of the video for the owner's separately recorded game. On-screen label: **“Next: a real-time game for streamer-vs-chat. Built separately; not part of this submission.”**
+Reserve 15–20 seconds near the end of the video for the owner's separately recorded game. On-screen label: **“Future game · teeworlds-rs. By Cristóbal Muñoz with Devin and Hermes. Separate from Vibe Arena's judged code.”**
 
 Narration: “This is my separate teeworlds-rs game, built with Devin and Hermes. Vibe Arena would connect it through an isolated runtime: viewers join as tees, and spectators send buffs and hazards from chat.”
 

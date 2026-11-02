@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-02T09:33:11.872Z",
+  "kind": "read-only-effective-local-policy",
+  "state": {
+    "execution": "cloud-vm",
+    "workerEnabled": false,
+    "prewarmEnabled": false,
+    "allocationConfigured": false,
+    "vmBudgetMinor": 0,
+    "remoteCatalogEntries": 0,
+    "autoGenerate": false,
+    "eventCreditSimulation": false,
+    "adminKeyConfigured": true,
+    "streamerKeyConfigured": true,
+    "publicUrlConfigured": true,
+    "publicUrlUsesTryCloudflareHost": true
+  },
+  "limits": [
+    "Merges private .env and process environment using the controller precedence.",
+    "No credential value or URL is recorded.",
+    "No service, provider, Twitch or model operation; not proof of a deployed judging host.",
+    "Configured URL classification does not prove an active tunnel or durable judging access."
+  ],
+  "urlClassificationCheckedAt": "2026-11-02T09:52:45.495Z"
+}

@@ -10,7 +10,7 @@ Record actual Twitch participation and actual Codex footage. The text and captio
 | 0:58–1:20 | Complete the streamer input decision, then live credits with Twitch still visible | Keep this part on the live participation/approval path. State the pre-hackathon Devin-assisted prototype and Codex-authored hackathon work. |
 | 1:20–1:50 | Real Codex build thread, existing Lantern inputs, guest construction receipt, nine-check report, cleanup and exact approval | Show the original approved artifact. Label the frame **Static test-VM preview — reviewed artifact**. Owner-selected idea, zero audience votes, separate build/test VMs. Do not edit or run its source on the PC. |
 | 1:50–2:05 | Actual moderator `!fallback` and continuing browser session | Say requested recovery. Watchdog failure recovery is a separate implemented path, not what the command shot proves. Use actual configured fallback order. |
-| 2:05–2:25 | Owner's separately recorded teeworlds-rs clip, only if ready | Plan B label: **Next: a real-time game for streamer-vs-chat. Built separately; not part of this submission.** Credit Cristóbal Muñoz, built with Devin and Hermes. No Vibe Arena integration is implied. |
+| 2:05–2:25 | Owner's separately recorded teeworlds-rs clip, only if ready | Plan B label: **Future game · teeworlds-rs. By Cristóbal Muñoz with Devin and Hermes. Separate from Vibe Arena's judged code.** Credit Cristóbal Muñoz, built with Devin and Hermes. No Vibe Arena integration is implied. |
 | 2:25–2:45 | Game with credits, optionally an owner-chosen roadmap diagram | Present runtime, external adapter, repair, statistics and broader creator credits as planned. Reference diagrams stay outside the repository; show only with the owner's decision. |
 
 ## Before recording
