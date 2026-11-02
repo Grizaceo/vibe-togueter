@@ -1,0 +1,26 @@
+{
+  "frozen_commit": "113c3f500fcec4c82808d176bd613607c27a9978",
+  "submission_branch": "113c3f500fcec4c82808d176bd613607c27a9978",
+  "annotated_tag_object": "1caae2e27206c87fe756d4a6462c74499a5a1dce",
+  "tag_peeled_commit": "113c3f500fcec4c82808d176bd613607c27a9978",
+  "protected_file_count": 13,
+  "protected_sha256": {
+    "artifacts/lantern-table-e21fef6b/game.js": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+    "artifacts/lantern-table-e21fef6b/manifest.json": "a0daa58a6a729909a6e7b9dd5b39370986ba325e36c24594ead368d0014f2726",
+    "artifacts/lantern-table-e21fef6b/report.json": "12f43ad7f2eda77fc41477040cf2860ff5b29511080d14d00b6047993377c959",
+    "artifacts/lantern-table-e21fef6b/review.json": "0dac9f23ea8852444d7a6c2eef7bcdb31493fcdddb5e5cdd984556adf7a9bf43",
+    "artifacts/lantern-table-roles-draft/draft.json": "52e80a556db09442032905786b0a2159a54554da21ad514f40f5b9483e8198d0",
+    "artifacts/lantern-table-roles-draft/game.js": "449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075",
+    "artifacts/lantern-table-roles-draft/guest-check.mjs": "93b135aa023e850bed3c61c424612e84fc4f24d718872b881a509dc133f843ba",
+    "artifacts/lantern-table-roles-draft/report.json": "780d5eb28d468224854c9a3f3ae02e32614017407c1fbe977ea7076840e1b523",
+    "artifacts/lantern-table-roles-draft/review.json": "bb8aa27a45d67bbaefc85e4749519c5933b5800d47b3533fce77f59474d49201",
+    "artifacts/seed-race/f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105/game.js": "f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105",
+    "artifacts/seed-race/f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105/provenance.json": "6c82766c5e6ac0cc6a2da58c11759d3655660ac84835c9375b896d7b3139e563",
+    "artifacts/seed-race/transfer/manifest.json": "1ceffa68636a062e712173f11a607c01ca5b9aeb9d4c1da2a080216d1c8e43fe",
+    "artifacts/seed-race/transfer/seed-race-approved.tar.gz": "04d88e1ceaf3aa1e28251c93d43aedbf286552a6ea8a37e9e69e97883125a18c"
+  },
+  "configuration_and_dependency_files_unchanged": true,
+  "test_directory_unchanged": true,
+  "sdk_prompt_already_english_and_unchanged": true,
+  "remotes": ""
+}
