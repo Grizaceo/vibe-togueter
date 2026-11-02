@@ -20,7 +20,7 @@ The [long-banner regression](evidence/overlay-long-banner-regression.json) adds 
 
 The [Studio round-count check](evidence/studio-round-counts-check.json) retains all 36 passing browser checks and a [targeted capture](evidence/studio-round-counts.png). It uses singular voting-session and selection-slot labels, preserving the distinction between unverified sessions and people.
 
-The later [overlay CSS cleanup replay](evidence/overlay-css-cleanup.json) passes the full 36-check browser run and 271-check suite after consolidating the feed selector and removing styling for hidden overlay details. Current captures above remain the visual references.
+The later [overlay CSS cleanup replay](evidence/overlay-css-cleanup.json) passes the full 36-check browser run and 271-check suite after consolidating the feed selector and removing styling for hidden overlay details. [Unused Studio style removal](evidence/studio-unused-style-check.json) separately passes the same checks after deleting the unreferenced `.numbers` selector. Current captures above remain the visual references.
 
 The dated sections below preserve historical counts/failures. No human/Twitch/OBS/video, hosting deployment, settled provider cost or public submission is inferred from local automation.
 

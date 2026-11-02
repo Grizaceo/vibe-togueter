@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-02T11:30:01.889427+00:00",
+  "kind": "unused-studio-style-removal-check",
+  "browser": {
+    "exit": 0,
+    "passed": 36,
+    "failed": 0,
+    "errors": []
+  },
+  "sourceSha256": "b3924a5c90847252e54429011ffd1d53b5b2c6f9db9b406ec9815e0535c6ac9e",
+  "removedSelector": ".numbers",
+  "scope": [
+    "Selector appears in neither static Studio markup nor dynamic element classes in its browser modules.",
+    "Full existing Chromium rehearsal in a disposable archive; screenshots discarded because this is unused-style removal.",
+    "No private .env, provider/VM/model, Twitch operation or candidate execution."
+  ],
+  "tempRemoved": true,
+  "suite": {
+    "exit": 0,
+    "focused": 161,
+    "integration": 110,
+    "failed": 0,
+    "isolatedCheckoutRemoved": true,
+    "logSha256": "bb14b73cecca746fac9b034eb99cfbe96ac0ae614e653a8e072f5df908e16f37"
+  }
+}
