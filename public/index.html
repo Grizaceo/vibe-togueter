@@ -1,67 +1,169 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<title>vibe-arena — play</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-  body { margin:0; background:#0b0b0f; color:#eee; font:16px system-ui; display:flex; flex-direction:column; height:100vh; }
-  header { padding:8px 12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:#14141c; }
-  header b { color:#8ef; }
-  #live-credits a { color:#8ef; }
-  canvas { flex:1;min-height:0;height:0; width:100%; touch-action:none; }
-  #bar { padding:6px 12px; background:#14141c; display:flex; gap:10px; font-size:14px; align-items:center; }
-  #players { color:#9a9; } #err { color:#f88; }
-  input { background:#222; color:#eee; border:1px solid #333; border-radius:4px; padding:4px 8px; }
-#live-credits { flex-shrink:0; }
-.creator-strip {display:flex;flex-wrap:wrap;gap:4px 24px;font-size:clamp(18px,1.5vw,28px);font-weight:650;color:#fff;line-height:1.5}
-#live-credits details>div { max-height:140px;overflow:auto; }
-#feed { min-height:0; }
-</style>
-</head>
-<body>
-<header>
-  <b id="game">vibe-arena</b>
-  <span id="me"></span>
-  <a href="/privacy.html" style="color:#9bd">Privacy</a>
-  <a href="/studio.html" style="color:#8ef">Community studio · creators &amp; ideas</a>
+  <head>
+    <meta charset="utf-8" />
+    <title>vibe-arena — play</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        margin: 0;
+        background: #0b0b0f;
+        color: #eee;
+        font: 16px system-ui;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      header {
+        padding: 8px 12px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+        background: #14141c;
+      }
+      header b {
+        color: #8ef;
+      }
+      #live-credits a {
+        color: #8ef;
+      }
+      canvas {
+        flex: 1;
+        min-height: 0;
+        height: 0;
+        width: 100%;
+        touch-action: none;
+      }
+      #bar {
+        padding: 6px 12px;
+        background: #14141c;
+        display: flex;
+        gap: 10px;
+        font-size: 14px;
+        align-items: center;
+      }
+      #players {
+        color: #9a9;
+      }
+      #err {
+        color: #f88;
+      }
+      input {
+        background: #222;
+        color: #eee;
+        border: 1px solid #333;
+        border-radius: 4px;
+        padding: 4px 8px;
+      }
+      #live-credits {
+        flex-shrink: 0;
+      }
+      .creator-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 24px;
+        font-size: clamp(18px, 1.5vw, 28px);
+        font-weight: 650;
+        color: #fff;
+        line-height: 1.5;
+      }
+      #live-credits details > div {
+        max-height: 140px;
+        overflow: auto;
+      }
+      #feed {
+        min-height: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <b id="game">vibe-arena</b>
+      <span id="me"></span>
+      <a href="/privacy.html" style="color: #9bd">Privacy</a>
+      <a href="/studio.html" style="color: #8ef"
+        >Community studio · creators &amp; ideas</a
+      >
 
-<form id="streamer" style="margin-left:auto;display:flex;gap:6px"><input id="streamer-key" type="password" placeholder="Streamer key" aria-label="Private streamer key" size="12" autocomplete="off"><button>Unlock controls</button><span id="role-status" role="status"></span></form>
-</header>
-<div id="rules" style="padding:6px 12px;color:#91a7ca;font-size:14px;line-height:1.5"></div>
-<canvas id="cv"></canvas>
-<div id="live-credits" hidden style="background:#14141c;padding:8px 12px;font-size:14px"></div>
-<div id="bar">
-  <span id="players"></span>
-  <span id="err"></span>
-  <form id="chat" style="margin-left:auto;display:flex;gap:6px">
-    <input id="ct" placeholder="!command or idea" size="24" autocomplete="off">
-  </form>
-</div>
-<script type="module">
-import { connect } from './client.js';
-import {attachLiveCredits} from './live-credits.js';
-const credits=attachLiveCredits(document.getElementById('live-credits'));
-const c = connect({
-  canvas: document.getElementById('cv'),
-  onCredits: publication => credits.update(publication),
-  onRole: m => {document.getElementById('role-status').textContent=m.ok?'Controls unlocked':'Key rejected / already claimed';document.getElementById('streamer-key').value='';},
-  onWelcome: m => { document.getElementById('me').textContent = `You are ${m.name}`; },
-  onPlayers: (p, game, err) => {
-    credits.matchGame(game);
-    if (game) {document.getElementById('game').textContent=game.name;document.getElementById('rules').textContent=game.desc||'';}
-    document.getElementById('players').textContent = `${p.length} playing`;
-    document.getElementById('err').textContent = err || '';
-  },
-});
-document.getElementById('streamer').onsubmit=e=>{e.preventDefault();c.claimStreamer(document.getElementById('streamer-key').value);};
-document.getElementById('chat').onsubmit = e => {
-  e.preventDefault();
-  const i = document.getElementById('ct');
-  if (i.value.trim()) c.sendChat(i.value.trim());
-  i.value = '';
-};
-</script>
-
-</body>
+      <form id="streamer" style="margin-left: auto; display: flex; gap: 6px">
+        <input
+          id="streamer-key"
+          type="password"
+          placeholder="Streamer key"
+          aria-label="Private streamer key"
+          size="12"
+          autocomplete="off"
+        /><button>Unlock controls</button
+        ><span id="role-status" role="status"></span>
+      </form>
+    </header>
+    <div
+      id="rules"
+      style="
+        padding: 6px 12px;
+        color: #91a7ca;
+        font-size: 14px;
+        line-height: 1.5;
+      "
+    ></div>
+    <canvas id="cv"></canvas>
+    <div
+      id="live-credits"
+      hidden
+      style="background: #14141c; padding: 8px 12px; font-size: 14px"
+    ></div>
+    <div id="bar">
+      <span id="players"></span>
+      <span id="err"></span>
+      <form id="chat" style="margin-left: auto; display: flex; gap: 6px">
+        <input
+          id="ct"
+          placeholder="!command or idea"
+          size="24"
+          autocomplete="off"
+        />
+      </form>
+    </div>
+    <script type="module">
+      import { connect } from "./client.js";
+      import { attachLiveCredits } from "./live-credits.js";
+      const credits = attachLiveCredits(
+        document.getElementById("live-credits"),
+      );
+      const c = connect({
+        canvas: document.getElementById("cv"),
+        onCredits: (publication) => credits.update(publication),
+        onRole: (m) => {
+          document.getElementById("role-status").textContent = m.ok
+            ? "Controls unlocked"
+            : "Key rejected / already claimed";
+          document.getElementById("streamer-key").value = "";
+        },
+        onWelcome: (m) => {
+          document.getElementById("me").textContent = `You are ${m.name}`;
+        },
+        onPlayers: (p, game, err) => {
+          credits.matchGame(game);
+          if (game) {
+            document.getElementById("game").textContent = game.name;
+            document.getElementById("rules").textContent = game.desc || "";
+          }
+          document.getElementById("players").textContent =
+            `${p.length} playing`;
+          document.getElementById("err").textContent = err || "";
+        },
+      });
+      document.getElementById("streamer").onsubmit = (e) => {
+        e.preventDefault();
+        c.claimStreamer(document.getElementById("streamer-key").value);
+      };
+      document.getElementById("chat").onsubmit = (e) => {
+        e.preventDefault();
+        const i = document.getElementById("ct");
+        if (i.value.trim()) c.sendChat(i.value.trim());
+        i.value = "";
+      };
+    </script>
+  </body>
 </html>

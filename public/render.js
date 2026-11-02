@@ -5,17 +5,26 @@
 
 const spriteCache = new Map();
 function sprite(src) {
-  if(typeof src!=='string'||!/^\/curated\/[a-z0-9-]+\/[a-zA-Z0-9_-]+\.png$/.test(src))return null;
-  if(spriteCache.size>=128&&!spriteCache.has(src))return null;
+  if (
+    typeof src !== "string" ||
+    !/^\/curated\/[a-z0-9-]+\/[a-zA-Z0-9_-]+\.png$/.test(src)
+  )
+    return null;
+  if (spriteCache.size >= 128 && !spriteCache.has(src)) return null;
   let img = spriteCache.get(src);
-  if (!img) { img = new Image(); img.src = src; spriteCache.set(src, img); }
+  if (!img) {
+    img = new Image();
+    img.src = src;
+    spriteCache.set(src, img);
+  }
   return img;
 }
 
 export function drawFrame(ctx, view, canvas, world) {
-  const W = world?.w || 1280, H = world?.h || 720;
+  const W = world?.w || 1280,
+    H = world?.h || 720;
   ctx.save();
-  ctx.fillStyle = view.bg || '#111';
+  ctx.fillStyle = view.bg || "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   const s = Math.min(canvas.width / W, canvas.height / H);
   ctx.translate((canvas.width - W * s) / 2, (canvas.height - H * s) / 2);
@@ -28,36 +37,53 @@ export function drawFrame(ctx, view, canvas, world) {
 
 function drawPrim(ctx, p) {
   switch (p.t) {
-    case 'rect':
+    case "rect":
       ctx.save();
-      if (p.rot) { ctx.translate(p.x + p.w / 2, p.y + p.h / 2); ctx.rotate(p.rot); ctx.translate(-p.x - p.w / 2, -p.y - p.h / 2); }
-      ctx.fillStyle = p.color || '#fff';
+      if (p.rot) {
+        ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+        ctx.rotate(p.rot);
+        ctx.translate(-p.x - p.w / 2, -p.y - p.h / 2);
+      }
+      ctx.fillStyle = p.color || "#fff";
       ctx.fillRect(p.x, p.y, p.w, p.h);
       ctx.restore();
       break;
-    case 'circle':
+    case "circle":
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      if (p.fill === false) { ctx.strokeStyle = p.color || '#fff'; ctx.lineWidth = p.w || 2; ctx.stroke(); }
-      else { ctx.fillStyle = p.color || '#fff'; ctx.fill(); }
+      if (p.fill === false) {
+        ctx.strokeStyle = p.color || "#fff";
+        ctx.lineWidth = p.w || 2;
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = p.color || "#fff";
+        ctx.fill();
+      }
       break;
-    case 'line':
+    case "line":
       ctx.beginPath();
-      ctx.moveTo(p.x1, p.y1); ctx.lineTo(p.x2, p.y2);
-      ctx.strokeStyle = p.color || '#fff'; ctx.lineWidth = p.w || 2; ctx.stroke();
+      ctx.moveTo(p.x1, p.y1);
+      ctx.lineTo(p.x2, p.y2);
+      ctx.strokeStyle = p.color || "#fff";
+      ctx.lineWidth = p.w || 2;
+      ctx.stroke();
       break;
-    case 'text':
-      ctx.fillStyle = p.color || '#fff';
+    case "text":
+      ctx.fillStyle = p.color || "#fff";
       ctx.font = `${p.size || 20}px system-ui, sans-serif`;
-      ctx.textAlign = p.align || 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(String(p.text ?? ''), p.x, p.y);
+      ctx.textAlign = p.align || "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(p.text ?? ""), p.x, p.y);
       break;
-    case 'sprite': {
+    case "sprite": {
       const img = sprite(p.src);
       if (!img?.complete || !img.naturalWidth) break;
       ctx.save();
-      if (p.rot) { ctx.translate(p.x + p.w / 2, p.y + p.h / 2); ctx.rotate(p.rot); ctx.translate(-p.x - p.w / 2, -p.y - p.h / 2); }
+      if (p.rot) {
+        ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+        ctx.rotate(p.rot);
+        ctx.translate(-p.x - p.w / 2, -p.y - p.h / 2);
+      }
       ctx.drawImage(img, p.x, p.y, p.w, p.h);
       ctx.restore();
       break;
