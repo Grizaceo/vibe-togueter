@@ -74,8 +74,7 @@ export function attachActivity(container) {
           "p",
           `Grove burst · 3 viewers in 5s: ☀️ ${state.crowd.sun}/${state.crowd.needed} · 🌧️ ${state.crowd.rain}/${state.crowd.needed}`,
         );
-      if (state?.chatEffectsPaused)
-        line("strong", "Chat effects paused");
+      if (state?.chatEffectsPaused) line("strong", "Chat effects paused");
     },
   };
 }
