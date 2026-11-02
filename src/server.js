@@ -1,3 +1,5 @@
+import { startGameRuntime } from "./server/game-lifecycle.js";
+import { startPublication } from "./server/publication.js";
 import { createWebhookRoutes } from "./server/routes/webhooks.js";
 import { createRoomBroadcast, startBroadcast, attachRoomSockets } from "./server/broadcast.js";
 import { createChatCommands } from "./server/chat-commands.js";
@@ -18,18 +20,12 @@ import {
 import { ChatPredictions } from "./chat-predictions.js";
 import { CrowdBursts } from "./crowd-bursts.js";
 import { FallbackPolicy } from "./fallback-policy.js";
-import { bundledContributorCredits } from "./contributor-credits.js";
 import { ChatEffects } from "./chat-effects.js";
 import fs from "node:fs";
 import path from "node:path";
-import { IsolatedGameHost as GameHost } from "./isolated-gamehost.js";
 import { CreatorAssets } from "./creator-assets.js";
 import { RemoteGames } from "./remote-games.js";
 import { TeeChatBridge } from "./tee-chat-bridge.js";
-import {
-  reviewGame,
-  GameCreditsSnapshot,
-} from "./game-credits.js";
 import { IdeaRounds } from "./idea-rounds.js";
 import { buildPolicy, localBuildPermission } from "./build-policy.js";
 import { BuildQuarantine } from "./build-quarantine.js";
@@ -66,120 +62,8 @@ const clients = new Map(); // ws -> {id,name,kind:'player'|'spectator'}
 
 const { broadcast, feed, events } = createRoomBroadcast(clients);
 
-let transitioning = false;
-let fallback = { active: false, reason: null, at: null };
-let fallbackScheduled = false,
-  fallbackRequested = null,
-  recovering = false;
-let fallbackAttempted = new Set();
-function requestFallback(reason) {
-  if (recovering) return;
-  fallbackRequested = reason;
-  if (fallbackScheduled) return;
-  fallbackScheduled = true;
-  setTimeout(async () => {
-    fallbackScheduled = false;
-    if (transitioning) return;
-    const pending = fallbackRequested;
-    fallbackRequested = null;
-    await activateFallback(pending);
-  }, 0);
-}
-async function activateFallback(reason) {
-  if (recovering || transitioning) return false;
-  recovering = true;
-  if (!fallback.active || !host.error) fallbackAttempted = new Set();
-  if (host.error) fallbackAttempted.add(path.basename(host.gameDir));
-  fallback = {
-    active: true,
-    reason: String(reason).slice(0, 240),
-    at: Date.now(),
-  };
-  try {
-    for (const gameId of fallbackPolicy.effective) {
-      if (fallbackAttempted.has(gameId)) continue;
-      fallbackAttempted.add(gameId);
-      const dir = path.join(ROOT, "games", gameId);
-      try {
-        const review = reviewGame(ROOT, gameId);
-        if (!bundledContributorCredits(ROOT, dir, review.codeSha256)) continue;
-      } catch {
-        continue;
-      }
-      if (await loadGameDir(dir, { isFallback: true })) {
-        fallback.gameId = gameId;
-        feed(
-          "system",
-          "Safety fallback: " + host.game.name + ". " + fallback.reason,
-        );
-        return true;
-      }
-    }
-    host.stop();
-    feed(
-      "system",
-      "Fallback unavailable; gameplay stopped. " + fallback.reason,
-    );
-    return false;
-  } finally {
-    recovering = false;
-  }
-}
-
-const host = new GameHost({
-  gameDir: GAME_DIR,
-  onEvent: (kind, detail) => {
-    if (kind === "game-reloaded") {
-      for (const player of clients.values())
-        if (player.kind === "player")
-          host.safeCall("onJoin", {
-            id: player.id,
-            name: player.name,
-            role: player.role,
-          });
-      crowdBursts.reset();
-      refreshPublication();
-      feed("system", `Game reloaded: ${host.game?.name}`);
-    }
-    if (kind === "game-error") {
-      feed("system", `Game stopped: ${detail}`);
-      requestFallback(detail);
-    }
-    if (kind === "log") console.log(detail);
-  },
-});
-
-if (!(await host.load())) console.error(`[boot] ${host.error}`);
-if (host.game) {
-  host.start();
-  host.startWatching();
-}
-
-async function loadGameDir(dir, { isFallback = false } = {}) {
-  if (transitioning) return false;
-  transitioning = true;
-  try {
-    crowdBursts.reset();
-    host.stop();
-    host.gameDir = dir;
-    if (!(await host.load())) return false;
-    for (const player of clients.values())
-      if (player.kind === "player")
-        host.safeCall("onJoin", {
-          id: player.id,
-          name: player.name,
-          role: player.role,
-        });
-    host.start();
-    host.startWatching();
-    refreshPublication();
-    if (!isFallback) fallback = { active: false, reason: null, at: null };
-    return true;
-  } finally {
-    transitioning = false;
-    if (fallbackRequested) requestFallback(fallbackRequested);
-  }
-}
+const { host, requestFallback, activateFallback, loadGameDir, getFallback } =
+  await startGameRuntime({ ROOT, GAME_DIR, clients, crowdBursts, fallbackPolicy, feed, refreshPublication });
 
 // ---------- treasury + generator ----------
 const treasury = new Treasury(path.join(ROOT, "treasury.jsonl"), {
@@ -235,38 +119,12 @@ const builderWarmHeartbeat = setInterval(() => {
 const creatorAssets = new CreatorAssets(
   path.join(ROOT, "runtime", "creator-assets.json"),
 );
-const publicationSnapshot = new GameCreditsSnapshot({
-  registry: creatorAssets,
-  root: ROOT,
-});
-function clientCredits() {
-  return {
-    ...publicationSnapshot.get(),
-    showCommunityCredit: CONFIG.features?.communityCredit === true,
-  };
-}
+const publication = startPublication({ ROOT, PUBLIC, CONFIG, creatorAssets, host, broadcast });
+const { clientCredits, resourceWatcher, getResourceDebounce } = publication;
 function refreshPublication() {
-  publicationSnapshot.refresh(host.gameDir, host.game?.versionSha256);
-  broadcast({ t: "credits", publication: clientCredits() });
+  return publication.refreshPublication();
 }
-refreshPublication();
-let resourceDebounce;
-const resourceWatcher = fs.watch(
-  path.join(PUBLIC, "curated"),
-  { recursive: true },
-  () => {
-    clearTimeout(resourceDebounce);
-    resourceDebounce = setTimeout(refreshPublication, 25);
-  },
-);
-resourceWatcher.on("error", () => {
-  publicationSnapshot.value = {
-    status: "unavailable",
-    manifest: null,
-    contributors: null,
-  };
-  broadcast({ t: "credits", publication: clientCredits() });
-});
+
 const remoteGames = new RemoteGames(
   CONFIG.remoteGames,
   path.join(ROOT, "runtime", "remote-games.json"),
@@ -445,7 +303,7 @@ startBroadcast({
   clients,
   broadcast,
   treasury,
-  getFallback: () => fallback,
+  getFallback,
   isGenerating: () => generating,
 });
 
@@ -485,7 +343,7 @@ const adminRoutes = createAdminRoutes({
   teeBridge,
   feed,
   activateFallback,
-  getFallback: () => fallback,
+  getFallback,
   buildQuarantine,
   ideaRounds,
   creatorAssets,
@@ -526,4 +384,4 @@ const server = http.createServer(async (req, res) => {
 
 attachRoomSockets({ server, clients, host, clientCredits, events, feed, handleChat });
 
-startServer({ server, PORT, LISTEN_HOST, GAME_DIR, TWITCH_CHANNEL, KICK_CHANNEL, builderWarmHeartbeat, resourceWatcher, getResourceDebounce: () => resourceDebounce, teeBridge, twitch, host, localChat, studioBuilds });
+startServer({ server, PORT, LISTEN_HOST, GAME_DIR, TWITCH_CHANNEL, KICK_CHANNEL, builderWarmHeartbeat, resourceWatcher, getResourceDebounce, teeBridge, twitch, host, localChat, studioBuilds });
