@@ -2,6 +2,8 @@
 
 Plan A is pending owner authorization and login. At **09:30 Santiago / 12:30 UTC on November 2**, use Plan B unless the real isolated connection, chat checks and cleanup are all verified. No VM or model operation is authorized by this proposal.
 
+The completed Studio construction run remains the demo's build evidence. These Tee alternatives concern the external-game connection and closing video segment.
+
 ## Read-only source inspection
 
 Candidate pin: `e9af04154ff6d891dff1e8d87f989cf4725392c5` in the owner's separate teeworlds-rs repository. Inspect the committed revision, not the dirty main worktree. The active bots branch at inspection was `8cb855c1ebed0c5db948f04d52f97c6af5a289ee`; its extra input and snapshot fields do not match this adapter.
@@ -24,6 +26,12 @@ Before creation, arm independent recurring cleanup with a durable unique creatio
 Use a temporary private controller configuration, with public Tee still off. Verify health, `!join` link delivery and bounded `!tee` commands against the actual VM. Record the source pin, guest ID, health result and observed command effects without tokens. Destroy the guest and independently confirm terminal state. Any uncertain cleanup blocks another creation. A failed check or missed gate selects Plan B.
 
 The provider's [limits and rates](https://createos.sh/docs/Sandbox/Limits/) were reopened November 2. At its published CPU/RAM/storage rates, 30 minutes with 1 vCPU, 2 GiB RAM and an 11-GB conservative disk allowance is about USD 0.031 before account-specific terms. USD 0.25 is a stop limit, not a provider-enforced spending cap or settled invoice. Account credits and dollar conversion still need owner confirmation.
+
+## Read-only provider checkpoint
+
+The installed CLI could read the account's sandbox inventory on November 2. It returned two running `s-2vcpu-4gb` guests; neither was modified. [Sanitized receipt](../evidence/tee-readonly-discovery.json) omits their identity, addresses and endpoints. There were zero VM mutations and zero model calls.
+
+This establishes read access only. Available credits, currency conversion, concurrency limits and permission to create the proposed shape remain unverified. No new spending approval has arrived; the bounded trial stays pending and public Tee stays off. Existing guests are outside this proposal.
 
 ## Plan B — recording ready
 

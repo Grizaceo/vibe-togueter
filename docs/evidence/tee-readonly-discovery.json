@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-02T09:18:03.165085+00:00",
+  "kind": "read-only-tee-account-discovery",
+  "cliVersion": "v0.0.31",
+  "inventoryReadSucceeded": true,
+  "rowsObserved": 2,
+  "limit": 100,
+  "mayBeTruncated": false,
+  "statusCounts": {
+    "running": 2
+  },
+  "shapeCounts": {
+    "s-2vcpu-4gb": 2
+  },
+  "vmMutations": 0,
+  "modelInvocations": 0,
+  "usableSandboxBalance": null,
+  "ownerSpendApproval": "pending",
+  "limits": [
+    "Authenticated inventory read only; no create, exec, resume, edit, destroy, upload or model command.",
+    "Unrelated guests were not modified; names, IDs, IPs, endpoints and account identity are omitted.",
+    "Inventory does not establish available credits, dollar conversion, plan concurrency or entitlement to the proposed shape.",
+    "No owner authorization for the proposed Tee VM has been received."
+  ]
+}
