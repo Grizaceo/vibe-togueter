@@ -166,7 +166,7 @@ function renderAssets(data) {
     $("assets").append(
       el(
         "div",
-        "The first artist contributions will appear here after curator review, with their portfolio and social links. No sample artist is being presented as a real contributor.",
+        "Reviewed contributions appear here with each creator's portfolio, social links and license.",
         "empty",
       ),
     );
