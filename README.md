@@ -121,7 +121,7 @@ The inherited treasury is **simulated build-credit accounting**, not money, dona
 
 ## Authorship and delivery
 
-Cristóbal Muñoz created the inherited prototype with Devin CLI before the hackathon; `fab3227` preserves that baseline. Codex wrote all hackathon code. During the hackathon Devin contributed read-only review and product discussion. Reference material was used to identify work; its wording and code were not copied into this repository. [Submission text and session IDs](SUBMISSION.md), [recording script](docs/DEMO_SCRIPT.md), [audit decisions and owner checklist](docs/platform/AUDIT_REPORT.md).
+Cristóbal Muñoz created the inherited prototype with Devin CLI before the hackathon; `fab3227` preserves that baseline. Codex wrote all hackathon code. During the hackathon Devin contributed read-only review and product discussion. On November 2, after the feature freeze, the owner's Codex quota ran out (the same subscription also powered the product's real VM builds); Claude Code was then used only to read the repository and prepare final submission wording, with no application code changes. Reference material was used to identify work; its wording and code were not copied into this repository. [Submission text and session IDs](SUBMISSION.md), [recording script](docs/DEMO_SCRIPT.md), [audit decisions and owner checklist](docs/platform/AUDIT_REPORT.md).
 
 ## Current limits
 
@@ -129,4 +129,4 @@ Generated games remain inert reviewed artifacts with static previews; a runtime 
 
 Next: a general external-game adapter with provenance and trust tiers, isolated runtime VMs, repair with regression testing and new exact-version approval, stream statistics, and credits for every creative role. These are product plans.
 
-Feature cutoff is November 2 at 12:00 Santiago / 15:00 UTC; human rehearsal follows, with safe delivery by 18:00 Santiago / 21:00 UTC. The owner handles human Twitch/OBS rehearsal, English video, public YouTube, private repository push/judge access and Devpost submission. Nothing was pushed, published or submitted by this revision.
+Feature cutoff is November 2 at 12:00 Santiago / 15:00 UTC; human rehearsal follows, with safe delivery by 18:00 Santiago / 21:00 UTC. The owner handles human Twitch/OBS rehearsal, English video, public YouTube, private repository push/judge access and Devpost submission. Source is in the private GitHub repository [Grizaceo/vibe-togueter](https://github.com/Grizaceo/vibe-togueter) (`develop`); video, judge access and Devpost submission remain owner actions.
