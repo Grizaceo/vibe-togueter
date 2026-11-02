@@ -1,6 +1,6 @@
 # Structural refactor report — November 2, 2026
 
-The frozen submission is preserved. All work is local on branches descended from the annotated tag through `develop`; each implementation branch is integrated with `git merge --no-ff` after full green verification. No remote was added, push/publication performed, dependency installed, cloud VM operated or model invoked. Tests use temporary copies and mocked providers; Chromium rehearsal is local and disposable.
+The frozen submission is preserved. The structural refactor was first integrated locally on branches descended from the annotated tag, then promoted through 14 real GitHub PRs into `develop` after the owner authorized repository creation, push and merge. The private repository is [Vibe Togueter](https://github.com/Grizaceo/vibe-togueter); application/package names and the local directory remain unchanged. No dependency was installed, hosting deployed, cloud VM operated or model invoked. Tests use temporary copies and mocked providers; Chromium rehearsal is local and disposable.
 
 ## Protected submission
 
@@ -10,29 +10,29 @@ The frozen submission is preserved. All work is local on branches descended from
 - All tracked artifacts remain unchanged. The 13 protected Lantern Table / Seed Race files match the frozen bytes and SHA-256 values in the [integrity receipt](../prs/integrity.json).
 - `test/`, `package.json`, lockfile, configuration and SDK prompt are byte-identical to the frozen tree. Existing owner runtime journals were not used by verification or reset.
 
-## Local PR status and checks
+## PR status and checks
 
-Each merged row has **271/271 npm checks (161 focused + 110 isolated integration)** and **36/36 Chromium checks** both before and after. Consecutive PRs reuse the previous post-checks as their pre-checks on the same code tree; docs/ignore changes do not change executed code. Each linked summary records touched-file line counts, purpose, risk and session log paths. [Compact receipts](../prs/verification.json) preserve exact counts and browser outcomes independently of temporary logs.
+Each merged row was freshly verified again for its real GitHub PR and has **271/271 npm checks (161 focused + 110 isolated integration)** and **36/36 Chromium checks** both before and after. Consecutive PRs reuse the previous post-checks as their pre-checks on the same code tree; docs/ignore changes do not change executed code. Each linked summary records touched-file line counts, purpose, risk and session log paths. [Compact receipts](../prs/verification.json) preserve exact counts and browser outcomes independently of temporary logs.
 
 | PR | Topic | Status | Before → after |
 | --- | --- | --- | --- |
-| [001](../prs/001-repo-hygiene.md) | Repository hygiene | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [002](../prs/002-server-bootstrap.md) | Configuration/bootstrap | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [003](../prs/003-server-public.md) | Public routes | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [004](../prs/004-server-admin.md) | Admin routes and existing gates | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [005](../prs/005-server-chat.md) | Chat commands | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [006](../prs/006-server-broadcast.md) | WS room/activity | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [006a](../prs/006a-server-webhooks.md) | Provider webhooks | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [006b](../prs/006b-server-game-lifecycle.md) | Game lifecycle/publication | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [006c](../prs/006c-server-construction.md) | Construction coordination | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [007](../prs/007-studio-panels.md) | Studio panels and literal CSS | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [008](../prs/008-worker-responsibilities.md) | Worker provider/build/test/cleanup | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [009](../prs/009-rehearsal-scenes.md) | CDP and screen scenes | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [009a](../prs/009a-server-platform-chat.md) | Platform connections/readable wiring | Merged locally into develop | 271 + 36 → 271 + 36 |
-| [010](../prs/010-refactor-map.md) | Architecture/index/report | Merged locally into develop | 271 + 36 → 271 + 36 |
+| [001](../prs/001-repo-hygiene.md) | Repository hygiene | [Merged GitHub #1](https://github.com/Grizaceo/vibe-togueter/pull/1) | 271 + 36 → 271 + 36 |
+| [002](../prs/002-server-bootstrap.md) | Configuration/bootstrap | [Merged GitHub #2](https://github.com/Grizaceo/vibe-togueter/pull/2) | 271 + 36 → 271 + 36 |
+| [003](../prs/003-server-public.md) | Public routes | [Merged GitHub #3](https://github.com/Grizaceo/vibe-togueter/pull/3) | 271 + 36 → 271 + 36 |
+| [004](../prs/004-server-admin.md) | Admin routes and existing gates | [Merged GitHub #4](https://github.com/Grizaceo/vibe-togueter/pull/4) | 271 + 36 → 271 + 36 |
+| [005](../prs/005-server-chat.md) | Chat commands | [Merged GitHub #5](https://github.com/Grizaceo/vibe-togueter/pull/5) | 271 + 36 → 271 + 36 |
+| [006](../prs/006-server-broadcast.md) | WS room/activity | [Merged GitHub #6](https://github.com/Grizaceo/vibe-togueter/pull/6) | 271 + 36 → 271 + 36 |
+| [006a](../prs/006a-server-webhooks.md) | Provider webhooks | [Merged GitHub #7](https://github.com/Grizaceo/vibe-togueter/pull/7) | 271 + 36 → 271 + 36 |
+| [006b](../prs/006b-server-game-lifecycle.md) | Game lifecycle/publication | [Merged GitHub #8](https://github.com/Grizaceo/vibe-togueter/pull/8) | 271 + 36 → 271 + 36 |
+| [006c](../prs/006c-server-construction.md) | Construction coordination | [Merged GitHub #9](https://github.com/Grizaceo/vibe-togueter/pull/9) | 271 + 36 → 271 + 36 |
+| [007](../prs/007-studio-panels.md) | Studio panels and literal CSS | [Merged GitHub #10](https://github.com/Grizaceo/vibe-togueter/pull/10) | 271 + 36 → 271 + 36 |
+| [008](../prs/008-worker-responsibilities.md) | Worker provider/build/test/cleanup | [Merged GitHub #11](https://github.com/Grizaceo/vibe-togueter/pull/11) | 271 + 36 → 271 + 36 |
+| [009](../prs/009-rehearsal-scenes.md) | CDP and screen scenes | [Merged GitHub #12](https://github.com/Grizaceo/vibe-togueter/pull/12) | 271 + 36 → 271 + 36 |
+| [009a](../prs/009a-server-platform-chat.md) | Platform connections/readable wiring | [Merged GitHub #13](https://github.com/Grizaceo/vibe-togueter/pull/13) | 271 + 36 → 271 + 36 |
+| [010](../prs/010-refactor-map.md) | Architecture/index/report | [Merged GitHub #14](https://github.com/Grizaceo/vibe-togueter/pull/14) | 271 + 36 → 271 + 36 |
 | [011](../prs/011-language.md) | Language | Functional edits discarded; audit recorded | No code change; same green tree |
 
-Additional server PRs kept webhooks, game lifecycle/publication, construction coordination and platform connections independently reviewable. PR 009a also normalizes extraction indentation/wrapping; the nine otherwise touched module ASTs are identical before/after, and `git diff -w` isolates its small connection extraction. Nothing was squashed, rebased, amended or rewritten. There are no open/unmerged implementation PRs at completion.
+Additional server PRs kept webhooks, game lifecycle/publication, construction coordination and platform connections independently reviewable. PR 009a also normalizes extraction indentation/wrapping; the nine otherwise touched module ASTs are identical before/after, and `git diff -w` isolates its small connection extraction. Nothing was squashed, rebased, amended or rewritten. GitHub generated its own merge commits; the existing local and GitHub histories were joined with an ordinary merge of identical trees. The [GitHub PR index](../prs/README.md) and [integration receipt](../prs/github-integration.json) record all real PRs, verified trees and merge commits. There are no open/unmerged implementation PRs at completion.
 
 ## File sizes (`wc -l`)
 
@@ -77,4 +77,4 @@ The entry points shrink by moving responsibilities, not deleting functionality. 
 
 ## Owner decisions
 
-No remote exists. The owner decides whether/where to configure one and whether to authorize push and real PRs toward develop. The owner also decides when to integrate develop into the submitted branch, respecting evaluation protection through November 15. No such action was taken here.
+The owner authorized the private [vibe-togueter](https://github.com/Grizaceo/vibe-togueter) remote, push and real PR merges toward develop; those actions are complete. The owner still decides when to integrate develop into the submitted branch, respecting evaluation protection through November 15. The submission branch/tag have not changed.
