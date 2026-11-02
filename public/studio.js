@@ -71,7 +71,7 @@ function renderRound() {
       " UTC"
     : "No active approval delegate.";
   $("round-info").textContent = r
-    ? `${r.ideas.length}/${r.settings.maxIdeas} proposals · ${r.voters} voting sessions · ${r.settings.winnerCount} selected idea(s)${r.phase === "voting" ? " · " + Math.max(0, Math.ceil((r.voteEndsAt - Date.now()) / 1000)) + "s left" : ""}`
+    ? `Proposals: ${r.ideas.length}/${r.settings.maxIdeas} · ${r.voters} voting session${r.voters === 1 ? "" : "s"} · ${r.settings.winnerCount} selection slot${r.settings.winnerCount === 1 ? "" : "s"}${r.phase === "voting" ? " · " + Math.max(0, Math.ceil((r.voteEndsAt - Date.now()) / 1000)) + "s left" : ""}`
     : "The streamer controls later rounds and every build approval.";
   $("ideas").replaceChildren();
   for (const idea of r?.ideas || []) {

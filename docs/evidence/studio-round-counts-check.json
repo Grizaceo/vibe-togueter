@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-02T10:36:32.839617+00:00",
+  "kind": "studio-round-wording-browser-check",
+  "exit": 0,
+  "browserChecks": 36,
+  "failed": 0,
+  "targetCheck": {
+    "name": "studio shows supporting ballots, approver and singular round counts",
+    "ok": true
+  },
+  "capture": "studio-round-counts.png",
+  "sources": {
+    "public/studio.js": "a8730be1081b10b3d6276f8590575cc2f2a2f914a0a2ba0a2df07e1f3746c460",
+    "scripts/rehearse-ui-local.mjs": "cee3c6d9ffdbd4eb9e60bfafcea5fa8360fff8979ca722ea1f55363c4ada12db"
+  },
+  "limits": [
+    "Full existing local Chromium rehearsal in a disposable archive with current changed files and installed dependencies.",
+    "No owner .env, Twitch, provider, VM/model or public service operation.",
+    "Only the targeted screenshot retained; other temporary captures removed."
+  ],
+  "outerCheckoutRemoved": true
+}
