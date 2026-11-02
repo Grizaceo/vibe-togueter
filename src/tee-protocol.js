@@ -26,12 +26,14 @@ export function teeInput(
     aimX = 1,
     aimY = 0,
     weapon = 0,
+    ...unknown
   } = {},
 ) {
   if (
+    Object.keys(unknown).length !== 0 ||
     ![-1, 0, 1].includes(dir) ||
     ![jump, hook, fire].every((v) => typeof v === "boolean") ||
-    ![aimX, aimY].every(Number.isFinite) ||
+    ![aimX, aimY].every(v => Number.isFinite(v) && Number.isFinite(Math.fround(v))) ||
     !Number.isInteger(weapon) ||
     weapon < 0 ||
     weapon > 5
@@ -102,9 +104,25 @@ export function teeServerMessage(bytes) {
     };
     if (result.tickrate !== 50 || result.mode > 2)
       throw Error("Incompatible runtime.");
+    // Consume the entire pinned legacy Welcome, including map and JumpCfg.
+    if (boolean()) {
+      const width = number(), height = number(), tiles = number();
+      if (!width || !height || width > 512 || height > 512 || tiles !== width * height)
+        throw Error('Invalid map.');
+      for (let i = 0; i < tiles; i++) if (number() > 4) throw Error('Unknown tile.');
+      const spawns = number();
+      if (spawns > 256) throw Error('Too many spawns.');
+      for (let i = 0; i < spawns; i++) vector();
+    }
+    result.maxJumps = byte();
+    if (number() > 1 || offset !== b.length) throw Error('Unexpected protocol data.');
     return result;
   }
-  if (tag === 2) return { type: "pong", clientTime: number(), tick: number() };
+  if (tag === 2) {
+    const result = { type: "pong", clientTime: number(), tick: number() };
+    if (offset !== b.length) throw Error('Unexpected protocol data.');
+    return result;
+  }
   if (tag !== 1) throw Error("Unknown server message.");
   const tick = number(),
     count = number();

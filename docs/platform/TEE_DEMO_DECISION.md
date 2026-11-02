@@ -1,5 +1,12 @@
 # External Tee demo decision
 
+**Later, separate develop increment (November 2, after 18:19 UTC):** the documented
+VM is now destroyed. A real local adapter/browser integration has been verified in
+a new worktree without changing the frozen delivery. See [the scoped contract,
+new evidence and remaining acceptance gates](TEE_LOCAL_ADAPTER.md). The historical
+recording decision below remains the decision for the frozen submission; it is not
+evidence of a current deployment.
+
 **Plan B is selected for recording.** The **09:30 Santiago / 12:30 UTC on November 2** gate passed without new spending authority or a verified isolated Tee/chat run. Plan A was not executed; public Tee stays off. The [gate receipt](../evidence/tee-gate-decision.json) was written on resumption after the goal restart; the read-only monitor completed at the gate itself.
 
 The completed Studio construction run remains the demo's build evidence. These Tee alternatives concern the external-game connection and closing video segment.

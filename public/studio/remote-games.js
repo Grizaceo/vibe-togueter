@@ -38,7 +38,10 @@ export function renderRemoteGames(data) {
           : "Not checked by this controller",
         "tiny muted",
       ),
-      link("Open browser game", game.baseURL),
+      link(
+        game.adapter === 'tee' ? 'Join with your own tee' : 'Open browser game',
+        game.adapter === 'tee' ? '/tee-play.html?game='+encodeURIComponent(game.id)+'&name=viewer' : game.baseURL,
+      ),
       el("p", game.rightsStatus, "tiny muted"),
       el(
         "p",

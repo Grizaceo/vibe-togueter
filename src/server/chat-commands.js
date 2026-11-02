@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { ChatGate } from "../traffic.js";
 import { roundApprovalActor } from "../approval-delegation.js";
+import { teeEntryURL } from "../tee-join.js";
 
 export function createChatCommands({
   ROOT,
@@ -83,6 +84,13 @@ export function createChatCommands({
       cmd === "entrar" ||
       cmd === "jugar-link"
     ) {
+      const teeGame=remoteGames.entries.find(g=>g.adapter==='tee'&&g.joinByDefault===true);
+      if(teeGame&&getPublicURL()){
+        const entry=teeEntryURL(getPublicURL(),teeGame.id,user);
+        if(replies[source])replies[source](`Join with your own tee: ${entry}`);
+        else feed('system',`Join with your own tee: ${entry}`);
+        return;
+      }
       if (getPublicURL() && replies[source]) {
         replies[source](
           `Join the game: ${getPublicURL()}/?name=${encodeURIComponent(user)}`,

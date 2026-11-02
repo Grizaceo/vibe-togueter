@@ -7,7 +7,7 @@ test('postcard codec agrees with independent Rust golden messages',()=>{
  assert.throws(()=>teeServerMessage(Buffer.from(snapshot.slice(0,-4),'hex')),/Truncated/);assert.throws(()=>teeInput(1,{dir:99}),/bounded/);
 });
 class Socket extends EventEmitter{constructor(){super();this.readyState=1;this.bufferedAmount=0;this.sent=[];Socket.last=this;}send(bytes){this.sent.push(bytes);}terminate(){this.closed=true;this.emit('close');}}
-const welcome=Buffer.from([0,7,1,50,0,0]);
+const welcome=Buffer.from([0,7,1,50,0,0,2,0]);
 test('only Twitch commands affect bounded pulses, idle/stop close the crowd socket',async()=>{
  let time=1000;const bridge=new TeeChatBridge({Socket,now:()=>time,idleMs:1000});const pending=bridge.start({id:'tee',adapter:'tee',baseURL:'https://example.test'},'gris_96');const socket=Socket.last;socket.emit('open');socket.emit('message',welcome);await pending;
  try{
