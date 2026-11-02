@@ -127,4 +127,4 @@ Generated games remain inert reviewed artifacts with static previews; a runtime 
 
 Next: a general external-game adapter with provenance and trust tiers, isolated runtime VMs, repair with regression testing and new exact-version approval, stream statistics, and credits for every creative role. These are product plans.
 
-Golden-path go/no-go is November 2 at 10:00 UTC; feature cutoff is 15:00 UTC; stabilization/human rehearsal is 15:00–17:00 UTC; target submission 21:00 UTC, official close 22:00 UTC. The owner handles human Twitch/OBS rehearsal, English video, public YouTube, private repository push/judge access and Devpost submission. Nothing was pushed, published or submitted by this revision.
+Feature cutoff is November 2 at 12:00 Santiago / 15:00 UTC; human rehearsal follows, with safe delivery by 18:00 Santiago / 21:00 UTC. The owner handles human Twitch/OBS rehearsal, English video, public YouTube, private repository push/judge access and Devpost submission. Nothing was pushed, published or submitted by this revision.

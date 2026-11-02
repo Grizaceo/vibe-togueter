@@ -1,0 +1,55 @@
+{
+  "at": "2026-11-02T08:12:32.518137+00:00",
+  "commit": "c8ff84c7d258d473b704e3006af20dd05dcc5338",
+  "kind": "disposable-git-archive-verification",
+  "checks": [
+    {
+      "name": "install",
+      "exit": 0,
+      "startedAt": "2026-11-02T08:12:15.884936+00:00",
+      "log": "delivery-polish-install.txt"
+    },
+    {
+      "name": "suite",
+      "exit": 0,
+      "startedAt": "2026-11-02T08:12:16.851223+00:00",
+      "log": "delivery-polish-suite.txt"
+    },
+    {
+      "name": "launcher",
+      "exit": 0,
+      "startedAt": "2026-11-02T08:12:31.747095+00:00",
+      "log": "delivery-polish-launcher.txt"
+    },
+    {
+      "name": "seed-transfer",
+      "exit": 0,
+      "startedAt": "2026-11-02T08:12:32.312559+00:00",
+      "log": "delivery-polish-seed-transfer.txt"
+    }
+  ],
+  "tempRemoved": true,
+  "limits": [
+    "No owner .env or runtime copied.",
+    "No real Twitch, VM/model operation, deployment or human recording.",
+    "Only bundled fixtures execute on the host; candidate artifacts remain inert."
+  ],
+  "artifactIntegrity": {
+    "artifacts/lantern-table-e21fef6b/game.js": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+    "artifacts/lantern-table-roles-draft/game.js": "449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075"
+  },
+  "browser": {
+    "receipt": "local-ui-1793607080646-rehearsal.json",
+    "passed": 31,
+    "failed": 0
+  },
+  "formatter": {
+    "version": "3.6.2",
+    "check": "All matched src/public JS, HTML, CSS and src Markdown use Prettier style."
+  },
+  "longestSourceUiLine": {
+    "length": 791,
+    "file": "src/createos-studio-worker.js",
+    "line": 329
+  }
+}
