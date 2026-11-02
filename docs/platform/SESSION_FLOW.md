@@ -40,6 +40,28 @@ game redesign or spectator-effect system is required for this example.
 
 ## Roles and isolation
 
+```mermaid
+flowchart LR
+  A[Open platform session] --> B[Chat proposes and votes]
+  A --> C[Prepare private builder VM]
+  A --> D[Prepare waiting-game VM]
+  D --> E[Cloudflare entry and individual Tee players]
+  B --> F[Streamer approves exact prompt and resources]
+  C --> F
+  F --> G[Codex construction in builder VM]
+  G --> H[Quarantine and separate tests]
+  H --> I[Streamer reviews exact artifact]
+  I --> J[New isolated runtime passes readiness checks]
+  J --> K[Notify chat that new game is ready]
+  K --> L[Streamer chooses transition time]
+  E --> L
+  L --> M[Handoff connected platform clients and publish new join link]
+```
+
+This diagram specifies the target flow; the verification table below governs what
+can be claimed today. In particular, the ready notice and session handoff are not
+triggered by model completion alone.
+
 | Resource | Responsibility | Authority |
 | --- | --- | --- |
 | Platform controller | Decisions, votes, credits, routing and evidence | Private streamer controls; trusted Twitch identity |
