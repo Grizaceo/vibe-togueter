@@ -49,7 +49,7 @@ Keep a browser player, the actual Twitch channel and OBS overlay visible. A part
 | `!join` returns the working player URL | UTC time, command/reply and reachable page | Pending |
 | Studio `!idea` / `!vote`, local streamer review | Actual Twitch messages, matching proposal/ballot and exact approval | Pending |
 | `!plant 3`, `!water 3`, `!sun` alongside browser click/space | Same live game state responds to both people | Pending |
-| Broadcaster or real moderator `!fallback` | Sender role, Marble transition and visible cause | Pending |
+| Broadcaster or real moderator `!fallback` | Sender role, selected reviewed fallback and visible cause | Pending |
 | Set preferred fallback order in Studio, then real mod `!fallback` | Selected reviewed fallback, cause, and eventual Marble final choice | Pending |
 | Real mod `!pause`, viewer game command, browser action, then `!resume` | Chat effect blocked while browser play continues; chat effect returns | Pending |
 | Three distinct Twitch logins send ☀️ or 🌧️ within five seconds | Single visible Grove bonus; repeated messages from one account do not trigger it | Pending |
@@ -59,7 +59,7 @@ Keep a browser player, the actual Twitch channel and OBS overlay visible. A part
 | Two entrants, chat `!play` then `!race` | Both entrants and actual moving race | Pending |
 | Game/art/idea credits, Kenney links | Human readability check on player and OBS at capture size | Pending |
 | Disconnect/reconnect and return to Grove | Observed recovery and any failure | Pending |
-| Private Studio prepare/extend/close with an explicitly approved future allocation | Remaining time, approved maximum, no model call during discussion, exact close; current coverage is mocked only | Pending |
+| Private Studio prepare/extend/close with an explicitly approved future allocation | Remaining time, approved maximum, no model call during discussion, exact close; [existing real verification](platform/PREWARM_CONTROL_VERIFICATION.md) passed, while the local UI rehearsal uses mocks | Pending |
 | Recorded Lantern Table construction/test/cleanup and exact approval | Actual thread and hashes; static preview and known gameplay issues labelled | Evidence ready; human recording pending |
 | English video, under three minutes | Full export watch, exact duration, readable Twitch/Codex shots | Pending |
 
@@ -67,4 +67,4 @@ If anything fails, retain the failure and its UTC time. Fix the observed issue b
 
 Follow [the 2:45 recording script](DEMO_SCRIPT.md). Show the completed real Lantern Table Studio-to-VM run and exact owner approval as recorded construction/test evidence; its preview remains static, gameplay issues are disclosed and no generated runtime is deployed. Earlier Seed Race evidence is optional historical backup. An actual human should review the full export and public YouTube playback. The owner handles private push/access for testing@devpost.com, hosting and Devpost submission. These commands perform none of those delivery actions. The owner rights/date confirmation is recorded separately.
 
-Checkpoints November 2: golden-path decision 10:00 UTC; feature cutoff 15:00; stabilization and human rehearsal 15:00–17:00; recording/delivery reserve 17:00–21:00; prudent submission 21:00. [Official rules](https://twitchcon-codex.devpost.com/rules), rechecked November 1, list close at 22:00 UTC / 19:00 Santiago, public YouTube footage of Twitch and Codex, English materials, code/testing access and free judging use through November 15.
+November 2 delivery gates: the optional external Tee trial must be verified by **09:30 Santiago / 12:30 UTC** or use the separate-game clip. Freeze features at **12:00 Santiago / 15:00 UTC**, then reserve 15:00–17:00 UTC for stabilization/human rehearsal and 17:00–21:00 UTC for owner recording/delivery. The earlier Studio golden-path decision is recorded in [increment history](platform/INCREMENT_HISTORY.md). [Official rules](https://twitchcon-codex.devpost.com/rules), rechecked November 1, list close at 22:00 UTC / 19:00 Santiago, public YouTube footage of Twitch and Codex, English materials, code/testing access and free judging use through November 15.
