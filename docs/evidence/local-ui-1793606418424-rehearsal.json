@@ -1,0 +1,138 @@
+{
+  "at": "2026-11-02T08:00:33.194Z",
+  "kind": "automated-local-Chromium-rehearsal",
+  "checks": [
+    {
+      "name": "lobby shows game, art and idea credit while details are collapsed",
+      "ok": true
+    },
+    {
+      "name": "creator strip is inside the desktop viewport",
+      "ok": true
+    },
+    {
+      "name": "production browser keyboard handler plants a visible tree",
+      "ok": true
+    },
+    {
+      "name": "overlay keeps all three credit roles in the viewport",
+      "ok": true
+    },
+    {
+      "name": "1080p credit strip is at least 24px and no ledger is shown",
+      "ok": true
+    },
+    {
+      "name": "720p stream credits and activity fit",
+      "ok": true
+    },
+    {
+      "name": "overlay shows a real local proposal and ballot from WS state",
+      "ok": true
+    },
+    {
+      "name": "overlay renders streamer-reported prediction winner",
+      "ok": true
+    },
+    {
+      "name": "overlay renders actual effects pause",
+      "ok": true
+    },
+    {
+      "name": "overlay shows the actual local fallback reason",
+      "ok": true
+    },
+    {
+      "name": "overlay separates current approved input co-credit from live game attribution",
+      "ok": true
+    },
+    {
+      "name": "720p crowded sidebar has no scrollbars, overlap or clipped activity",
+      "ok": true
+    },
+    {
+      "name": "720p Marble credit names its owner and inherited prototype",
+      "ok": true
+    },
+    {
+      "name": "1080p crowded sidebar has no scrollbars, overlap or clipped activity",
+      "ok": true
+    },
+    {
+      "name": "1080p Marble credit names its owner and inherited prototype",
+      "ok": true
+    },
+    {
+      "name": "studio renders its selected Plan B boundary and privacy link",
+      "ok": true
+    },
+    {
+      "name": "studio shows actual supporting ballots and approver",
+      "ok": true
+    },
+    {
+      "name": "owner unlock clears fixture keys and keeps VM controls disabled",
+      "ok": true
+    },
+    {
+      "name": "Studio production control saves preferred fallback order [\"chat-vs-streamer\",\"community-grove\",\"marble-race\"]",
+      "ok": true
+    },
+    {
+      "name": "Studio production controls grant and revoke a limited input delegate",
+      "ok": true
+    },
+    {
+      "name": "disabled build control uses neutral gray",
+      "ok": true
+    },
+    {
+      "name": "default-off warm controls cannot prepare extend or close a VM",
+      "ok": true
+    },
+    {
+      "name": "mocked prepare control exposes countdown without approving or starting a model",
+      "ok": true
+    },
+    {
+      "name": "mocked keep-ready control adds fifteen minutes within the displayed maximum",
+      "ok": true
+    },
+    {
+      "name": "mocked close control does not offer an automatic replacement",
+      "ok": true
+    },
+    {
+      "name": "mocked interrupted publication reinspection shows persisted creator approval",
+      "ok": true
+    },
+    {
+      "name": "mocked UI publication retry preserves all approved creator metadata",
+      "ok": true
+    },
+    {
+      "name": "owner lock hides private tools and clears candidate review state",
+      "ok": true
+    },
+    {
+      "name": "privacy page shows supplied operator/contact and pending hosting",
+      "ok": true
+    },
+    {
+      "name": "no browser JavaScript exception occurred",
+      "ok": true
+    },
+    {
+      "name": "credit clients make no HTTP polling requests",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "temp": "/tmp/va-ui-VT2RDj",
+  "limits": [
+    "Disposable checkout without owner configuration.",
+    "No real Twitch traffic, human gameplay, OBS recording or submission video.",
+    "Warm-session controls and interrupted artifact publication UI use mocked HTTP; no real VM or candidate runs.",
+    "Lobby 1600x900, overlay 1920x1080 and 1280x720; not a mobile usability claim."
+  ]
+}

@@ -110,7 +110,7 @@ The inherited treasury is **simulated build-credit accounting**, not money, dona
 
 ## Authorship and delivery
 
-The Devin CLI prototype is preserved at `fab3227`; it is not reattributed to Codex. Subsequent Codex sessions built the Twitch/studio/quarantine/VM increments and this audit-response implementation. An external read-only Devin audit informed findings; its prose, legal drafts and code were not imported. [Submission text and session IDs](SUBMISSION.md), [recording script](docs/DEMO_SCRIPT.md), [audit decisions and owner checklist](docs/platform/AUDIT_REPORT.md).
+Cristóbal Muñoz created the inherited prototype with Devin CLI before the hackathon; `fab3227` preserves that baseline. Codex wrote all hackathon code. During the hackathon Devin contributed read-only review and product discussion. Reference material was used to identify work; its wording and code were not copied into this repository. [Submission text and session IDs](SUBMISSION.md), [recording script](docs/DEMO_SCRIPT.md), [audit decisions and owner checklist](docs/platform/AUDIT_REPORT.md).
 
 Future work: improving candidate gameplay and connecting a separately approved runtime, a creator-discovery feed, clips retaining game/art/idea attribution, and subscriptions that might subsidize compute under explicit budgets. These are proposals, not current integrations or revenue claims.
 

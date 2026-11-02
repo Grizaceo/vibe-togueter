@@ -53,3 +53,7 @@ Current local suite: **271 = 161 focused + 110 integration**. Separate checks: 2
 ## Owner delivery checklist
 
 Follow [human rehearsal](../REHEARSAL.md), including real-mod !fallback, !pause/!resume and three distinct accounts for bursts. Confirm OBS credit readability and actual chat footage. Supply durable free judging access and hosting/recording disclosure, record/review the English [demo](../DEMO_SCRIPT.md), upload YouTube, push privately, grant testing@devpost.com access and complete Devpost using the main session ID. These actions were prepared but not performed by Codex. Original Lantern Table has two documented gameplay findings; the roles revision has targeted fixes/tests, not a certified human playthrough. Settled provider cost and credit-to-dollar conversion remain unverified.
+
+## November 2 delivery polish
+
+08:01 UTC — Started from clean f5456c7 on feat/twitchcon-codex; baseline and changed suite pass 271/271. Closed O15 singular labels, O21 neutral disabled controls, O14 sidebar layout at 1080p/720p, and O16 owner/pre-hackathon Marble attribution. Chromium measures crowded activity without overlap or scrollbars and captures the visible attribution. Next: lead README/SUBMISSION with working behavior, then inspect the external Tee protocol read-only. Owner: hosting/login/budget and recording remain pending; no cloud spend, push or publication.
