@@ -45,6 +45,8 @@ The streamer/controller host targets **Linux** with bubblewrap and user namespac
 
 Without installing, inspect the [720p overlay](docs/evidence/local-ui-1793614056771-overlay.png), [lobby](docs/evidence/local-ui-1793614056771-lobby.png), [studio](docs/evidence/local-ui-1793614056771-studio.png), [local browser checks](docs/evidence/local-ui-1793614056771-rehearsal.json), and [real isolated-build evidence](docs/platform/VM_TRIAL.md). These are evidence, not a playable hosted service. **Video URL: owner must add the public English YouTube recording before submission.** Linux judges can use the clean-install commands above; an existing Linux remote host can serve browser players on other operating systems. Hosting and video remain owner delivery actions.
 
+See [npm scripts](docs/NPM_SCRIPTS.md) for the complete command index.
+
 ## Connect an operator-owned Twitch channel
 
 Run `npm run setup:local`, then edit the ignored local configuration yourself with your Twitch app details and registered callback URL. Authorize through `npm run twitch:auth`, check the safe summary with `npm run twitch:status`, and start:

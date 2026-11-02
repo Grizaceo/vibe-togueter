@@ -7,3 +7,6 @@ games/auto-*
 !.env.example
 *.log
 runtime/
+
+# Disposable browser rehearsal outputs; committed hackathon evidence stays tracked.
+docs/evidence/local-ui-*
