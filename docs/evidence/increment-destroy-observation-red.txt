@@ -1,0 +1,31 @@
+✔ fresh private VM preflight runs only fixed probe and confirms destruction (6.333699ms)
+✔ failed guest checks still destroy the exact fresh VM (1.823367ms)
+✔ lost creation response reconciles by unique journaled name without a second create (1.58311ms)
+✔ cleanup failure survives restart and blocks automatic replacement (1.57452ms)
+✔ provider identity mismatch cannot destroy a foreign VM (1.05224ms)
+✔ pre-cancelled preflight makes no provider mutation or journal (0.480653ms)
+✔ failed provider VM still needs explicit destruction before release (1.106648ms)
+✔ explicit login preparation retains only the fresh VM and restart can release it (1.536246ms)
+✔ journal failure after successful probe cannot retain an unconfirmed login VM (1.347952ms)
+✔ persistent disk outage cannot prevent remote destruction of the verified trial VM (1.022907ms)
+✔ build dispatch rejects absent/nonfinite expiry and unconfirmed timer identity (0.447548ms)
+✔ a trusted independent-lease hook runs before provider creation and a failed hook creates nothing (2.132418ms)
+✖ destruction observes the same VM through pending and empty replies without a second delete (1.239976ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 107.24349
+
+✖ failing tests:
+
+test at test/vm-builder-preflight.mjs:89:1
+✖ destruction observes the same VM through pending and empty replies without a second delete (1.239976ms)
+  Error: VM destruction not confirmed.
+      at VMBuilderPreflight.release (file:///home/gris96/vibe-arena/src/vm-builder-preflight.js:61:41)
+      at async TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/vm-builder-preflight.mjs:90:464)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

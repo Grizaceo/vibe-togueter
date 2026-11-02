@@ -57,8 +57,17 @@ export class VMBuilderPreflight {
     this.owned(vm);this.state.id=vm.id;try{this.save();}catch{}
     if(vm.status!=='destroyed')await this.cli(['sandbox','rm',vm.id,'--force']);
     // Confirm the terminal state; an acknowledgement alone is not cleanup evidence.
-    const ended=this.owned(JSON.parse(await this.cli(['sandbox','get',vm.id])));
-    if(ended.status!=='destroyed')throw Error('VM destruction not confirmed.');
+    let ended;
+    for(let attempt=0;attempt<8;attempt++){
+      let output;
+      try{output=await this.cli(['sandbox','get',vm.id],{timeout:3000});}catch{/* A lost observation never repeats create/delete. */}
+      if(output?.trim()){
+        let value;try{value=JSON.parse(output);}catch{}
+        if(value){ended=this.owned(value);if(ended.status==='destroyed')break;}
+      }
+      if(attempt<7)await new Promise(resolve=>setTimeout(resolve,250));
+    }
+    if(ended?.status!=='destroyed')throw Error('VM destruction not confirmed.');
     this.state.phase='released';this.state.releasedAt=Date.now();this.state.providerTerminalStatus=ended.status;try{this.save();}catch{this.state.phase='cleanup-required';throw Error('VM destroyed but journal persistence needs reconciliation.');}
     return structuredClone(this.state);
   }
