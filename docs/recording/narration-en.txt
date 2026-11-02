@@ -8,19 +8,19 @@ Vibe Arena helps a stream community shape games and play together. Some people o
 The Studio collects ideas and ballots. This recorded trial used an owner-selected proposal, with zero audience votes. After exact input approval and fresh guest login, the controller sent Lantern Table to Codex in a private VM.
 
 00:00:40,000–00:01:10,000
-Codex returned source in about forty-eight seconds. Another VM ran nine protocol checks, then both guests were destroyed. Dispatch through testing and cleanup took about sixty-three seconds. The owner reviewed the exact version. This preview is static; two gameplay issues remain documented.
+Codex returned source in about forty-eight seconds. Another VM ran nine protocol checks, then both guests were destroyed. Dispatch through testing and cleanup took about sixty-three seconds. The owner reviewed that exact version. A later roles revision passed fourteen targeted guest checks. These previews are static; human gameplay remains unverified.
 
 00:01:10,000–00:01:25,000
 Game, art and idea credits stay outside game-controlled drawing. Grove uses curated Kenney CC0 artwork, without endorsement. Lantern Table uses code-drawn art and no external assets.
 
 00:01:25,000–00:01:40,000
-The streamer can prepare a VM while chat discusses ideas, extend its bounded deadline, or close it. These new controls have local mock coverage; live renewal remains unverified.
+While chat votes, the streamer can prepare a VM, extend its bounded deadline, or close it. Real provider preparation, renewal, pause, resume and cleanup checks passed without a model call.
 
 00:01:40,000–00:02:15,000
 Grove remains a reviewed playable example. Browser actions and Twitch commands grow the same garden. Three distinct accounts can trigger a weather bonus. Moderators can pause chat effects while browser play continues. This shot shows a requested fallback, with Marble Race last in the configured order. Two entrants can start a race.
 
 00:02:15,000–00:02:35,000
-The initial prototype was Devin-assisted. Codex implemented the later Twitch, studio and isolation work. The local suite passes 270 checks. Browser and guest checks are recorded separately; automated checks do not establish human gameplay quality.
+The initial prototype was Devin-assisted. Codex implemented the later Twitch, studio and isolation work. The local suite passes 271 checks. Browser and guest checks are recorded separately; automated checks do not establish human gameplay quality.
 
 00:02:35,000–00:02:45,000
 Next are gameplay validation and a separate approved runtime. Creator discovery and clips preserving attribution remain future work.

@@ -1,5 +1,7 @@
 # Streamer-controlled builder preparation
 
+**Real verification passed:** owner-approved one-guest check exercised actual prepare-during-voting, +15-minute renewal, exact pause/resume and close; independent provider observation confirms destruction. No model, completed login or candidate was used. [Receipt](../evidence/prewarm-real-control-verification-v2.json).
+
 Implemented, default disabled. The streamer can prepare an isolated builder during idea collection, voting or design discussion, then start construction after approving the exact inputs. No model call is used for preparation or to keep the environment ready.
 
 ## Streamer flow
@@ -26,4 +28,4 @@ A partial write after a durable build claim is recovered through the exact lease
 
 ## Verified scope
 
-Local/mock tests cover disabled/unauthorized operations, one-use decisions, immutable deadline caps, delayed writers, close/renew/claim races, minimum 30-minute setup, timer/provider uncertainty, claimed-job ownership, failed session persistence, scheduled cleanup retention and bounded resume/heartbeat. Disposable Chromium exercises production prepare/extend/close handlers with explicitly mocked HTTP and the default-off state; no real VM or candidate is executed by that browser fixture. The read-only closing review found no remaining actionable issue. Actual provider idle/resume/renewal operation is still unverified; the earlier real build/test/cleanup evidence is separate.
+Local/mock tests cover disabled/unauthorized operations, one-use decisions, immutable deadline caps, delayed writers, close/renew/claim races, minimum 30-minute setup, timer/provider uncertainty, claimed-job ownership, failed session persistence, scheduled cleanup retention and bounded resume/heartbeat. Disposable Chromium exercises production prepare/extend/close handlers with explicitly mocked HTTP and the default-off state; no real VM or candidate is executed by that browser fixture. The read-only closing review found no remaining actionable issue. Actual preparation during a ballot and exact 15-minute renewal succeeded in a separately approved live check. Its fixture stopped on an empty pause acknowledgement before resume observation; exact destruction was independently reconciled. [Current live verification record](PREWARM_CONTROL_VERIFICATION.md). A separately approved repeat then completed pause/resume/close; its receipt is linked above. The earlier real build/test/cleanup and roles evidence remain separate.

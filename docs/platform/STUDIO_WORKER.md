@@ -32,4 +32,4 @@ The CreateOS CLI v0.0.31 installed commit was checked against its public source 
 
 ## Preparation while the community votes
 
-[Streamer warm-session controls](BUILDER_PREWARM.md) add prepare, bounded +15-minute renewal and exact close, with a countdown. Independent cleanup remains armed; immutable atomic lease decisions arbitrate renewal, build admission and close. New controls are default-off and verified locally/mocked only. They do not change the preserved real run or grant new spending.
+[Streamer warm-session controls](BUILDER_PREWARM.md) add prepare, bounded +15-minute renewal and exact close, with a countdown. Independent cleanup remains armed; immutable atomic lease decisions arbitrate renewal, build admission and close. New controls are default-off; local/mock/browser checks plus a separately approved real prepare/extend/pause/resume/close verification pass. [Provider verification](PREWARM_CONTROL_VERIFICATION.md). They do not change the preserved real run or grant new spending.

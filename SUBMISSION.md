@@ -18,7 +18,9 @@ The controller runs reviewed SDK games in separate Linux namespaces with deadlin
 
 The treasury is a simulated build-credit ledger. It does not receive donations, settle bills, or treat Bits, subscriptions or Channel Points as money for builds. Paid-event simulation is disabled by default; payments and paid asset checkout are outside this submission. External Rust runtimes were removed from the demo configuration pending rights/hosting review.
 
-The increment adds distinct-account Grove emote bonuses, moderator chat-effect pause/resume, preferred fallback order, temporary input-approval delegation, supporting-voter/approver credit and free chat predictions. Each has an independent config flag. New Grove art stages and large stream credits are verified locally; real audience rehearsal remains pending.
+The increment adds distinct-account Grove emote bonuses, moderator chat-effect pause/resume, preferred fallback order, temporary input-approval delegation, supporting-voter/approver credit and free chat predictions. Each has an independent config flag. Streamer warm controls additionally passed real prepare/extend/pause/resume/close verification without model use; they remain default-off per allocation. New Grove art stages and large stream credits are verified locally; real audience rehearsal remains pending.
+
+A later controller-authored inert revision adds rotating die/monster/healer seats for small chats, with bots for gaps and inactivity. Fourteen guest checks passed, including focused cases for the two earlier gameplay findings, and the owner approved that exact revision. It has no deployed runtime or human playtest.
 
 ## Built with Codex, with explicit provenance
 
@@ -42,11 +44,11 @@ The Twitch OAuth port was informed by the sibling `stream-to-shorts/twitchcon-ap
 
 ## Evidence and limitations
 
-The current local suite passes **270 checks: 160 focused tests and 110 isolated integration checks**. Separate automated Chromium evidence passes 26 local UI checks and 14 normal-launcher browser checks. A fresh disposable checkout passes installation, the complete suite, 10 launcher checks and six inert Seed-transfer checks. Separate real VM quarantine evidence is nine checks for Lantern Table and twelve historical Seed Race checks, not added to the npm total. Failed intermediate attempts remain documented. See docs/EVIDENCE.md.
+The current local suite passes **271 checks: 161 focused tests and 110 isolated integration checks**. Separate automated Chromium evidence passes 26 local UI checks and 14 normal-launcher browser checks. A fresh disposable checkout passes installation, the complete suite, 10 launcher checks and six inert Seed-transfer checks. Separate real VM quarantine evidence is nine checks for Lantern Table, fourteen controlled gameplay checks for its roles revision and twelve historical Seed Race checks, not added to the npm total. Failed intermediate attempts remain documented. See docs/EVIDENCE.md.
 
 Saved real Twitch/WSS rehearsals verify commands, bot replies and effects in the existing games. Those runs used owner-account automation while the channel was offline. We have not represented them as independent audience play, a real OBS broadcast, or new Twitch evidence from this revision. Paid events, actual reward redemptions and payment settlement have not been demonstrated. Default tests use mock coding providers.
 
-The full vision still needs gameplay validation/fixes, live verification of the new warm-session controls, a separate approved-artifact runtime, stable free judging access and human rehearsal. There is no Twitch Extension, general marketplace, universal co-op conversion or connected Agent Native runtime. The privacy page is implemented, but Cristóbal Muñoz supplied the operator name and privacy contacts. Hosting/recording disclosure and retention/deletion handling remain required before public use.
+The full vision still needs gameplay validation/fixes, a separate approved-artifact runtime, stable free judging access and human rehearsal. There is no Twitch Extension, general marketplace, universal co-op conversion or connected Agent Native runtime. The privacy page is implemented, but Cristóbal Muñoz supplied the operator name and privacy contacts. Hosting/recording disclosure and retention/deletion handling remain required before public use.
 
 ## Next steps and submission fields
 

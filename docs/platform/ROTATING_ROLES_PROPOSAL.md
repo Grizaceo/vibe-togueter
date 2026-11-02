@@ -1,4 +1,6 @@
-# Conditional C — inert roles revision, guest test decision pending
+# Conditional C — approved roles revision and historical test proposal
+
+**Outcome:** owner authorized the one-test-guest scope. All 14 checks passed; the guest is destroyed, and exact owner approval saved [reviewed local evidence](../evidence/lantern-roles-reviewed-publication.json). The source remains inert, outside served games. The proposal below is historical and grants no further VM/model use.
 
 A completed the real reviewed-publication path and B's six features are implemented before 13:00 UTC. The newly requested warm controls are also implemented/default-off and clean-tested. This makes the conditional roles work eligible to prepare; it does not authorize another charged guest by itself.
 
@@ -10,7 +12,7 @@ Proposed exact inputs:
 
 > Revise Lantern Table with rotating die, monster and healer seats for small chats. Use !role to join and !role off to leave. Rotate people across roles each round; bots fill empty or sixty-second inactive seats. Only the assigned role can use !roll, !enemy or !heal, with account cooldowns. Bound role membership and browser heroes to 32. Fix defeated-enemy damage and offscreen reset positions. Keep English UI, code-drawn art, no external assets or network, and no host execution.
 
-The current Codex controller authored this inert text revision of the earlier VM-built source. No new model call generated it. Three participants rotate across all seats; larger queues enter in three-round groups. Join/leave chatter does not reset bot clocks. The die result remains cosmetic. No real Twitch identities, natural five-round balance or human play is proved. A read-only reviewer found no actionable issue by text inspection; the candidate and harness have **never been executed**.
+The current Codex controller authored this inert text revision of the earlier VM-built source. No new model call generated it. Three participants rotate across all seats; larger queues enter in three-round groups. Join/leave chatter does not reset bot clocks. The die result remains cosmetic. No real Twitch identities, natural five-round balance or human play is proved. A read-only reviewer found no actionable issue by text inspection; at that pre-verification checkpoint the candidate and harness had not been executed. The later guest-only run passed all 14 checks.
 
 ## Proposed bounded verification
 
@@ -18,4 +20,4 @@ One fresh private `devbox:1` / 1-vCPU/2-GB **test guest only**, up to five minut
 
 Transfer only exact inert source, trusted SDK/harness and test metadata. Run 14 planned guest checks for role assignment/rotation, role authorization/cooldowns, bot fill/inactivity/chatter, finite bounds and the two prior gameplay regressions. Some edge fixtures set guest state deliberately; they do not prove a natural full game. Retrieve report/static frame as data, destroy and independently verify the guest, then request owner exact-version/rights approval separately. Keep the previously approved Lantern Table artifact unchanged. No candidate executes on the PC, no runtime or external publication is created, and nothing is presented as real audience play.
 
-Until that scoped decision and guest verification, C remains an inert untested draft outside the served games. Worker/prewarm defaults remain off; the shipped clean source and 270 passing local tests are unaffected.
+The scoped decision, guest verification and exact owner review are now complete. The revision remains inert outside the served games. Worker/prewarm defaults remain off; the current local suite has 271 passing checks.
