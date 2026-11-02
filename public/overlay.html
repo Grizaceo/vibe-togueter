@@ -55,12 +55,6 @@
         max-height: 72px;
         overflow: hidden;
       }
-      #fund {
-        padding: 8px 12px;
-        border-top: 1px solid #222;
-        font-size: 13px;
-        color: #ffd166;
-      }
       #err {
         color: #f88;
         padding: 0 12px;
@@ -173,7 +167,7 @@
           (m.recent || []).forEach(addFeed);
         },
         onFeed: addFeed,
-        onPlayers: (p, game, err, fund) => {
+        onPlayers: (p, game, err) => {
           credits.matchGame(game);
           if (game) document.getElementById("game").textContent = game.name;
           document.getElementById("err").textContent = err || "";
