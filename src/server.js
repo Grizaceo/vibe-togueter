@@ -50,9 +50,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const PUBLIC = path.join(ROOT, "public");
 const { acquireController } = await import("./controller-lock.js");
-const releaseController = await acquireController(
-  path.join(ROOT, "runtime", "controller.lock"),
-);
+await acquireController(path.join(ROOT, "runtime", "controller.lock"));
 const IDEAS_FILE = path.join(ROOT, "ideas.jsonl");
 
 const args = process.argv.slice(2);

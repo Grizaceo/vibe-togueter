@@ -3,7 +3,6 @@
 // kinds: 'deposit' (sub/bits/donation/manual), 'spend' (generación), 'adjust'
 
 import fs from "node:fs";
-import path from "node:path";
 
 export class Treasury {
   constructor(file, { onChange } = {}) {

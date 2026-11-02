@@ -361,7 +361,7 @@ export class StudioBuilds {
           preview: tested.preview || null,
         },
       );
-    } catch (error) {
+    } catch {
       failure = signal.aborted ? "cancelled" : "failed";
     } finally {
       let cleanup;
