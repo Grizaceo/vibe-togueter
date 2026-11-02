@@ -12,6 +12,8 @@ The [roles revision](platform/LANTERN_ROLES_REVIEW.md) passed 14 controlled game
 
 [New 720p crowded overlay](evidence/local-ui-1793608089799-overlay-crowded-720p.png), [1080p counterpart](evidence/local-ui-1793608089799-overlay-crowded-1080p.png) and [disabled Studio controls](evidence/local-ui-1793608089799-studio-owner.png) show delivery polish O14/O15/O16/O21. Chromium checked geometry, singular labels, neutral disabled controls and the inherited prototype credit. This remains automated local evidence. A later [layout regression](evidence/overlay-sidebar-regression.json) covers one and ten selected authors with maximum-sized summary fields. The [720p synthetic scene](evidence/local-ui-1793608089799-overlay-synthetic-max-10authors-720p.png) is a layout fixture, not a real audience round.
 
+The [current configured-secret scan](evidence/delivery-secret-scan.json) checked 493 tracked working-tree files against seven configured secret values, with zero matches. It is not a history-wide or generic credential-pattern scan.
+
 The dated sections below preserve historical counts/failures. No human/Twitch/OBS/video, hosting deployment, settled provider cost or public submission is inferred from local automation.
 
 Codex thread: `01a19536-0f02-7fc3-b030-d6b6fd8e170c`. Branch: `feat/twitchcon-codex`. Inherited baseline: `fab3227`; new work starts with `61d06b3`. No push or submission was performed.
