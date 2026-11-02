@@ -1,3 +1,5 @@
+import { loadServerConfig } from "./server/config.js";
+import { startServer } from "./server/bootstrap.js";
 // vibe-arena server: static files + websocket room + chat routing + admin API.
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
@@ -17,7 +19,6 @@ import { ChatEffects } from "./chat-effects.js";
 import { secretMatches, staticFileInside } from "./request-boundaries.js";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { WebSocketServer } from "ws";
 import {
   STATE_INTERVAL_MS,
@@ -44,42 +45,9 @@ import { Generator } from "./generator.js";
 import { createLocalChat } from "./chat/local.js";
 import crypto from "node:crypto";
 import { decodeTwitchEvent, rewardCommand } from "./twitch-events.js";
-import { loadEnv, TwitchAuth } from "./auth/twitch.js";
+import { TwitchAuth } from "./auth/twitch.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.join(__dirname, "..");
-const PUBLIC = path.join(ROOT, "public");
-const { acquireController } = await import("./controller-lock.js");
-await acquireController(path.join(ROOT, "runtime", "controller.lock"));
-const IDEAS_FILE = path.join(ROOT, "ideas.jsonl");
-
-const args = process.argv.slice(2);
-const arg = (name, dflt) => {
-  const i = args.indexOf(`--${name}`);
-  return i >= 0 ? args[i + 1] : dflt;
-};
-loadEnv(arg("env-file", path.join(ROOT, ".env")));
-const PORT = Number(arg("port", 8420));
-const LISTEN_HOST = arg("host", "0.0.0.0");
-const TWITCH_CHANNEL = arg("twitch", null);
-const KICK_CHANNEL = arg("kick", null);
-const GAME_DIR = path.resolve(ROOT, arg("game-dir", "games/demo"));
-
-const CONFIG = JSON.parse(
-  fs.readFileSync(path.join(ROOT, "vibe-arena.config.json"), "utf8"),
-);
-// env overrides for cloud mode: VA_BASE_URL, VA_API_KEY, VA_MODEL
-if (process.env.VA_BASE_URL) CONFIG.generator.baseUrl = process.env.VA_BASE_URL;
-if (process.env.VA_API_KEY) CONFIG.generator.apiKey = process.env.VA_API_KEY;
-if (process.env.VA_MODEL) CONFIG.generator.model = process.env.VA_MODEL;
-
-if (process.env.VA_EVENTSUB_SECRET)
-  CONFIG.monetization.eventsubSecret = process.env.VA_EVENTSUB_SECRET;
-if (process.env.VA_WEBHOOK_SECRET)
-  CONFIG.monetization.webhookSecret = process.env.VA_WEBHOOK_SECRET;
-
-// Synthetic event accounting is opt-in for isolated fixtures only; never provider settlement.
-const simulateEventCredits = process.env.VA_SIMULATE_EVENT_CREDITS === "1";
+const { ROOT, PUBLIC, IDEAS_FILE, arg, PORT, LISTEN_HOST, TWITCH_CHANNEL, KICK_CHANNEL, GAME_DIR, CONFIG, simulateEventCredits } = await loadServerConfig();
 
 const approvalDelegation = new ApprovalDelegation({
   enabled: CONFIG.features?.approvalDelegation,
@@ -1841,54 +1809,4 @@ wss.on("connection", (ws, req) => {
   });
 });
 
-server.listen(PORT, LISTEN_HOST, () => {
-  console.log(
-    `[vibe-arena] players  -> http://localhost:${server.address().port}/`,
-  );
-  console.log(
-    `[vibe-arena] overlay  -> http://localhost:${server.address().port}/overlay.html`,
-  );
-  console.log(`[vibe-arena] chat test-> type in this terminal, or !cmd`);
-  console.log(`[vibe-arena] game dir -> ${GAME_DIR}`);
-  if (TWITCH_CHANNEL) console.log(`[vibe-arena] twitch   -> ${TWITCH_CHANNEL}`);
-  if (KICK_CHANNEL)
-    console.log(`[vibe-arena] kick webhook -> POST /webhook/kick`);
-});
-
-let shuttingDown = false;
-const shutdown = async () => {
-  if (shuttingDown) return;
-  shuttingDown = true;
-  clearInterval(builderWarmHeartbeat);
-  resourceWatcher.close();
-  clearTimeout(resourceDebounce);
-  teeBridge.stop();
-  twitch?.close();
-  host.stop();
-  localChat.close();
-  server.close();
-  if (studioBuilds.running) {
-    const running = studioBuilds.running;
-    try {
-      await studioBuilds.cancel(running.id);
-      let timer;
-      try {
-        await Promise.race([
-          running.promise,
-          new Promise((resolve) => {
-            timer = setTimeout(resolve, 45000);
-          }),
-        ]);
-      } finally {
-        clearTimeout(timer);
-      }
-    } catch {}
-    if (studioBuilds.running)
-      console.error(
-        "Managed guest cleanup still requires reconciliation; independent lease timers remain.",
-      );
-  }
-  process.exit(0);
-};
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
+startServer({ server, PORT, LISTEN_HOST, GAME_DIR, TWITCH_CHANNEL, KICK_CHANNEL, builderWarmHeartbeat, resourceWatcher, getResourceDebounce: () => resourceDebounce, teeBridge, twitch, host, localChat, studioBuilds });
