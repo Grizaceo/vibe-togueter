@@ -1,5 +1,7 @@
 # Submission increment — November 1–2, 2026
 
+**Latest A result, November 2 02:41 UTC: no-go remains.** Fresh guest login passed, but the single owner-approved real construction timed out without a candidate. The builder is confirmed destroyed; no test VM was created. Default flag remains off. Earlier preparation/billing blockers below are historical; this run consumed the bounded approval. See the final attempt report at the end.
+
 Plan B stays runnable after every commit. This plan supersedes the old freeze and 09:00 golden-path deadline in REORIENTATION.md. November 2 UTC gates: **10:00 build go/no-go; 15:00 feature cutoff; 15:00–17:00 stabilization/human rehearsal; 17:00–21:00 owner recording/submission; 22:00 official close.**
 
 ## Evidence before editing
@@ -139,3 +141,23 @@ Final local Chromium evidence `local-ui-1793585185903-*` passes **22 checks**; t
 | O12 | Inert package preserved; six transfer checks pass; candidate never executed on host |
 
 **Decision remains no current go for A**, pending the concrete account/login gate, before the 10:00 UTC decision deadline. Plan B remains primary and worker disabled. No push, external publication, payment gateway, upload, new VM/model call or candidate host execution occurred. Owner actions: report usable Sandbox balance/capacity and decide the bounded fresh-login run; arrange free judge hosting/access; complete privacy hosting/recording disclosure; run the real command checklist; record/review OBS and English video; upload YouTube; push privately and grant testing@devpost.com access; fill Devpost with the primary session ID. At 15:00 stop feature work; retain or disable based on observed rehearsal results.
+
+### Actual owner-approved attempt — November 2, 02:27–02:41 UTC
+
+Owner reported **2,990.35 hackathon credits**, requested the new OpenAI login flow, completed fresh guest subscription authentication and approved the exact Lantern Table proposal. CreateOS accepted a private `s-1vcpu-2gb` / `devbox:1` guest. Its cleanup timer was verified active; no host auth cache or Twitch credential was copied. Credit conversion and settled cost remain unverified.
+
+The actual controller opened a new Studio round, recorded the owner-selected proposal with **zero ballots**, selected an empty resource manifest and persisted exact input approval. Dispatch used the installed `CreateOSStudioWorker` with a unique one-run approval and a 25-cent operator reservation. Public controller/WebSocket state exposed queued/building/failed while bundled Grove remained active. Browser evidence has no JavaScript errors and explicitly makes no Twitch/human/OBS claim. Startup fixture issues (/dev/null chmod, closed operator stdin and missing user-bus environment) were corrected before the one managed Codex construction command; they did not cause extra model attempts or VM replacements.
+
+Managed process `proc_USt9veZsP5vDIEUv8tgExw` reached the five-minute timeout, terminal **exit 124**. No completed model receipt or candidate was received. Timeout establishes the bound, not an underlying cause; model/token usage cannot be inferred. The controller rejected the ticket, cleared input approval for any future attempt, independently confirmed builder destruction and returned the failed state. **No test VM, artifact approval, reviewed publication, candidate host execution or external runtime occurred.** No automatic retry was performed. The controller was stopped and the disk flag stayed false.
+
+Evidence: `increment-real-attempt.json`, `increment-real-run-status.json`, `increment-real-controller-browser.json`, `increment-real-failed-overlay.png` and the two safe fresh-login receipts. Source/config/dependency fingerprints still match the clean-tested fc8d9f2 checkpoint; **246 npm checks** and the separately recorded browser/launcher/transfer checks remain the applicable local verification. No implementation change was made to conceal or speculate about the failure.
+
+**A: no current go; Plan B primary. C remains ineligible.** Any new attempt requires a new explicit bounded allocation and fresh guest login, since the one approved job is consumed and its VM destroyed. Current O1–O12 status is unchanged from the preceding table. Owner still handles stable free judging access, hosting/recording disclosure, real Twitch/mod/three-account and OBS rehearsal, English video/YouTube, private push/testing access and Devpost. The 10:00 go/no-go and 15:00 feature cutoff remain in force.
+
+### Managed stdin follow-up — local correction, real rerun pending
+
+Installed Codex help explicitly says piped stdin is appended to an explicit prompt. The new managed-process API leaves that pipe open, unlike the earlier one-shot exec path. An actual Codex 0.166 probe with a fresh empty temporary HOME and a localhost mock showed zero output/requests while stdin remained open, then one localhost request immediately after EOF. No OpenAI model, credentials or candidate were involved. An initial host-wrapper probe did not reach the real executable; the decisive probe used the resolved installed binary directly, and its temporary directory was removed.
+
+A real trusted-shell regression reproduced the adapter's EOF wait red, then passed after prefixing its managed guest command with `exec < /dev/null;`. Full suite is now **247 = 141 focused + 106 integration**, green. The correction fixes a demonstrated reachable transport defect; it is consistent with the real timeout but does not turn that failed run into a success or prove all future provider behavior. Fresh clean-checkout verification follows the fix. A remains off/Plan B primary; a second real attempt still needs an explicit bounded decision and fresh guest login.
+
+Post-fix clean checkout **1e8bd6c** passed npm ci, **247 npm checks**, 10 disposable launcher checks and six inert Seed-transfer checks; cleanup was confirmed. The skill-required read-only reviewer found no issue in the stdin correction and passed its real-shell regression. No real provider/model rerun occurred. Current shipped source/config/dependency fingerprints match the new clean result.

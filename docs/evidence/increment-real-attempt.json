@@ -1,0 +1,64 @@
+{
+  "kind": "real-studio-connector-attempt",
+  "at": "2026-11-02T02:42:15.265086+00:00",
+  "ownerReportedBalance": {
+    "credits": 2990.35,
+    "source": "owner-reported hackathon credits",
+    "usdConversionVerified": false,
+    "settledProviderCostVerified": false
+  },
+  "ownerInputApproved": true,
+  "proposal": "Build Lantern Table, an original cooperative tabletop game. Browser players move a hero and attack with space or click. Chat uses !enemy, !heal and !roll to summon bounded enemies, heal or roll a die. Show health, round and recent actions in English. Use per-account cooldowns, finite drawing primitives and a clear win/reset loop. No external assets, network or downloads.",
+  "roundId": "289577d6-66ff-4d42-8b3a-eb5dfcd15838",
+  "approvedInputHash": "0c1919c6400ebf69ce9f62090b8583f7bc2118bd39c812db124768af32504bc6",
+  "jobId": "988e8eef-06d2-42b5-adca-c0c109fd565d",
+  "ticketId": "914b4c7b-cb86-4862-9022-5332ef61bcc6",
+  "approvalId": "owner-increment-20261102-login-flow",
+  "vmBudgetMinor": 25,
+  "authentication": "fresh guest ChatGPT subscription login verified",
+  "requestedModel": "gpt-6.1-terra",
+  "buildVmId": "sb-01m6d1atmm3btfkxx2zp9cyr08",
+  "managedProcess": {
+    "id": "proc_USt9veZsP5vDIEUv8tgExw",
+    "startedAt": 1793586954621,
+    "terminal": {
+      "state": "exited",
+      "exitCode": 124
+    }
+  },
+  "phase": "failed",
+  "cleanup": {
+    "confirmed": true,
+    "testVmId": null,
+    "testDestroyed": null,
+    "buildVmId": "sb-01m6d1atmm3btfkxx2zp9cyr08",
+    "buildDestroyed": true
+  },
+  "buildDestroyed": true,
+  "testVMCreated": false,
+  "candidateReceived": false,
+  "liveRuntime": false,
+  "candidateExecutedOnHost": false,
+  "noAutomaticRetry": true,
+  "diskWorkerEnabled": false,
+  "instructionFileRemoved": true,
+  "limits": [
+    "Exit 124 establishes the five-minute timeout, not its underlying cause.",
+    "No verified model completion receipt; token/model usage is unknown.",
+    "No candidate, distinct-VM tests, artifact approval or reviewed publication completed.",
+    "Owner-selected local input; no real Twitch ballots/human gameplay/OBS footage.",
+    "Earlier Seed Race trial remains separate historical evidence."
+  ],
+  "operatorPreparationFailures": [
+    "Controller initialization with /dev/null env path failed chmod before dispatch; a known-empty private env fixture resolved it.",
+    "First ready check lacked DBus/XDG user-session variables; no job/model process was created until corrected.",
+    "A noninteractive operator stdin handle was closed; its controller was stopped and reopened with a live PTY before dispatch."
+  ],
+  "localFollowUp": {
+    "evidence": "increment-stdin-probe.json",
+    "defect": "managed command stdin remained open; Codex appends piped stdin even with an explicit prompt",
+    "fix": "prefix guest command with exec < /dev/null",
+    "realRerunPerformed": false,
+    "causalityLimit": "Local reproduction demonstrates a reachable defect consistent with timeout; full guest stderr was not recovered."
+  }
+}

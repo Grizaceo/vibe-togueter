@@ -1,0 +1,51 @@
+{
+  "kind": "real-local-controller-with-createos-worker",
+  "observations": [
+    {
+      "at": "2026-11-02T02:35:49.206Z",
+      "kind": "actual-controller-observation",
+      "roundPhase": "building",
+      "job": {
+        "id": "988e8eef-06d2-42b5-adca-c0c109fd565d",
+        "ticketId": "914b4c7b-cb86-4862-9022-5332ef61bcc6",
+        "roundId": "289577d6-66ff-4d42-8b3a-eb5dfcd15838",
+        "phase": "building",
+        "at": 1793586948623,
+        "message": "Codex construction in the isolated VM.",
+        "adapter": "createos-subscription",
+        "codeSha256": null,
+        "artifactHash": null,
+        "reportHash": null,
+        "cleanupConfirmed": false,
+        "liveRuntime": false
+      },
+      "liveGame": "Community Grove",
+      "twitchConnected": false
+    },
+    {
+      "at": "2026-11-02T02:40:59.217Z",
+      "kind": "actual-controller-observation",
+      "roundPhase": "awaiting-approval",
+      "job": {
+        "id": "988e8eef-06d2-42b5-adca-c0c109fd565d",
+        "ticketId": "914b4c7b-cb86-4862-9022-5332ef61bcc6",
+        "roundId": "289577d6-66ff-4d42-8b3a-eb5dfcd15838",
+        "phase": "failed",
+        "at": 1793586948623,
+        "message": "Build/test failed; no local fallback or automatic retry.",
+        "adapter": "createos-subscription",
+        "codeSha256": null,
+        "artifactHash": null,
+        "reportHash": null,
+        "cleanupConfirmed": true,
+        "liveRuntime": false
+      },
+      "liveGame": "Community Grove",
+      "twitchConnected": false
+    }
+  ],
+  "limits": [
+    "Operator-selected inputs; no Twitch ballots or human gameplay claimed.",
+    "Live game remains bundled Grove; generated candidate is inert."
+  ]
+}

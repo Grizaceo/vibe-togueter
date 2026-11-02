@@ -1,10 +1,10 @@
 {
   "kind": "local-completion-boundary-audit",
-  "sourceCommit": "fc8d9f236122689de69193f71532d650ecfbdf1c",
+  "sourceCommit": "1e8bd6c652db9bc93680a960146edb67b5319729",
   "cleanFingerprintsMatch": true,
   "studioWorkerEnabled": false,
   "sixParticipationFlagsEnabled": true,
-  "npmChecks": 246,
+  "npmChecks": 247,
   "localUI": 22,
   "normalLauncherBrowser": 14,
   "launcher": 10,
@@ -20,9 +20,12 @@
   ],
   "remaining": [
     "Real golden-path VM/model run and owner exact approval",
-    "Usable balance/capacity and fresh guest login decision",
+    "New explicit bounded allocation and fresh guest login only if another attempt is requested",
     "Human Twitch/mod/three-account and OBS rehearsal",
     "Owner hosting/disclosure/video/YouTube/private push/judge access/Devpost"
   ],
-  "goalComplete": false
+  "goalComplete": false,
+  "latestRealAttempt": "increment-real-attempt.json",
+  "realRunResult": "failed: timeout exit 124, no candidate, builder destroyed, no test VM",
+  "latestLocalFix": "Managed command stdin now closes before execution; real-shell red-to-green test and local Codex/mock probe."
 }

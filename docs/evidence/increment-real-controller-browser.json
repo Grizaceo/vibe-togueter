@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-02T02:41:48.723Z",
+  "kind": "actual-local-controller-browser-observation",
+  "state": {
+    "game": "Community Grove",
+    "activity": "Community round · awaiting approval1 ideas · 0 voters#1 · 0 votes · Owner-selected-trial: Build Lantern Table, an original cooperative tabletop game. Browser players move a hero and attack wIsolated build · failed · no live runtimeGrove burst · 3 viewers in 5s: ☀️ 0/3 · 🌧️ 0/3",
+    "error": "",
+    "credits": "Game by: Cristóbal Muñoz · Codex implementationArt by: KenneyIdea by: Cristóbal MuñozBackground Elements · CC0; curated resource, no endorsement"
+  },
+  "errors": [],
+  "limits": [
+    "Real VM worker with owner-selected inputs; no Twitch or human participant.",
+    "Grove bundled game frame; candidate never loaded on host."
+  ]
+}

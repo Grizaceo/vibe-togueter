@@ -17,10 +17,10 @@ Game, art and idea credits stay outside game-controlled drawing. Grove uses cura
 The streamer can choose reviewed fallback preferences, with Marble Race last. This shot shows a requested fallback. Two entrants can then start a race.
 
 00:01:40,000–00:02:15,000
-This is the earlier owner-selected Seed Race trial. Codex built it in one private VM. Another VM tested the exact source. The owner then approved that version and report. Its preview is static and the game remains unpublished. The new Studio connector has mock lifecycle coverage; no new complete real run is claimed.
+This is the earlier owner-selected Seed Race trial. Codex built it in one private VM. Another VM tested the exact source. The owner then approved that version and report. Its preview is static and the game remains unpublished. The new Studio connector authenticated successfully, but its construction attempt timed out. Cleanup was verified; no complete new run is claimed.
 
 00:02:15,000–00:02:35,000
-The initial prototype was Devin-assisted. Codex implemented the later Twitch, studio and isolation work. The local suite passes 246 checks. Browser and guest checks are recorded separately. Human Twitch and OBS rehearsal remains an owner task.
+The initial prototype was Devin-assisted. Codex implemented the later Twitch, studio and isolation work. The local suite passes 247 checks. Browser and guest checks are recorded separately. Human Twitch and OBS rehearsal remains an owner task.
 
 00:02:35,000–00:02:45,000
 Next is verifying the isolated Studio builder and connecting an approved runtime. Creator discovery and clips preserving attribution remain future work.

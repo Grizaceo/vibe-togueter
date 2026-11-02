@@ -84,33 +84,33 @@ fallback. Two entrants can then start a
 race.
 
 18
-00:01:40,000 --> 00:01:45,283
+00:01:40,000 --> 00:01:45,932
 This is the earlier owner-selected Seed
-Race trial.
+Race trial. Codex built
 
 19
-00:01:45,283 --> 00:01:51,887
-Codex built it in one private VM. Another
-VM tested
+00:01:45,932 --> 00:01:53,051
+it in one private VM. Another VM tested
+the exact source. The
 
 20
-00:01:51,887 --> 00:01:57,170
-the exact source. The owner then approved
-that
+00:01:53,051 --> 00:01:58,983
+owner then approved that version and
+report. Its preview is
 
 21
-00:01:57,170 --> 00:02:03,774
-version and report. Its preview is static
-and the game
+00:01:58,983 --> 00:02:04,915
+static and the game remains unpublished.
+The new Studio connector
 
 22
-00:02:03,774 --> 00:02:09,057
-remains unpublished. The new Studio
-connector has mock
+00:02:04,915 --> 00:02:09,068
+authenticated successfully, but its
+construction attempt timed
 
 23
-00:02:09,057 --> 00:02:15,000
-lifecycle coverage; no new complete real
+00:02:09,068 --> 00:02:15,000
+out. Cleanup was verified; no complete new
 run is claimed.
 
 24
@@ -121,7 +121,7 @@ Codex implemented the later Twitch, studio
 25
 00:02:21,111 --> 00:02:28,333
 and isolation work. The local suite passes
-246 checks. Browser and guest checks
+247 checks. Browser and guest checks
 
 26
 00:02:28,333 --> 00:02:35,000
