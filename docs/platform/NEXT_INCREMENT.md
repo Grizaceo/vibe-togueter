@@ -103,3 +103,39 @@ Experimental Studio dispatch/status/cancel, inert receipt, separate-VM protocol 
 The review reproduced and fixed terminal-ticket/round-write reconciliation splits, creation-before-cleanup supervision and suspended-producer timing. Both guest types now use pre-armed recurring reconcilers with durable ownership/creation intent. Added regressions preserve failed evidence. Installed CLI result contracts were checked against commit 6b33b67673ab20e8f8babb2aff755f70f9cc322c; no CLI upgrade or real provider mutation occurred.
 
 **Real-run gate: pending / no current go.** Owner asked to inspect the existing CLI and documentation for balance. The CLI exposes the general Free plan but no remaining balance; docs show web Billing → Balance → Total Credits. Account browser access is unavailable in this tool session. Sandbox usable credit/capacity and new guest login remain unverified, so no new VM/model request is authorized or performed. The concrete one-run proposal remains pending. Mocks do not satisfy the November 2 10:00 UTC gate. C stays ineligible. O1–O12/owner actions remain as recorded above; clean-install and delivery-document stabilization follow this checkpoint.
+
+### Creator approval and local stabilization follow-up
+
+Full suite: **246 = 140 focused + 106 integration**, green. Reviewed evidence now includes owner-declared game creators, pinned resource artists/licenses and canonical input community credit. Creator metadata is committed atomically with exact source/report approval; reinspection and retry preserve it after interrupted evidence writes. A read-only reviewer reproduced the backend retry gap and a UI default-name reset; both have red-to-green regressions. No new provider/model operation occurred.
+
+Normal-launcher Plan B browser rehearsal again passed **14 checks**, with temporary-state cleanup confirmed (`plan-b-browser-1793585012393.json`). The expanded local UI rehearsal additionally covers owner unlock/lock, fallback order, temporary delegation and an explicitly mocked interrupted-publication recovery. These are synthetic local checks, not Twitch/human/OBS evidence. Delivery documents retain Plan B; the 10:00 real-run gate has no current go and dispatch stays disabled. C remains ineligible. Clean-install verification follows this checkpoint.
+
+### Delivery-ready local checkpoint — November 2, 02:08 UTC
+
+Source checkpoint **fc8d9f2** passed a fresh detached checkout: `npm ci`, **246 npm checks (140 + 106)**, **10 disposable launcher checks**, and **six inert Seed-transfer checks**. Worktree cleanup is confirmed in `docs/evidence/increment-clean-install.json`. A config-path collision stopped the initial install harness before dependency resolution; its failed evidence is preserved, and separate empty npm config files corrected the harness. No owner config was copied. No source/config/dependency changes followed this clean check.
+
+Final local Chromium evidence `local-ui-1793585185903-*` passes **22 checks**; two explicitly mocked HTTP cases exercise interrupted publication recovery. Normal-launcher browser evidence passes **14**, including actual forms, two race entrants and moving authoritative positions. Fresh lobby/overlay/Studio/privacy captures were inspected; earlier rescaled 720p credit evidence remains available. Draft narration and 28 subtitle cues match over a 165-second track (42 columns/two lines maximum); this is a structural check, not recorded speech or export timing.
+
+| Block | Final local result | Remaining gate |
+| --- | --- | --- |
+| 0 | Grove art/stages, stream credits, English, round sidebar/no ledger, Linux/evidence judge path and boundary fixes committed green | Human OBS readability and owner hosting/video/disclosure |
+| B | All six individually disableable features implemented and tested | Real Twitch/mod/three-account rehearsal |
+| A | Connector and reviewed evidence path implemented; credit/retry fix fc8d9f2; default off | Budget/capacity, fresh guest login, real full run and exact owner approval; mocks do not establish go |
+| C | Not implemented | Ineligible while A incomplete; keep roadmap only |
+
+| Observation | Current result |
+| --- | --- |
+| O1 | Linux setup and no-install evidence path implemented; stable free access and video URL pending owner |
+| O2 | Visible initial trees and growth stages verified locally |
+| O3 | Full-width contrast credits; 1080p/720p layout and rescaled capture verified locally |
+| O4 | Human Twitch/mod/OBS/video rehearsal pending owner |
+| O5 | English UI/HUD/system feed implemented |
+| O6 | Main session retained for Devpost; increment session listed separately |
+| O7 | Live round/ideas/votes/fallback sidebar implemented |
+| O8 | Simulated ledger removed from overlay |
+| O9 | Supplied operator/contact details present; hosting/recording disclosure visibly pending |
+| O10 | Shared constant-time secret equality implemented/tested |
+| O11 | Canonical/relative static-path containment implemented/tested |
+| O12 | Inert package preserved; six transfer checks pass; candidate never executed on host |
+
+**Decision remains no current go for A**, pending the concrete account/login gate, before the 10:00 UTC decision deadline. Plan B remains primary and worker disabled. No push, external publication, payment gateway, upload, new VM/model call or candidate host execution occurred. Owner actions: report usable Sandbox balance/capacity and decide the bounded fresh-login run; arrange free judge hosting/access; complete privacy hosting/recording disclosure; run the real command checklist; record/review OBS and English video; upload YouTube; push privately and grant testing@devpost.com access; fill Devpost with the primary session ID. At 15:00 stop feature work; retain or disable based on observed rehearsal results.

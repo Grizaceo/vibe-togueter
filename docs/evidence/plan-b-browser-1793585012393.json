@@ -1,0 +1,75 @@
+{
+  "at": "2026-11-02T02:03:49.464Z",
+  "kind": "automated-local-normal-launcher-browser-rehearsal",
+  "checks": [
+    {
+      "name": "Studio accurately describes empty remote catalog and supplied operator status",
+      "ok": true
+    },
+    {
+      "name": "production Studio form submits browser-authored proposal",
+      "ok": true
+    },
+    {
+      "name": "production Studio vote button counts the browser ballot",
+      "ok": true
+    },
+    {
+      "name": "launcher reviews and approves exactly the browser-proposed input",
+      "ok": true
+    },
+    {
+      "name": "production keyboard input advances Grove through normal launcher",
+      "ok": true
+    },
+    {
+      "name": "terminal fallback reaches the existing browser and exposes its cause",
+      "ok": true
+    },
+    {
+      "name": "both browser players are present after fallback",
+      "ok": true
+    },
+    {
+      "name": "browser chat form actually submits the race command",
+      "ok": true
+    },
+    {
+      "name": "two browser entrants start an actual Marble race through the production chat form",
+      "ok": true
+    },
+    {
+      "name": "authoritative marble positions move beyond their initial spawn",
+      "ok": true
+    },
+    {
+      "name": "returning to Grove restores matching source-version credits inside the viewport",
+      "ok": true
+    },
+    {
+      "name": "no browser JavaScript exception occurred",
+      "ok": true
+    },
+    {
+      "name": "owner can prepare another round after cancelling approved inputs",
+      "ok": true
+    },
+    {
+      "name": "normal stop closes the launcher successfully",
+      "ok": true
+    }
+  ],
+  "exceptions": [],
+  "screenshots": [
+    "plan-b-browser-1793585012393-approved-studio.png",
+    "plan-b-browser-1793585012393-grove.png",
+    "plan-b-browser-1793585012393-fallback.png",
+    "plan-b-browser-1793585012393-marble-race.png"
+  ],
+  "cleanupConfirmed": true,
+  "limits": [
+    "Production browser forms, keyboard and terminal controls on localhost only.",
+    "No human participants, Twitch connection/messages, OBS capture or exported video.",
+    "Approved inputs do not dispatch a worker; Seed Race was not imported or executed."
+  ]
+}

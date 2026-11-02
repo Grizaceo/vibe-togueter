@@ -1,6 +1,6 @@
 # Plan B rehearsal, prepared for later human participation
 
-November 1, 2026. The owner chose to rehearse later. No human, new Twitch, OBS or exported-video evidence is recorded by this preparation.
+Updated November 2, 2026. The owner chose to rehearse later. No human, new Twitch, OBS or exported-video evidence is recorded by this preparation.
 
 ## Start a disposable local practice session
 
@@ -20,7 +20,7 @@ Browser: enter a nickname; arrows/A-D, space or a click plants/advances Grove. K
 4. `approve` approves exactly the reviewed inputs. It does not build a game. If the round changes, approval is rejected; review again.
 5. `open` starts the next round after completion/cancellation; `cancel` cancels the current round.
 
-`marble`, `duel`, `grove` switch reviewed games; `fallback` requests the same local recovery path. Marble needs two browser entrants before a race can start; local commands are not Twitch. Duel's private streamer controls require normal operator setup for the later real rehearsal. `stop` exits and cleans up. Ephemeral control keys are kept inside the launcher and never printed.
+`marble`, `duel`, `grove` switch reviewed games; `fallback` requests the same local recovery path. Marble needs two browser entrants before a race can start; local commands are not Twitch. Duel's private streamer controls require normal operator setup for the later real rehearsal. `pause` / `resume` control chat effects; `prediction`, `lockprediction`, `sunwins` demonstrate a local free prediction. These terminal actions are synthetic practice, not Twitch evidence. `stop` exits and cleans up. Ephemeral control keys are kept inside the launcher and never printed.
 
 The automated launcher check is separate:
 
@@ -50,6 +50,12 @@ Keep a browser player, the actual Twitch channel and OBS overlay visible. A part
 | Studio `!idea` / `!vote`, local streamer review | Actual Twitch messages, matching proposal/ballot and exact approval | Pending |
 | `!plant 3`, `!water 3`, `!sun` alongside browser click/space | Same live game state responds to both people | Pending |
 | Broadcaster or real moderator `!fallback` | Sender role, Marble transition and visible cause | Pending |
+| Set preferred fallback order in Studio, then real mod `!fallback` | Selected reviewed fallback, cause, and eventual Marble final choice | Pending |
+| Real mod `!pause`, viewer game command, browser action, then `!resume` | Chat effect blocked while browser play continues; chat effect returns | Pending |
+| Three distinct Twitch logins send ☀️ or 🌧️ within five seconds | Single visible Grove bonus; repeated messages from one account do not trigger it | Pending |
+| Broadcaster `!delegate trusted_mod 1`; selected-input review token; moderator `!build approve TOKEN`; `!delegate off` | Correct exact-input approval, actual approver credit, expiry/revoke and rejection afterward | Pending |
+| Broadcaster `!prediction open Sun\|Rain`; viewers `!predict Sun`; `!prediction lock`; `!prediction resolve Sun` | Free prediction, streamer-reported result and matching winners in overlay | Pending |
+| Approved idea with supporting voters | Input co-credit names/count/approver remain distinct from the current game's authors | Pending |
 | Two entrants, chat `!play` then `!race` | Both entrants and actual moving race | Pending |
 | Game/art/idea credits, Kenney links | Human readability check on player and OBS at capture size | Pending |
 | Disconnect/reconnect and return to Grove | Observed recovery and any failure | Pending |
@@ -59,4 +65,4 @@ If anything fails, retain the failure and its UTC time. Fix the observed issue b
 
 Follow [the 2:45 recording script](DEMO_SCRIPT.md). Show the existing Seed Race trial as prior construction/test/approval evidence; its preview remains static and its runtime remains unconnected. An actual human should review the full export and public YouTube playback. The owner handles private push/access for testing@devpost.com, hosting and Devpost submission. These commands perform none of those delivery actions. The owner rights/date confirmation is recorded separately.
 
-Checkpoints November 2: builder decision 09:00 UTC; freeze 13:00 (then observed-failure fixes only); human demo by 16:00; recording/delivery reserve 17:00–21:00; prudent submission 21:00. [Official rules](https://twitchcon-codex.devpost.com/rules), rechecked November 1, list close at 22:00 UTC / 19:00 Santiago, public YouTube footage of Twitch and Codex, English materials, code/testing access and free judging use through November 15.
+Checkpoints November 2: golden-path decision 10:00 UTC; feature cutoff 15:00; stabilization and human rehearsal 15:00–17:00; recording/delivery reserve 17:00–21:00; prudent submission 21:00. [Official rules](https://twitchcon-codex.devpost.com/rules), rechecked November 1, list close at 22:00 UTC / 19:00 Santiago, public YouTube footage of Twitch and Codex, English materials, code/testing access and free judging use through November 15.

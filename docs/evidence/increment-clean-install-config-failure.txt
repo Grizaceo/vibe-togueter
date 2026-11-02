@@ -1,0 +1,5 @@
+Checkout commit: fc8d9f236122689de69193f71532d650ecfbdf1c
+Command: ["npm", "ci", "--no-audit", "--no-fund"]
+Exit prior to config file resolving
+cause
+double-loading config "/dev/null" as "global", previously loaded as "user"

@@ -1,5 +1,7 @@
 # Audit response and delivery handoff
 
+Current increment and replacement calendar: [NEXT_INCREMENT.md](NEXT_INCREMENT.md). Historical counts and deadlines below describe the earlier checkpoint.
+
 November 1, 2026. Branch feat/twitchcon-codex. Codex session **01a197c1-5ea9-7b21-8339-a38373db96b1**. This report distinguishes completed local work from owner delivery tasks; it does not declare the platform vision or Devpost submission complete.
 
 ## Decision

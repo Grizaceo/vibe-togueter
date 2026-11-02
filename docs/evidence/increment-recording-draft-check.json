@@ -1,0 +1,12 @@
+{
+  "kind": "draft-structure-check-only",
+  "cues": 28,
+  "trackSeconds": 165,
+  "words": 263,
+  "maxLines": 2,
+  "maxColumns": 42,
+  "narrationMatchesCaptions": true,
+  "limits": [
+    "No recorded speech, human timing, Twitch footage or measured export duration."
+  ]
+}

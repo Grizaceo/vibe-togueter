@@ -1,5 +1,7 @@
 # Demo reorientation — November 1, 2026
 
+Current increment and replacement calendar: [NEXT_INCREMENT.md](NEXT_INCREMENT.md). Historical counts and deadlines below describe the earlier checkpoint.
+
 ## Decision: Plan B
 
 Show the working community studio and reviewed games, followed by the real operator-run Codex VM trial. The intended golden path remains: chat proposes → votes → streamer approves inputs → Codex builds in a separate VM → quarantine/tests → streamer approves the exact version → web/chat play → automatic fallback → visible game/art/idea credits.

@@ -1,0 +1,9 @@
+Checkout commit: fc8d9f236122689de69193f71532d650ecfbdf1c
+Command: ["npm", "ci", "--no-audit", "--no-fund"]
+
+added 96 packages in 1s
+npm notice
+npm notice New major version of npm available! 11.20.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

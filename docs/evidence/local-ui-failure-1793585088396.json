@@ -1,0 +1,76 @@
+{
+  "at": "2026-11-02T02:04:48.396Z",
+  "error": "mocked interrupted publication reinspection shows persisted creator approval",
+  "checks": [
+    {
+      "name": "lobby shows game, art and idea credit while details are collapsed",
+      "ok": true
+    },
+    {
+      "name": "creator strip is inside the desktop viewport",
+      "ok": true
+    },
+    {
+      "name": "production browser keyboard handler plants a visible tree",
+      "ok": true
+    },
+    {
+      "name": "overlay keeps all three credit roles in the viewport",
+      "ok": true
+    },
+    {
+      "name": "1080p credit strip is at least 24px and no ledger is shown",
+      "ok": true
+    },
+    {
+      "name": "720p stream credits and activity fit",
+      "ok": true
+    },
+    {
+      "name": "overlay shows a real local proposal and ballot from WS state",
+      "ok": true
+    },
+    {
+      "name": "overlay renders streamer-reported prediction winner",
+      "ok": true
+    },
+    {
+      "name": "overlay renders actual effects pause",
+      "ok": true
+    },
+    {
+      "name": "overlay shows the actual local fallback reason",
+      "ok": true
+    },
+    {
+      "name": "overlay separates current approved input co-credit from live game attribution",
+      "ok": true
+    },
+    {
+      "name": "studio renders its selected Plan B boundary and privacy link",
+      "ok": true
+    },
+    {
+      "name": "studio shows actual supporting ballots and approver",
+      "ok": true
+    },
+    {
+      "name": "owner unlock clears fixture keys and keeps VM controls disabled",
+      "ok": true
+    },
+    {
+      "name": "Studio production control saves preferred fallback order",
+      "ok": true
+    },
+    {
+      "name": "Studio production controls grant and revoke a limited input delegate",
+      "ok": true
+    },
+    {
+      "name": "mocked interrupted publication reinspection shows persisted creator approval",
+      "ok": false
+    }
+  ],
+  "errors": [],
+  "temp": "/tmp/va-ui-wSkeaj"
+}

@@ -1,135 +1,139 @@
 1
-00:00:00,000 --> 00:00:07,545
+00:00:00,000 --> 00:00:07,200
 Vibe Arena helps a stream community shape
-games and play together. Some people open
+games and play together. Some
 
 2
-00:00:07,545 --> 00:00:15,000
-the game. Others stay in Twitch chat. The
-creators behind the work remain visible.
+00:00:07,200 --> 00:00:15,000
+people open the game. Others stay in
+Twitch chat. The creators remain visible.
 
 3
-00:00:15,000 --> 00:00:22,932
-The studio collects short game ideas and
-ballots. The streamer selects an idea,
+00:00:15,000 --> 00:00:21,410
+Chat proposes ideas and votes. The
+streamer reviews the selected
 
 4
-00:00:22,932 --> 00:00:30,663
-reviews the exact inputs and approves
-them. That approval is a real boundary,
+00:00:21,410 --> 00:00:27,179
+inputs and resources before approval.
+Supporting voters and the
 
 5
-00:00:30,663 --> 00:00:39,096
-but it does not start an automatic coding
-worker today. We keep that unfinished step
+00:00:27,179 --> 00:00:32,949
+approver receive credit. An experimental
+isolated Studio builder is
 
 6
-00:00:39,096 --> 00:00:40,000
-explicit.
+00:00:32,949 --> 00:00:40,000
+implemented, but stays disabled until a
+complete real run verifies it.
 
 7
-00:00:40,000 --> 00:00:48,539
-In Community Grove, browser actions and
-Twitch commands grow the same shared
+00:00:40,000 --> 00:00:45,714
+Browser actions and Twitch commands grow
+Community Grove
 
 8
-00:00:48,539 --> 00:00:57,528
-garden. Chat can plant, water and add
-sunshine. A browser player can help with a
+00:00:45,714 --> 00:00:51,429
+together. Trees appear immediately and
+grow through visible
 
 9
-00:00:57,528 --> 00:01:06,292
-click or the space bar. This is a reviewed
-playable example, separate from the
+00:00:51,429 --> 00:00:57,857
+stages. Three distinct Twitch accounts can
+send the same
 
 10
-00:01:06,292 --> 00:01:10,000
-earlier cloud construction trial.
+00:00:57,857 --> 00:01:04,286
+weather emote within five seconds for a
+bonus. Moderators
 
 11
-00:01:10,000 --> 00:01:15,415
-The game, art and idea credits stay
-outside game-controlled drawing. Grove
+00:01:04,286 --> 00:01:10,000
+can pause chat effects while browser play
+continues.
 
 12
-00:01:15,415 --> 00:01:20,829
-credits Cristóbal Muñoz and the curated
-Kenney artwork. The images are CC0
+00:01:10,000 --> 00:01:15,217
+Game, art and idea credits stay outside
+game-controlled
 
 13
-00:01:20,829 --> 00:01:25,000
-resources; Kenney has not joined or
-endorsed the project.
+00:01:15,217 --> 00:01:19,783
+drawing. Grove uses curated Kenney CC0
+artwork.
 
 14
-00:01:25,000 --> 00:01:30,597
-A broadcaster or moderator can request
-fallback to Marble Race. A failed or
+00:01:19,783 --> 00:01:25,000
+Kenney has not joined or endorsed the
+project.
 
 15
-00:01:30,597 --> 00:01:35,896
-unresponsive reviewed game can also
-trigger recovery. This shot shows a
+00:01:25,000 --> 00:01:29,375
+The streamer can choose reviewed fallback
+preferences,
 
 16
-00:01:35,896 --> 00:01:40,000
-requested fallback. Two entrants can then
-start a race.
+00:01:29,375 --> 00:01:35,000
+with Marble Race last. This shot shows a
+requested
 
 17
-00:01:40,000 --> 00:01:48,265
-Here is the earlier owner-selected Seed
-Race trial. Codex built it in one private
+00:01:35,000 --> 00:01:40,000
+fallback. Two entrants can then start a
+race.
 
 18
-00:01:48,265 --> 00:01:56,531
-VM. Another VM tested the exact source
-before the owner approved that version and
+00:01:40,000 --> 00:01:45,283
+This is the earlier owner-selected Seed
+Race trial.
 
 19
-00:01:56,531 --> 00:02:04,592
-report. The construction was real. The
-preview is static, and the approved game
+00:01:45,283 --> 00:01:51,887
+Codex built it in one private VM. Another
+VM tested
 
 20
-00:02:04,592 --> 00:02:13,061
-is still unpublished. The automatic studio
-builder and a separate Seed Race runtime
+00:01:51,887 --> 00:01:57,170
+the exact source. The owner then approved
+that
 
 21
-00:02:13,061 --> 00:02:15,000
-remain unconnected.
+00:01:57,170 --> 00:02:03,774
+version and report. Its preview is static
+and the game
 
 22
-00:02:15,000 --> 00:02:20,151
-The initial prototype was Devin-assisted.
-Codex implemented the later Twitch,
+00:02:03,774 --> 00:02:09,057
+remains unpublished. The new Studio
+connector has mock
 
 23
-00:02:20,151 --> 00:02:25,033
-studio, quarantine and runtime
-improvements. These commits and tests show
+00:02:09,057 --> 00:02:15,000
+lifecycle coverage; no new complete real
+run is claimed.
 
 24
-00:02:25,033 --> 00:02:30,452
-the work, including failure recovery and
-persistent credits. The main local suite
+00:02:15,000 --> 00:02:21,111
+The initial prototype was Devin-assisted.
+Codex implemented the later Twitch, studio
 
 25
-00:02:30,452 --> 00:02:35,000
-passes 179 checks; browser and guest
-checks are recorded separately.
+00:02:21,111 --> 00:02:28,333
+and isolation work. The local suite passes
+246 checks. Browser and guest checks
 
 26
-00:02:35,000 --> 00:02:39,129
-Next is connecting isolated construction
-to the studio. Creator discovery and clips
+00:02:28,333 --> 00:02:35,000
+are recorded separately. Human Twitch and
+OBS rehearsal remains an owner task.
 
 27
-00:02:39,129 --> 00:02:43,159
-that preserve attribution remain future
-work. Today, this demo shows the playable
+00:02:35,000 --> 00:02:40,238
+Next is verifying the isolated Studio
+builder and connecting an approved
 
 28
-00:02:43,159 --> 00:02:45,000
-foundation and its honest boundaries.
+00:02:40,238 --> 00:02:45,000
+runtime. Creator discovery and clips
+preserving attribution remain future work.

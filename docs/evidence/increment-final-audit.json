@@ -1,0 +1,28 @@
+{
+  "kind": "local-completion-boundary-audit",
+  "sourceCommit": "fc8d9f236122689de69193f71532d650ecfbdf1c",
+  "cleanFingerprintsMatch": true,
+  "studioWorkerEnabled": false,
+  "sixParticipationFlagsEnabled": true,
+  "npmChecks": 246,
+  "localUI": 22,
+  "normalLauncherBrowser": 14,
+  "launcher": 10,
+  "inertTransfer": 6,
+  "checkedDeliveryLinks": [
+    "README.md",
+    "SUBMISSION.md",
+    "docs/DEMO_SCRIPT.md",
+    "docs/EVIDENCE.md",
+    "docs/REHEARSAL.md",
+    "docs/platform/NEXT_INCREMENT.md",
+    "docs/platform/STUDIO_WORKER.md"
+  ],
+  "remaining": [
+    "Real golden-path VM/model run and owner exact approval",
+    "Usable balance/capacity and fresh guest login decision",
+    "Human Twitch/mod/three-account and OBS rehearsal",
+    "Owner hosting/disclosure/video/YouTube/private push/judge access/Devpost"
+  ],
+  "goalComplete": false
+}

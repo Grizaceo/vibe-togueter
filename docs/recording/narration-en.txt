@@ -1,26 +1,26 @@
-DRAFT — read against the real footage; not a recording or evidence of Twitch/human participation.
-Target: 2:45. Follow docs/DEMO_SCRIPT.md; shorten pauses or rerecord rather than accelerating unreadable footage. The matching SRT is a starting timing track and must be retimed to the actual English narration/export.
+DRAFT — not a recording or evidence of Twitch/human participation.
+Target 2:45. Retiming to actual English narration and footage, human review and a measured export duration remain required.
 
-00:00–00:15
-Vibe Arena helps a stream community shape games and play together. Some people open the game. Others stay in Twitch chat. The creators behind the work remain visible.
+00:00:00,000–00:00:15,000
+Vibe Arena helps a stream community shape games and play together. Some people open the game. Others stay in Twitch chat. The creators remain visible.
 
-00:15–00:40
-The studio collects short game ideas and ballots. The streamer selects an idea, reviews the exact inputs and approves them. That approval is a real boundary, but it does not start an automatic coding worker today. We keep that unfinished step explicit.
+00:00:15,000–00:00:40,000
+Chat proposes ideas and votes. The streamer reviews the selected inputs and resources before approval. Supporting voters and the approver receive credit. An experimental isolated Studio builder is implemented, but stays disabled until a complete real run verifies it.
 
-00:40–01:10
-In Community Grove, browser actions and Twitch commands grow the same shared garden. Chat can plant, water and add sunshine. A browser player can help with a click or the space bar. This is a reviewed playable example, separate from the earlier cloud construction trial.
+00:00:40,000–00:01:10,000
+Browser actions and Twitch commands grow Community Grove together. Trees appear immediately and grow through visible stages. Three distinct Twitch accounts can send the same weather emote within five seconds for a bonus. Moderators can pause chat effects while browser play continues.
 
-01:10–01:25
-The game, art and idea credits stay outside game-controlled drawing. Grove credits Cristóbal Muñoz and the curated Kenney artwork. The images are CC0 resources; Kenney has not joined or endorsed the project.
+00:01:10,000–00:01:25,000
+Game, art and idea credits stay outside game-controlled drawing. Grove uses curated Kenney CC0 artwork. Kenney has not joined or endorsed the project.
 
-01:25–01:40
-A broadcaster or moderator can request fallback to Marble Race. A failed or unresponsive reviewed game can also trigger recovery. This shot shows a requested fallback. Two entrants can then start a race.
+00:01:25,000–00:01:40,000
+The streamer can choose reviewed fallback preferences, with Marble Race last. This shot shows a requested fallback. Two entrants can then start a race.
 
-01:40–02:15
-Here is the earlier owner-selected Seed Race trial. Codex built it in one private VM. Another VM tested the exact source before the owner approved that version and report. The construction was real. The preview is static, and the approved game is still unpublished. The automatic studio builder and a separate Seed Race runtime remain unconnected.
+00:01:40,000–00:02:15,000
+This is the earlier owner-selected Seed Race trial. Codex built it in one private VM. Another VM tested the exact source. The owner then approved that version and report. Its preview is static and the game remains unpublished. The new Studio connector has mock lifecycle coverage; no new complete real run is claimed.
 
-02:15–02:35
-The initial prototype was Devin-assisted. Codex implemented the later Twitch, studio, quarantine and runtime improvements. These commits and tests show the work, including failure recovery and persistent credits. The main local suite passes 179 checks; browser and guest checks are recorded separately.
+00:02:15,000–00:02:35,000
+The initial prototype was Devin-assisted. Codex implemented the later Twitch, studio and isolation work. The local suite passes 246 checks. Browser and guest checks are recorded separately. Human Twitch and OBS rehearsal remains an owner task.
 
-02:35–02:45
-Next is connecting isolated construction to the studio. Creator discovery and clips that preserve attribution remain future work. Today, this demo shows the playable foundation and its honest boundaries.
+00:02:35,000–00:02:45,000
+Next is verifying the isolated Studio builder and connecting an approved runtime. Creator discovery and clips preserving attribution remain future work.

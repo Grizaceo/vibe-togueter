@@ -1,5 +1,11 @@
 # Evidence — Vibe Arena, November 1, 2026
 
+## Current increment snapshot — November 2
+
+The current complete suite passes **246 checks (140 focused + 106 isolated integration)**: [full output](evidence/increment-creator-approval-tests.txt). Creator approval interruption regressions retain [red evidence](evidence/increment-creator-approval-red.txt). The experimental Studio VM connector is implemented but default-off and has **no complete real provider/model run in this increment**. Earlier Seed Race guest evidence remains separate. [Increment decisions and block/O-status report](platform/NEXT_INCREMENT.md), [worker boundary](platform/STUDIO_WORKER.md).
+
+[Twenty-two local UI checks](evidence/local-ui-1793585185903-rehearsal.json), [14 normal-launcher browser checks](evidence/plan-b-browser-1793585012393.json), and [fresh disposable installation](evidence/increment-clean-install.json) all pass. Clean checkout `fc8d9f2` ran npm ci, the complete 246-check suite, 10 launcher checks and six inert Seed-transfer checks; cleanup was confirmed. The first install harness failed because user/global npm config paths both pointed at /dev/null; separate empty config files fixed the harness, and the failed attempt is retained. Local Chromium captures/checks and the normal-launcher Plan B browser run verify synthetic browser interactions only. No human/Twitch/OBS/video evidence or hosting deployment is inferred. The dated sections below retain historical counts and failures.
+
 Codex thread: `01a19536-0f02-7fc3-b030-d6b6fd8e170c`. Branch: `feat/twitchcon-codex`. Inherited baseline: `fab3227`; new work starts with `61d06b3`. No push or submission was performed.
 
 ## Baseline and scope
