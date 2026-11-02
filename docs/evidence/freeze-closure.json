@@ -1,0 +1,141 @@
+{
+  "recordedAt": "2026-11-02T15:01:40.102067+00:00",
+  "freezeAt": "2026-11-02T15:00:00Z",
+  "freezeObservedAt": "2026-11-02T15:00:00.009422+00:00",
+  "repositoryHeadAtFreeze": "67091f58175bf451182f19c5756a85b3f53d2c75",
+  "branch": "feat/twitchcon-codex",
+  "testedCodeCommit": "8a58ad30ad03fd0575d067622a96fdc65b7d6144",
+  "sourceTree": {
+    "files": 145,
+    "sha256": "6431d1c7550ebffad98b8e48a68e0cabb7085c508fdb70afab63c2bdc62068ff",
+    "prefixes": [
+      "src/",
+      "public/",
+      "scripts/",
+      "test/",
+      "games/",
+      "templates/"
+    ],
+    "filesOutsidePrefixes": [
+      "vibe-arena.config.json",
+      "package.json",
+      "package-lock.json"
+    ]
+  },
+  "codeAndTestsMatchCleanAudit": true,
+  "cleanBeforeClosure": true,
+  "freezeMonitor": {
+    "samples": 35,
+    "first": "2026-11-02T14:32:19.786844+00:00",
+    "last": "2026-11-02T15:00:00.009422+00:00",
+    "exit": 0,
+    "allSamplesPassed": true
+  },
+  "requirements": [
+    {
+      "point": 1,
+      "state": "done",
+      "deliverable": "O14/O15/O16/O21 layout, singular labels, gray disabled controls and visible owner/prototype attribution.",
+      "evidence": [
+        "freeze-ui-checks.json",
+        "freeze-ui-overlay-crowded-720p.png",
+        "freeze-ui-overlay-crowded-1080p.png",
+        "freeze-ui-studio-owner.png"
+      ]
+    },
+    {
+      "point": 2,
+      "state": "done",
+      "deliverable": "Working story first, four Start here links, positive English UI and complete planned-product/provenance narrative.",
+      "files": [
+        "README.md",
+        "SUBMISSION.md"
+      ]
+    },
+    {
+      "point": 3,
+      "state": "Plan A off; Plan B prepared",
+      "deliverable": "15\u201320-second separate owner game vision with Crist\u00f3bal Mu\u00f1oz/Devin/Hermes provenance outside judged code; public catalog empty.",
+      "evidence": [
+        "tee-gate-decision.json"
+      ],
+      "files": [
+        "docs/platform/TEE_DEMO_DECISION.md",
+        "docs/recording/SHOT_LIST.md"
+      ]
+    },
+    {
+      "point": 4,
+      "state": "done within scoped cleanup",
+      "deliverable": "Separate formatting and cleanup commits, dead/duplicate removal, short English architecture; broad server extraction deferred.",
+      "files": [
+        "docs/ARCHITECTURE.md"
+      ],
+      "evidence": [
+        "freeze-format.txt",
+        "unused-binding-review.json"
+      ]
+    },
+    {
+      "point": 5,
+      "state": "checklist done; deployment pending owner",
+      "deliverable": "Debian/Ubuntu profile, Node, persistent journals, HTTPS/WSS, remote admin 403, isolation/fallback/reboot acceptance.",
+      "files": [
+        "docs/platform/JUDGE_DEPLOYMENT.md"
+      ]
+    },
+    {
+      "point": 6,
+      "state": "draft done; footage/export pending owner",
+      "deliverable": "English 2:45 shot list, 320-word narration and 39 matching subtitle cues.",
+      "files": [
+        "docs/recording/SHOT_LIST.md",
+        "docs/recording/narration-en.txt",
+        "docs/recording/captions-en.srt"
+      ],
+      "evidence": [
+        "freeze-recording-check.json"
+      ]
+    }
+  ],
+  "verification": {
+    "controllerSuite": 271,
+    "systemNodeSuite": 271,
+    "browser": 36,
+    "normalLauncherBrowser": 14,
+    "launcher": 10,
+    "inertTransfer": 6,
+    "format": "Prettier 3.6.2 passes",
+    "artifactIntegrity": {
+      "artifacts/lantern-table-e21fef6b/game.js": "6bf31dda8d610956129986af157af56e6b46448c3f49f396f707659b98034900",
+      "artifacts/lantern-table-roles-draft/game.js": "449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075"
+    },
+    "effectiveLocalPolicy": {
+      "execution": "cloud-vm",
+      "workerEnabled": false,
+      "prewarmEnabled": false,
+      "approvalPresent": false,
+      "vmBudgetMinor": 0,
+      "remoteGameCount": 0,
+      "autoGenerate": false,
+      "eventCreditSimulation": false,
+      "configuredOriginUsesTryCloudflare": true,
+      "stableJudgeHostingVerified": false
+    }
+  },
+  "ownerActions": [
+    "Choose host/provider and finish privacy/recording/retention disclosure; execute deployment acceptance.",
+    "Capture real human Twitch/OBS and Codex footage; supply external-game clip or narrate the adapter vision over Vibe Arena.",
+    "Retime captions, review the full English export under three minutes and verify public YouTube playback.",
+    "Push the reviewed repository, grant judge access and complete the submission form."
+  ],
+  "deliveryTarget": "2026-11-02T21:00:00Z",
+  "scope": [
+    "Feature source held unchanged through the cutoff; this closing commit adds only documentation/evidence.",
+    "No new VM/model spending, push, hosting publication or submission by this delivery-polish work.",
+    "Approved Lantern sources were hashed/read only, never edited or executed on the PC.",
+    "Human/hosting/video acceptance remains owner work; no completion of those actions is inferred."
+  ],
+  "auditReceipt": "freeze-clean-install.json",
+  "secretScanReceipt": "freeze-secret-value-scan.json"
+}
