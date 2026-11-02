@@ -1,0 +1,84 @@
+{
+  "at": "2026-11-02T08:53:24.126Z",
+  "kind": "read-only-bundled-attribution-check",
+  "games": [
+    {
+      "id": "demo",
+      "codeSha256": "35a64f3e13cc0678458ece0e1b2c1aee805f2ec2dee8e75b52b6689a13dae3d4",
+      "contributors": {
+        "gameAuthors": [
+          {
+            "name": "Cristóbal Muñoz · pre-hackathon prototype"
+          }
+        ],
+        "ideaAuthors": [
+          {
+            "name": "Cristóbal Muñoz"
+          }
+        ],
+        "artNote": "Code-drawn shapes"
+      }
+    },
+    {
+      "id": "marble-race",
+      "codeSha256": "9566fcfec19e0aec1e766493b82dd4694c24456792e7186de6d3b24b8cd070a2",
+      "contributors": {
+        "gameAuthors": [
+          {
+            "name": "Cristóbal Muñoz · pre-hackathon prototype"
+          }
+        ],
+        "ideaAuthors": [
+          {
+            "name": "Cristóbal Muñoz"
+          }
+        ],
+        "artNote": "Code-drawn shapes"
+      }
+    },
+    {
+      "id": "community-grove",
+      "codeSha256": "c9637fbb7ce261e220d8e55b717be5dffbb564d1523c3d58499b0904c2d13c9c",
+      "contributors": {
+        "gameAuthors": [
+          {
+            "name": "Cristóbal Muñoz · Codex implementation"
+          }
+        ],
+        "ideaAuthors": [
+          {
+            "name": "Cristóbal Muñoz"
+          }
+        ],
+        "artAuthors": [
+          {
+            "name": "Kenney",
+            "url": "https://kenney.nl/"
+          }
+        ],
+        "artNote": "Background Elements · CC0; curated resource, no endorsement"
+      }
+    },
+    {
+      "id": "chat-vs-streamer",
+      "codeSha256": "bad6b454bb76b247f02e0a0116b92d90d814f1f7fa1769c5aa5c65d2c7e31e8c",
+      "contributors": {
+        "gameAuthors": [
+          {
+            "name": "Cristóbal Muñoz · Codex implementation"
+          }
+        ],
+        "ideaAuthors": [
+          {
+            "name": "Cristóbal Muñoz"
+          }
+        ],
+        "artNote": "Code-drawn shapes"
+      }
+    }
+  ],
+  "limits": [
+    "Uses the production metadata validator and source/resource fingerprints.",
+    "No game module evaluated; no browser, Twitch, VM/model or deployment operation."
+  ]
+}
