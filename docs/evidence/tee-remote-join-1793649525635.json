@@ -1,0 +1,39 @@
+{
+  "at": "2026-11-02T19:54:59.144Z",
+  "kind": "manual Twitch entry to remote individual Tee",
+  "baseURL": "https://built-berlin-allowed-supplied.trycloudflare.com",
+  "manifest": {
+    "contractVersion": 1,
+    "schema": "teeworlds-rs/172cfef",
+    "gameBaseRevision": "172cfef66565af00f75e865c60e3c91859beb039",
+    "gameRevision": "0c6250d86c59d7ec166ded0785baef51529fb9ec",
+    "platformRevision": "1a1cf080bd644c0925228ab4b25adb4a0af751cc",
+    "credits": "External teeworlds-rs by Cristóbal Muñoz with Devin and Hermes; platform Vibe Togueter implemented as Vibe Arena.",
+    "platformCustomDomain": "pending",
+    "temporaryGameTrial": true,
+    "serverSha256": "240c99946f82cde337c1e573a89f5c69373b15a8a9cbe13f9c42764667da1e25",
+    "wasmSha256": "37ab48f1c61fcade5a87be77c0112a5a19583413765882921e5751c7343e88d4",
+    "builtAt": "2026-11-02T19:37:34.418Z",
+    "transport": "cloudflare-quick-tunnel"
+  },
+  "protocol": {
+    "snapshots": 5,
+    "lastAck": 2
+  },
+  "commands": [
+    {
+      "at": "2026-11-02T19:55:36.050Z",
+      "command": "!join",
+      "source": "real Twitch transport",
+      "entryURL": "https://built-berlin-allowed-supplied.trycloudflare.com/tee-play.html?game=tee-vm&name=gris_96",
+      "replyQueued": true
+    }
+  ],
+  "limitations": [
+    "One automated neutral-input protocol probe is not a human player.",
+    "Manual received link and ONLINE movement still need owner confirmation.",
+    "Provider hostname is a temporary game trial; platform custom domain/definitive hosting pending.",
+    "Names grant no authenticated game role."
+  ],
+  "finishedAt": "2026-11-02T19:58:45.635Z"
+}

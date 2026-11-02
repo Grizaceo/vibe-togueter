@@ -84,7 +84,7 @@ A display name `streamer` does not authenticate a privileged game role.
 | Prepare builder during voting, renew/close/countdown | Implemented, default off; prior authorized real provider control check exists |
 | Codex construction, quarantine, separate tests/review | Prior real Studio trial; no new model run authorized here; protected artifacts stay untouched |
 | Individual Twitch `!join` → local Tee → ONLINE keyboard play | Verified with real command, owner confirmation and authoritative local snapshots |
-| Waiting-game VM + Cloudflare + external play | Current trial objective; not yet verified |
+| Waiting-game VM + Cloudflare + individual play | Verified November 2: real manual Twitch !join, complete public link and owner-confirmed ONLINE play; automated WSS movement/disconnect/return. Two-human interaction and independent-network testing remain pending. |
 | Session opening automatically prepares both VMs | Pending orchestration; current controls are separate |
 | Generally usable runtime for newly generated artifacts | Pending; reviewed-publication evidence is not deployment |
 | Ready notice and streamer-selected cross-game handoff | Pending integrated flow |
@@ -94,7 +94,7 @@ Worker/prewarm flags stay disabled in shipped configuration. This trial concerns
 one waiting-game VM only; it grants no builder, Codex call, prewarm allocation,
 generated runtime or automatic provider renewal.
 
-## Current Cloudflare trial plan
+## Cloudflare trial planning record (superseded by result)
 
 CreateOS checked at 19:23 UTC: no active guests; all 57 historical rows destroyed.
 The owner chose preparation of a new VM. Railway's earlier rejected/reconciled
@@ -118,3 +118,7 @@ References: [builder preparation](BUILDER_PREWARM.md), [worker](STUDIO_WORKER.md
 [hosting policy](HOSTING_POLICY.md), [local integration](TEE_LOCAL_ADAPTER.md),
 [Railway rejection](TEE_RAILWAY_TRIAL.md),
 [Cloudflare](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/).
+
+## Verified trial result
+
+See [Cloudflare VM result](TEE_CLOUDFLARE_RESULT.md) for exact revisions, evidence and cleanup. The temporary URL expires with the trial; the platform own URL/custom domain remains pending. The full parallel-builder lifecycle and cross-game handoff above remain a specification.

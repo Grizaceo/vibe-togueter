@@ -10,6 +10,7 @@ let game,started=false,ended=false;
 const stop=()=>{if(ended)return;ended=true;game?.kill('SIGTERM');tunnel.kill('SIGTERM');setTimeout(()=>process.exit(0),1000).unref();};
 let text='';
 const observe=chunk=>{
+  fs.appendFileSync('/app/tunnel-diagnostic.log',chunk,{mode:0o600});
   text=(text+chunk.toString()).slice(-16384);
   const match=/https:\/\/[a-z0-9-]+\.trycloudflare\.com/.exec(text);
   if(match&&!started){

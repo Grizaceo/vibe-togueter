@@ -1,0 +1,60 @@
+{
+  "recordedAt": "2026-11-02T20:00:44.667657+00:00",
+  "kind": "authorized live VM trial and terminal cleanup",
+  "vmId": "sb-01m6ew2nn4nb53z4d0cy3h497t",
+  "vmName": "va-build-922a1ceb22cc",
+  "createdAt": "2026-11-02T19:34:15.972826Z",
+  "expiresAt": "2026-11-02T20:04:06.057Z",
+  "destroyedAt": "2026-11-02T19:58:48.351854Z",
+  "cleanupConfirmed": true,
+  "independentProviderGet": "destroyed",
+  "authorization": {
+    "guests": 1,
+    "maxMinutes": 30,
+    "operationalLimitUSD": 0.25,
+    "models": false,
+    "topUps": false
+  },
+  "builds": 1,
+  "gameRevision": "0c6250d86c59d7ec166ded0785baef51529fb9ec",
+  "platformPackageRevision": "1a1cf080bd644c0925228ab4b25adb4a0af751cc",
+  "packageSha256": "d8760a69b93f9fae6b41eebd86de94870146e67cd30e1dfa7ecfc0d7dba26451",
+  "manualTwitch": {
+    "channel": "gris_96",
+    "commands": 1,
+    "replyQueued": true,
+    "ownerConfirmation": "si puedo entrar y jugar sin problema",
+    "confirmationObservedAt": "2026-11-02T19:58:29Z",
+    "previousTimedOutAnswerCounted": false
+  },
+  "browserEvidence": "tee-cloudflare-browser-1793648603861.json",
+  "manualReceiverEvidence": "tee-remote-join-1793649525635.json",
+  "visualCreditReview": "readable, no credentials in saved capture",
+  "limitations": [
+    "No two-human streamer interaction verified",
+    "No second independent network/human verified",
+    "Exact billing not established",
+    "Temporary URL retired with guest",
+    "Full orchestration and cross-game handoff pending"
+  ],
+  "setupCorrections": [
+    "Node copied to unprivileged app path",
+    "Cloudflare 530 resolved by explicit edge IPv4 egress",
+    "Private runtime diagnostic logging added"
+  ],
+  "egress": "2 Cloudflare API domains and 20 explicit edge IPv4:7844 rules; build registries removed",
+  "credentialsCopiedToGuest": false,
+  "verification": {
+    "npm": {
+      "focused": 172,
+      "integration": 110,
+      "failures": 0,
+      "finalRun": "/tmp/vt-cloudflare-final-npm.log"
+    },
+    "chromiumPlatformChecks": 36,
+    "liveVMChromiumChecks": 11,
+    "guestLauncherSyntax": "passed",
+    "guestBuildShellSyntax": "passed",
+    "gameRustCheckAndStrictCodecTest": "passed in isolated game worktree"
+  }
+}

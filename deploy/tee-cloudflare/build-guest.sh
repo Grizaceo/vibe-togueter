@@ -28,3 +28,6 @@ fs.writeFileSync('/app/runtime-manifest.json',JSON.stringify(m));
 JS
 id -u vtgame >/dev/null 2>&1 || useradd --system --create-home vtgame
 chown vtgame:vtgame /app
+# The image's Node shim may point into root's private toolchain directory.
+cp "$(readlink -f "$(command -v node)")" /app/node
+chmod 755 /app/node
