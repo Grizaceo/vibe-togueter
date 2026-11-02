@@ -40,7 +40,7 @@ Codex subsequently implemented Twitch OAuth lifecycle handling, tagged/reconnect
 
 An additional external **read-only audit with Devin** provided hypotheses and product ideas. We evaluated them against the current code, commands and primary rules. All implementation and documentation added in response to that audit were authored and verified with Codex in this session. No audit paragraphs, legal drafts, tables or code snippets were copied into the repository. This statement describes our new work and does not erase the inherited prototype's provenance.
 
-**Final-hours disclosure.** On November 2, after the feature freeze, Cristóbal Muñoz's Codex quota (ChatGPT subscription) ran out. The same account served both his Codex build sessions and the product's real VM builds, whose isolated builder signs in with that subscription, so testing the product consumed the same quota. Claude Code (Anthropic) was then used only to read the repository and prepare the final submission wording in README.md and SUBMISSION.md. It changed no application code, tests, games or approved artifacts; every code change made during the hackathon came from Codex sessions.
+**Final-hours disclosure.** On November 2, after the feature freeze, Cristóbal Muñoz's Codex quota (ChatGPT subscription) ran out. The same account served both his Codex build sessions and the product's real VM builds, whose isolated builder signs in with that subscription, so testing the product consumed the same quota. Claude Code (Anthropic) was then used to read the repository, prepare the final submission wording in README.md and SUBMISSION.md, and package the product-vision diagrams for judges. Those diagrams come from ADW Canvas, Cristóbal's own workflow editor built before the hackathon, and were drafted with Devin during product discussion; Claude Code exported them into a standalone web viewer hosted outside this repository. It changed no application code, tests, games or approved artifacts; every code change made during the hackathon came from Codex sessions.
 
 The Twitch OAuth port was informed by the sibling `stream-to-shorts/twitchcon-app`; its MIT notice is retained in LICENSES. Its older editing pipeline is not a dependency or a submitted feature here. Kenney resources retain their own CC0 notice and provenance.
 
@@ -53,6 +53,8 @@ Saved real Twitch/WSS rehearsals verify commands, bot replies and effects in the
 The full vision still needs gameplay validation/fixes, a separate approved-artifact runtime, stable free judging access and human rehearsal. There is no Twitch Extension, general marketplace, universal co-op conversion or connected Agent Native runtime. The privacy page is implemented, but Cristóbal Muñoz supplied the operator name and privacy contacts. Hosting/recording disclosure and retention/deletion handling remain required before public use.
 
 ## Where this is going
+
+The [interactive product vision](https://claude.ai/artifact/3dBN2uPPJok2DYvdT3AHap) shows ten connected flows as a 3D tower and marks every step as built, partial or planned.
 
 The next milestone closes the loop from an approved artifact to a game running in its own isolated VM. A general adapter would describe a game's pinned source, license and hosting permission, runtime requirements, health check, bounded chat commands and creator credits. Trust tiers would distinguish reviewed SDK games, verified open-source revisions and publisher-authorized commercial games. Missing provenance would prevent launch.
 

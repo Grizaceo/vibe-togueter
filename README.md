@@ -8,6 +8,7 @@ Vibe Arena turns Twitch ideas into a shared game-making session. Viewers propose
 - [Real Lantern Table build and exact review](docs/platform/LANTERN_TABLE_REVIEW.md).
 - [Submission story and Codex sessions](SUBMISSION.md).
 - [Try the local demo](#run-locally).
+- [Product vision, floor by floor](https://claude.ai/artifact/3dBN2uPPJok2DYvdT3AHap): ten flows with built, partial and planned steps.
 
 ## What works today
 
@@ -121,7 +122,7 @@ The inherited treasury is **simulated build-credit accounting**, not money, dona
 
 ## Authorship and delivery
 
-Cristóbal Muñoz created the inherited prototype with Devin CLI before the hackathon; `fab3227` preserves that baseline. Codex wrote all hackathon code. During the hackathon Devin contributed read-only review and product discussion. On November 2, after the feature freeze, the owner's Codex quota ran out (the same subscription also powered the product's real VM builds); Claude Code was then used only to read the repository and prepare final submission wording, with no application code changes. Reference material was used to identify work; its wording and code were not copied into this repository. [Submission text and session IDs](SUBMISSION.md), [recording script](docs/DEMO_SCRIPT.md), [audit decisions and owner checklist](docs/platform/AUDIT_REPORT.md).
+Cristóbal Muñoz created the inherited prototype with Devin CLI before the hackathon; `fab3227` preserves that baseline. Codex wrote all hackathon code. During the hackathon Devin contributed read-only review and product discussion. On November 2, after the feature freeze, the owner's Codex quota ran out (the same subscription also powered the product's real VM builds); Claude Code was then used to read the repository, prepare final submission wording and package the owner's pre-existing ADW Canvas product diagrams into a web viewer hosted outside this repository, with no application code changes. Reference material was used to identify work; its wording and code were not copied into this repository. [Submission text and session IDs](SUBMISSION.md), [recording script](docs/DEMO_SCRIPT.md), [audit decisions and owner checklist](docs/platform/AUDIT_REPORT.md).
 
 ## Current limits
 
