@@ -1,8 +1,13 @@
+import { connectPlatformChat } from "./server/platform-chat.js";
 import { createConstruction } from "./server/construction.js";
 import { startGameRuntime } from "./server/game-lifecycle.js";
 import { startPublication } from "./server/publication.js";
 import { createWebhookRoutes } from "./server/routes/webhooks.js";
-import { createRoomBroadcast, startBroadcast, attachRoomSockets } from "./server/broadcast.js";
+import {
+  createRoomBroadcast,
+  startBroadcast,
+  attachRoomSockets,
+} from "./server/broadcast.js";
 import { createChatCommands } from "./server/chat-commands.js";
 import { createAdminRoutes } from "./server/routes/admin.js";
 import { createPublicRoutes } from "./server/routes/public.js";
@@ -12,9 +17,7 @@ import { startServer } from "./server/bootstrap.js";
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from "node:http";
-import {
-  ApprovalDelegation,
-} from "./approval-delegation.js";
+import { ApprovalDelegation } from "./approval-delegation.js";
 import { ChatPredictions } from "./chat-predictions.js";
 import { CrowdBursts } from "./crowd-bursts.js";
 import { FallbackPolicy } from "./fallback-policy.js";
@@ -24,9 +27,20 @@ import { CreatorAssets } from "./creator-assets.js";
 import { RemoteGames } from "./remote-games.js";
 import { TeeChatBridge } from "./tee-chat-bridge.js";
 import { createLocalChat } from "./chat/local.js";
-import { TwitchAuth } from "./auth/twitch.js";
 
-const { ROOT, PUBLIC, IDEAS_FILE, arg, PORT, LISTEN_HOST, TWITCH_CHANNEL, KICK_CHANNEL, GAME_DIR, CONFIG, simulateEventCredits } = await loadServerConfig();
+const {
+  ROOT,
+  PUBLIC,
+  IDEAS_FILE,
+  arg,
+  PORT,
+  LISTEN_HOST,
+  TWITCH_CHANNEL,
+  KICK_CHANNEL,
+  GAME_DIR,
+  CONFIG,
+  simulateEventCredits,
+} = await loadServerConfig();
 
 const approvalDelegation = new ApprovalDelegation({
   enabled: CONFIG.features?.approvalDelegation,
@@ -55,7 +69,15 @@ const clients = new Map(); // ws -> {id,name,kind:'player'|'spectator'}
 const { broadcast, feed, events } = createRoomBroadcast(clients);
 
 const { host, requestFallback, activateFallback, loadGameDir, getFallback } =
-  await startGameRuntime({ ROOT, GAME_DIR, clients, crowdBursts, fallbackPolicy, feed, refreshPublication });
+  await startGameRuntime({
+    ROOT,
+    GAME_DIR,
+    clients,
+    crowdBursts,
+    fallbackPolicy,
+    feed,
+    refreshPublication,
+  });
 
 // ---------- treasury + generator ----------
 const {
@@ -76,7 +98,14 @@ const {
 const creatorAssets = new CreatorAssets(
   path.join(ROOT, "runtime", "creator-assets.json"),
 );
-const publication = startPublication({ ROOT, PUBLIC, CONFIG, creatorAssets, host, broadcast });
+const publication = startPublication({
+  ROOT,
+  PUBLIC,
+  CONFIG,
+  creatorAssets,
+  host,
+  broadcast,
+});
 const { clientCredits, resourceWatcher, getResourceDebounce } = publication;
 function refreshPublication() {
   return publication.refreshPublication();
@@ -124,47 +153,15 @@ if (
 )
   throw new Error("Run npm run setup:local before exposing a public URL.");
 
-let twitch;
-if (TWITCH_CHANNEL) {
-  const { connectTwitch } = await import("./chat/twitch.js");
-  const auth = new TwitchAuth({
-    file: arg("env-file", path.join(ROOT, ".env")),
-  });
-  const info = await auth.validate({ force: true });
-  if (info.login.toLowerCase() !== TWITCH_CHANNEL.toLowerCase())
-    throw new Error("Use your own authorized Twitch channel.");
-  twitch = connectTwitch(TWITCH_CHANNEL, handleChat, { auth });
-  replies.twitch = twitch.send;
-}
-
-// optional kick send (needs user token OAuth chat:write)
-if (process.env.VA_KICK_TOKEN && CONFIG.kick?.broadcasterUserId) {
-  replies.kick = (text) =>
-    import("./chat/kick.js")
-      .then((m) =>
-        m.sendKickChat({
-          accessToken: process.env.VA_KICK_TOKEN,
-          broadcasterUserId: CONFIG.kick.broadcasterUserId,
-          content: text,
-        }),
-      )
-      .then(() => true)
-      .catch((e) => {
-        console.error(`[kick] send: ${e.message}`);
-        return false;
-      });
-}
-
-// kick chat: la lectura anónima murió (Kick dejó Pusher cloud). Vía oficial:
-// webhook /webhook/kick — ver src/chat/kick.js y scripts/kick-subscribe.mjs.
-if (KICK_CHANNEL) {
-  console.log(
-    `[kick] canal objetivo: ${KICK_CHANNEL} — suscribe el webhook con:`,
-  );
-  console.log(
-    `[kick]   node scripts/kick-subscribe.mjs --token <APP_TOKEN> --user <broadcaster_user_id>`,
-  );
-}
+const twitch = await connectPlatformChat({
+  ROOT,
+  arg,
+  TWITCH_CHANNEL,
+  CONFIG,
+  handleChat,
+  replies,
+  KICK_CHANNEL,
+});
 
 startBroadcast({
   ROOT,
@@ -184,7 +181,16 @@ startBroadcast({
 });
 
 // ---------- http ----------
-const webhookRoutes = createWebhookRoutes({ ROOT, CONFIG, simulateEventCredits, handleChat, treasury, feed, chatEffects, host });
+const webhookRoutes = createWebhookRoutes({
+  ROOT,
+  CONFIG,
+  simulateEventCredits,
+  handleChat,
+  treasury,
+  feed,
+  chatEffects,
+  host,
+});
 
 const publicRoutes = createPublicRoutes({
   CONFIG,
@@ -250,14 +256,36 @@ const server = http.createServer(async (req, res) => {
     }
   });
   if (publicRoutes.community(req, res, url)) return;
-  if (url.pathname.startsWith("/admin/"))
-    return adminRoutes(req, res, url);
+  if (url.pathname.startsWith("/admin/")) return adminRoutes(req, res, url);
 
   if (webhookRoutes(req, res, url)) return;
 
   publicRoutes.staticFiles(req, res, url);
 });
 
-attachRoomSockets({ server, clients, host, clientCredits, events, feed, handleChat });
+attachRoomSockets({
+  server,
+  clients,
+  host,
+  clientCredits,
+  events,
+  feed,
+  handleChat,
+});
 
-startServer({ server, PORT, LISTEN_HOST, GAME_DIR, TWITCH_CHANNEL, KICK_CHANNEL, builderWarmHeartbeat, resourceWatcher, getResourceDebounce, teeBridge, twitch, host, localChat, studioBuilds });
+startServer({
+  server,
+  PORT,
+  LISTEN_HOST,
+  GAME_DIR,
+  TWITCH_CHANNEL,
+  KICK_CHANNEL,
+  builderWarmHeartbeat,
+  resourceWatcher,
+  getResourceDebounce,
+  teeBridge,
+  twitch,
+  host,
+  localChat,
+  studioBuilds,
+});
