@@ -1,0 +1,144 @@
+{
+  "markdown_files": 61,
+  "link_occurrences": 395,
+  "missing_local_targets": [],
+  "missing_local_anchors": [],
+  "external": [
+    {
+      "url": "https://caddyserver.com/docs/caddyfile/directives/reverse_proxy",
+      "status": 200,
+      "final": "https://caddyserver.com/docs/caddyfile/directives/reverse_proxy"
+    },
+    {
+      "url": "https://caddyserver.com/docs/install",
+      "status": 200,
+      "final": "https://caddyserver.com/docs/install"
+    },
+    {
+      "url": "https://createos.sh/docs/Account-Billing/Pricing/",
+      "status": 200,
+      "final": "https://createos.sh/docs/Account-Billing/Pricing/"
+    },
+    {
+      "url": "https://createos.sh/docs/Sandbox/CLI/Commands/",
+      "status": 200,
+      "final": "https://createos.sh/docs/Sandbox/CLI/Commands/"
+    },
+    {
+      "url": "https://createos.sh/docs/Sandbox/Limits/",
+      "status": 200,
+      "final": "https://createos.sh/docs/Sandbox/Limits/"
+    },
+    {
+      "url": "https://createos.sh/docs/Sandbox/REST-API/Managed-Processes/",
+      "status": 200,
+      "final": "https://createos.sh/docs/Sandbox/REST-API/Managed-Processes/"
+    },
+    {
+      "url": "https://createos.sh/pricing",
+      "status": 200,
+      "final": "https://createos.sh/pricing"
+    },
+    {
+      "url": "https://createos.sh/pricing/sandbox",
+      "status": 200,
+      "final": "https://createos.sh/pricing/sandbox"
+    },
+    {
+      "url": "https://dev.twitch.tv/docs/authentication/validate-tokens/",
+      "status": 200,
+      "final": "https://dev.twitch.tv/docs/authentication/validate-tokens/"
+    },
+    {
+      "url": "https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/",
+      "status": 200,
+      "final": "https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/"
+    },
+    {
+      "url": "https://dev.twitch.tv/docs/eventsub/manage-subscriptions/",
+      "status": 200,
+      "final": "https://dev.twitch.tv/docs/eventsub/manage-subscriptions/"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-terra",
+      "status": 200,
+      "final": "https://developers.openai.com/api/docs/models/gpt-6.1-terra"
+    },
+    {
+      "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+      "status": 200,
+      "final": "https://docs.cloud.google.com/free/docs/free-cloud-features"
+    },
+    {
+      "url": "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier.htm",
+      "status": 200,
+      "final": "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier.htm"
+    },
+    {
+      "url": "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm",
+      "status": 200,
+      "final": "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm"
+    },
+    {
+      "url": "https://github.com/dfaerch/bubblewrap-on-ubuntu",
+      "status": 200,
+      "final": "https://github.com/dfaerch/bubblewrap-on-ubuntu"
+    },
+    {
+      "url": "https://github.com/dfaerch/bubblewrap-on-ubuntu/blob/main/profiles/24.04/bwrap-userns-restrict",
+      "status": 200,
+      "final": "https://github.com/dfaerch/bubblewrap-on-ubuntu/blob/main/profiles/24.04/bwrap-userns-restrict"
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/auth",
+      "status": 200,
+      "final": "https://learn.chatgpt.com/docs/auth"
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/non-interactive-mode",
+      "status": 200,
+      "final": "https://learn.chatgpt.com/docs/non-interactive-mode"
+    },
+    {
+      "url": "https://legal.twitch.com/en/legal/developer-agreement/",
+      "status": 200,
+      "final": "https://legal.twitch.com/en/legal/developer-agreement/"
+    },
+    {
+      "url": "https://nodejs.org/api/permissions.html",
+      "status": 200,
+      "final": "https://nodejs.org/api/permissions.html"
+    },
+    {
+      "url": "https://nodejs.org/api/vm.html",
+      "status": 200,
+      "final": "https://nodejs.org/api/vm.html"
+    },
+    {
+      "url": "https://nodejs.org/en/download",
+      "status": 200,
+      "final": "https://nodejs.org/en/download"
+    },
+    {
+      "url": "https://render.com/docs/free",
+      "status": 200,
+      "final": "https://render.com/docs/free"
+    },
+    {
+      "url": "https://twitchcon-codex.devpost.com/resources",
+      "status": 200,
+      "final": "https://twitchcon-codex.devpost.com/resources"
+    },
+    {
+      "url": "https://twitchcon-codex.devpost.com/rules",
+      "status": 200,
+      "final": "https://twitchcon-codex.devpost.com/rules"
+    },
+    {
+      "url": "https://www.koyeb.com/docs/reference/instances",
+      "status": 200,
+      "final": "https://www.koyeb.com/docs/reference/instances"
+    }
+  ],
+  "external_scope": "HTTP HEAD reachability only; non-2xx may reflect access controls or bot protection, not a confirmed broken human link. No external contents or document currency inferred."
+}

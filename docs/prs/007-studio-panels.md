@@ -8,7 +8,7 @@ Split rounds/conversation, resources, contributions, owner controls, remote game
 
 ## Risk
 
-Browser module loading, owner unlock/lock, exact artifact review and mocked prewarm actions passed all 36 checks. CSS content is byte-identical to the original style body; 1280×720 Studio comparison only differed in the dynamic countdown text region. A syntax cut in the control-panel extraction was corrected within ten minutes before the final full checks. No test file changed.
+Browser module loading, owner unlock/lock, exact artifact review and mocked prewarm actions passed all 36 checks. CSS content is byte-identical to the original style body; 1280×720 Studio comparison differed only in a six-pixel-high band at the upper resource-card corners (bounding box 24,623–1241,629); the visible layout matched. A syntax cut in the control-panel extraction was corrected within ten minutes before the final full checks. No test file changed.
 
 ## Verification
 
