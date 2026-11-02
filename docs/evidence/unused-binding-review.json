@@ -1,0 +1,44 @@
+{
+  "at": "2026-11-02T10:41:56.293002+00:00",
+  "commit": "97ce854383c15ef79eae1ad520842a322a7833f4",
+  "kind": "read-only-unused-binding-review",
+  "tool": "eslint 9.39.1",
+  "rule": {
+    "no-unused-vars": [
+      "error",
+      {
+        "ignoreRestSiblings": true
+      }
+    ]
+  },
+  "javascriptFiles": 44,
+  "inlineModuleFiles": [
+    "public/index.html",
+    "public/overlay.html"
+  ],
+  "exit": 0,
+  "inlineExit": {
+    "public/index.html": 0,
+    "public/overlay.html": 0
+  },
+  "sourceSetSha256": "074811404c683dc913d6cf385123dd75bfd8a672f88b698ba706d73a2683ef1f",
+  "reviewedExclusions": [
+    {
+      "file": "src/build-quarantine.js",
+      "method": "BuildQuarantine.list",
+      "bindings": [
+        "source",
+        "resources",
+        "report",
+        "attempts"
+      ],
+      "reason": "Rest destructuring deliberately omits these fields from each metadata summary."
+    }
+  ],
+  "limits": [
+    "No source, dependency manifest or configuration changed.",
+    "Checks local unused bindings in src/public JavaScript and the two inline browser modules; exported APIs and cross-file dead code are not proven unused.",
+    "Inline modules were checked through stdin with virtual repository .js filenames and max-warnings 0; an earlier outside-base-path extraction was ignored and is not counted.",
+    "No candidate artifacts or external game repositories were evaluated."
+  ]
+}
