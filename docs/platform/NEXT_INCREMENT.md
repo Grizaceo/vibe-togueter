@@ -57,3 +57,5 @@ Follow [human rehearsal](../REHEARSAL.md), including real-mod !fallback, !pause/
 ## November 2 delivery polish
 
 08:01 UTC — Started from clean f5456c7 on feat/twitchcon-codex; baseline and changed suite pass 271/271. Closed O15 singular labels, O21 neutral disabled controls, O14 sidebar layout at 1080p/720p, and O16 owner/pre-hackathon Marble attribution. Chromium measures crowded activity without overlap or scrollbars and captures the visible attribution. Next: lead README/SUBMISSION with working behavior, then inspect the external Tee protocol read-only. Owner: hosting/login/budget and recording remain pending; no cloud spend, push or publication.
+
+08:04 UTC — README now opens with the working Twitch/community/build/credits path and four Start here links. SUBMISSION includes the external-game, runtime, repair, statistics and all-role credit roadmap; both distinguish the owner-selected zero-ballot Lantern run. Studio/overlay status is positive English; generator contract translated before any future build. Suite 271/271 and Chromium 31/31 pass. Next: read-only Tee pin and bounded VM proposal; owner authorization/login still needed for Plan A.

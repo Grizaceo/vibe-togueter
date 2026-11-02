@@ -1,10 +1,19 @@
 # Vibe Arena
 
-## What to try in two minutes
+Vibe Arena turns Twitch ideas into a shared game-making session. Viewers propose and vote, the streamer approves exact inputs, and Codex builds in an isolated VM. Another VM tests the result before the streamer reviews the exact version. Playable bundled games connect browser players and Twitch chat, with visible creator credits and automatic fallback.
 
-Start the local app, open `/studio.html`, propose a short game idea, vote, and inspect the streamer's review boundary. Open the player page, plant a tree with space or a click, and follow the permanent game/art/idea credits. Load Marble Race to try the fallback format. Twitch adds passive commands and `!join` after the operator connects their own channel.
+## Start here
 
-Vibe Arena lets a stream community shape games while keeping creators visible. **The main demo story is the real Studio-to-VM workflow:** owner-approved Lantern Table inputs → Codex subscription construction → inert quarantine → nine checks in another VM → exact owner approval → local reviewed evidence. The run took about 63 seconds from dispatch to tested/cleaned state; both guests are destroyed. [Exact evidence and limitations](docs/platform/LANTERN_TABLE_REVIEW.md). Reviewed bundled games remain the playable Twitch/browser foundation. Generated Lantern Table and Seed Race have no deployed runtime; their previews are static. The worker stays default-off and requires an explicitly configured allocation for each new run.
+- [Video and judge access](#judge-access-and-evidence-without-installation) — the owner will add the public recording and hosted URL.
+- [Real Lantern Table build and exact review](docs/platform/LANTERN_TABLE_REVIEW.md).
+- [Submission story and Codex sessions](SUBMISSION.md).
+- [Try the local demo](#run-locally).
+
+## What works today
+
+The Twitch connection handles chat commands, join links, ideas and ballots. Studio review binds selected ideas and resource fingerprints to the approved input. A real owner-selected Lantern Table run went from dispatch to tested/cleaned in about 63 seconds: Codex built in one VM, a separate VM passed nine protocol checks, both guests were destroyed, and the owner approved the exact artifact as reviewed local evidence.
+
+Community Grove, Marble Race and Democracy Duel are playable examples. Game, art and idea credits stay visible outside game-controlled rendering and follow the actual source version. A watchdog switches to reviewed fallback games when a game fails; a Twitch moderator can request the same recovery with `!fallback`. The generated Lantern Table preview is static; its separate runtime is the next step.
 
 ## Run locally
 
@@ -32,9 +41,9 @@ These administration commands are local. A second controller cannot acquire the 
 
 ## Judge access and evidence without installation
 
-The streamer/controller host targets **Linux** with bubblewrap and user namespaces; macOS and Windows native controller execution are unsupported. Players use a browser against that host. No stable hosted judging URL is available yet; the owner is reviewing free hosting. Do not treat a temporary rehearsal link as judging access.
+The streamer/controller host targets **Linux** with bubblewrap and user namespaces; macOS and Windows native controller execution are unsupported. Players use a browser against that host. No stable hosted judging URL is available yet; the owner will arrange a Linux VM with a fixed HTTPS address. Do not treat a temporary rehearsal link as judging access.
 
-Without installing, inspect the [720p overlay](docs/evidence/local-ui-1793601419450-overlay.png), [lobby](docs/evidence/local-ui-1793601419450-lobby.png), [studio](docs/evidence/local-ui-1793601419450-studio.png), [local browser checks](docs/evidence/local-ui-1793601419450-rehearsal.json), and [real isolated-build evidence](docs/platform/VM_TRIAL.md). These are evidence, not a playable hosted service. **Video URL: owner must add the public English YouTube recording before submission.** Linux judges can use the clean-install commands above; an existing Linux remote host can serve browser players on other operating systems. Hosting and video remain owner delivery actions.
+Without installing, inspect the [720p overlay](docs/evidence/local-ui-1793606543091-overlay.png), [lobby](docs/evidence/local-ui-1793606543091-lobby.png), [studio](docs/evidence/local-ui-1793606543091-studio.png), [local browser checks](docs/evidence/local-ui-1793606543091-rehearsal.json), and [real isolated-build evidence](docs/platform/VM_TRIAL.md). These are evidence, not a playable hosted service. **Video URL: owner must add the public English YouTube recording before submission.** Linux judges can use the clean-install commands above; an existing Linux remote host can serve browser players on other operating systems. Hosting and video remain owner delivery actions.
 
 ## Connect an operator-owned Twitch channel
 
@@ -100,18 +109,22 @@ The conditional [rotating-role revision](docs/platform/LANTERN_ROLES_REVIEW.md) 
 
 ## What is demonstrated
 
-`npm test`: **271 checks = 161 focused + 110 isolated integration**, all passing. Tests use temporary state and mock coding providers. Separately, automated Chromium passed **26 local UI checks** and **14 normal-launcher browser checks**, including production input and visible credits. A disposable checkout also passed `npm ci`, the full suite, 10 launcher checks and six inert Seed-transfer checks. These separate checks are not added to the npm total. [Evidence index](docs/EVIDENCE.md).
+`npm test`: **271 checks = 161 focused + 110 isolated integration**, all passing. Tests use temporary state and mock coding providers. Separately, automated Chromium passed **31 local UI checks** and **14 normal-launcher browser checks**, including production input and visible credits. A disposable checkout also passed `npm ci`, the full suite, 10 launcher checks and six inert Seed-transfer checks. These separate checks are not added to the npm total. [Evidence index](docs/EVIDENCE.md).
 
 Earlier saved network rehearsals establish actual Twitch commands/replies and public WSS effects for Marble Race, Democracy Duel and Grove. They used owner-account automation while offline; they are not independent audience or OBS evidence, and were not replayed in this revision.
 
 The earlier Seed Race operator trial passed twelve separate-VM checks and exact approval; all eight earlier trial guests were destroyed. [Historical trial](docs/platform/VM_TRIAL.md). The new Studio connector's first attempt timed out and is preserved as failure evidence. After the stdin correction, a second owner-approved run built Lantern Table, passed nine distinct-VM protocol checks, confirmed both guests destroyed and saved exact owner-reviewed evidence with two known gameplay issues. No human gameplay or live generated runtime is claimed. [Owner review](docs/evidence/lantern-table-owner-review.json). Stable public judging access and paid settlement remain pending.
 
-The inherited treasury is **simulated build-credit accounting**, not money, donations or a claim that Bits, subscriptions or Channel Points finance builds. Event-credit simulation is off by default; `VA_SIMULATE_EVENT_CREDITS=1` is used only by isolated legacy fixtures. The generic donation route returns 410 by default. Real payment processing, creator checkout and provider reconciliation are not implemented. External Rust games are absent from the shipped catalog and recording path pending rights/hosting review.
+The inherited treasury is **simulated build-credit accounting**, not money, donations or a claim that Bits, subscriptions or Channel Points finance builds. Event-credit simulation is off by default; `VA_SIMULATE_EVENT_CREDITS=1` is used only by isolated legacy fixtures. The generic donation route returns 410 by default. Real payment processing, creator checkout and provider reconciliation are not implemented. teeworlds-rs is an external game owned by Cristóbal Muñoz and built separately with Devin and Hermes. It is outside the judged code. It may appear only as a clearly labeled future direction unless a separately approved VM integration is verified.
 
 ## Authorship and delivery
 
 Cristóbal Muñoz created the inherited prototype with Devin CLI before the hackathon; `fab3227` preserves that baseline. Codex wrote all hackathon code. During the hackathon Devin contributed read-only review and product discussion. Reference material was used to identify work; its wording and code were not copied into this repository. [Submission text and session IDs](SUBMISSION.md), [recording script](docs/DEMO_SCRIPT.md), [audit decisions and owner checklist](docs/platform/AUDIT_REPORT.md).
 
-Future work: improving candidate gameplay and connecting a separately approved runtime, a creator-discovery feed, clips retaining game/art/idea attribution, and subscriptions that might subsidize compute under explicit budgets. These are proposals, not current integrations or revenue claims.
+## Current limits
+
+Generated games remain inert reviewed artifacts with static previews; a runtime VM is still needed. The Lantern Table trial used an owner-selected idea and zero audience votes. Its nine checks establish the documented protocol behavior, not gameplay polish. New construction needs its own budget decision and guest login; worker and preparation ship off. Hosted judge access, human Twitch/OBS rehearsal and the final video remain owner tasks. Payments are simulated accounting only.
+
+Next: a general external-game adapter with provenance and trust tiers, isolated runtime VMs, repair with regression testing and new exact-version approval, stream statistics, and credits for every creative role. These are product plans.
 
 Golden-path go/no-go is November 2 at 10:00 UTC; feature cutoff is 15:00 UTC; stabilization/human rehearsal is 15:00–17:00 UTC; target submission 21:00 UTC, official close 22:00 UTC. The owner handles human Twitch/OBS rehearsal, English video, public YouTube, private repository push/judge access and Devpost submission. Nothing was pushed, published or submitted by this revision.

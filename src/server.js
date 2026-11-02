@@ -354,7 +354,7 @@ function streamActivity(){
   activityRound=r?{credit:CONFIG.features?.communityCredit===true?r.credit:null,phase:r.phase,ideas:r.ideas.length,voters:r.voters,voteEndsAt:r.voteEndsAt,
    highlights:r.ideas.slice().sort((a,b)=>b.votes-a.votes||a.id-b.id).slice(0,3).map(i=>({id:i.id,text:i.text.slice(0,100),author:i.author.slice(0,40),votes:i.votes}))}:null;
  }
- return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:studioBuilds.public()?'Isolated build · '+studioBuilds.public().phase+' · no live runtime':studioBuilds.status().workerConnected?'Isolated worker ready for approved inputs':'Isolated builder not connected',chatEffectsPaused:chatEffects.blocked,prediction:predictions.public(),delegation:approvalDelegation.public(),crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
+ return {round:activityRound,fallback:fallback.active?fallback.reason:null,builder:studioBuilds.public()?'Isolated build · '+studioBuilds.public().phase+' · no live runtime':studioBuilds.status().workerConnected?'Isolated worker ready for approved inputs':'Studio builder: off — enabled per approved run',chatEffectsPaused:chatEffects.blocked,prediction:predictions.public(),delegation:approvalDelegation.public(),crowd:host.gameDir===path.join(ROOT,'games','community-grove')?crowdBursts.public():null};
 }
 
 // ---------- broadcast loop (view @ 10Hz; slow recipients skip obsolete frames) ----------

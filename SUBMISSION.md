@@ -16,7 +16,7 @@ The main demo story now includes a completed real Studio connector run: exact ow
 
 The controller runs reviewed SDK games in separate Linux namespaces with deadlines, bounded messages and a watchdog. A failed game follows the streamer’s reviewed fallback preferences, with Marble Race last; Twitch moderators or the broadcaster can request the same fallback. Rendering accepts bounded flat primitives and local curated image paths. Credits are delivered through version-matched WebSocket snapshots. State compression/backpressure and admission before chat broadcast reduce avoidable traffic. These controls are not a general guarantee that arbitrary uploaded games are safe.
 
-The treasury is a simulated build-credit ledger. It does not receive donations, settle bills, or treat Bits, subscriptions or Channel Points as money for builds. Paid-event simulation is disabled by default; payments and paid asset checkout are outside this submission. External Rust runtimes were removed from the demo configuration pending rights/hosting review.
+The treasury is a simulated build-credit ledger. It does not receive donations, settle bills, or treat Bits, subscriptions or Channel Points as money for builds. Paid-event simulation is disabled by default; payments and paid asset checkout are outside this submission. External Rust games remain outside the playable submission catalog.
 
 The increment adds distinct-account Grove emote bonuses, moderator chat-effect pause/resume, preferred fallback order, temporary input-approval delegation, supporting-voter/approver credit and free chat predictions. Each has an independent config flag. Streamer warm controls additionally passed real prepare/extend/pause/resume/close verification without model use; they remain default-off per allocation. New Grove art stages and large stream credits are verified locally; real audience rehearsal remains pending.
 
@@ -44,15 +44,25 @@ The Twitch OAuth port was informed by the sibling `stream-to-shorts/twitchcon-ap
 
 ## Evidence and limitations
 
-The current local suite passes **271 checks: 161 focused tests and 110 isolated integration checks**. Separate automated Chromium evidence passes 26 local UI checks and 14 normal-launcher browser checks. A fresh disposable checkout passes installation, the complete suite, 10 launcher checks and six inert Seed-transfer checks. Separate real VM quarantine evidence is nine checks for Lantern Table, fourteen controlled gameplay checks for its roles revision and twelve historical Seed Race checks, not added to the npm total. Failed intermediate attempts remain documented. See docs/EVIDENCE.md.
+The current local suite passes **271 checks: 161 focused tests and 110 isolated integration checks**. Separate automated Chromium evidence passes 31 local UI checks and 14 normal-launcher browser checks. A fresh disposable checkout passes installation, the complete suite, 10 launcher checks and six inert Seed-transfer checks. Separate real VM quarantine evidence is nine checks for Lantern Table, fourteen controlled gameplay checks for its roles revision and twelve historical Seed Race checks, not added to the npm total. Failed intermediate attempts remain documented. See docs/EVIDENCE.md.
 
 Saved real Twitch/WSS rehearsals verify commands, bot replies and effects in the existing games. Those runs used owner-account automation while the channel was offline. We have not represented them as independent audience play, a real OBS broadcast, or new Twitch evidence from this revision. Paid events, actual reward redemptions and payment settlement have not been demonstrated. Default tests use mock coding providers.
 
 The full vision still needs gameplay validation/fixes, a separate approved-artifact runtime, stable free judging access and human rehearsal. There is no Twitch Extension, general marketplace, universal co-op conversion or connected Agent Native runtime. The privacy page is implemented, but Cristóbal Muñoz supplied the operator name and privacy contacts. Hosting/recording disclosure and retention/deletion handling remain required before public use.
 
-## Next steps and submission fields
+## Where this is going
 
-Future versions could help streamers discover creator games, export clips that preserve game/art/idea credit, and offer explicit-budget subscriptions to subsidize compute. These are roadmap proposals without current sales, platform partnerships or adoption claims.
+The next milestone closes the loop from an approved artifact to a game running in its own isolated VM. A general adapter would describe a game's pinned source, license and hosting permission, runtime requirements, health check, bounded chat commands and creator credits. Trust tiers would distinguish reviewed SDK games, verified open-source revisions and publisher-authorized commercial games. Missing provenance would prevent launch.
+
+Streamers could also invite eligible chat members to submit games. Each submission would bind an authenticated identity to source hashes, pass a separate VM test and produce a behavior report explaining attempted and blocked actions. The streamer would review that evidence before enabling a session, with a spending cap and fallback available.
+
+teeworlds-rs illustrates the intended experience: viewers who join become tees, while chat spectators influence streamer-versus-chat play through buffs and hazards. Cristóbal Muñoz built that game separately with Devin and Hermes. It is an external owner game, outside this submission's judged code. Vibe Arena's existing Tee adapter is a starting point; current crowd commands control a shared tee. Individual participation, spectator effects and a general VM launch path are future work. The recording uses a short separately built-game preview unless a real authorized integration is verified.
+
+Live repair would preserve the stream by stopping a faulty game and falling back, then send the report and exact revision to Codex in a VM. Another VM would run a regression check; the streamer would review the change and approve the new hash before it returned. Stream statistics would combine game events, chat aggregates and an optional transcript to identify moments and support recommendations, with opt-in and published retention.
+
+Credits would expand across illustration, music, sound, animation, voice, writing and level design. Creator discovery and clips would carry that attribution forward. Any future marketplace or derivative-game revenue sharing would require verified licenses, agreed contributor roles, accepted terms and legal/business review before payments. These are planned product steps; the hackathon demo does not sell assets or distribute revenue.
+
+## Submission fields and owner delivery
 
 Owner fills: repository URL and access for **testing@devpost.com**, public YouTube URL, hosting/recording disclosure and the Devpost form. Rights/date attestation is recorded in the owner confirmation above. Record an English video under three minutes showing real Twitch functionality and how Codex built the project; use docs/DEMO_SCRIPT.md. Keep judging access free through November 15. No push, publication, video upload or submission was performed here.
 
