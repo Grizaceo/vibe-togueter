@@ -1,5 +1,11 @@
 # Vibe Arena — community game studio
 
+November 2 owner clarification: the product is **Vibe Togueter**; implementation
+names stay Vibe Arena. The intended parallel builder/waiting-game session and
+streamer-selected cross-game transition are specified in [SESSION_FLOW.md](SESSION_FLOW.md),
+with an explicit implemented/verified/pending boundary. The platform's dedicated
+public URL/custom domain remains pending.
+
 Owner-directed revision: November 1, 2026. This supersedes the earlier two-format submission scope. Those formats and real-chat checks are a foundation, not completion of this platform.
 
 ## Product thesis
