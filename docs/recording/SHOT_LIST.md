@@ -19,7 +19,7 @@ Record actual Twitch participation and actual Codex footage. The text and captio
 - Open [original Lantern review](../platform/LANTERN_TABLE_REVIEW.md), [static preview](../evidence/lantern-table-static-preview.png), [real-run observations](../evidence/increment-real-rerun-status.json), [owner review](../evidence/lantern-table-owner-review.json) and the real Codex thread before starting.
 - Keep keys, `.env`, login instructions, participant private data and unrelated tabs off camera. Capture the complete credit strip at 1080p; check the 720p export.
 - Rehearse [narration](narration-en.txt), then retime [captions](captions-en.srt) to actual speech. Omit narration for an action that was not captured. If Tee footage is unavailable, use that time for the planned adapter over the Vibe Arena screen, without claiming the external game is integrated.
-- If Plan A is later authorized, it may replace the separate-game clip only after all gates in [TEE_DEMO_DECISION](../platform/TEE_DEMO_DECISION.md) pass. The owner decides separate-source access because judges may expect the external game's code. No new paid run is needed to record the existing Lantern evidence.
+- [Plan B was selected at the Tee gate](../platform/TEE_DEMO_DECISION.md); the real integration trial was not executed. Keep the external clip as future vision with its declared provenance. The owner decides separate-source access; an integrated demonstration would also require addressing judges' access to that game's code. No new paid run is needed for the existing Lantern evidence.
 
 ## Export and delivery
 

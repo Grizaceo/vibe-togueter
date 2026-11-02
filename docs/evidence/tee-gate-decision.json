@@ -1,0 +1,35 @@
+{
+  "recordedAt": "2026-11-02T14:16:09.914Z",
+  "gateAt": "2026-11-02T12:30:00Z",
+  "decision": "B",
+  "planA": "not executed",
+  "reason": "No bounded new spending authorization or verified isolated Tee connection/chat run by the gate.",
+  "sourcePin": "e9af04154ff6d891dff1e8d87f989cf4725392c5",
+  "sourceCompatibility": "Static fingerprint check only; no real connection established.",
+  "newGuestsCreated": 0,
+  "newModelCalls": 0,
+  "guestCleanup": "No new guest created for this proposal.",
+  "effectiveLocalPolicy": {
+    "execution": "cloud-vm",
+    "workerEnabled": false,
+    "prewarmEnabled": false,
+    "approvalPresent": false,
+    "vmBudgetMinor": 0,
+    "remoteGameCount": 0,
+    "autoGenerate": false,
+    "eventCreditSimulation": false
+  },
+  "gateMonitor": {
+    "samples": 25,
+    "first": "2026-11-02T12:10:09.929073+00:00",
+    "last": "2026-11-02T12:30:00.006761+00:00",
+    "exit": 0,
+    "allSamplesPassed": true
+  },
+  "recording": "15–20 seconds of separately recorded owner game as future vision, with owner/Devin/Hermes provenance and exclusion from judged code.",
+  "limits": [
+    "Recorded after the goal was cleared and then resumed; gate monitor completed at the scheduled time.",
+    "No VM or model operation, provider mutation, external-game execution, repository push or publication for this proposal.",
+    "Actual clip, hosting, human rehearsal and export remain owner work."
+  ]
+}
