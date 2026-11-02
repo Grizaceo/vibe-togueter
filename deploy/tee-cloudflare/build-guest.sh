@@ -26,3 +26,5 @@ for(const [k,p] of Object.entries({serverSha256:'/app/server',wasmSha256:'/app/g
 m.builtAt=new Date().toISOString();m.transport='cloudflare-quick-tunnel';
 fs.writeFileSync('/app/runtime-manifest.json',JSON.stringify(m));
 JS
+id -u vtgame >/dev/null 2>&1 || useradd --system --create-home vtgame
+chown vtgame:vtgame /app

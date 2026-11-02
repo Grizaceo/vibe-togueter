@@ -15,6 +15,7 @@ const get=async endpoint=>{const r=await fetch(base+endpoint,{redirect:'error',s
 const manifest=await get('/trial-manifest.json');
 const allowed=['contractVersion','schema','gameBaseRevision','gameRevision','platformRevision','credits','platformCustomDomain','temporaryGameTrial','serverSha256','wasmSha256','builtAt','transport'];
 if(Object.keys(manifest).some(k=>!allowed.includes(k))||manifest.contractVersion!==1||manifest.schema!=='teeworlds-rs/172cfef'||manifest.gameRevision!==opt('--game-revision')||!['serverSha256','wasmSha256'].every(k=>/^[a-f0-9]{64}$/.test(manifest[k])))throw Error('Unknown or unpinned remote contract');
+if(manifest.transport!==undefined&&manifest.transport!=='cloudflare-quick-tunnel')throw Error('Unknown tunnel transport');
 if((await get('/healthz')).data?.up!==true)throw Error('Game backend is not healthy');
 const codec=await nativeTeeCodec(opt('--codec'));
 const socket=new WebSocket(base.replace('https:','wss:')+'/ws',{origin:base,maxPayload:1048576,handshakeTimeout:8000});
