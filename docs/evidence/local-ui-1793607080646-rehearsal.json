@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-02T08:00:33.194Z",
+  "at": "2026-11-02T08:11:35.384Z",
   "kind": "automated-local-Chromium-rehearsal",
   "checks": [
     {
@@ -128,7 +128,7 @@
     }
   ],
   "errors": [],
-  "temp": "/tmp/va-ui-VT2RDj",
+  "temp": "/tmp/va-ui-75bn7z",
   "limits": [
     "Disposable checkout without owner configuration.",
     "No real Twitch traffic, human gameplay, OBS recording or submission video.",
