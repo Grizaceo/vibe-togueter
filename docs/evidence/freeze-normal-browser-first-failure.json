@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-02T14:23:30.402194+00:00",
+  "kind": "normal-launcher-browser-stale-copy-assertion-failure",
+  "log": "freeze-normal-browser-first-failure.txt",
+  "exit": 1,
+  "cleanupConfirmed": true,
+  "finding": "Harness waited for obsolete pending text and expected an obsolete remote-catalog sentence after the positive-English UI update. No production failure is inferred.",
+  "correction": "Wait for the actual default-off builder text; assert current playable-bundle/static-preview copy, empty remote card container and pending hosting notice.",
+  "screenshot": "The failed disposable run named a screenshot, but it was removed with the temporary checkout and is not retained.",
+  "failedScriptSha256": "1c5b3738452c422c1404608089ea10723c7eb977e4e8491f341df43f321c370e"
+}

@@ -43,8 +43,8 @@ try{
   const session={ws,cdp,evaluate,click,fill,capture};sessions.push(session);
   await cdp('Page.enable');await cdp('Runtime.enable');await cdp('Emulation.setDeviceMetricsOverride',{width:1600,height:900,deviceScaleFactor:1,mobile:false});await cdp('Page.navigate',{url:base+route});await wait(()=>evaluate("document.readyState==='complete'"));return session;
  }
- const studio=await tab('/studio.html');await wait(()=>studio.evaluate("document.querySelector('#execution').textContent.includes('pending')"));
- check('Studio accurately describes empty remote catalog and supplied operator status',await studio.evaluate("document.querySelector('#games').textContent.includes('remote catalog is empty')&&document.querySelector('a[href=\"/privacy.html\"]').textContent.includes('hosting details pending')"));
+ const studio=await tab('/studio.html');await wait(()=>studio.evaluate("document.querySelector('#execution').textContent.includes('Studio builder: off in this public demo')"));
+ check('Studio describes playable bundles and static previews with an empty remote catalog',await studio.evaluate("document.querySelector('#games').textContent.includes('Play reviewed bundled games')&&document.querySelector('#games').textContent.includes('static test previews')&&document.querySelector('#remote-games').children.length===0&&document.querySelector('a[href=\"/privacy.html\"]').textContent.includes('hosting details pending')"));
  await studio.fill('#alias','LocalBrowserParticipant');await studio.click('#connect');await wait(()=>studio.evaluate("!document.querySelector('#propose').disabled"));
  await studio.fill('#proposal','A cooperative garden shaped by our community');await studio.click('#propose');
  await wait(async()=>{const s=await state();return s.round?.ideas[0]?.text==='A cooperative garden shaped by our community';});
