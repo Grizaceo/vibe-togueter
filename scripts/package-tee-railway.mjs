@@ -11,8 +11,9 @@ const base='172cfef66565af00f75e865c60e3c91859beb039';git('merge-base','--is-anc
 fs.mkdirSync(destination,{recursive:true});
 const gameDir=path.join(destination,'game');fs.mkdirSync(gameDir);
 // Only tracked committed external source. No host .env, Git metadata, target or node_modules.
-const archive=execFileSync('git',['-C',source,'archive','HEAD']);
-execFileSync('tar',['-x','-C',gameDir],{input:archive});
+const archive=path.join(destination,'source.tar');
+execFileSync('git',['-C',source,'archive','--format=tar','--output='+archive,'HEAD']);
+execFileSync('tar',['-xf',archive,'-C',gameDir]);fs.unlinkSync(archive);
 for(const file of ['Dockerfile','railway.json'])fs.copyFileSync('deploy/tee-railway/'+file,path.join(destination,file));
 fs.copyFileSync('scripts/tee-vm-gateway.mjs',path.join(destination,'tee-vm-gateway.mjs'));
 fs.mkdirSync(path.join(destination,'public'));
