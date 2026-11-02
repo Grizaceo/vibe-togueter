@@ -1,14 +1,19 @@
 {
-  "kind": "local-completion-boundary-audit",
-  "sourceCommit": "1e8bd6c652db9bc93680a960146edb67b5319729",
+  "kind": "current-increment-boundary-audit",
+  "sourceCommit": "30153159e9f56161ba5ed726ece9dbaac2cdeb0a",
   "cleanFingerprintsMatch": true,
-  "studioWorkerEnabled": false,
-  "sixParticipationFlagsEnabled": true,
-  "npmChecks": 247,
-  "localUI": 22,
+  "workerAndPrewarmDefaultOff": true,
+  "npmChecks": 270,
+  "localUI": 26,
   "normalLauncherBrowser": 14,
   "launcher": 10,
-  "inertTransfer": 6,
+  "inertSeedTransfer": 6,
+  "realLanternProtocolChecks": 9,
+  "realLanternOwnerApproval": true,
+  "realLanternGuestsDestroyed": true,
+  "liveGeneratedRuntime": false,
+  "candidateExecutedOnHost": false,
+  "knownLanternGameplayIssues": 2,
   "checkedDeliveryLinks": [
     "README.md",
     "SUBMISSION.md",
@@ -16,16 +21,15 @@
     "docs/EVIDENCE.md",
     "docs/REHEARSAL.md",
     "docs/platform/NEXT_INCREMENT.md",
-    "docs/platform/STUDIO_WORKER.md"
+    "docs/platform/STUDIO_WORKER.md",
+    "docs/platform/BUILDER_PREWARM.md",
+    "docs/platform/LANTERN_TABLE_REVIEW.md"
   ],
   "remaining": [
-    "Real golden-path VM/model run and owner exact approval",
-    "New explicit bounded allocation and fresh guest login only if another attempt is requested",
+    "C rotating roles conditional scope is not implemented; any revised candidate needs owner input/test allocation review",
+    "Actual provider warm-session idle/renewal verification",
     "Human Twitch/mod/three-account and OBS rehearsal",
     "Owner hosting/disclosure/video/YouTube/private push/judge access/Devpost"
   ],
-  "goalComplete": false,
-  "latestRealAttempt": "increment-real-attempt.json",
-  "realRunResult": "failed: timeout exit 124, no candidate, builder destroyed, no test VM",
-  "latestLocalFix": "Managed command stdin now closes before execution; real-shell red-to-green test and local Codex/mock probe."
+  "goalComplete": false
 }
