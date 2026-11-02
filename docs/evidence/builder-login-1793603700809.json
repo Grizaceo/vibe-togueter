@@ -1,0 +1,8 @@
+{
+  "at": "2026-11-02T07:15:00.809Z",
+  "sessionId": "01a19904-ac5e-7b41-895c-bf07c9864f2b",
+  "kind": "guest-login-released",
+  "vmId": "sb-01m6dhnvps5qb0hyfdctepb08n",
+  "phase": "released",
+  "providerTerminalStatus": "destroyed"
+}

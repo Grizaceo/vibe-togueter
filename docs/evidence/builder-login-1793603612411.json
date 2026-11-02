@@ -1,0 +1,8 @@
+{
+  "at": "2026-11-02T07:13:32.411Z",
+  "sessionId": null,
+  "kind": "guest-login-failure",
+  "vmId": "sb-01m6dhnvps5qb0hyfdctepb08n",
+  "phase": "cleanup-required",
+  "message": "Login preparation/status failed; inspect protected diagnostics. No model call attempted."
+}

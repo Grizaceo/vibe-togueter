@@ -1,0 +1,82 @@
+{
+  "kind": "read-only-project-guest-cleanup-inventory",
+  "at": "2026-11-02T07:46:12.775673+00:00",
+  "projectTrials": [
+    {
+      "id": "sb-01m6djffbz40w72myhxrkcb51r",
+      "name": "va-build-71688d840102",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6dhnvps5qb0hyfdctepb08n",
+      "name": "va-build-bf1fc68848f5",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6dgs6pxn932qp4gtw0rrtg6",
+      "name": "va-stest-72058f897203",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6d30dhtbk16k552w3vj7pga",
+      "name": "va-stest-bfe3c51e3802",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6d2ssj47f5c8pbfwc6rvxa3",
+      "name": "va-build-70f20f9099fc",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6d1atmm3btfkxx2zp9cyr08",
+      "name": "va-build-51b4ef3d5a20",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6btat9yz66jyq1mrhrh67g8",
+      "name": "va-test-84f0c865d638",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6bszr2v5c3wgkb1r9h01a7g",
+      "name": "va-test-6dd236f2575e",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6bsx3kj61vqvs6kdh9snszz",
+      "name": "va-test-0b1e84f3e46f",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6bs0vnqsx186jvqgygfcqr8",
+      "name": "va-build-a5845d48d388",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6brwnd8epmndne2dfm3r942",
+      "name": "va-build-aaf7539670ba",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6brvm9756xn2k5104jqvkpe",
+      "name": "va-build-5a906aaf32b1",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6brtj7ktvnc0v83t2mhkyfp",
+      "name": "va-build-f8c1717479ea",
+      "status": "destroyed"
+    },
+    {
+      "id": "sb-01m6brqvc7vz09je6p25yas4p4",
+      "name": "va-build-87e421a1c036",
+      "status": "destroyed"
+    }
+  ],
+  "allProjectTrialsDestroyed": true,
+  "unrelatedInstancesUntouched": true,
+  "limits": [
+    "No settled billing or account balance inference.",
+    "Only project-prefixed trial names are included; unrelated infrastructure was not modified."
+  ]
+}

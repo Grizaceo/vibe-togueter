@@ -1,0 +1,62 @@
+{
+  "kind": "real-owner-approved-prewarm-control-verification",
+  "approvalId": "owner-prewarm-control-verification-v2-20261102",
+  "at": "2026-11-02T07:27:13.043Z",
+  "finishedAt": "2026-11-02T07:27:59.292Z",
+  "maxOperationMs": 300000,
+  "verificationSuballocationMinor": 5,
+  "existingAppParentReservationMinor": 25,
+  "events": [
+    {
+      "at": "2026-11-02T07:27:19.764Z",
+      "kind": "prepared-during-voting",
+      "phase": "voting",
+      "vmId": "sb-01m6djffbz40w72myhxrkcb51r",
+      "expiresAt": 1793606234892,
+      "maxExpiresAt": 1793608034892
+    },
+    {
+      "at": "2026-11-02T07:27:21.678Z",
+      "kind": "deadline-extended",
+      "oldExpiresAt": 1793606234892,
+      "newExpiresAt": 1793607134892,
+      "cleanupStillActive": true
+    },
+    {
+      "at": "2026-11-02T07:27:47.333Z",
+      "kind": "exact-guest-paused",
+      "vmId": "sb-01m6djffbz40w72myhxrkcb51r"
+    },
+    {
+      "at": "2026-11-02T07:27:55.849Z",
+      "kind": "same-guest-resumed",
+      "vmId": "sb-01m6djffbz40w72myhxrkcb51r",
+      "unauthenticatedBuildCheckRejected": true
+    },
+    {
+      "at": "2026-11-02T07:27:59.266Z",
+      "kind": "exact-guest-destroyed",
+      "vmId": "sb-01m6djffbz40w72myhxrkcb51r"
+    }
+  ],
+  "cleanupConfirmed": true,
+  "failure": null,
+  "modelCalled": false,
+  "openAILoginCompleted": false,
+  "candidateExecuted": false,
+  "diskWorkerEnabled": false,
+  "diskPrewarmEnabled": false,
+  "limits": [
+    "One private guest; real HTTP control paths and provider pause/resume, not a human playtest.",
+    "The interface admission uses the previously approved parent reservation; this verification has a separate five-cent/five-minute suballocation.",
+    "No settled invoice or provider-enforced hard money cap claimed."
+  ],
+  "independentFinalObservation": {
+    "at": "2026-11-02T07:29:13.372790+00:00",
+    "id": "sb-01m6djffbz40w72myhxrkcb51r",
+    "status": "destroyed"
+  },
+  "elapsedSeconds": 46.249,
+  "operatorControllerText": "prewarm-control-verification-v2-operator.mjs.txt",
+  "operatorControllerSha256": "52499d8b2757ed293d5942d76da4665280db56e8f2bdf53f0f93b6f66358918f"
+}

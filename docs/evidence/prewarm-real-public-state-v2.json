@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-02T07:27:55.854Z",
+  "roundPhase": "voting",
+  "warm": {
+    "enabled": true,
+    "phase": "prepared",
+    "expiresAt": 1793607134892,
+    "maxExpiresAt": 1793608034892,
+    "remainingSeconds": 2659,
+    "closing": false,
+    "stopRequested": false,
+    "claimedBy": null,
+    "canExtend": true,
+    "lastReadyCheckAt": 1793604472859,
+    "readinessWarning": null,
+    "canPrepare": false,
+    "canClose": true
+  },
+  "liveGame": "Community Grove",
+  "twitchConnected": false
+}

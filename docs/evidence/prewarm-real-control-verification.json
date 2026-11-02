@@ -1,0 +1,51 @@
+{
+  "kind": "real-owner-approved-prewarm-control-verification",
+  "approvalId": "owner-prewarm-control-verification-20261102",
+  "at": "2026-11-02T07:13:13.297Z",
+  "finishedAt": "2026-11-02T07:13:32.428Z",
+  "maxOperationMs": 300000,
+  "verificationSuballocationMinor": 5,
+  "existingAppParentReservationMinor": 25,
+  "events": [
+    {
+      "at": "2026-11-02T07:13:20.331Z",
+      "kind": "prepared-during-voting",
+      "phase": "voting",
+      "vmId": "sb-01m6dhnvps5qb0hyfdctepb08n",
+      "expiresAt": 1793605395276,
+      "maxExpiresAt": 1793607195276
+    },
+    {
+      "at": "2026-11-02T07:13:22.373Z",
+      "kind": "deadline-extended",
+      "oldExpiresAt": 1793605395276,
+      "newExpiresAt": 1793606295276,
+      "cleanupStillActive": true
+    },
+    {
+      "at": "2026-11-02T07:13:29.828Z",
+      "kind": "verification-failed",
+      "message": "Unexpected end of JSON input"
+    }
+  ],
+  "cleanupConfirmed": true,
+  "failure": "Unexpected end of JSON input",
+  "modelCalled": false,
+  "openAILoginCompleted": false,
+  "candidateExecuted": false,
+  "diskWorkerEnabled": false,
+  "diskPrewarmEnabled": false,
+  "limits": [
+    "Real prepare/extend HTTP paths verified. Pause was issued but its empty CLI acknowledgement aborted the fixture before pause/resume observations.",
+    "The interface admission uses the previously approved parent reservation; this verification has a separate five-cent/five-minute suballocation.",
+    "No settled invoice or provider-enforced hard money cap claimed."
+  ],
+  "cleanupReconciliation": "Independent get confirmed the exact guest destroyed; helper release reconciled the local journal. No replacement was created.",
+  "cleanupReconciledAt": "2026-11-02T07:19:05.236552+00:00",
+  "pauseResumeVerified": false,
+  "stagesVerified": [
+    "Prepare during voting",
+    "Extend exactly fifteen minutes while cleanup remains active",
+    "Independent terminal destruction and journal reconciliation"
+  ]
+}
