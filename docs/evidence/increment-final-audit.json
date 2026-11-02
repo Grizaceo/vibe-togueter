@@ -26,7 +26,7 @@
     "docs/platform/LANTERN_TABLE_REVIEW.md"
   ],
   "remaining": [
-    "C rotating roles conditional scope is not implemented; any revised candidate needs owner input/test allocation review",
+    "C inert role draft prepared and text-reviewed; exact inputs and one bounded test-VM allocation pending in ROTATING_ROLES_PROPOSAL.md",
     "Actual provider warm-session idle/renewal verification",
     "Human Twitch/mod/three-account and OBS rehearsal",
     "Owner hosting/disclosure/video/YouTube/private push/judge access/Devpost"
