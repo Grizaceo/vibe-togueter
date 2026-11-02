@@ -27,7 +27,10 @@ context.on('page',page=>{
   });
 });
 try{
-  const origin=new URL(base).origin;const page=await context.newPage();await page.goto(origin+'/tee-play.html?game=tee-local&name=automated-streamer');await page.getByRole('button',{name:'Enter game with my own tee'}).click();await page.waitForTimeout(3500);
+  const origin=new URL(base).origin;
+  const redirect=await fetch(origin+'/?name=automated-viewer',{redirect:'manual'});
+  check('local root entry redirects with the individual display name',redirect.status===302&&new URL(redirect.headers.get('location')).searchParams.get('name')==='automated-viewer');
+  const page=await context.newPage();await page.goto(origin+'/tee-play.html?game=tee-local&name=automated-streamer');await page.getByRole('button',{name:'Enter game with my own tee'}).click();await page.waitForTimeout(3500);
   check('external game credits visible',await page.getByText('External game by Cristóbal Muñoz, developed separately with Devin and Hermes.',{exact:true}).isVisible());
   check('individual controls and pending VM disclosed',(await page.locator('body').innerText()).includes('Your own tee · keyboard and mouse')&&(await page.locator('#boundary').innerText()).includes('VM deployment and external access testing pending'));
   const player=await context.newPage();await player.goto(origin+'/tee-play.html?game=tee-local&name=automated-viewer');await player.getByRole('button',{name:'Enter game with my own tee'}).click();

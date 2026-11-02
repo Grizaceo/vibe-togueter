@@ -7,3 +7,13 @@ export function teeEntryURL(platformURL, gameId, name) {
   url.search=new URLSearchParams({game:gameId,name:String(name).slice(0,25)}).toString();
   return url.toString();
 }
+
+export function localTeeJoinReply(baseURL, name) {
+  const url=new URL(baseURL);
+  if(url.protocol!=='http:'||url.hostname!=='127.0.0.1'||url.username||url.password||url.search||url.hash)
+    throw Error('Use the private local demo address.');
+  // Twitch can linkify the filename as a domain while leaving the local IP plain.
+  // A root URL avoids that false link; the local prototype explicitly needs copy/paste.
+  url.pathname='/';url.search=new URLSearchParams({name:String(name).slice(0,25)}).toString();
+  return {entryURL:url.toString(),text:'Local prototype, this PC only: COPY the entire address into your browser (Twitch does not link it reliably): '+url.toString()};
+}

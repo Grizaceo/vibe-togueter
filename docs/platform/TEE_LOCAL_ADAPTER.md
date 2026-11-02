@@ -7,17 +7,20 @@ tag still resolve to `113c3f500fcec4c82808d176bd613607c27a9978`.
 
 **Verified local integration — VM deployment and external access testing pending.**
 
-**Local teeworlds-rs adapter prototype — real Twitch integration testing pending.**
+**Manual local entry now verified:** the owner sent `!join` on real Twitch,
+confirmed receiving the address, opened the complete local URL and confirmed
+“Sí, está ONLINE y puedo jugar” using A/D and space after focusing the game.
+An independent read-only probe observed the `gris_96` tee in 38 authoritative
+snapshots. This establishes one human's local entry/control, not a second human
+streamer, an authenticated in-game role or external access.
 
-The second statement remains the recording claim until the separate manual Twitch
-receipt has been reviewed. Automated inputs and browser clients are not human
-participants and are not real Twitch evidence.
-
-**Manual individual-entry check is currently failing:** the owner sent `!join` and
-reports receiving the link, but opening it on the same PC showed “Server not found”.
-The harness recorded the real command and queued reply; its local HTTP endpoint
-continues to respond. The exact opened URL is still needed to diagnose that human
-failure. Do not mark the end-to-end manual flow successful based on automated tests.
+The first attempt failed with “Server not found”. The owner's Twitch screenshot
+identified a partial-link problem: only `tee-play.html` was rendered as a link,
+while the IP/port remained plain text. The local reply now omits the filename,
+uses `/?name=VIEWER` and explicitly asks to copy the entire address. The successful
+human retest used the complete address. This is a local-prototype workaround,
+not verified clickable public access. Earlier failure receipts remain unchanged.
+Automated inputs/browser clients remain separate from this human confirmation.
 
 teeworlds-rs is Cristóbal Muñoz's external game, developed separately with Devin
 and Hermes. It is used to demonstrate the platform's potential; its implementation
@@ -59,7 +62,8 @@ and observed movement. A subsequent individual-entry browser rehearsal also open
 two separate platform entry pages and presses each entry button, without a
 collective bridge. Both clients receive snapshots and one moves by keyboard input.
 The screenshots visibly show ONLINE and legible external
-credits. There is no human-versus-streamer gameplay or cross-network verification.
+credits. The owner subsequently confirmed individual ONLINE play using the full
+local address. There is no human-versus-streamer gameplay or cross-network verification.
 
 ## VM decision, revalidated November 2
 
@@ -133,6 +137,10 @@ node scripts/tee-join-demo.mjs --twitch YOUR_CHANNEL --auth-file /PRIVATE/EXISTI
 This uses the existing Twitch authorization, verifies that it belongs to the owner
 channel, and does not start a login. It replies only to an explicit real `!join`,
 with per-user/global limits, labeling the link **local prototype: this PC only**.
+Because Twitch rendered only the old filename as a link in the owner's screenshot,
+the local reply now instructs full-address copy/paste and uses a filename-free root
+URL. This limitation must stay visible in the demo; a public HTTPS hostname flow
+has not been tested.
 Replies observed back on the actual Twitch transport are recorded separately from
 queued sends. The URL has a display name, game ID and no credential/privilege.
 The owner can open the printed streamer entry in a second browser window; the name
@@ -185,11 +193,11 @@ Fresh append-only run receipts and screenshots use `docs/evidence/tee-local-*`.
 The final verification receipt links exact evidence and records tests/revisions.
 Evidence includes failed/intermediate attempts; none replaces historical records.
 
-Suggested recording caption for individual entry while manual verification is pending:
+Suggested recording caption for the verified local individual entry:
 
 > Vibe Togueter · verified local integration prototype. External teeworlds-rs by
 > Cristóbal Muñoz with Devin and Hermes. Individual browser players. VM deployment,
-> external access and real Twitch integration testing pending.
+> external access testing pending. Local Twitch entry uses full-address copy/paste.
 
 Use the credits-bearing harness page for a playable shot. A standalone full-screen
 game capture must retain the same external credit caption. Human play, a verified

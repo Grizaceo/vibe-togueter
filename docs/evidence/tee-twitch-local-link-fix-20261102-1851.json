@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-02T18:51:18.300860+00:00",
+  "kind": "local Twitch partial-link regression fix",
+  "source": "Owner-provided Twitch screenshot: only tee-play.html was colored as a link, while http://127.0.0.1:40661/ remained plain text.",
+  "diagnosis": "Clicking that partial filename treats it as a domain instead of opening the local service.",
+  "change": "Local reply uses http://127.0.0.1:40661/?name=VIEWER and explicitly requests whole-address copy/paste. Root redirects to the platform player entry, preserving the display name.",
+  "scope": "Local prototype workaround, not verified public clickable Twitch entry. No DNS alias, public hosting or VM deployed.",
+  "tests": {
+    "npmFocusedPassed": 169,
+    "npmIntegrationPassed": 110,
+    "npmFailed": 0,
+    "platformChromiumPassed": 36,
+    "individualBrowserPassed": 9,
+    "browserReceipt": "tee-individual-browser-1793645432208.json"
+  },
+  "humanEntryRetest": "pending owner confirmation after using full local address",
+  "sourceSha256": {
+    "src/tee-join.js": "89dbba53421a16628825b3d95d2e827b81e2ba99651e0997a478a21f449c3414",
+    "scripts/tee-join-demo.mjs": "530170b295cc4e8a63afd222733a6f02a990cbbe9af776e2f7715a7a6c111792",
+    "test/tee-local-adapter.mjs": "4f10e9fba1d761f811646a374af6e10bf13a51eab91bf2b2c961d4c75b84a262",
+    "scripts/rehearse-tee-individual.mjs": "91488c01f6f0c429b5555227760366540f7ef4969b4362f2089a27a9ecefdb16"
+  }
+}

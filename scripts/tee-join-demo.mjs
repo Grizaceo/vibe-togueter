@@ -7,7 +7,7 @@ import crypto from 'node:crypto';
 import {createInterface} from 'node:readline';
 import {TwitchAuth} from '../src/auth/twitch.js';
 import {connectTwitch} from '../src/chat/twitch.js';
-import {teeEntryURL} from '../src/tee-join.js';
+import {teeEntryURL,localTeeJoinReply} from '../src/tee-join.js';
 const option=name=>process.argv[process.argv.indexOf(name)+1];
 if(!process.argv.includes('--twitch')||!process.argv.includes('--auth-file')||!process.argv.includes('--pid'))throw Error('Use --twitch CHANNEL --auth-file PRIVATE_PATH --pid EXISTING_GAME_PID');
 const channel=option('--twitch'),pid=option('--pid');
@@ -26,7 +26,7 @@ const server=http.createServer((req,res)=>{
   const url=new URL(req.url,'http://127.0.0.1');
   if(url.pathname==='/community/games'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({games:[game]}));return;}
   if(url.pathname==='/status'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({individualEntry:true,receivedJoins:evidence.commands.length,observedReplies:evidence.replies.length,entries:evidence.entries.length}));return;}
-  if(url.pathname==='/' ){res.writeHead(302,{Location:teeEntryURL(base,game.id,'streamer')});res.end();return;}
+  if(url.pathname==='/' ){res.writeHead(302,{Location:teeEntryURL(base,game.id,url.searchParams.get('name')||'viewer')});res.end();return;}
   if(['/tee-play.html','/tee-play.js'].includes(url.pathname)){
     if(url.pathname.endsWith('.html'))evidence.entries.push({at:new Date().toISOString(),kind:'HTTP entry page requested; not a confirmed player'});
     res.setHeader('Content-Type',url.pathname.endsWith('.js')?'application/javascript':'text/html; charset=utf-8');res.end(fs.readFileSync('public'+url.pathname));return;
@@ -47,13 +47,13 @@ try{
   const cooldowns=new Map();let lastReply=-Infinity;
   irc=connectTwitch(channel,message=>{
     if(message.source!=='twitch')return;
-    if(message.user===channel&&message.text.startsWith('Join with your own tee: ')){evidence.replies.push({at:new Date().toISOString(),kind:'own-channel reply observed on actual Twitch transport'});return;}
+    if(message.user===channel&&message.text.startsWith('Local prototype, this PC only: ')){evidence.replies.push({at:new Date().toISOString(),kind:'own-channel reply observed on actual Twitch transport'});return;}
     if(message.text.trim().toLowerCase()!=='!join')return;
     const now=Date.now(),user=message.user.toLowerCase();
     if(now-(cooldowns.get(user)??-Infinity)<10000||now-lastReply<2000||cooldowns.size>=128)return;
     cooldowns.set(user,now);lastReply=now;
-    const entry=teeEntryURL(base,game.id,user);
-    const queued=irc.send('Join with your own tee: '+entry+' (local prototype: this PC only; keyboard/mouse control)');
+    const reply=localTeeJoinReply(base,user),entry=reply.entryURL;
+    const queued=irc.send(reply.text);
     evidence.commands.push({at:new Date().toISOString(),command:'!join',source:'real Twitch transport',replyQueued:queued,entryURL:entry});
     console.log(JSON.stringify({joinReceived:true,replyQueued:queued,entryURL:entry}));
   },{auth});

@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {nativeTeeCodec} from '../src/tee-native-codec.js';
-import {teeEntryURL} from '../src/tee-join.js';
+import {teeEntryURL,localTeeJoinReply} from '../src/tee-join.js';
 import {createChatCommands} from '../src/server/chat-commands.js';
 import {RemoteGames} from '../src/remote-games.js';
 class Socket extends EventEmitter {
@@ -91,4 +91,10 @@ test('join URL cannot carry credentials and only one Tee may be selected for def
     assert.throws(()=>new RemoteGames([{id:'one',adapter:'tee',baseURL:'https://a.test',joinByDefault:true},{id:'two',adapter:'tee',baseURL:'https://b.test',joinByDefault:true}],path.join(dir,'sessions.json')),/at most one/);
     assert.throws(()=>new RemoteGames([{id:'one',adapter:'t99',baseURL:'https://a.test',joinByDefault:true}],path.join(dir,'sessions.json')),/at most one/);
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+test('local Twitch reply avoids filename linkification and instructs full-address copy',()=>{
+  const reply=localTeeJoinReply('http://127.0.0.1:40661','viewer');
+  assert.equal(reply.entryURL,'http://127.0.0.1:40661/?name=viewer');
+  assert.match(reply.text,/COPY the entire address/);assert.ok(!reply.text.includes('.html'));
+  assert.throws(()=>localTeeJoinReply('http://secret:token@127.0.0.1:40661','viewer'),/private/);
 });

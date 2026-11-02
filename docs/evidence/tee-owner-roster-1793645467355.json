@@ -1,0 +1,353 @@
+{
+  "at": "2026-11-02T18:51:05.853Z",
+  "kind": "read-only roster observation after owner opened entry",
+  "samples": [
+    {
+      "tick": 366698,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366700,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366702,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366704,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366706,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 976.5
+      },
+      "alive": true
+    },
+    {
+      "tick": 366708,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366710,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366712,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366714,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366716,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366718,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366720,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366722,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366724,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366726,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366728,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366730,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366732,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366734,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366736,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366738,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366740,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366742,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366744,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366746,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366748,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366750,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366752,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366754,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366756,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366758,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366760,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366762,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366764,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366766,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366768,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366770,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    },
+    {
+      "tick": 366772,
+      "id": 34,
+      "position": {
+        "x": 1680,
+        "y": 979
+      },
+      "alive": false
+    }
+  ],
+  "limits": [
+    "Probe is an automated participant, not a human.",
+    "Display name is not authenticated identity.",
+    "Presence/movement alone does not establish human keyboard control."
+  ]
+}
