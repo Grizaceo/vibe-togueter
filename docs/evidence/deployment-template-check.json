@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-02T08:40:36.841966+00:00",
+  "kind": "local-deployment-template-check",
+  "configGate": {
+    "exit": 0,
+    "result": "Public host gates OK"
+  },
+  "systemdSyntax": {
+    "exit": 0,
+    "diagnostics": ""
+  },
+  "limits": [
+    "Read-only assertions against the public repository configuration.",
+    "Temporary unit parsed locally; no unit installed or service started.",
+    "No purchased host, Caddy/TLS/WSS, AppArmor or remote acceptance is verified."
+  ],
+  "bashBlocksParsed": 5,
+  "oauthNotes": "Checked against the current localhost-only auth helper and .env.example; no SSH connection or Twitch login was performed."
+}

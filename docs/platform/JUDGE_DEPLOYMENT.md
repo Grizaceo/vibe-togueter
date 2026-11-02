@@ -5,7 +5,7 @@ Prepared for a Linux VM with a fixed HTTPS address and persistent disk. No host 
 ## 1. Select and prepare the VM
 
 - Use **Debian 12**, or **Ubuntu 24.04** with the restricted bubblewrap AppArmor profile below. Start with 2 GiB RAM, then check actual CPU/memory and concurrent-client behavior before sharing the URL.
-- Install Git, bubblewrap, CA certificates, Node and npm. Match the tested Node 26.12.1 installation at `/usr/bin/node`: the guest explicitly executes that path and needs `--permission` and `--experimental-vm-modules`. Do not assume the distribution's default Node has those features.
+- Install Git, bubblewrap, CA certificates, Node and npm. Match the tested Node 26.12.1 installation at `/usr/bin/node`: the guest explicitly executes that path and needs `--permission` and `--experimental-vm-modules`. Do not assume the distribution's default Node has those features. Use the [official Node distribution instructions](https://nodejs.org/en/download), then verify that `/usr/bin/node` resolves to the intended version.
 - Use an unprivileged `vibe-arena` service account and a persistent directory such as `/srv/vibe-arena`. The service account needs to write `runtime/`, its private `.env` and the operator-managed journals. Do not put the application on an ephemeral root disk or a tmpfs.
 - Firewall public ingress to HTTPS/HTTP and restricted SSH. Port 8420 stays loopback only. Keep an existing SSH session open while applying firewall rules and confirm a second connection before closing it.
 - Transfer the reviewed repository using the owner's authorized source-access method. Do not copy local `.env`, live journals, `node_modules` or unrelated game repositories from the PC.
@@ -32,10 +32,37 @@ npm run setup:local
 
 The setup command creates missing secrets without printing them. Keep `.env` mode 600. Set `VA_PUBLIC_URL=https://YOUR_HOSTNAME` privately. For Twitch, configure the owner's application/callback and run the existing authorization flow; verify `npm run twitch:status` without recording credentials. Do not expose OAuth device instructions or admin/streamer keys in the video.
 
+### Twitch authorization from an SSH session
+
+The current auth helper accepts an exact registered `http://localhost:PORT/callback`, not the public HTTPS hostname. With the example port 3000, keep this tunnel open on the owner's computer:
+
+```bash
+ssh -N -o ExitOnForwardFailure=yes \
+  -L 127.0.0.1:3000:127.0.0.1:3000 \
+  -L 127.0.0.1:18420:127.0.0.1:8420 YOUR_SSH_HOST
+```
+
+On the VM, set `VA_TWITCH_REDIRECT_URI=http://localhost:3000/callback` in the private `.env`, matching the Twitch application's registered redirect, then run `npm run twitch:auth` as the service account. Open the printed authorization URL in the owner's local browser. Its callback reaches the VM through the SSH tunnel; do not open port 3000 on the public firewall or proxy it with Caddy. If port 3000 is already used locally, choose a free port and change the registered redirect, VM setting and tunnel together.
+
+After successful authorization, run `npm run twitch:status` on the VM and start the service with the same authenticated channel. The second forward also provides private Studio access at `http://localhost:18420/studio.html`. Close the tunnel after private administration is finished. This explains the existing helper; no login was performed during preparation.
+
 Confirm the deployed configuration before launch:
 
 ```bash
-node --input-type=module -e 'import fs from "node:fs";import assert from "node:assert/strict";const c=JSON.parse(fs.readFileSync("vibe-arena.config.json"));assert.equal(c.build.execution,"cloud-vm");assert.equal(c.build.studioWorker.enabled,false);assert.equal(c.build.studioWorker.prewarmEnabled,false);assert.equal(c.build.studioWorker.approvalId,null);assert.equal(c.build.studioWorker.vmBudgetMinor,0);assert.deepEqual(c.remoteGames,[]);assert.equal(c.monetization.autoGenerate,false);assert.equal(c.monetization.simulateEventCredits,false);console.log("Public host gates OK");'
+node --input-type=module <<'JS'
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const config = JSON.parse(fs.readFileSync('vibe-arena.config.json'));
+assert.equal(config.build.execution, 'cloud-vm');
+assert.equal(config.build.studioWorker.enabled, false);
+assert.equal(config.build.studioWorker.prewarmEnabled, false);
+assert.equal(config.build.studioWorker.approvalId, null);
+assert.equal(config.build.studioWorker.vmBudgetMinor, 0);
+assert.deepEqual(config.remoteGames, []);
+assert.equal(config.monetization.autoGenerate, false);
+assert.equal(config.monetization.simulateEventCredits, false);
+console.log('Public host gates OK');
+JS
 ```
 
 Leave `VA_SIMULATE_EVENT_CREDITS` unset. Worker, warm preparation and public Tee remain off. Never load a quarantined artifact as a local bundled game.
@@ -79,7 +106,7 @@ For persistent service logs, configure journald `Storage=persistent`, a suitable
 
 ## 4. Add HTTPS and WSS
 
-Point the chosen hostname at the VM and install Caddy through its supported package instructions. Example Caddyfile, with a real hostname in place of `YOUR_HOSTNAME`:
+Point the chosen hostname at the VM and install Caddy through its [official package instructions](https://caddyserver.com/docs/install). Example Caddyfile, with a real hostname in place of `YOUR_HOSTNAME`:
 
 ```caddyfile
 YOUR_HOSTNAME {
@@ -95,7 +122,7 @@ YOUR_HOSTNAME {
 
 Validate with `caddy validate --config /etc/caddy/Caddyfile`, then reload Caddy. Its [reverse proxy](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy) supports WebSocket upgrades. Preserve forwarded client headers; the app also rejects forwarded admin operations. The firewall and loopback bind prevent bypassing Caddy on port 8420.
 
-For local owner controls, use an SSH forward (`ssh -N -L 18420:127.0.0.1:8420 YOUR_SSH_HOST`) and open `http://localhost:18420/studio.html` privately. The public proxy must continue rejecting admin even with valid keys.
+For local owner controls, use an SSH forward (`ssh -N -L 127.0.0.1:18420:127.0.0.1:8420 YOUR_SSH_HOST`) and open `http://localhost:18420/studio.html` privately. The public proxy must continue rejecting admin even with valid keys.
 
 ## 5. Acceptance before giving judges the URL
 
@@ -111,4 +138,4 @@ Record commit, OS/Node/bubblewrap versions, UTC time and actual results in a pri
 - [ ] Edit the hosting/recording disclosure in `public/privacy.html` with the actual operator-selected provider, region, processing/recording details, retention and deletion/contact procedure. Update all UI hosting labels, README and SUBMISSION with the tested URL. No provider is guessed in advance.
 - [ ] Test logged-out free access, note the required November 15 availability window and verify budget alert/shutdown reminder. Owner records, reviews, pushes and submits separately.
 
-Sources reopened November 2: [Ubuntu bubblewrap profile project](https://github.com/dfaerch/bubblewrap-on-ubuntu), [Caddy proxy documentation](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy). The service template and commands have not been run on a purchased judge VM; host acceptance remains necessary.
+Sources reopened November 2: [Ubuntu bubblewrap profile project](https://github.com/dfaerch/bubblewrap-on-ubuntu), [Caddy proxy documentation](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy). The public-config assertion and temporary service template passed [local checks](../evidence/deployment-template-check.json). No service was installed. These checks do not establish Caddy/TLS/WSS, a working OAuth tunnel or acceptance on the purchased judge VM.
