@@ -1,0 +1,273 @@
+
+> vibe-arena@0.1.0 test
+> node --experimental-vm-modules --test test/studio-builds.mjs test/createos-studio-worker.mjs test/community-credit.mjs test/approval-delegation.mjs test/chat-predictions.mjs test/crowd-bursts.mjs test/fallback-policy.mjs test/chat-effects.mjs test/request-boundaries.mjs test/traffic.mjs test/game-isolation.mjs test/twitch-auth.mjs test/twitch-chat.mjs test/twitch-events.mjs test/chat-vs-streamer.mjs test/build-policy.mjs test/build-quarantine.mjs test/vm-builder-preflight.mjs test/builder-login.mjs test/client-input.mjs test/idea-rounds.mjs test/creator-assets.mjs test/creator-credit-render.mjs test/curated-resources.mjs test/remote-games.mjs test/tee-bridge.mjs test/game-credits.mjs && node test/run-legacy.mjs
+
+✔ delegate needs matching Twitch login, current mod tag, unexpired grant and enabled config (1.885294ms)
+✔ delegated authority approves only a reviewed exact round; stale review and ordinary owner actions stay denied (15.614821ms)
+✔ VM is the default and missing worker cannot grant local execution (1.431186ms)
+✔ trusted local requires explicit owner configuration, not a chat prompt (0.644425ms)
+✔ runtime lease blocks a second writer until release (26.2515ms)
+✔ tickets require streamer approval and distinct build/runtime VMs (9.701295ms)
+✔ candidate bytes remain inert, private, immutable and idempotent across restart (2.508488ms)
+✔ wrong source hash, UTF-8 byte limit and malformed candidates fail without changing state (0.993072ms)
+✔ approval binds exact source, round, resource manifest and test report (5.081298ms)
+✔ failed checks, missing isolation attestation and runtime/build VM tests cannot approve (5.039254ms)
+✔ restart during testing requires retest and rejects delayed success (2.229821ms)
+✔ retesting revokes approval; cancelled/rejected tickets reject late reports and artifacts (3.444779ms)
+✔ corrupted source or test report blocks recovery without overwriting evidence (2.455059ms)
+✔ persistence failure rolls back the mutation and preserves retry (2.306856ms)
+✔ rejection before artifact receipt is durable and permits a replacement ticket (1.225295ms)
+✔ retest retains failed evidence, interrupted attempts and terminal test decisions (3.007642ms)
+✔ resource manifest is copied into the immutable version and checked after restart (3.264099ms)
+✔ exact completed construction can receive final artifact approval without reopening intake (2.737008ms)
+✔ device login helper keeps codes private, verifies subscription status and releases own guest (879.177596ms)
+✔ failed destruction timer installation prevents guest creation (159.504155ms)
+✔ SIGTERM during timer installation leaves no created guest (193.383226ms)
+✔ pre-armed per-lease cleanup recovers a guest without the create reply ID and clears only its own session (654.516204ms)
+✔ builder supervisor receives durable creation intent before its timer can fire (598.301287ms)
+✔ only trusted Twitch broadcaster or mod can pause; nicknames and disabled config cannot (1.3105ms)
+✔ pause/resume repeats are idempotent and other commands remain routable (0.344457ms)
+✔ one latest ballot per actor, closed voting and streamer-reported winners (3.143344ms)
+✔ untrusted owners, malformed choices, expired windows and disabled features fail closed (0.859606ms)
+(node:1228902) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ latest ballot per person, majority only acts at voting deadline, reset each window (8.383671ms)
+✔ only authenticated streamer role receives web controls; disconnect releases held keys (0.575283ms)
+✔ chat fire damages streamer, winner resets with preserved joined players (3.873395ms)
+✔ no votes holds, bounded votes and ships, finite render and SDK sandbox compatibility (17.709709ms)
+✔ blur releases both vertical arrow keys as well as held pointer input (75.964342ms)
+✔ releasing outside canvas sends a pointer-up and permits the next click (4.480035ms)
+✔ pointer cancellation clears held state without accepting another touch release (0.884329ms)
+✔ approved participation counts supporters of selected ideas and records actual approver (12.415604ms)
+✔ quarantine pins community snapshot to exact artifact and detects altered participation metadata (11.345358ms)
+✔ community credit rejects unbounded or unbound claims (5.496644ms)
+✔ legacy blank display names do not block approval or rewrite original round provenance (3.411744ms)
+✔ unapproved worker cannot query credentials, provider or model (5.125787ms)
+✔ read-only preflight checks owned lease, active cleanup, auth boolean and equivalent egress order (2.441789ms)
+✔ managed process observation failure re-polls the same handle without another creation (504.595507ms)
+✔ operator adapter keeps model/source inert and verifies builder terminal state (5.980713ms)
+✔ test-VM ownership rejects foreign inventory IDs and changed isolation before destruction (1.207415ms)
+✔ independent recurring test cleanup is armed before any VM creation request (1.51723ms)
+✔ an in-progress pre-create journal cannot stop its own independent supervision (0.69925ms)
+✔ free by default, review required, creator links and license retained in manifest (6.365259ms)
+✔ paid drafts cannot enter free catalog or builds while commerce/fee is unconfigured (2.640976ms)
+✔ platform use tracks pinned game version and cannot omit or alter creator credits (2.297497ms)
+✔ rights, content hash and safe public URLs must be supplied explicitly (1.18325ms)
+✔ fingerprints and pricing tiers cannot be coerced from another type (0.946768ms)
+✔ creator-specified notice, license and follow links appear in the credit panel (1.897237ms)
+✔ live credits stay visible without polling and never attribute a stale version (5.119641ms)
+✔ co-credit disappears on source change or disabled presentation flag (1.162996ms)
+✔ same-account spam cannot trigger; three Twitch logins unlock one emote bonus (6.785983ms)
+✔ expired people, mixed emotes, pause/reset and config disable cannot complete a burst (0.439511ms)
+✔ actual Grove bonuses have visible bounded effects and ignore malformed bonus input (1.113828ms)
+✔ ordinary chat including prototype-property names cannot crash burst admission (0.587644ms)
+✔ ordinary sunshine cannot shorten a previously unlocked crowd bonus (0.345854ms)
+✔ local curator can open bundled bytes without permitting arbitrary HTTP links (1.365885ms)
+✔ curated art is byte-verified, labeled, review-gated and imported idempotently (9.627403ms)
+✔ fallback accepts reviewed IDs only and keeps Marble last once (2.175903ms)
+✔ owner preference persists; disabled flag keeps original fallback; failed save keeps prior order (6.155735ms)
+✔ published creator credits bind exact source version and real licensed image bytes (15.571729ms)
+✔ changed image bytes and linked game paths cannot be published (3.004849ms)
+✔ illustration game supports chat and web tending, grows and resets a cooperative round (2.474335ms)
+✔ public credit snapshot does no repeated verification and invalidates mismatched source (5.250663ms)
+✔ external game and idea authors can publish without an external art pack (6.120256ms)
+✔ game contributor links follow the public creator URL policy (1.041333ms)
+✔ Grove shows the original illustration before input and grows through visible stages (0.731517ms)
+✔ SDK callbacks run outside the controller and block the reproduced constructor escape (122.340732ms)
+✔ infinite tick is terminated without stopping the controller event loop (483.881371ms)
+✔ top-level infinite loop fails load within a bounded deadline (105.091766ms)
+✔ game crash emits one failure and supports a clean replacement (426.631334ms)
+✔ stop and replacement settle pending loads without orphaned promises (64.882009ms)
+✔ a hostile view getter is timed out during guest serialization (111.656284ms)
+✔ missing source and missing watcher report failures rather than throwing (1.531548ms)
+✔ global context constructor cannot escape to the guest process or spoof its IPC (58.35863ms)
+✔ word cap, duplicate prompts, identity allowance and first-arrival capacity (9.670495ms)
+✔ latest ballot replaces rather than multiplies, deadline survives restart, owner approves selected content hash (7.300224ms)
+✔ tie and empty vote require explicit streamer selection; no automatic default winner (5.162175ms)
+✔ settings are frozen per round, public snapshots cannot mutate the store, multiple winners explicit (2.595021ms)
+✔ credentials rejected, no automatic vote privilege, cancelled round retained, malformed store fails closed (2.401979ms)
+✔ stale approval cannot approve changed selection or another round (4.921362ms)
+✔ persistence failure rolls back mutations in memory and cannot leak into later save (2.783383ms)
+✔ build must match approved input and can be dispatched once; failures need fresh approval (2.893592ms)
+✔ redundant vote receipts remain deduplicated after restart (2.288487ms)
+✔ active construction cannot be cancelled into another round and restart needs reconciliation (6.65531ms)
+✔ structurally corrupt stored rounds fail at load, not during a later public request (6.581558ms)
+✔ owner orchestration creates one durable lobby per request and does not autostart (47.977918ms)
+✔ start checks presence and ambiguous mutations require reconciliation (4.877362ms)
+✔ remote origin redirects and unbounded responses are not followed (4.979609ms)
+✔ restarting an uncertain mutation requires a read-only backend reconciliation (2.556678ms)
+✔ create owns its session lease until remote mutation resolves (2.667376ms)
+✔ malformed health cannot start or erase a known lobby (1.452977ms)
+✔ private confirmation requires nonempty exact UTF-8 bytes and rejects invalid header types (1.260355ms)
+✔ static resolution rejects siblings, traversal, directories and links outside either static root (4.530181ms)
+✔ disabled worker and stale approval cannot spend, issue a ticket or change the live round (11.013262ms)
+✔ approved inputs flow to inert quarantine, separate tests and exact reviewed evidence with explicit mock label (12.343598ms)
+✔ cancel remains pending until actual cleanup confirmation and rejects another writer (4.729299ms)
+✔ unknown cleanup blocks replacement; restart observation never reruns a model (7.725138ms)
+✔ failed journal write does not start construction or lose canonical input approval (3.362506ms)
+✔ notification failure cannot undo a committed job; failed tests never publish (8.985004ms)
+✔ reconciliation is idempotent across a terminal quarantine ticket and an interrupted round write (7.371113ms)
+✔ one owner spending approval cannot silently fund another job (16.940966ms)
+✔ cancellation can retry after quarantine closure succeeded but the worker journal write failed (6.627863ms)
+✔ exact approval survives evidence-write interruption without requiring a different artifact approval (7.09489ms)
+✔ reviewed evidence carries declared game creator, pinned art/license and immutable community credit (18.451982ms)
+✔ approved creator metadata cannot change after an interrupted evidence write (9.55833ms)
+✔ postcard codec agrees with independent Rust golden messages (2.99109ms)
+✔ only Twitch commands affect bounded pulses, idle/stop close the crowd socket (1.886272ms)
+✔ duplicate enable and malformed server frames fail closed without reconnecting (0.73899ms)
+✔ chat flood is bounded per actor and globally before side effects (6.680871ms)
+✔ frame compaction preserves accounting precision and bounds coordinate error (0.577727ms)
+✔ slow clients skip obsolete frames and excessive backlog disconnects (0.304229ms)
+✔ actual guest nested extensions cannot recurse in controller compaction (118.905941ms)
+✔ external sprite URLs and invalid primitive geometry are removed before broadcast (0.711542ms)
+✔ validates at startup and before an hour, validates client and scopes (20.11979ms)
+✔ 401 refresh saves rotated tokens privately and preserves other settings (4.530949ms)
+✔ Helix retries 401 once and concurrent refreshes coalesce (27.424204ms)
+Connected as owner; credentials saved mode 600.
+✔ OAuth rejects wrong state including unicode and exchanges only valid callback (49.093562ms)
+✔ network errors cannot echo tokens or raw server errors (0.852622ms)
+✔ hourly maintenance validates, rotates refreshable tokens, then validates new identity (2.239319ms)
+✔ tagged IRC and Shared Chat room filtering (1.466666ms)
+[twitch] authenticated #owner
+[twitch] disconnected #owner
+[twitch] authenticated #owner
+[twitch] disconnected #owner
+✔ stable sender reconnects, deduplicates, sanitizes and throttles messages (38.7616ms)
+✔ only Twitch moderator tags grant moderator fallback authority (0.944812ms)
+✔ valid signatures, bad signatures, stale timestamps and malformed JSON (2.548227ms)
+✔ reward titles map exactly to configured bounded game commands (0.475968ms)
+✔ EventSub uses app token, broadcaster condition and both requested types plus optional points (7.043767ms)
+✔ fresh private VM preflight runs only fixed probe and confirms destruction (11.785847ms)
+✔ failed guest checks still destroy the exact fresh VM (3.217655ms)
+✔ lost creation response reconciles by unique journaled name without a second create (2.183935ms)
+✔ cleanup failure survives restart and blocks automatic replacement (3.697814ms)
+✔ provider identity mismatch cannot destroy a foreign VM (3.570144ms)
+✔ pre-cancelled preflight makes no provider mutation or journal (1.26706ms)
+✔ failed provider VM still needs explicit destruction before release (2.722341ms)
+✔ explicit login preparation retains only the fresh VM and restart can release it (2.092094ms)
+✔ journal failure after successful probe cannot retain an unconfirmed login VM (2.068487ms)
+✔ persistent disk outage cannot prevent remote destruction of the verified trial VM (1.612843ms)
+✔ build dispatch rejects absent/nonfinite expiry and unconfirmed timer identity (0.854089ms)
+✔ a trusted independent-lease hook runs before provider creation and a failed hook creates nothing (5.188645ms)
+ℹ tests 140
+ℹ suites 0
+ℹ pass 140
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2585.854718
+PASS welcome alice 
+PASS welcome spectator 
+PASS game loaded 
+PASS state broadcasts (17 states)
+PASS players in state ["alice","bob"]
+PASS view has layers 
+PASS !ball spawned + players (3 circles)
+PASS chat feed relayed 
+PASS idea ack 
+PASS hud has scoreboard 
+
+10/10 passed
+PASS webhook rechaza secret malo 
+PASS webhook donación aceptada 
+PASS admin fund deposit 
+PASS treasury balance {"balance":2.5,"totalRaised":2.5,"totalSpent":0,"gamesGenerated":0,"lastDeposit":{"at":1793585164049,"kind":"deposit","amountUsd":1,"balance":2.5,"meta":{"source":"test"}}}
+PASS generación vía mock LLM {"ok":true,"game":"auto-mvymapt7","costUsd":0}
+PASS spend registrado {"balance":2.5,"totalRaised":2.5,"totalSpent":0,"gamesGenerated":1,"lastDeposit":{"at":1793585164049,"kind":"deposit","amountUsd":1,"balance":2.5,"meta":{"source":"test"}}}
+PASS juego cargado es el generado MockLLM Game
+[vibe-arena-mcp] stdio listo · arena: http://127.0.0.1:39807
+PASS tools/list arena_status,get_sdk_spec,list_templates,get_template,install_game,load_game,generate_game,list_ideas,clear_ideas,treasury_stats,deposit,inject_chat
+PASS list_templates 
+PASS get_sdk_spec 
+PASS get_template 
+PASS install_game valida {
+  "installed": "marble-race",
+  "validated": true
+}
+PASS install_game rechaza código inválido ERROR: no compila en el sandbox: Game failure: Game load failed: Missing SDK export createState
+PASS arena_status 
+PASS load_game en vivo Marble Race
+PASS inject_chat 
+PASS treasury_stats 
+PASS twitch challenge handshake 200
+PASS twitch firma mala → 403 
+PASS twitch channel.subscribe 
+PASS twitch bits.use 
+PASS twitch depósitos en fondo +$7.50
+PASS kick chat.message.sent aceptado 
+PASS kick chat en feed 
+PASS kick firma mala → 403 
+PASS kick subscription.new 
+PASS kick kicks.gifted 
+PASS kick depósitos en fondo +$7.24
+done
+PASS tunneled admin denied
+PASS private web input moves streamer ship
+PASS reward mapping affects vote once across EventSub retry
+PASS generation rejects an arbitrary unapproved prompt
+PASS community intake and replacement ballots reach streamer decision
+PASS forged web owner cannot approve a round
+PASS approved artifact input has a durable content fingerprint
+PASS malformed and oversized WebSocket messages do not kill the controller
+PASS free creator draft stays unpublished until explicit curator review
+PASS public free catalog preserves creator website/social links and featuring reason
+PASS changing creator resource pack invalidates previous build approval
+PASS Tee bridge enable requires private streamer confirmation
+PASS forged web broadcaster cannot enable the remote crowd socket
+PASS authorized local owner can explicitly disable the remote bridge
+PASS publication rejects a stale source approval
+PASS publication stores verified resources, creator follow links and exact code hash
+PASS live game exposes credits for exactly the published version
+PASS real SDK load and browser input produce an illustrated tree frame
+PASS local game loader rejects a sibling path sharing the games prefix
+PASS WebSocket initial credits match the HTTP snapshot and loaded version
+PASS changed resource bytes invalidate cached attribution and notify clients
+PASS restored exact resource bytes recover the verified snapshot
+PASS changed game source cannot reuse prior game, art or idea attribution
+PASS quarantine rejects missing streamer key and public forwarded requests
+PASS HTTP build ticket pins approved community input
+PASS candidate arrives as inert data outside public game paths
+PASS owner listing omits candidate source and private reports
+PASS candidate cannot approve itself before testing
+PASS test receipt is explicitly operator-attested, not verified VM evidence
+PASS exact approval never deploys or overwrites the trusted live game
+PASS cancelled community decision blocks later artifact approval
+PASS terminal ticket rejects a delayed report
+PASS operator helper omits candidate source from console output
+PASS operator can export exact source and reports to a new protected review file
+PASS operator helper refuses remote origins and review overwrite
+PASS HTTP final artifact approval accepts the exact completed construction round
+PASS hung SDK tick falls back while controller HTTP and existing socket survive
+PASS fallback frame visibly identifies the cause and rejoins connected players
+PASS web nickname cannot impersonate a Twitch moderator fallback
+PASS forced fallback rejects missing streamer confirmation
+PASS private owner can force the same fallback
+PASS fallback preferences reject missing owner confirmation
+PASS fallback preferences reject candidate or external game IDs
+PASS owner-selected reviewed fallback loads before Marble
+PASS changed preferred source is skipped and Marble remains final fallback
+PASS actual WebSocket connection negotiates state compression
+PASS web flood is throttled before feed broadcast and ordinary text is capped
+PASS bounded broadcast and HTTP remain responsive under chat flood
+PASS pause owner endpoint rejects a missing confirmation
+PASS web owner nickname cannot pause chat effects
+PASS paused chat cannot grow a tree while controller keeps broadcasting
+PASS proposal intake remains available during effects pause
+PASS safety fallback remains available during effects pause
+PASS resume restores actual chat game effects
+PASS prediction owner actions reject missing confirmation
+PASS viewer cannot resolve a prediction
+PASS browser chat ballot reaches the overlay snapshot
+PASS local prediction cannot resolve an unknown outcome
+PASS resolved overlay recognizes winners without a money ledger
+PASS delegation settings reject missing streamer confirmation
+PASS active limited delegation is visible in community state
+PASS a web delegate nickname cannot approve the exact reviewed inputs
+PASS streamer can revoke delegation immediately
+PASS studio worker status requires private streamer confirmation
+PASS disabled worker refuses provider preflight
+PASS disabled worker rejects dispatch without a provider/model operation
+PASS forwarded worker operations remain local-only
+PASS default-off connector preserves live Plan B game and honest public status
+ISOLATED SUITE {"temp":"/tmp/va-check-enTfvT","results":[{"file":"e2e","exit":0,"failures":0,"passes":10},{"file":"monetization","exit":0,"failures":0,"passes":7},{"file":"mcp","exit":0,"failures":0,"passes":10},{"file":"platforms","exit":0,"failures":0,"passes":11},{"file":"integration","exit":0,"failures":0,"passes":3},{"file":"round-integration","exit":0,"failures":0,"passes":5},{"file":"creator-integration","exit":0,"failures":0,"passes":3},{"file":"tee-integration","exit":0,"failures":0,"passes":3},{"file":"game-publication-integration","exit":0,"failures":0,"passes":5},{"file":"credits-cache-integration","exit":0,"failures":0,"passes":4},{"file":"quarantine-integration","exit":0,"failures":0,"passes":13},{"file":"fallback-integration","exit":0,"failures":0,"passes":9},{"file":"traffic-integration","exit":0,"failures":0,"passes":3},{"file":"chat-effects-integration","exit":0,"failures":0,"passes":6},{"file":"prediction-integration","exit":0,"failures":0,"passes":5},{"file":"delegation-integration","exit":0,"failures":0,"passes":4},{"file":"studio-worker-integration","exit":0,"failures":0,"passes":5}]}

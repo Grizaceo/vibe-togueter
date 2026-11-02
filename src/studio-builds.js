@@ -1,4 +1,5 @@
 // Durable controller orchestration. Candidate bytes remain data in BuildQuarantine.
+import {contributorCredits} from './contributor-credits.js';
 import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';
 const active=new Set(['queued','building','quarantined','testing','cancel-requested','reconcile-required']);
 const phases=new Set([...active,'tested','tests-failed','failed','cancelled','reviewed-publication']);
@@ -92,12 +93,14 @@ export class StudioBuilds {
  publish(id,expected,owner){
   const job=this.job(id);if(!['tested','reviewed-publication'].includes(job.phase)||job.cleanup?.confirmed!==true)throw Error('A fully tested, cleaned job is required.');
   const round=this.rounds.public();if(round?.id!==job.roundId||round.phase!=='completed'||this.rounds.inputHash()!==job.approvedInputHash)throw Error('Matching completed approved inputs required.');
-  let ticket=this.quarantine.inspect(job.ticketId);
-  if(ticket.state!=='approved')ticket=this.quarantine.approve(owner,job.ticketId,expected,round);
-  else if(expected.artifactHash!==ticket.artifactHash||expected.reportHash!==ticket.reportHash||expected.rightsAttested!==true)throw Error('Review the exact current artifact and report.');
-  const publication={kind:'reviewed-isolated-artifact-evidence',at:new Date(this.now()).toISOString(),adapter:job.adapter,roundId:job.roundId,inputHash:job.approvedInputHash,codeSha256:ticket.codeSha256,artifactHash:ticket.artifactHash,reportHash:ticket.reportHash,communityCredit:ticket.communityCredit||null,construction:job.construction,tests:job.testEvidence,cleanup:job.cleanup,candidateExecutedOnHost:false,liveRuntime:false,limitations:['Local reviewed publication evidence, not a deployed game.','Protocol checks do not establish human gameplay quality.']};
+  let ticket=this.quarantine.inspect(job.ticketId);const participation=ticket.communityCredit||round.credit;if(!participation)throw Error('Approved input attribution is missing.');
+  const artists=[...new Map((ticket.resources?.assets||[]).map(a=>[a.creator.name+'|'+a.creator.website,{name:a.creator.name,url:a.creator.website}])).values()];
+  const contributors=contributorCredits({gameAuthors:expected.gameAuthors,ideaAuthors:participation.ideaAuthors,...(artists.length?{artAuthors:artists}:{artNote:'Code-drawn art; no external image assets selected.'}),communityCredit:participation}),contributorCreditsSha256=sha(JSON.stringify(contributors));
+  if(ticket.state!=='approved')ticket=this.quarantine.approve(owner,job.ticketId,{...expected,contributors},round);
+  else if(expected.artifactHash!==ticket.artifactHash||expected.reportHash!==ticket.reportHash||expected.rightsAttested!==true||ticket.approval.contributorCreditsSha256!==contributorCreditsSha256)throw Error('Review the exact current artifact, report and approved creator credit metadata.');
+  const publication={kind:'reviewed-isolated-artifact-evidence',at:new Date(this.now()).toISOString(),adapter:job.adapter,roundId:job.roundId,inputHash:job.approvedInputHash,codeSha256:ticket.codeSha256,artifactHash:ticket.artifactHash,reportHash:ticket.reportHash,communityCredit:ticket.communityCredit||null,contributors,contributorCreditsSha256,manifest:ticket.resources||null,artifactApproval:ticket.approval,construction:job.construction,tests:job.testEvidence,cleanup:job.cleanup,candidateExecutedOnHost:false,liveRuntime:false,limitations:['Local reviewed publication evidence, not a deployed game.','Protocol checks do not establish human gameplay quality.']};
   fs.mkdirSync(this.evidenceDir,{recursive:true});const file=path.join(this.evidenceDir,'studio-build-'+id+'.json'),bytes=JSON.stringify(publication,null,2)+'\n';
-  if(fs.existsSync(file)){const previous=JSON.parse(fs.readFileSync(file));if(previous.artifactHash!==ticket.artifactHash||previous.reportHash!==ticket.reportHash)throw Error('Existing publication evidence differs; preserve it.');}
+  if(fs.existsSync(file)){const previous=JSON.parse(fs.readFileSync(file));if(previous.artifactHash!==ticket.artifactHash||previous.reportHash!==ticket.reportHash||previous.contributorCreditsSha256!==contributorCreditsSha256)throw Error('Existing publication evidence differs; preserve it.');}
   else fs.writeFileSync(file,bytes,{flag:'wx'});
   this.update(id,'reviewed-publication','Exact artifact approved; reviewed evidence saved. No live runtime.',{publicationFile:path.basename(file),publicationSha256:sha(fs.readFileSync(file))});return {...this.public(),publicationFile:path.basename(file)};
  }

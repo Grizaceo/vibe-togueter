@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {contributorCredits} from './contributor-credits.js';
 import {communityCredit} from './community-credit.js';
 import {creditManifestFingerprint} from './creator-assets.js';
 
@@ -53,6 +54,11 @@ function validate(job) {
     if (JSON.stringify(normalized)!==JSON.stringify(job.report) || digest(JSON.stringify(job.report))!==job.reportHash) throw Error('Test report integrity failure.');
   }
   if (['tested','approved'].includes(job.state) && job.attempts.at(-1)?.reportHash!==job.reportHash) throw Error('Current test history integrity failure.');
+  if(job.approval?.contributors!==undefined||job.approval?.contributorCreditsSha256!==undefined){
+    const credits=contributorCredits(job.approval.contributors);if(!credits||JSON.stringify(credits)!==JSON.stringify(job.approval.contributors)||digest(JSON.stringify(credits))!==requireHash(job.approval.contributorCreditsSha256))throw Error('Approved contributor credit integrity failure.');
+    if(credits.communityCredit&&(!job.communityCredit||JSON.stringify(credits.communityCredit)!==JSON.stringify(job.communityCredit)||JSON.stringify(credits.ideaAuthors)!==JSON.stringify(job.communityCredit.ideaAuthors)))throw Error('Approved participation credit changed.');
+  }
+  if(job.approval?.by&&(typeof job.approval.by.name!=='string'||!job.approval.by.name.trim()||job.approval.by.name.length>100||typeof job.approval.by.source!=='string'||!job.approval.by.source.trim()||job.approval.by.source.length>50))throw Error('Invalid artifact approver.');
   if (job.state === 'approved' && (!job.report.passed || job.approval?.artifactHash!==job.artifactHash || job.approval?.reportHash!==job.reportHash || job.approval?.rightsAttested!==true)) throw Error('Invalid artifact approval.');
 }
 
@@ -117,11 +123,12 @@ export class BuildQuarantine {
     const normalized=reportValue(report,job);
     return this.change(()=>{job.report=normalized;job.reportHash=digest(JSON.stringify(normalized));Object.assign(job.attempts.at(-1),{state:'completed',report:structuredClone(normalized),reportHash:job.reportHash});job.state='tested';job.revision++;return job;});
   }
-  approve(actor,id,{artifactHash,reportHash,rightsAttested},round) {
+  approve(actor,id,{artifactHash,reportHash,rightsAttested,contributors},round) {
     owner(actor);const job=this.job(id);
     if (!['approved','completed'].includes(round?.phase)||round.id!==job.roundId||round.approvedInputHash!==job.inputHash) throw Error('Community round approval changed.');
     if(job.state!=='tested'||!job.report.passed||artifactHash!==job.artifactHash||reportHash!==job.reportHash||rightsAttested!==true)throw Error('Review passing tests, exact artifact/report hashes and rights before approval.');
-    return this.change(()=>{job.approval={artifactHash,reportHash,rightsAttested:true,at:Date.now()};job.state='approved';job.revision++;return job;});
+    const credits=contributors===undefined?null:contributorCredits(contributors);if(contributors!==undefined&&!credits)throw Error('Record the reviewed contributor metadata.');
+    return this.change(()=>{job.approval={artifactHash,reportHash,rightsAttested:true,at:Date.now(),by:{name:String(actor.name||'').trim()||'Unrecorded approver',source:String(actor.source||'').trim()||'unknown'},...(credits?{contributors:credits,contributorCreditsSha256:digest(JSON.stringify(credits))}:{})};job.state='approved';job.revision++;return job;});
   }
   close(actor,id,state) {
     owner(actor);const job=this.job(id);

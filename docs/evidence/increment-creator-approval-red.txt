@@ -1,0 +1,36 @@
+✔ disabled worker and stale approval cannot spend, issue a ticket or change the live round (9.91428ms)
+✔ approved inputs flow to inert quarantine, separate tests and exact reviewed evidence with explicit mock label (11.451992ms)
+✔ cancel remains pending until actual cleanup confirmation and rejects another writer (5.757006ms)
+✔ unknown cleanup blocks replacement; restart observation never reruns a model (7.302679ms)
+✔ failed journal write does not start construction or lose canonical input approval (3.741436ms)
+✔ notification failure cannot undo a committed job; failed tests never publish (7.59832ms)
+✔ reconciliation is idempotent across a terminal quarantine ticket and an interrupted round write (3.767487ms)
+✔ one owner spending approval cannot silently fund another job (5.212447ms)
+✔ cancellation can retry after quarantine closure succeeded but the worker journal write failed (6.430213ms)
+✔ exact approval survives evidence-write interruption without requiring a different artifact approval (8.15098ms)
+✔ reviewed evidence carries declared game creator, pinned art/license and immutable community credit (13.243159ms)
+✖ approved creator metadata cannot change after an interrupted evidence write (7.069896ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 11
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 214.840964
+
+✖ failing tests:
+
+test at test/studio-builds.mjs:58:1
+✖ approved creator metadata cannot change after an interrupted evidence write (7.069896ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/studio-builds.mjs:61:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /credit|metadata/i,
+    operator: 'throws',
+    diff: 'simple'
+  }
