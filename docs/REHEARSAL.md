@@ -1,4 +1,4 @@
-# Plan B rehearsal, prepared for later human participation
+# Playable foundation and real-workflow evidence rehearsal
 
 Updated November 2, 2026. The owner chose to rehearse later. No human, new Twitch, OBS or exported-video evidence is recorded by this preparation.
 
@@ -59,10 +59,12 @@ Keep a browser player, the actual Twitch channel and OBS overlay visible. A part
 | Two entrants, chat `!play` then `!race` | Both entrants and actual moving race | Pending |
 | Game/art/idea credits, Kenney links | Human readability check on player and OBS at capture size | Pending |
 | Disconnect/reconnect and return to Grove | Observed recovery and any failure | Pending |
+| Private Studio prepare/extend/close with an explicitly approved future allocation | Remaining time, approved maximum, no model call during discussion, exact close; current coverage is mocked only | Pending |
+| Recorded Lantern Table construction/test/cleanup and exact approval | Actual thread and hashes; static preview and known gameplay issues labelled | Evidence ready; human recording pending |
 | English video, under three minutes | Full export watch, exact duration, readable Twitch/Codex shots | Pending |
 
 If anything fails, retain the failure and its UTC time. Fix the observed issue before recording a new result. Use a new dated evidence file; do not replace earlier rehearsal records. Keep usernames/recording expectations agreed with participants. Never record keys, configuration, auth codes or unrelated private windows.
 
-Follow [the 2:45 recording script](DEMO_SCRIPT.md). Show the existing Seed Race trial as prior construction/test/approval evidence; its preview remains static and its runtime remains unconnected. An actual human should review the full export and public YouTube playback. The owner handles private push/access for testing@devpost.com, hosting and Devpost submission. These commands perform none of those delivery actions. The owner rights/date confirmation is recorded separately.
+Follow [the 2:45 recording script](DEMO_SCRIPT.md). Show the completed real Lantern Table Studio-to-VM run and exact owner approval as recorded construction/test evidence; its preview remains static, gameplay issues are disclosed and no generated runtime is deployed. Earlier Seed Race evidence is optional historical backup. An actual human should review the full export and public YouTube playback. The owner handles private push/access for testing@devpost.com, hosting and Devpost submission. These commands perform none of those delivery actions. The owner rights/date confirmation is recorded separately.
 
 Checkpoints November 2: golden-path decision 10:00 UTC; feature cutoff 15:00; stabilization and human rehearsal 15:00–17:00; recording/delivery reserve 17:00–21:00; prudent submission 21:00. [Official rules](https://twitchcon-codex.devpost.com/rules), rechecked November 1, list close at 22:00 UTC / 19:00 Santiago, public YouTube footage of Twitch and Codex, English materials, code/testing access and free judging use through November 15.

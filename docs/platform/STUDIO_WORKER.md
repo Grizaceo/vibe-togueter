@@ -1,6 +1,6 @@
 # Experimental studio-to-VM worker
 
-Status: implemented behind **`build.studioWorker.enabled: false`**, with mocked lifecycle/provider tests and one failed real attempt. On November 2, fresh guest subscription login succeeded and owner-approved Lantern Table inputs were dispatched through the actual local controller. The managed Codex command reached its 300-second timeout (exit 124), without a completed model receipt or candidate. Builder destruction was independently confirmed; no test guest or reviewed publication followed. [Safe evidence](../evidence/increment-real-attempt.json). Plan B stays primary. The earlier Seed Race operator trial remains separate historical evidence.
+Status: a real Studio-to-VM run completed through exact owner-reviewed local publication before the November 2 gate. Lantern Table was built by gpt-6.1-terra using fresh guest subscription login, passed nine protocol checks in another VM and had both guests confirmed destroyed. [Exact owner review](LANTERN_TABLE_REVIEW.md) documents two gameplay findings. No generated runtime or human playtest is claimed. The earlier failed timeout remains recorded. **`build.studioWorker.enabled: false`** remains the shipped default; every new run requires its own allocation/login.
 
 ## Connected code path
 
@@ -12,7 +12,7 @@ Approval requires the current completed inputs, exact artifact/report hashes and
 
 ## Managed stdin correction after the failed attempt
 
-Codex 0.166 appends non-TTY stdin even when a prompt argument is supplied. A managed process leaves its pipe open, so the previous command could wait indefinitely for EOF. An actual credential-free local CLI probe against a localhost HTTP mock observed no request before EOF and one request immediately after it. A trusted-shell regression failed on the old adapter and passes after prefixing managed commands with `exec < /dev/null;`. No candidate or paid provider was used in the probe. Full suite: **247 checks (141 focused + 106 integration)**. This reachable defect is consistent with the real timeout/zero stdout; the guest's full stderr was not recovered, so the probe is not proof that no other issue remains. No second real run has been authorized or performed. [Probe](../evidence/increment-stdin-probe.json), [red](../evidence/increment-managed-stdin-red.txt), [green](../evidence/increment-managed-stdin-tests.txt).
+Codex 0.166 appends non-TTY stdin even when a prompt argument is supplied. A managed process leaves its pipe open, so the previous command could wait indefinitely for EOF. An actual credential-free local CLI probe against a localhost HTTP mock observed no request before EOF and one request immediately after it. A trusted-shell regression failed on the old adapter and passes after prefixing managed commands with `exec < /dev/null;`. No candidate or paid provider was used in the probe. Full suite: **247 checks (141 focused + 106 integration)**. This reachable defect is consistent with the real timeout/zero stdout; the guest's full stderr was not recovered, so the probe is not proof that no other issue remains. A separately authorized second run subsequently completed; see the current status above. [Probe](../evidence/increment-stdin-probe.json), [red](../evidence/increment-managed-stdin-red.txt), [green](../evidence/increment-managed-stdin-tests.txt).
 
 ## Cancellation, recovery and leases
 
@@ -20,12 +20,16 @@ Both guest creation paths arm independent recurring user-manager cleanup before 
 
 Cancellation remains pending until destruction is confirmed. Lost observations re-poll the same process identity; there is no model or VM replacement retry. Restart marks interrupted jobs uncertain. Terminal quarantine decisions are idempotent during cross-store reconciliation, so a later journal failure does not trap cleanup forever. One spending approval ID can dispatch only one job. Unknown cleanup blocks another writer; a failed fallback never switches construction to the PC. Provider/control-plane or host outages still need operator attention: these leases are supervised cleanup, not a provider-enforced money cap or uptime guarantee.
 
-## Before any real enablement
+## Before another charged run
 
 1. The owner reported 2,990.35 hackathon credits and authorized the bounded attempt; the actual provider accepted the requested shape. Credit-to-USD conversion and settled usage were not verified. A new attempt needs a new explicit allocation because the one-run approval is consumed. Confirm any remaining Sandbox balance/capacity. [Bounded run proposal](INCREMENT_VM_RUN_PROPOSAL.md). No new payment account, top-up, plan change or paid API use is authorized.
 2. Prepare a fresh builder with `node scripts/builder-login.mjs prepare`. The helper puts device-login instructions in a restricted local file; the owner reads/completes them locally. Never copy host auth caches or put codes/tokens in evidence. Use `status` for the safe authenticated boolean.
 3. Only after that decision, set a unique owner decision ID and the explicitly reserved minor-unit VM amount in the private operator configuration; the proposed minimum reservation is 25 cents. Enable only cloud-vm mode. The code accepts no chat-selected provider, shape, model, budget or local fallback.
-4. Run the actual approved Studio round through dispatch, separate tests, source/frame/rights review and exact approval. Record real VM/model/report/cleanup identities; the successful mock checks and failed real attempt do not satisfy this gate.
+4. Run the actual approved Studio round through dispatch, separate tests, source/frame/rights review and exact approval. Record real VM/model/report/cleanup identities; the actual Lantern Table run satisfies the reviewed-publication path, while the first failed attempt and mocks alone would not.
 5. By November 2 10:00 UTC, without a complete real run, retain the disabled default and Plan B script. At 15:00 stop feature work; a separate future runtime and public hosting remain owner decisions.
 
 The CreateOS CLI v0.0.31 installed commit was checked against its public source for managed process result fields and JSON behavior. Official [process API](https://createos.sh/docs/Sandbox/REST-API/Managed-Processes/), [limits](https://createos.sh/docs/Sandbox/Limits/), [Codex non-interactive mode](https://learn.chatgpt.com/docs/non-interactive-mode) and [headless authentication](https://learn.chatgpt.com/docs/auth) informed the adapter. No source prose/code was imported.
+
+## Preparation while the community votes
+
+[Streamer warm-session controls](BUILDER_PREWARM.md) add prepare, bounded +15-minute renewal and exact close, with a countdown. Independent cleanup remains armed; immutable atomic lease decisions arbitrate renewal, build admission and close. New controls are default-off and verified locally/mocked only. They do not change the preserved real run or grant new spending.

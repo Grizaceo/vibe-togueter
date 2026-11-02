@@ -1,0 +1,11 @@
+{
+  "kind": "local-browser-failure-triage",
+  "evidence": "local-ui-failure-1793589944405.json",
+  "failedCheck": "Studio production control saves preferred fallback order",
+  "finding": "Owner tools were shown before the asynchronous preference load completed, allowing typed input to be replaced.",
+  "fix": "Show tools only after preferences load.",
+  "laterEvidence": "local-ui-1793601419450-rehearsal.json",
+  "limits": [
+    "Synthetic browser interaction, not human/provider evidence."
+  ]
+}

@@ -1,5 +1,7 @@
 # One bounded golden-path verification run — owner decision pending
 
+**Latest outcome:** the separately authorized second run completed construction, nine distinct-VM checks, verified cleanup and exact owner-reviewed local publication. [Review](LANTERN_TABLE_REVIEW.md). Both bounded run decisions are consumed. No further charged attempt, runtime or external publication is authorized by this document; proposal/failure text below is historical.
+
 **Attempted November 2, 02:27–02:41 UTC.** Owner reported 2,990.35 hackathon credits, completed fresh guest subscription login and explicitly approved Lantern Table inputs for one construction. Provider creation and login succeeded. The actual Studio dispatch command timed out at 300 seconds (exit 124), without a model-completion receipt or candidate. The builder was verified destroyed, and no test VM or runtime was created. This one-run approval is consumed; no automatic retry. [Actual evidence](../evidence/increment-real-attempt.json). The prepared proposal below is retained as the scope of that attempt, not an unspent authorization.
 
 Historical preparation, November 1, 2026. At that checkpoint no VM/model/resource changes had been made in this increment. The eight earlier trial guests are destroyed; no reusable guest login remains. HOSTING_POLICY.md and SEED_RUNTIME_PROPOSAL.md explicitly distinguish the historical USD 3 trial from future hosting authority. This run can use only a separately confirmed unspent allocation, never an account top-up.
@@ -24,6 +26,6 @@ The existing reviewed helper `node scripts/builder-login.mjs prepare` creates th
 
 Device login instructions are displayed to the owner locally and never read into the model. Official [headless authentication](https://learn.chatgpt.com/docs/auth) and [non-interactive CLI](https://learn.chatgpt.com/docs/non-interactive-mode) documentation were fetched alongside the installed CLI help. Their existence does not establish account model access or authenticate a guest. The owner's prohibition on copying auth caches remains in force.
 
-## Second attempt proposal — pending, not authorized or started
+## Second attempt scope — subsequently authorized and completed
 
 The managed-stdin correction is committed at **1e8bd6c**, with 247 green checks, read-only review and fresh disposable installation. The owner-approved Lantern Table text and empty resource selection remain the proposed inputs; no Twitch ballots are claimed. A second attempt would use a new unique spending decision, reserve at most USD 0.25 from the previously approved account budget, prepare one fresh private builder/login and invoke gpt-6.1-terra by subscription once. Only if a candidate returns would it destroy that builder and create one distinct bounded test VM. All exact source/report/rights approval remains with the owner. The same independent cleanup, no paid API, no host execution, no runtime and no external-publication boundaries apply. No top-up or plan change is proposed. The first guest is destroyed, so its login cannot be reused.

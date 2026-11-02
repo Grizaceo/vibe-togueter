@@ -5,22 +5,22 @@ Target 2:45. Retiming to actual English narration and footage, human review and 
 Vibe Arena helps a stream community shape games and play together. Some people open the game. Others stay in Twitch chat. The creators remain visible.
 
 00:00:15,000–00:00:40,000
-Chat proposes ideas and votes. The streamer reviews the selected inputs and resources before approval. Supporting voters and the approver receive credit. An experimental isolated Studio builder is implemented, but stays disabled until a complete real run verifies it.
+The Studio collects ideas and ballots. This recorded trial used an owner-selected proposal, with zero audience votes. After exact input approval and fresh guest login, the controller sent Lantern Table to Codex in a private VM.
 
 00:00:40,000–00:01:10,000
-Browser actions and Twitch commands grow Community Grove together. Trees appear immediately and grow through visible stages. Three distinct Twitch accounts can send the same weather emote within five seconds for a bonus. Moderators can pause chat effects while browser play continues.
+Codex returned source in about forty-eight seconds. Another VM ran nine protocol checks, then both guests were destroyed. Dispatch through testing and cleanup took about sixty-three seconds. The owner reviewed the exact version. This preview is static; two gameplay issues remain documented.
 
 00:01:10,000–00:01:25,000
-Game, art and idea credits stay outside game-controlled drawing. Grove uses curated Kenney CC0 artwork. Kenney has not joined or endorsed the project.
+Game, art and idea credits stay outside game-controlled drawing. Grove uses curated Kenney CC0 artwork, without endorsement. Lantern Table uses code-drawn art and no external assets.
 
 00:01:25,000–00:01:40,000
-The streamer can choose reviewed fallback preferences, with Marble Race last. This shot shows a requested fallback. Two entrants can then start a race.
+The streamer can prepare a VM while chat discusses ideas, extend its bounded deadline, or close it. These new controls have local mock coverage; live renewal remains unverified.
 
 00:01:40,000–00:02:15,000
-This is the earlier owner-selected Seed Race trial. Codex built it in one private VM. Another VM tested the exact source. The owner then approved that version and report. Its preview is static and the game remains unpublished. The new Studio connector authenticated successfully, but its construction attempt timed out. Cleanup was verified; no complete new run is claimed.
+Grove remains a reviewed playable example. Browser actions and Twitch commands grow the same garden. Three distinct accounts can trigger a weather bonus. Moderators can pause chat effects while browser play continues. This shot shows a requested fallback, with Marble Race last in the configured order. Two entrants can start a race.
 
 00:02:15,000–00:02:35,000
-The initial prototype was Devin-assisted. Codex implemented the later Twitch, studio and isolation work. The local suite passes 247 checks. Browser and guest checks are recorded separately. Human Twitch and OBS rehearsal remains an owner task.
+The initial prototype was Devin-assisted. Codex implemented the later Twitch, studio and isolation work. The local suite passes 270 checks. Browser and guest checks are recorded separately; automated checks do not establish human gameplay quality.
 
 00:02:35,000–00:02:45,000
-Next is verifying the isolated Studio builder and connecting an approved runtime. Creator discovery and clips preserving attribution remain future work.
+Next are gameplay validation and a separate approved runtime. Creator discovery and clips preserving attribution remain future work.

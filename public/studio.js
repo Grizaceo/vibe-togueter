@@ -11,7 +11,7 @@ function updateWords(){const words=$('proposal').value.trim().split(/\s+/u).filt
 function renderRound(){
  if(!state)return;
  const r=state.round;$('community-credit').textContent=state.features?.communityCredit&&r?.credit?'Approved input credit · '+communityCreditText(r.credit):'';$('channel').textContent=(state.channel?'#'+state.channel+' · ':'')+(state.twitchConnected?'Twitch connected':'web studio');
- $('execution').textContent=state.build.mode==='cloud-vm'?(state.build.enabled?'Construction: experimental isolated worker '+(state.build.workerConnected?'ready.':'configured; owner preflight required.'):'Construction: isolated VM required. Builder connection is still pending; experimental dispatch is disabled.'):'Construction: explicitly trusted local agent mode.';
+ $('execution').textContent=state.build.mode==='cloud-vm'?(state.build.enabled?'Construction: experimental isolated worker '+(state.build.workerConnected?'ready.':'configured; owner preflight required.'):'Construction: isolated VM required. A new per-run allocation and login are pending; dispatch is disabled by configuration.'):'Construction: explicitly trusted local agent mode.';
  renderWorker();
  $('phase').textContent=r?.phase||'First proposal opens a round';
  $('delegate-message').textContent=state.delegation?'Input approvals delegated to @'+state.delegation.name+' until '+new Date(state.delegation.expiresAt).toISOString().slice(11,19)+' UTC':'No active approval delegate.';
@@ -63,7 +63,7 @@ $('revoke-delegate').onclick=()=>setDelegate({action:'revoke'}).catch(error=>mes
 
 function renderWorker(){
  const b=state?.build,j=b?.job,w=b?.warm,unfinished=j&&['queued','building','quarantined','testing','cancel-requested','reconcile-required','tested'].includes(j.phase);
- $('worker-status').textContent=j?`${j.phase} · ${j.message} · ${j.cleanupConfirmed?'guest cleanup confirmed':'cleanup pending/unknown'} · no live runtime`:'Worker '+(b?.enabled?'enabled; check its private authenticated lease before dispatch.':'disabled by owner configuration. Plan B remains available.');
+ $('worker-status').textContent=j?`${j.phase} · ${j.message} · ${j.cleanupConfirmed?'guest cleanup confirmed':'cleanup pending/unknown'} · no live runtime`:'Worker '+(b?.enabled?'enabled; Build checks the approved guest lease and login before dispatch.':'disabled by owner configuration. Plan B remains available.');
  const seconds=w?.expiresAt?Math.max(0,Math.floor((w.expiresAt-Date.now())/1000)):0,clock=String(Math.floor(seconds/60))+':'+String(seconds%60).padStart(2,'0');
  $('warm-status').textContent=!w?.enabled?'VM preparation disabled by configuration.':w.phase==='prepared'?`VM prepared · ${clock} remaining · approved maximum until ${new Date(w.maxExpiresAt).toLocaleTimeString()}${seconds<120?(w.canExtend?' · expiry is near; extend now or close.':' · expiry is near; the approved extension window is closed.'):''}${w.readinessWarning?' · '+w.readinessWarning:''}`:'VM preparation: '+w.phase+'.';
  $('prepare-warm').disabled=!ownerHeaders||warmBusy||!w?.canPrepare||!!unfinished;

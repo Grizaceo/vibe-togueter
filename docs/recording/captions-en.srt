@@ -9,131 +9,131 @@ people open the game. Others stay in
 Twitch chat. The creators remain visible.
 
 3
-00:00:15,000 --> 00:00:21,410
-Chat proposes ideas and votes. The
-streamer reviews the selected
+00:00:15,000 --> 00:00:21,250
+The Studio collects ideas and ballots.
+This recorded trial
 
 4
-00:00:21,410 --> 00:00:27,179
-inputs and resources before approval.
-Supporting voters and the
+00:00:21,250 --> 00:00:26,806
+used an owner-selected proposal, with zero
+audience votes.
 
 5
-00:00:27,179 --> 00:00:32,949
-approver receive credit. An experimental
-isolated Studio builder is
+00:00:26,806 --> 00:00:33,056
+After exact input approval and fresh guest
+login, the
 
 6
-00:00:32,949 --> 00:00:40,000
-implemented, but stays disabled until a
-complete real run verifies it.
+00:00:33,056 --> 00:00:40,000
+controller sent Lantern Table to Codex in
+a private VM.
 
 7
 00:00:40,000 --> 00:00:45,714
-Browser actions and Twitch commands grow
-Community Grove
+Codex returned source in about forty-eight
+seconds. Another
 
 8
-00:00:45,714 --> 00:00:51,429
-together. Trees appear immediately and
-grow through visible
+00:00:45,714 --> 00:00:52,857
+VM ran nine protocol checks, then both
+guests were destroyed.
 
 9
-00:00:51,429 --> 00:00:57,857
-stages. Three distinct Twitch accounts can
-send the same
+00:00:52,857 --> 00:00:58,571
+Dispatch through testing and cleanup took
+about sixty-three
 
 10
-00:00:57,857 --> 00:01:04,286
-weather emote within five seconds for a
-bonus. Moderators
+00:00:58,571 --> 00:01:04,286
+seconds. The owner reviewed the exact
+version. This
 
 11
 00:01:04,286 --> 00:01:10,000
-can pause chat effects while browser play
-continues.
+preview is static; two gameplay issues
+remain documented.
 
 12
-00:01:10,000 --> 00:01:15,217
+00:01:10,000 --> 00:01:15,192
 Game, art and idea credits stay outside
-game-controlled
+game-controlled drawing.
 
 13
-00:01:15,217 --> 00:01:19,783
-drawing. Grove uses curated Kenney CC0
-artwork.
+00:01:15,192 --> 00:01:19,808
+Grove uses curated Kenney CC0 artwork,
+without endorsement.
 
 14
-00:01:19,783 --> 00:01:25,000
-Kenney has not joined or endorsed the
-project.
+00:01:19,808 --> 00:01:25,000
+Lantern Table uses code-drawn art and no
+external assets.
 
 15
-00:01:25,000 --> 00:01:29,375
-The streamer can choose reviewed fallback
-preferences,
+00:01:25,000 --> 00:01:30,357
+The streamer can prepare a VM while chat
+discusses ideas,
 
 16
-00:01:29,375 --> 00:01:35,000
-with Marble Race last. This shot shows a
-requested
+00:01:30,357 --> 00:01:35,714
+extend its bounded deadline, or close it.
+These new controls
 
 17
-00:01:35,000 --> 00:01:40,000
-fallback. Two entrants can then start a
-race.
+00:01:35,714 --> 00:01:40,000
+have local mock coverage; live renewal
+remains unverified.
 
 18
-00:01:40,000 --> 00:01:45,932
-This is the earlier owner-selected Seed
-Race trial. Codex built
+00:01:40,000 --> 00:01:45,385
+Grove remains a reviewed playable example.
+Browser actions
 
 19
-00:01:45,932 --> 00:01:53,051
-it in one private VM. Another VM tested
-the exact source. The
+00:01:45,385 --> 00:01:51,442
+and Twitch commands grow the same garden.
+Three distinct
 
 20
-00:01:53,051 --> 00:01:58,983
-owner then approved that version and
-report. Its preview is
+00:01:51,442 --> 00:01:56,827
+accounts can trigger a weather bonus.
+Moderators can
 
 21
-00:01:58,983 --> 00:02:04,915
-static and the game remains unpublished.
-The new Studio connector
+00:01:56,827 --> 00:02:02,212
+pause chat effects while browser play
+continues. This
 
 22
-00:02:04,915 --> 00:02:09,068
-authenticated successfully, but its
-construction attempt timed
+00:02:02,212 --> 00:02:08,269
+shot shows a requested fallback, with
+Marble Race last
 
 23
-00:02:09,068 --> 00:02:15,000
-out. Cleanup was verified; no complete new
-run is claimed.
+00:02:08,269 --> 00:02:15,000
+in the configured order. Two entrants can
+start a race.
 
 24
-00:02:15,000 --> 00:02:21,111
+00:02:15,000 --> 00:02:21,286
 The initial prototype was Devin-assisted.
 Codex implemented the later Twitch, studio
 
 25
-00:02:21,111 --> 00:02:28,333
+00:02:21,286 --> 00:02:28,714
 and isolation work. The local suite passes
-247 checks. Browser and guest checks
+270 checks. Browser and guest checks
 
 26
-00:02:28,333 --> 00:02:35,000
-are recorded separately. Human Twitch and
-OBS rehearsal remains an owner task.
+00:02:28,714 --> 00:02:35,000
+are recorded separately; automated checks
+do not establish human gameplay quality.
 
 27
-00:02:35,000 --> 00:02:40,238
-Next is verifying the isolated Studio
-builder and connecting an approved
+00:02:35,000 --> 00:02:40,556
+Next are gameplay validation and a
+separate approved runtime. Creator
 
 28
-00:02:40,238 --> 00:02:45,000
-runtime. Creator discovery and clips
-preserving attribution remain future work.
+00:02:40,556 --> 00:02:45,000
+discovery and clips preserving attribution
+remain future work.
