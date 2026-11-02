@@ -1,0 +1,23 @@
+{
+  "kind": "local-codex-managed-stdin-probe",
+  "cliVersion": "0.166.0",
+  "explicitPrompt": true,
+  "provider": "local HTTP mock only; no credentials or paid model",
+  "beforeEOF": {
+    "processRunning": true,
+    "localRequests": 0,
+    "stdoutBytes": 0,
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"/tmp\" (codex_home: AbsolutePathBuf(\"/tmp/va-codex-stdin-probe-jice30r6/codex-home\"))\nReading additional input from stdin...\n"
+  },
+  "afterEOF": {
+    "processRunning": false,
+    "localRequests": 1,
+    "stdoutBytes": 377,
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"/tmp\" (codex_home: AbsolutePathBuf(\"/tmp/va-codex-stdin-probe-jice30r6/codex-home\"))\nReading additional input from stdin...\n"
+  },
+  "localPaths": [
+    "/v1/responses"
+  ],
+  "temporaryHomeRemoved": true,
+  "candidateExecuted": false
+}

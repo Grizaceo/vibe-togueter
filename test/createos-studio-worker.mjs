@@ -1,3 +1,4 @@
+import {spawn} from 'node:child_process';
 import {test} from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import crypto from 'node:crypto';import {CreateOSStudioWorker} from '../src/createos-studio-worker.js';import {TRIAL_PROFILE} from '../src/vm-builder-preflight.js';
 const buildId='sb-aaaaaaaaaaaaaaaaaaaaaaaaaa',testId='sb-bbbbbbbbbbbbbbbbbbbbbbbbbb',jobId='11111111-1111-4111-8111-111111111111';
 function fixture(t){const root=fs.mkdtempSync(path.join(os.tmpdir(),'va-createos-worker-'));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));fs.mkdirSync(path.join(root,'runtime'));const requestedAt=Date.now(),name='va-build-aaaaaaaaaaaa',cleanupUnit='vibe-arena-builder-aaaaaaaaaaaa',state={name,id:buildId,requestedAt,phase:'awaiting-login',cleanupLeaseVersion:2,existingIds:[],profile:TRIAL_PROFILE,cleanupUnit,expiresAt:Date.now()+1800000};fs.writeFileSync(path.join(root,'runtime','builder-session.json'),JSON.stringify(state));fs.mkdirSync(path.join(root,'runtime','builder-leases'));fs.writeFileSync(path.join(root,'runtime','builder-leases',name+'.json'),JSON.stringify({...state,creationRequested:true}));const vm={id:buildId,name,created_at:new Date(requestedAt).toISOString(),rootfs:'devbox:1',shape:'s-1vcpu-2gb',ingress_enabled:false,egress:[...TRIAL_PROFILE.egress].reverse(),status:'running'},calls=[];let getFailures=0;
@@ -20,4 +21,18 @@ test('independent recurring test cleanup is armed before any VM creation request
 test('an in-progress pre-create journal cannot stop its own independent supervision',async t=>{
  const f=fixture(t);f.worker.save(f.job,{...f.ownedState,buildDestroyed:true,test:{name:'va-stest-bbbbbbbbbbbb',requestedAt:Date.now(),id:null,existingIds:[],creationRequested:false,cleanupUnit:'vibe-arena-studio-test-bbbbbbbbbbbb'}});
  const result=await f.worker.cleanupTest(f.job);assert.equal(result.confirmed,false);assert.equal(f.calls.some(c=>c.cmd==='systemctl'&&c.args.includes('stop')),false);
+});
+
+// Real trusted shell fixture with stdin deliberately left open by the process manager.
+// No coding provider, credentials, candidate or actual VM is involved.
+test('managed noninteractive commands receive EOF without waiting for manager stdin',async t=>{
+ const f=fixture(t);let child,starts=0;
+ t.after(()=>{if(child&&child.exitCode===null)child.kill('SIGKILL');});
+ f.worker.run=async(cmd,args)=>{
+  assert.equal(cmd,'createos');assert.equal(args[1],'process');
+  if(args[2]==='start'){starts++;child=spawn('bash',['-c',args.at(-1)],{cwd:f.root,env:{PATH:'/usr/bin',HOME:f.root},stdio:['pipe','pipe','pipe']});child.stdout.resume();child.stderr.resume();return {stdout:JSON.stringify({process_id:'proc_stdin_probe'}),stderr:''};}
+  assert.equal(args[2],'get');const exited=child.exitCode!==null;return {stdout:JSON.stringify({process_id:'proc_stdin_probe',state:exited?'exited':'running',tree_exited:exited,exit_code:child.exitCode}),stderr:''};
+ };
+ await f.worker.managed(buildId,`node -e 'process.stdin.resume();process.stdin.on("end",()=>process.exit(0))'`,f.job,{...f.ownedState},'stdinProbe',{signal:new AbortController().signal,maxMs:1500});
+ assert.equal(starts,1);assert.equal(child.exitCode,0);
 });

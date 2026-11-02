@@ -30,8 +30,9 @@ export class CreateOSStudioWorker {
  }
  async managed(vm,command,job,state,field,{signal,maxMs}){
   signal?.throwIfAborted();
+  // Codex appends piped stdin even with an explicit prompt. Managed pipes stay open; close fd 0 in the guest.
   // Creation is never retried after an observation failure.
-  const created=await this.json(['sandbox','process','start',vm,'--','bash','-c',command],{signal});
+  const created=await this.json(['sandbox','process','start',vm,'--','bash','-c','exec < /dev/null; '+command],{signal});
   if(!processId(created.process_id))throw Error('Managed process identity missing; reconcile the VM.');
   state[field]={id:created.process_id,startedAt:this.now()};this.save(job,state);
   const end=this.now()+maxMs;

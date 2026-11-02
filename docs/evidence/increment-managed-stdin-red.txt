@@ -1,0 +1,26 @@
+✔ unapproved worker cannot query credentials, provider or model (6.005372ms)
+✔ read-only preflight checks owned lease, active cleanup, auth boolean and equivalent egress order (3.525349ms)
+✔ managed process observation failure re-polls the same handle without another creation (504.280414ms)
+✔ operator adapter keeps model/source inert and verifies builder terminal state (7.58513ms)
+✔ test-VM ownership rejects foreign inventory IDs and changed isolation before destruction (1.45956ms)
+✔ independent recurring test cleanup is armed before any VM creation request (2.376516ms)
+✔ an in-progress pre-create journal cannot stop its own independent supervision (1.050844ms)
+✖ managed noninteractive commands receive EOF without waiting for manager stdin (1508.113833ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2131.086406
+
+✖ failing tests:
+
+test at test/createos-studio-worker.mjs:28:1
+✖ managed noninteractive commands receive EOF without waiting for manager stdin (1508.113833ms)
+  Error: Guest deadline reached; destroy the exact VM instead of restarting.
+      at CreateOSStudioWorker.managed (file:///home/gris96/vibe-arena/src/createos-studio-worker.js:45:9)
+      at async TestContext.<anonymous> (file:///home/gris96/vibe-arena/test/createos-studio-worker.mjs:36:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
