@@ -17,21 +17,29 @@ const nextVsync = (t) => phase + Math.ceil((t - phase) / FRAME) * FRAME;
 let rafQueue = [],
   rafTimer = null,
   rafNow = null,
-  rafId = 0;
+  rafId = 0,
+  lastVsync = -Infinity;
+// Fires queued callbacks exactly once per vsync tick. Node timers round to whole
+// milliseconds and can wake before the tick, so wait out the remainder and
+// never run two batches for the same tick.
 function armRaf() {
   if (rafTimer) return;
-  const now = performance.now();
-  rafTimer = setTimeout(
-    () => {
-      rafTimer = null;
-      const queue = rafQueue;
-      rafQueue = [];
-      rafNow = performance.now();
-      for (const { cb } of queue) cb(rafNow);
-      rafNow = null;
-    },
-    Math.max(0, nextVsync(now + 0.5) - now),
-  );
+  const target = nextVsync(Math.max(performance.now(), lastVsync) + 0.5);
+  const fire = () => {
+    const early = target - performance.now();
+    if (early > 0.05) {
+      rafTimer = setTimeout(fire, Math.max(1, Math.ceil(early)));
+      return;
+    }
+    rafTimer = null;
+    lastVsync = target;
+    const queue = rafQueue;
+    rafQueue = [];
+    rafNow = target;
+    for (const { cb } of queue) cb(rafNow);
+    rafNow = null;
+  };
+  rafTimer = setTimeout(fire, Math.max(0, Math.floor(target - performance.now())));
 }
 globalThis.requestAnimationFrame = (cb) => {
   rafQueue.push({ cb, id: ++rafId });
@@ -90,6 +98,12 @@ class ProbeSocket extends BaseSocket {
       if (!inWindow()) return;
       if (isBinary) {
         m.stateMessages++;
+        const bytes = data instanceof ArrayBuffer ? new Uint8Array(data) : data;
+        if (bytes[0] & 0x80)
+          m.transit.push(
+            Date.now() -
+              new DataView(bytes.buffer, bytes.byteOffset).getFloat64(5),
+          );
         return;
       }
       const text = data.toString();
