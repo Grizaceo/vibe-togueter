@@ -9,6 +9,10 @@ import {
   sendRoom,
 } from "../traffic.js";
 
+// Optional latency instrumentation (VA_NET_PROBE=1): ping/pong and a server
+// timestamp on each state frame. Off by default; nothing changes when off.
+const NET_PROBE = process.env.VA_NET_PROBE === "1";
+
 export function createRoomBroadcast(clients) {
   function broadcast(msg, except = null) {
     const data = encodeMessage(msg);
@@ -102,6 +106,7 @@ export function startBroadcast({
       .map((c) => ({ id: c.id, name: c.name }));
     broadcast({
       t: "state",
+      ...(NET_PROBE ? { ts: Date.now() } : {}),
       activity: streamActivity(),
       view: host.getView(),
       players,
@@ -192,6 +197,10 @@ export function attachRoomSockets({
         return;
       }
       if (!msg || typeof msg !== "object" || Array.isArray(msg)) return;
+      if (NET_PROBE && msg.t === "ping" && Number.isFinite(msg.c)) {
+        ws.send(JSON.stringify({ t: "pong", c: msg.c, s: Date.now() }));
+        return;
+      }
       if (kind !== "player" && msg.t !== "chat") return;
       if (msg.t === "claim-streamer") {
         const expected = process.env.VA_STREAMER_KEY;
