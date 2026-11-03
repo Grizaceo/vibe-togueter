@@ -9,6 +9,7 @@ agente los reskinée a tu canal "a un prompt de distancia".
 | `marble-race` | Marbles on Stream | pasivo (puro chat) | listo |
 | `chat-trivia` | TriviaMurder/Jackbox | pasivo + activo | spec |
 | `chat-vs-streamer` | Chat vs Streamer chess/roguelike | pasivo votación | spec |
+| `chess-simul` | Simultáneas de ajedrez 1-vs-N | pasivo (chat por tablero) + activo (streamer) | spec |
 | `claw-crowd` | Crowd Control (efectos sobre juego) | pasivo pagado | spec |
 
 ## Cómo adaptar un juego preexistente (flujo MCP)
