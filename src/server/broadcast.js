@@ -7,15 +7,29 @@ import {
   stateIntervalMs,
   WS_COMPRESSION,
   encodeMessage,
+  compactState,
   sendRoom,
 } from "../traffic.js";
+import { FrameStream } from "./frame-stream.js";
+import { negotiateFormat } from "../../public/frame-codec.js";
 
 // Optional latency instrumentation (VA_NET_PROBE=1): ping/pong and a server
 // timestamp on each state frame. Off by default; nothing changes when off.
 const NET_PROBE = process.env.VA_NET_PROBE === "1";
 
 export function createRoomBroadcast(clients) {
+  // State frames are diffed once and encoded per negotiated format (full, d1, b1).
+  const frames = new FrameStream();
+  function broadcastState(msg) {
+    const frame = frames.next(compactState(msg));
+    for (const [ws, client] of clients) {
+      if (client.frames === "none") continue;
+      const data = frame.for(client.frames, client.lastSeq);
+      if (sendRoom(ws, data, { state: true })) client.lastSeq = frame.seq;
+    }
+  }
   function broadcast(msg, except = null) {
+    if (msg.t === "state" && !except) return broadcastState(msg);
     const data = encodeMessage(msg);
     for (const ws of clients.keys()) {
       if (ws !== except) sendRoom(ws, data, { state: msg.t === "state" });
@@ -188,6 +202,9 @@ export function attachRoomSockets({
       name,
       kind,
       role: "viewer",
+      // Frame format negotiated from ?frames=b1,d1 (absent: legacy full JSON).
+      frames: negotiateFormat(url.searchParams.get("frames")),
+      lastSeq: -1,
     };
     clients.set(ws, client);
 
@@ -198,6 +215,7 @@ export function attachRoomSockets({
         id: client.id,
         name,
         kind,
+        frames: client.frames,
         game: host.game
           ? { name: host.game.name, desc: host.game.meta.description || "" }
           : null,
@@ -225,6 +243,10 @@ export function attachRoomSockets({
         return;
       }
       if (!msg || typeof msg !== "object" || Array.isArray(msg)) return;
+      if (msg.t === "resync") {
+        client.lastSeq = -1; // next state frame is a keyframe
+        return;
+      }
       if (NET_PROBE && msg.t === "ping" && Number.isFinite(msg.c)) {
         ws.send(JSON.stringify({ t: "pong", c: msg.c, s: Date.now() }));
         return;

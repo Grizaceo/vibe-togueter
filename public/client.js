@@ -1,6 +1,7 @@
 // Shared client: connects over WS, forwards inputs, renders states.
 import { drawFrame } from "./render.js";
 import { createInterpolator } from "./interpolate.js";
+import { createFrameDecoder, FORMATS } from "./frame-codec.js";
 
 // Links shared in chat carry no name (anyone may click them), so the entry
 // page asks each viewer. An explicit ?name= is still honoured for own links.
@@ -64,9 +65,13 @@ export function connect({
 
   const proto = location.protocol === "https:" ? "wss" : "ws";
   const path = spectator ? "/spectate" : "/play";
+  // Binary deltas preferred, JSON deltas as fallback; ?frames= on the page overrides.
+  const formats = params.get("frames") || FORMATS.join(",");
   const ws = new WebSocket(
-    `${proto}://${location.host}${path}?name=${encodeURIComponent(name)}`,
+    `${proto}://${location.host}${path}?name=${encodeURIComponent(name)}&frames=${encodeURIComponent(formats)}`,
   );
+  ws.binaryType = "arraybuffer";
+  const frames = createFrameDecoder();
   const ctx = canvas?.getContext("2d");
   let world = { w: 1280, h: 720 };
   // Drawing happens on requestAnimationFrame, never per message. Primitives with
@@ -87,7 +92,16 @@ export function connect({
   };
 
   ws.onmessage = (e) => {
-    const msg = JSON.parse(e.data);
+    let msg;
+    try {
+      msg = frames.decode(e.data);
+    } catch {
+      msg = { t: "resync" };
+    }
+    if (msg.t === "resync") {
+      if (ws.readyState === 1) ws.send(JSON.stringify({ t: "resync" }));
+      return;
+    }
     if (msg.t === "welcome") {
       world = msg.world;
       onWelcome?.(msg);

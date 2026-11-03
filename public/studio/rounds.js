@@ -91,7 +91,7 @@ export function initConversation() {
     socket?.close();
     setSocket(
       new WebSocket(
-        `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/spectate?name=${encodeURIComponent($("alias").value || "viewer")}`,
+        `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/spectate?name=${encodeURIComponent($("alias").value || "viewer")}&frames=none`,
       ),
     );
     socket.onopen = () => {

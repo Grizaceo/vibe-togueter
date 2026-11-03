@@ -94,10 +94,11 @@ function compact(view) {
     hud: list(view?.hud),
   };
 }
+export function compactState(msg) {
+  return { ...msg, view: compact(msg.view) };
+}
 export function encodeMessage(msg) {
-  return JSON.stringify(
-    msg.t === "state" ? { ...msg, view: compact(msg.view) } : msg,
-  );
+  return JSON.stringify(msg.t === "state" ? compactState(msg) : msg);
 }
 export function sendRoom(ws, data, { state = false } = {}) {
   if (ws.readyState !== 1) return false;

@@ -6,6 +6,7 @@
 //   node scripts/latency/bench.mjs --label baseline --out docs/evidence/latency-baseline.json
 //   options: --games grove,duel,marble --scenarios clean,wan,lossy --clients 8
 //            --duration 60 --race-duration 75 --ids (opt-in id variants) --env K=V
+//            --frames d1 (page ?frames= override, e.g. d1 or full)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -30,6 +31,8 @@ const clients = Number(opt("clients", 8));
 const durationMs = Number(opt("duration", 60)) * 1000;
 const raceDurationMs = Number(opt("race-duration", 75)) * 1000;
 const useIds = flag("ids");
+// Frame formats the viewers request (page ?frames=); default: what the client asks.
+const frames = opt("frames", "");
 const extraEnv = Object.fromEntries(
   args
     .filter((_, i) => args[i - 1] === "--env")
@@ -205,6 +208,7 @@ async function runOne(temp, game, scenarioName, seed) {
       const worker = new Worker(path.join(here, "client-worker.mjs"), {
         workerData: {
           host: "127.0.0.1:" + proxy.port,
+          search: frames ? "?frames=" + encodeURIComponent(frames) : "",
           clientModule: pathToFileURL(path.join(temp, "public", "client.js"))
             .href,
           wsModule: pathToFileURL(
@@ -303,6 +307,7 @@ const report = {
     durationSeconds: durationMs / 1000,
     raceDurationSeconds: raceDurationMs / 1000,
     idVariants: useIds,
+    frames: frames || "client default",
     env: extraEnv,
   },
   scenarios: Object.fromEntries(scenarioNames.map((s) => [s, SCENARIOS[s]])),

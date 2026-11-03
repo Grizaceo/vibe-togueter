@@ -52,7 +52,11 @@ globalThis.cancelAnimationFrame = (id) => {
 
 // ---------- browser globals ----------
 const windowListeners = new Map();
-globalThis.location = { search: "", protocol: "http:", host: cfg.host };
+globalThis.location = {
+  search: cfg.search || "",
+  protocol: "http:",
+  host: cfg.host,
+};
 globalThis.localStorage = { getItem: () => null, setItem() {} };
 globalThis.addEventListener = (name, fn) => {
   if (!windowListeners.has(name)) windowListeners.set(name, []);
