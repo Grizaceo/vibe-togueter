@@ -13,6 +13,11 @@ import { createAdminRoutes } from "./server/routes/admin.js";
 import { createPublicRoutes } from "./server/routes/public.js";
 import { loadServerConfig } from "./server/config.js";
 import { startServer } from "./server/bootstrap.js";
+import {
+  PublicLink,
+  LINK_PROBE_PATH,
+  tunnelMode,
+} from "./server/public-link.js";
 // vibe-arena server: static files + websocket room + chat routing + admin API.
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
@@ -124,7 +129,7 @@ const handleChat = createChatCommands({
   ROOT,
   IDEAS_FILE,
   TWITCH_CHANNEL,
-  getPublicURL: () => PUBLIC_URL,
+  getPublicURL: () => publicLink.url,
   replies,
   chatEffects,
   crowdBursts,
@@ -141,17 +146,30 @@ const handleChat = createChatCommands({
 
 const localChat = createLocalChat(handleChat);
 
-// Platform reply senders are shared with the chat command handler.
-const PUBLIC_URL =
-  (process.env.VA_PUBLIC_URL || CONFIG.publicUrl || "").replace(/\/$/, "") ||
-  null;
-if (
-  PUBLIC_URL &&
-  (!process.env.VA_ADMIN_TOKEN ||
-    CONFIG.monetization.eventsubSecret.startsWith("cambia-") ||
-    CONFIG.monetization.webhookSecret.startsWith("cambia-"))
-)
+// Public entry link: !join only ever returns a URL verified to reach this process.
+const configuredPublicURL = (
+  process.env.VA_PUBLIC_URL ||
+  CONFIG.publicUrl ||
+  ""
+).replace(/\/$/, "");
+const setupComplete = Boolean(
+  process.env.VA_ADMIN_TOKEN &&
+  !CONFIG.monetization.eventsubSecret.startsWith("cambia-") &&
+  !CONFIG.monetization.webhookSecret.startsWith("cambia-"),
+);
+if (configuredPublicURL && !setupComplete)
   throw new Error("Run npm run setup:local before exposing a public URL.");
+const publicLink = new PublicLink({
+  configuredURL: configuredPublicURL,
+  mode: setupComplete
+    ? tunnelMode(process.env.VA_TUNNEL || arg("tunnel", "auto"))
+    : "off",
+  disabledReason: setupComplete
+    ? ""
+    : "Public link off until npm run setup:local has been run.",
+  command: process.env.VA_CLOUDFLARED || "cloudflared",
+  log: (line) => console.log("[vibe-arena] " + line),
+});
 
 const twitch = await connectPlatformChat({
   ROOT,
@@ -240,10 +258,13 @@ const adminRoutes = createAdminRoutes({
   isGenerating,
   handleChat,
   loadGameDir,
+  publicLink,
 });
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://x");
+  if (url.pathname === LINK_PROBE_PATH && req.method === "GET")
+    return publicLink.handleProbe(req, res);
   if (url.pathname === "/community/state" && req.method === "GET")
     return publicRoutes.state(req, res, url);
   let bodyBytes = 0;
@@ -288,4 +309,5 @@ startServer({
   host,
   localChat,
   studioBuilds,
+  publicLink,
 });

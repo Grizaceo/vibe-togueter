@@ -80,8 +80,9 @@ test('individual join replies with platform entry and never starts a collective 
   assert.equal(replies.length,1);
   const entry=new URL(replies[0].split(' ').at(-1));
   assert.equal(entry.origin,'https://platform.example');assert.equal(entry.pathname,'/tee-play.html');
-  assert.equal(entry.searchParams.get('game'),'tee-example');assert.equal(entry.searchParams.get('name'),'viewer');
-  assert.deepEqual([...entry.searchParams.keys()],['game','name']);
+  // The reply is public chat: it must not carry the requester's name (the page asks).
+  assert.equal(entry.searchParams.get('game'),'tee-example');assert.equal(entry.searchParams.get('name'),null);
+  assert.deepEqual([...entry.searchParams.keys()],['game']);assert.ok(!replies[0].includes('viewer'));
 });
 test('join URL cannot carry credentials and only one Tee may be selected for default entry',()=>{
   assert.throws(()=>teeEntryURL('https://secret:token@example.test','tee','viewer'),/Invalid/);
@@ -93,8 +94,8 @@ test('join URL cannot carry credentials and only one Tee may be selected for def
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 test('local Twitch reply avoids filename linkification and instructs full-address copy',()=>{
-  const reply=localTeeJoinReply('http://127.0.0.1:40661','viewer');
-  assert.equal(reply.entryURL,'http://127.0.0.1:40661/?name=viewer');
+  const reply=localTeeJoinReply('http://127.0.0.1:40661');
+  assert.equal(reply.entryURL,'http://127.0.0.1:40661/');
   assert.match(reply.text,/COPY the entire address/);assert.ok(!reply.text.includes('.html'));
-  assert.throws(()=>localTeeJoinReply('http://secret:token@127.0.0.1:40661','viewer'),/private/);
+  assert.throws(()=>localTeeJoinReply('http://secret:token@127.0.0.1:40661'),/private/);
 });

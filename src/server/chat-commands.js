@@ -84,23 +84,27 @@ export function createChatCommands({
       cmd === "entrar" ||
       cmd === "jugar-link"
     ) {
-      const teeGame=remoteGames.entries.find(g=>g.adapter==='tee'&&g.joinByDefault===true);
-      if(teeGame&&getPublicURL()){
-        const entry=teeEntryURL(getPublicURL(),teeGame.id,user);
-        if(replies[source])replies[source](`Join with your own tee: ${entry}`);
-        else feed('system',`Join with your own tee: ${entry}`);
+      // The reply is public: anyone may click it, so it never carries the
+      // requester's name. The entry page asks each viewer for their own name.
+      const say = (text) =>
+        replies[source] ? replies[source](text) : feed("system", text);
+      const publicURL = getPublicURL();
+      if (!publicURL) {
+        say(
+          "No live game link right now (the public tunnel is down). The streamer has been notified; try !join again in a minute.",
+        );
+        if (replies[source])
+          feed("system", `!join from ${user}: no live public link to share.`);
         return;
       }
-      if (getPublicURL() && replies[source]) {
-        replies[source](
-          `Join the game: ${getPublicURL()}/?name=${encodeURIComponent(user)}`,
-        );
-      } else if (getPublicURL()) {
-        feed(
-          "system",
-          `Game link: ${getPublicURL()}/?name=${encodeURIComponent(user)}`,
-        );
+      const teeGame = remoteGames.entries.find(
+        (g) => g.adapter === "tee" && g.joinByDefault === true,
+      );
+      if (teeGame) {
+        say(`Join with your own tee: ${teeEntryURL(publicURL, teeGame.id)}`);
+        return;
       }
+      say(`Join the game: ${publicURL}/`);
       return;
     }
     const actor = {

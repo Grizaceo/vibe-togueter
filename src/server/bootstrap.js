@@ -13,6 +13,7 @@ export function startServer({
   host,
   localChat,
   studioBuilds,
+  publicLink,
 }) {
   server.listen(PORT, LISTEN_HOST, () => {
     console.log(
@@ -27,6 +28,12 @@ export function startServer({
       console.log(`[vibe-arena] twitch   -> ${TWITCH_CHANNEL}`);
     if (KICK_CHANNEL)
       console.log(`[vibe-arena] kick webhook -> POST /webhook/kick`);
+    publicLink?.start(server.address().port).then((status) => {
+      if (status.state !== "live")
+        console.log(
+          `[vibe-arena] public   -> none (${status.reason}) · !join will say so`,
+        );
+    });
   });
 
   let shuttingDown = false;
@@ -37,6 +44,7 @@ export function startServer({
     resourceWatcher.close();
     clearTimeout(getResourceDebounce());
     teeBridge.stop();
+    publicLink?.stop();
     twitch?.close();
     host.stop();
     localChat.close();

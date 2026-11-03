@@ -55,6 +55,7 @@ const env = {
   VA_EVENTSUB_SECRET: "",
   VA_WEBHOOK_SECRET: "",
   VA_PUBLIC_URL: "",
+  VA_TUNNEL: "off",
   VA_STREAMER_KEY: "test-streamer-key",
   VA_BUILD_MODE: "trusted-local",
   VA_SIMULATE_EVENT_CREDITS: "1",

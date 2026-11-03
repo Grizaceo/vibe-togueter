@@ -43,7 +43,7 @@ const users=new Map();let last=-Infinity;
 irc=connectTwitch(channel,message=>{
   if(message.source!=='twitch'||message.text.trim().toLowerCase()!=='!join')return;
   const now=Date.now();if(now-last<2000||now-(users.get(message.user)??-Infinity)<10000||users.size>=128)return;
-  users.set(message.user,now);last=now;const entryURL=teeEntryURL(base,'tee-vm',message.user),queued=irc.send('Join with your own tee: '+entryURL+' · external teeworlds-rs trial');
+  users.set(message.user,now);last=now;const entryURL=teeEntryURL(base,'tee-vm'),queued=irc.send('Join with your own tee: '+entryURL+' · external teeworlds-rs trial');
   evidence.commands.push({at:new Date().toISOString(),command:'!join',source:'real Twitch transport',entryURL,replyQueued:queued});console.log(JSON.stringify({joinReceived:true,entryURL,replyQueued:queued}));
 },{auth});
 stdin.on('line',line=>{if(line==='quit')close();});process.on('SIGINT',close);process.on('SIGTERM',close);expiry=setTimeout(close,10*60*1000);

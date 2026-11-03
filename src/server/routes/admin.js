@@ -34,6 +34,7 @@ export function createAdminRoutes({
   isGenerating,
   handleChat,
   loadGameDir,
+  publicLink,
 }) {
   return async function adminRoutes(req, res, url) {
     // admin (localhost only)
@@ -586,6 +587,7 @@ export function createAdminRoutes({
               balance: treasury.balance,
               goal: CONFIG.generator.gameCostUsd,
             },
+            publicLink: publicLink?.status() || null,
           }),
         );
       }
