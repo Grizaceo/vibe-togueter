@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibe Togueter · Play teeworlds-rs</title>
+<style>
+html,body{height:100%;margin:0;background:#121725;color:#fff;font:18px system-ui}
+body{display:flex;flex-direction:column}header{padding:14px 24px}p{margin:5px 0}
+small{color:#c9d6ee}iframe{width:100%;flex:1;border:0;min-height:300px}
+a{color:#9edcff}button{padding:8px 14px;margin-top:10px;font:inherit;cursor:pointer}
+</style>
+<header>
+  <b>Vibe Togueter · Play teeworlds-rs</b>
+  <p>External game by Cristóbal Muñoz, developed separately with Devin and Hermes.</p>
+  <small>Your own tee · keyboard and mouse · same server as the streamer.</small>
+  <p id="status" role="status">Loading entry…</p>
+  <button id="play" hidden>Enter game with my own tee</button>
+  <p><small id="boundary"></small></p>
+</header>
+<script type="module" src="/tee-play.js"></script>
+</html>

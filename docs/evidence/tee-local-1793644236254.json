@@ -1,0 +1,280 @@
+{
+  "at": "2026-11-02T18:30:35.211Z",
+  "kind": "local external-game adapter prototype",
+  "contract": {
+    "version": 1,
+    "schema": "teeworlds-rs/172cfef",
+    "sourcePin": "172cfef66565af00f75e865c60e3c91859beb039"
+  },
+  "runtime": {
+    "binarySha256": "85eb8ed241e1ce0f44b7ee866cd43f280574b396cbf7e90fcce6539fde427dc1",
+    "sourceRevision": null,
+    "endpoint": "ws://127.0.0.1:8304/ws",
+    "health": {
+      "status": 200,
+      "body": "ok",
+      "registryCompatible": false
+    }
+  },
+  "checks": [
+    {
+      "name": "real local server snapshots and input acknowledgements",
+      "ok": true
+    },
+    {
+      "name": "web input rejected",
+      "ok": true
+    },
+    {
+      "name": "bounded right pulse accepted",
+      "ok": true
+    },
+    {
+      "name": "same user cooldown enforced",
+      "ok": true
+    },
+    {
+      "name": "authoritative position moved",
+      "ok": true
+    },
+    {
+      "name": "viewer cannot pause",
+      "ok": true
+    },
+    {
+      "name": "streamer pause blocks controls",
+      "ok": true
+    },
+    {
+      "name": "disconnect closes bridge",
+      "ok": true
+    },
+    {
+      "name": "return receives new authoritative snapshots",
+      "ok": true
+    }
+  ],
+  "commands": [],
+  "samples": [
+    {
+      "at": "2026-11-02T18:30:35.387Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 560,
+        "y": 978.0098876953125
+      },
+      "ack": 4,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.427Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 562,
+        "y": 978.0098876953125
+      },
+      "ack": 6,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.467Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 572,
+        "y": 978.0098876953125
+      },
+      "ack": 8,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.507Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 10,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.548Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 12,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.588Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 14,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.628Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 16,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.668Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 18,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.708Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 20,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.748Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 22,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.788Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 24,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.828Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 26,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.868Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 28,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.908Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 30,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.948Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 32,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:35.989Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 34,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:36.029Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 36,
+      "paused": false
+    },
+    {
+      "at": "2026-11-02T18:30:36.130Z",
+      "connected": true,
+      "playerId": 19,
+      "position": {
+        "x": 590,
+        "y": 978.5098876953125
+      },
+      "ack": 42,
+      "paused": true
+    },
+    {
+      "at": "2026-11-02T18:30:36.253Z",
+      "connected": true,
+      "playerId": 20,
+      "position": {
+        "x": 1936,
+        "y": 338.0098876953125
+      },
+      "ack": 5,
+      "paused": true
+    }
+  ],
+  "limitations": [
+    "External game by Cristóbal Muñoz with Devin and Hermes; separate from judged platform code.",
+    "Native helper contract is versioned locally; external server has no negotiated wire version. Exact schema decoding and trailing-byte rejection are required.",
+    "Runtime binary identity is a hash, not a proven source revision.",
+    "One collective tee; no per-viewer characters or spectator effects.",
+    "No VM deployment, external network, human streamer interaction or real Twitch effect established by automated verification."
+  ],
+  "codecSha256": "d36825b755e016186f258fc747536b60b3d76f3a772b9dede09be161f27a4cf5",
+  "inputSource": "synthetic adapter verification",
+  "maxDisplacementX": 30,
+  "finishedAt": "2026-11-02T18:30:36.254Z"
+}

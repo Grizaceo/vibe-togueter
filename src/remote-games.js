@@ -20,6 +20,8 @@ export class RemoteGames {
     });
     if (new Set(this.entries.map((e) => e.id)).size !== this.entries.length)
       throw Error("Duplicate remote game ID.");
+    if(this.entries.filter(e=>e.joinByDefault===true).length>1||this.entries.some(e=>e.joinByDefault!==undefined&&(typeof e.joinByDefault!=='boolean'||e.adapter!=='tee')))
+      throw Error('Select at most one Tee game for individual join.');
     this.file = file;
     this.fetch = fetchImpl;
     this.data = fs.existsSync(file)

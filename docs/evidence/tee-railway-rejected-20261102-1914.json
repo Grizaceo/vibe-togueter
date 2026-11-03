@@ -1,0 +1,72 @@
+{
+  "at": "2026-11-02T19:14:54.922199+00:00",
+  "kind": "authorized Railway trial rejected before creation",
+  "platformRevision": "9897e40",
+  "platformBranch": "feat/tee-vm-trial-20261102",
+  "externalGameRevision": "0c6250d86c59d7ec166ded0785baef51529fb9ec",
+  "externalGameBranch": "feat/vt-remote-demo-20261102",
+  "externalBaseRevision": "172cfef66565af00f75e865c60e3c91859beb039",
+  "authorization": {
+    "ownerExplicitlyApproved": true,
+    "newProjectsMax": 1,
+    "replicasMax": 1,
+    "cloudBuildsMax": 1,
+    "totalMinutesMax": 30,
+    "existingTrialCreditLimitUSD": 1,
+    "paidChargesAuthorizedUSD": 0,
+    "modelsAuthorized": 0,
+    "cleanupAuthorized": true
+  },
+  "providerResponse": "Trials are temporarily paused for new accounts. Upgrade to a paid plan to start deploying.",
+  "observations": {
+    "cliAuthentication": true,
+    "trialCreditsBefore": 5,
+    "trialCreditsAfter": 5,
+    "projectInventoryBefore": 0,
+    "projectInventoryAfter": 0,
+    "createdProjects": 0,
+    "createdServices": 0,
+    "domainsCreated": 0,
+    "sourceUploads": 0,
+    "cloudBuilds": 0,
+    "modelInvocations": 0,
+    "planChanges": 0
+  },
+  "cleanup": {
+    "armedBeforeCreation": true,
+    "creationIntentReconciled": true,
+    "terminal": "absent-from-authenticated-inventory",
+    "timerStoppedOnlyAfterTerminal": true
+  },
+  "localTests": {
+    "npmFocusedPassed": 172,
+    "npmIntegrationPassed": 110,
+    "npmFailed": 0,
+    "chromiumPassed": 36,
+    "rustServerCheck": "passed locally",
+    "rustStrictCodecTestPassed": 1,
+    "gatewayFixturesAreNotVMProof": true
+  },
+  "package": {
+    "sizeApproxMiB": 2.8,
+    "dockerfileSha256": "bba0568f1c268a0d8f9f32268971d2bb2950e3e1b86b3158eb85e014dc6f633a",
+    "manifest": {
+      "contractVersion": 1,
+      "schema": "teeworlds-rs/172cfef",
+      "gameBaseRevision": "172cfef66565af00f75e865c60e3c91859beb039",
+      "gameRevision": "0c6250d86c59d7ec166ded0785baef51529fb9ec",
+      "platformRevision": "9897e404bd4d9799e0a6875797ada252808c009b",
+      "credits": "External teeworlds-rs by Crist\u00f3bal Mu\u00f1oz with Devin and Hermes; platform Vibe Togueter implemented as Vibe Arena.",
+      "platformCustomDomain": "pending",
+      "temporaryGameTrial": true
+    }
+  },
+  "status": "Remote trial blocked by provider; local integration verified separately.",
+  "platformOwnDomain": "pending",
+  "frozenSourceUnchanged": "113c3f500fcec4c82808d176bd613607c27a9978",
+  "limits": [
+    "No public game URL/TLS/WSS or real viewer connection to this proposed VM was established.",
+    "No paid-plan upgrade or second provider/creation attempt was performed.",
+    "Trial balance observation is not a settled invoice."
+  ]
+}

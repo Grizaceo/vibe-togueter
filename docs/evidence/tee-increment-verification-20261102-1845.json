@@ -1,0 +1,78 @@
+{
+  "at": "2026-11-02T18:44:46.279512+00:00",
+  "kind": "local Tee increment verification; human entry failure unresolved",
+  "platformRevision": "1d3fc5fd87514359b97edd2e1ee8561bdb27b98a",
+  "baseRevision": "a96d0ffec07759d1e013da9b635ccd54727867e0",
+  "branch": "feat/tee-demo-contract-20261102",
+  "frozenCommitUnchanged": "113c3f500fcec4c82808d176bd613607c27a9978",
+  "sourceHashes": {
+    "src/tee-chat-bridge.js": "65b16376769ccf06ad878e7100eb8d8179c6711bf931992536e3262287c8a662",
+    "src/tee-protocol.js": "808c2381a823eefb7985bc7dc41453a8e187ed8923cb239872c2590c849c8ff6",
+    "src/tee-native-codec.js": "9d61eafbc446ddc6f856a744c9900b76e6e09b36523a52d6e76dc25f89c7eeef",
+    "src/tee-local-session.js": "a00fb5edfd2b99bc5a6c101c7954760c012b618ce17da3b0c911860a7c266d19",
+    "src/tee-join.js": "10aa2c6239eed9fa9a06aa39f5687a128aad1ebf7f8dac3e5f93897311771b53",
+    "src/server/chat-commands.js": "a381bde08b482cf9825f680cbbf56c06e555c2acb7bc0d04a8295dffaee1b63b",
+    "src/remote-games.js": "f304db52d67be71decfbc814a49a116e6b3cbbd9850be3bf05ec1d2e59bf46d0",
+    "public/tee-play.html": "41b1e3ff300a5d0039bdc308c4f7c73fd722cc09d3885975a8cf585ad7cf224a",
+    "public/tee-play.js": "582135d52b19798357e9da7c9a5823b0169ee2fc08d550fd76548c60024eb000",
+    "public/studio/remote-games.js": "ce0d7e76238535c59ed3dd835cde0acdc20adedab4722052efd6acd24faa0af2",
+    "scripts/tee-join-demo.mjs": "a6c26c77bd9dbea2ea1fce61dd98c4eb4d87f71f4a152338f48b516589ac43f9",
+    "tools/tee-codec/src/main.rs": "ff56eaa0990d194690eab63de3fb5124411272ec6477efee55dbd1865f978464",
+    "tools/tee-codec/Cargo.lock": "e092b66d69b2c0697e0dfdb6bbb1843130d4695d2e1371297c37c11b75706885"
+  },
+  "tests": {
+    "npm": {
+      "focusedPassed": 168,
+      "focusedFailed": 0,
+      "integrationPassed": 110,
+      "integrationFailed": 0
+    },
+    "platformChromium": {
+      "passed": 36,
+      "failed": 0
+    },
+    "rustPinnedCodec": {
+      "passed": 3,
+      "failed": 0
+    },
+    "individualBrowser": "tee-individual-browser-1793644982877.json",
+    "manualIndividualEntry": "tee-manual-entry-failure-20261102-1843.json",
+    "manualTwitchIndividualJoin": "tee-individual-join-1793645156653.json"
+  },
+  "priorAttempts": [
+    {
+      "kind": "initial browser launcher",
+      "result": "failed before launch; executable path corrected from chromium to /usr/bin/chromium"
+    },
+    {
+      "receipt": "tee-individual-browser-1793644876537.json",
+      "result": "failed close-event observation; replaced assertion with actual removal from authoritative server roster; original receipt preserved"
+    }
+  ],
+  "claims": {
+    "localIndividualBrowserEntry": "verified by automation",
+    "manualTwitchJoinReceived": "verified real transport",
+    "linkReceived": "owner reported yes; send queued; same-connection IRC echo not observed",
+    "humanIndividualEntry": "failed: Server not found; diagnosing exact URL",
+    "collectiveTeeRealTwitch": "right/jump observed in separate prior test; not individual participation",
+    "vmDeployment": "not verified; documented guest destroyed",
+    "externalNetwork": "not tested",
+    "humanStreamerInteraction": "not tested"
+  },
+  "restrictions": {
+    "newVMs": 0,
+    "cloudBuilds": 0,
+    "models": 0,
+    "workerEnabled": false,
+    "prewarmEnabled": false,
+    "frozenBranchOrTagChanged": false,
+    "protectedArtifactExecution": false,
+    "repositoryPublished": false,
+    "hostingDeployed": false,
+    "remoteGameCatalogEnabled": false
+  },
+  "liveManualHarness": {
+    "port": 40661,
+    "note": "Initial run stopped cleanly; same port restarted for ten minutes while diagnosing owner-reported failed entry. No game restart."
+  }
+}

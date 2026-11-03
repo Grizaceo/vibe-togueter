@@ -1,0 +1,25 @@
+{
+  "recordedAt": "2026-11-02T18:43:52.831075+00:00",
+  "kind": "owner-reported individual-entry failure",
+  "input": "Manual !join on Twitch gris_96",
+  "observedServerStatus": {
+    "receivedJoins": 1,
+    "entryReplyQueued": true,
+    "ircSelfEchoObserved": false
+  },
+  "ownerReports": {
+    "receivedLink": true,
+    "entrySucceeded": false,
+    "browserMessage": "Server not found",
+    "samePC": true
+  },
+  "localHTTPCheck": {
+    "base": "http://127.0.0.1:40661",
+    "responds": true
+  },
+  "diagnosis": "pending exact opened URL; not declared successful",
+  "limits": [
+    "Automated browser entry passed separately; it does not override this human failure.",
+    "No screenshot of the error or exact URL was obtained; native browser changed to a different page during inspection."
+  ]
+}

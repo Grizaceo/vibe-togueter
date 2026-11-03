@@ -1,0 +1,152 @@
+{
+  "at": "2026-11-02T18:50:17.714Z",
+  "kind": "automated Chromium individual entry flow; no collective tee",
+  "entryURL": "http://127.0.0.1:40661/",
+  "checks": [
+    {
+      "name": "local root entry redirects with the individual display name",
+      "ok": true
+    },
+    {
+      "name": "external game credits visible",
+      "ok": true
+    },
+    {
+      "name": "individual controls and pending VM disclosed",
+      "ok": true
+    },
+    {
+      "name": "platform entry link opens real local game",
+      "ok": true
+    },
+    {
+      "name": "two actual browser clients receive authoritative snapshots",
+      "ok": true
+    },
+    {
+      "name": "browser input changes authoritative position",
+      "ok": true
+    },
+    {
+      "name": "individual disconnect removes its tee from authoritative roster",
+      "ok": true
+    },
+    {
+      "name": "return opens a new ONLINE individual tee",
+      "ok": true
+    },
+    {
+      "name": "no browser or schema errors",
+      "ok": true
+    }
+  ],
+  "clients": [
+    {
+      "url": "ws://127.0.0.1:8304/ws",
+      "snapshots": 332,
+      "sent": 390,
+      "closed": false,
+      "position": {
+        "x": 507.98931884765625,
+        "y": 338.0098876953125
+      },
+      "playerId": 32,
+      "ack": 382,
+      "players": 13,
+      "playerIds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        32,
+        34,
+        35
+      ]
+    },
+    {
+      "url": "ws://127.0.0.1:8304/ws",
+      "snapshots": 150,
+      "sent": 308,
+      "closed": false,
+      "position": {
+        "x": 1297.921875,
+        "y": 434.0099792480469
+      },
+      "playerId": 33,
+      "ack": 296,
+      "players": 13,
+      "playerIds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        32,
+        33,
+        34
+      ]
+    },
+    {
+      "url": "ws://127.0.0.1:8304/ws",
+      "snapshots": 62,
+      "sent": 128,
+      "closed": false,
+      "position": {
+        "x": 560,
+        "y": 978.0098876953125
+      },
+      "playerId": 35,
+      "ack": 119,
+      "players": 13,
+      "playerIds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        32,
+        34,
+        35
+      ]
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Automated browser participants, not humans.",
+    "Local WS only, no VM/TLS/WSS or external network verification.",
+    "No streamer authentication or human streamer interaction established.",
+    "Native schema pin does not prove binary/WASM source revision."
+  ],
+  "browserMovement": {
+    "before": {
+      "x": 1168,
+      "y": 434.0098876953125
+    },
+    "after": {
+      "x": 1288,
+      "y": 434.0098876953125
+    }
+  },
+  "screenshots": [
+    "docs/evidence/tee-individual-browser-1793645426675-credits.png",
+    "docs/evidence/tee-individual-browser-1793645426675-game.png"
+  ],
+  "servedWasmSha256": "ed7eb06c66ab471362fdcc91185d9abbae1621d0dd95db815ceefba10f20360c",
+  "finishedAt": "2026-11-02T18:50:32.208Z"
+}

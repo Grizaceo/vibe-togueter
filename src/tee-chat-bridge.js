@@ -6,11 +6,16 @@ export class TeeChatBridge {
     now = Date.now,
     pulseMs = 350,
     idleMs = 60000,
+    codec = { join: teeJoin, input: teeInput, decode: teeServerMessage },
   } = {}) {
     this.Socket = Socket;
     this.now = now;
     this.pulseMs = pulseMs;
     this.idleMs = idleMs;
+    this.codec = codec;
+    if (!Number.isFinite(pulseMs) || pulseMs < 20 || pulseMs > 500 || !Number.isFinite(idleMs) || idleMs < 500 || idleMs > 60000)
+      throw Error('Invalid bridge time limits.');
+    this.paused = false;
     this.ws = null;
     this.timer = null;
     this.deadline = null;
@@ -29,6 +34,9 @@ export class TeeChatBridge {
     return structuredClone({
       ...this.state,
       enabled: !!this.ws,
+      paused: this.paused,
+      participation: 'collective-tee',
+      protocol: this.codec.version || 'legacy-unversioned',
       pulseUntil: this.pulse?.until || null,
     });
   }
@@ -42,16 +50,32 @@ export class TeeChatBridge {
     url.pathname = "/ws";
     url.search = "";
     url.hash = "";
+    return this.connect(url, game.id, channel);
+  }
+  async startLocal(url, channel) {
+    if (this.ws) throw Error("Bridge already enabled or connecting.");
+    const parsed = new URL(url);
+    if (this.codec.version !== 'teeworlds-rs/172cfef' || parsed.protocol !== 'ws:' || !['127.0.0.1','[::1]'].includes(parsed.hostname) || parsed.username || parsed.password || parsed.search || parsed.hash || parsed.pathname !== '/ws')
+      throw Error('Use the pinned contract and a private loopback WebSocket.');
+    return this.connect(parsed, 'local-tee-prototype', channel);
+  }
+  pause(paused = true) {
+    this.paused = !!paused;
+    this.pulse = null;
+    this.tick();
+  }
+  connect(url, gameId, channel) {
     this.state = {
       connected: false,
       reason: "connecting",
       commands: 0,
       snapshots: 0,
-      gameId: game.id,
+      gameId,
       startedAt: this.now(),
     };
     this.sequence = 0;
     this.cooldowns.clear();
+    this.lastAccepted = -Infinity;
     this.pulse = null;
     this.lastCommand = this.now();
     const ws = new this.Socket(url.toString(), {
@@ -71,15 +95,18 @@ export class TeeChatBridge {
       ws.on("open", () => {
         if (this.ws === ws)
           try {
-            ws.send(teeJoin("chat@" + channel.slice(0, 25)));
+            ws.send(this.codec.join("chat@" + channel.slice(0, 25)));
           } catch {
             this.stop("join send failed");
           }
       });
-      ws.on("message", (bytes) => {
+      ws.on("message", async (bytes) => {
         if (this.ws !== ws) return;
         try {
-          const message = teeServerMessage(bytes);
+          let message = this.codec.decode(bytes);
+          if (message?.then) message = await message;
+          if (this.ws !== ws) return;
+          if (!message || !['welcome','snapshot','pong','events'].includes(message.type)) throw Error('Unknown codec message');
           if (message.type === "welcome") {
             if (this.state.connected) throw Error("Duplicate welcome.");
             this.state.connected = true;
@@ -92,6 +119,7 @@ export class TeeChatBridge {
             resolve(this.status());
           }
           if (message.type === "snapshot") {
+            if (!this.state.connected) throw Error('Snapshot before welcome.');
             this.state.snapshots++;
             this.state.lastAck = message.ack;
             const own = message.players.find(
@@ -113,12 +141,16 @@ export class TeeChatBridge {
   command(action, { source, user } = {}) {
     if (
       source !== "twitch" ||
+      this.paused ||
+      typeof user !== 'string' || !user.trim() ||
+      user.length > 100 ||
       !this.state.connected ||
       !["left", "right", "jump", "hook", "fire", "stop"].includes(action)
     )
       return false;
     const now = this.now(),
       key = String(user || "").toLowerCase();
+    if (now - this.lastAccepted < 100) return false;
     if (now - (this.cooldowns.get(key) ?? -Infinity) < 250) return false;
     if (this.cooldowns.size > 10000) {
       for (const [key, at] of this.cooldowns)
@@ -126,6 +158,7 @@ export class TeeChatBridge {
       if (this.cooldowns.size > 10000) return false;
     }
     this.cooldowns.set(key, now);
+    this.lastAccepted = now;
     this.lastCommand = now;
     this.state.commands++;
     this.state.lastAction = action;
@@ -153,7 +186,7 @@ export class TeeChatBridge {
     const input =
       this.pulse && this.now() < this.pulse.until ? this.pulse.input : {};
     try {
-      this.ws.send(teeInput(++this.sequence, input));
+      this.ws.send(this.codec.input(++this.sequence, input));
       this.state.lastSent = this.sequence;
     } catch {
       this.stop("input send failed");

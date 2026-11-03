@@ -1,0 +1,141 @@
+{
+  "at": "2026-11-02T19:43:02.480Z",
+  "kind": "automated Chromium Cloudflare-to-VM individual entry; no collective tee",
+  "manifest": {
+    "contractVersion": 1,
+    "schema": "teeworlds-rs/172cfef",
+    "gameBaseRevision": "172cfef66565af00f75e865c60e3c91859beb039",
+    "gameRevision": "0c6250d86c59d7ec166ded0785baef51529fb9ec",
+    "platformRevision": "1a1cf080bd644c0925228ab4b25adb4a0af751cc",
+    "credits": "External teeworlds-rs by Cristóbal Muñoz with Devin and Hermes; platform Vibe Togueter implemented as Vibe Arena.",
+    "platformCustomDomain": "pending",
+    "temporaryGameTrial": true,
+    "serverSha256": "240c99946f82cde337c1e573a89f5c69373b15a8a9cbe13f9c42764667da1e25",
+    "wasmSha256": "37ab48f1c61fcade5a87be77c0112a5a19583413765882921e5751c7343e88d4",
+    "builtAt": "2026-11-02T19:37:34.418Z",
+    "transport": "cloudflare-quick-tunnel"
+  },
+  "entryURL": "https://built-berlin-allowed-supplied.trycloudflare.com",
+  "checks": [
+    {
+      "name": "public HTTPS entry redirects with the individual display name",
+      "ok": true
+    },
+    {
+      "name": "external game credits visible",
+      "ok": true
+    },
+    {
+      "name": "individual controls and external-game boundary visible",
+      "ok": true
+    },
+    {
+      "name": "platform custom domain explicitly remains pending",
+      "ok": true
+    },
+    {
+      "name": "platform entry opens the VM game over HTTPS",
+      "ok": true
+    },
+    {
+      "name": "two actual browser clients receive authoritative snapshots",
+      "ok": true
+    },
+    {
+      "name": "browser input changes authoritative position",
+      "ok": true
+    },
+    {
+      "name": "individual disconnect removes its tee from authoritative roster",
+      "ok": true
+    },
+    {
+      "name": "return opens a new ONLINE individual tee",
+      "ok": true
+    },
+    {
+      "name": "served WASM matches the VM build manifest",
+      "ok": true
+    },
+    {
+      "name": "no browser or schema errors",
+      "ok": true
+    }
+  ],
+  "clients": [
+    {
+      "url": "wss://built-berlin-allowed-supplied.trycloudflare.com/ws",
+      "snapshots": 414,
+      "sent": 412,
+      "closed": false,
+      "position": {
+        "x": 848,
+        "y": 978.0098876953125
+      },
+      "playerId": 2,
+      "ack": 400,
+      "players": 2,
+      "playerIds": [
+        2,
+        4
+      ]
+    },
+    {
+      "url": "wss://built-berlin-allowed-supplied.trycloudflare.com/ws",
+      "snapshots": 187,
+      "sent": 309,
+      "closed": false,
+      "position": {
+        "x": 2258.009765625,
+        "y": 978.0098876953125
+      },
+      "playerId": 3,
+      "ack": 302,
+      "players": 2,
+      "playerIds": [
+        2,
+        3
+      ]
+    },
+    {
+      "url": "wss://built-berlin-allowed-supplied.trycloudflare.com/ws",
+      "snapshots": 49,
+      "sent": 106,
+      "closed": false,
+      "position": {
+        "x": 2128,
+        "y": 978.0098876953125
+      },
+      "playerId": 4,
+      "ack": 93,
+      "players": 2,
+      "playerIds": [
+        2,
+        4
+      ]
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Automated browser participants, not humans.",
+    "Runs from the owner PC to the public VM tunnel, not a second independent human/network.",
+    "No streamer authentication or human streamer interaction established.",
+    "Native schema pin does not prove binary/WASM source revision."
+  ],
+  "browserMovement": {
+    "before": {
+      "x": 2128,
+      "y": 978.0098876953125
+    },
+    "after": {
+      "x": 2258.009765625,
+      "y": 978.0098876953125
+    }
+  },
+  "screenshots": [
+    "docs/evidence/tee-cloudflare-browser-1793648596640-credits.png",
+    "docs/evidence/tee-cloudflare-browser-1793648596640-game.png"
+  ],
+  "servedWasmSha256": "37ab48f1c61fcade5a87be77c0112a5a19583413765882921e5751c7343e88d4",
+  "finishedAt": "2026-11-02T19:43:23.861Z"
+}

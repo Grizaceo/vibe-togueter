@@ -1,0 +1,58 @@
+{
+  "at": "2026-11-02T18:37:04.384Z",
+  "kind": "manual Twitch !join to individual browser player",
+  "runtime": {
+    "binarySha256": "85eb8ed241e1ce0f44b7ee866cd43f280574b396cbf7e90fcce6539fde427dc1",
+    "sourceRevision": null,
+    "endpoint": "http://127.0.0.1:8304/"
+  },
+  "commands": [
+    {
+      "at": "2026-11-02T18:41:09.787Z",
+      "command": "!join",
+      "source": "real Twitch transport",
+      "replyQueued": true,
+      "entryURL": "http://127.0.0.1:40661/tee-play.html?game=tee-local&name=gris_96"
+    }
+  ],
+  "replies": [],
+  "entries": [
+    {
+      "at": "2026-11-02T18:38:06.485Z",
+      "kind": "HTTP entry page requested; not a confirmed player"
+    },
+    {
+      "at": "2026-11-02T18:38:10.225Z",
+      "kind": "HTTP entry page requested; not a confirmed player"
+    },
+    {
+      "at": "2026-11-02T18:41:05.420Z",
+      "kind": "HTTP entry page requested; not a confirmed player"
+    },
+    {
+      "at": "2026-11-02T18:41:09.163Z",
+      "kind": "HTTP entry page requested; not a confirmed player"
+    },
+    {
+      "at": "2026-11-02T18:42:48.432Z",
+      "kind": "HTTP entry page requested; not a confirmed player"
+    },
+    {
+      "at": "2026-11-02T18:42:52.174Z",
+      "kind": "HTTP entry page requested; not a confirmed player"
+    },
+    {
+      "at": "2026-11-02T18:42:59.580Z",
+      "kind": "HTTP entry page requested; not a confirmed player"
+    }
+  ],
+  "limitations": [
+    "Local prototype only; VM deployment and external access testing pending.",
+    "A join request/reply is not evidence of ONLINE gameplay; inspect browser snapshots/HUD separately.",
+    "Display names are not Twitch identity binding or authenticated game roles.",
+    "teeworlds-rs is external owner code developed with Devin and Hermes.",
+    "No collective tee is started and no chat movement commands are handled."
+  ],
+  "entryBase": "http://127.0.0.1:40661",
+  "finishedAt": "2026-11-02T18:45:56.653Z"
+}
