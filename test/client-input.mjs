@@ -1,4 +1,4 @@
-import {test} from 'node:test';import assert from 'node:assert/strict';import {connect} from '../public/client.js';
+import {test} from 'node:test';import assert from 'node:assert/strict';import {connect,askName} from '../public/client.js';
 function fixture(t){
  const globals=['location','localStorage','WebSocket','addEventListener'];const previous=Object.fromEntries(globals.map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
  t.after(()=>{for(const key of globals){if(previous[key])Object.defineProperty(globalThis,key,previous[key]);else delete globalThis[key];}});
@@ -19,4 +19,15 @@ test('releasing outside canvas sends a pointer-up and permits the next click',t=
 test('pointer cancellation clears held state without accepting another touch release',t=>{
  const {sent,windowEvents,canvasEvents}=fixture(t);canvasEvents.get('pointerdown')({pointerId:2,clientX:100,clientY:200});
  assert.equal(typeof windowEvents.get('pointercancel'),'function');windowEvents.get('pointercancel')({pointerId:8,clientX:0,clientY:0});assert.equal(sent.length,1);windowEvents.get('pointercancel')({pointerId:2,clientX:0,clientY:0});assert.equal(sent.at(-1).down,false);
+});
+
+test('a shared link without a name asks the viewer and never invents the requester name',async t=>{
+ const previous=Object.getOwnPropertyDescriptor(globalThis,'location');t.after(()=>{if(previous)Object.defineProperty(globalThis,'location',previous);else delete globalThis.location;});
+ const stored=new Map([['va-name','returning-me']]),storage={getItem:k=>stored.get(k)??null,setItem:(k,v)=>stored.set(k,v)};
+ const el=()=>({children:[],append(...c){this.children.push(...c);},remove(){this.removed=true;},focus(){}});
+ const body=el(),doc={body,createElement:()=>el()};
+ globalThis.location={search:'?name=from-own-link'};assert.equal(await askName({doc,storage}),'from-own-link');assert.equal(body.children.length,0);
+ globalThis.location={search:''};const pending=askName({doc,storage});
+ const form=body.children[0],input=form.children[0].children[0];assert.equal(input.value,'returning-me','own stored name is only a suggestion');
+ input.value='  typed-by-me  ';form.onsubmit({preventDefault(){}});assert.equal(await pending,'typed-by-me');assert.equal(form.removed,true);assert.equal(stored.get('va-name'),'typed-by-me');
 });

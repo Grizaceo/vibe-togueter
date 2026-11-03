@@ -72,6 +72,30 @@
         max-height: 140px;
         overflow: auto;
       }
+      #name-gate {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 16px;
+        background: rgb(11 11 15 / 0.92);
+        z-index: 10;
+      }
+      #name-gate label {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        font-size: 18px;
+      }
+      #name-gate input,
+      #name-gate button {
+        font: inherit;
+        padding: 6px 10px;
+      }
     </style>
   </head>
   <body>
@@ -123,12 +147,13 @@
       </form>
     </div>
     <script type="module">
-      import { connect } from "./client.js";
+      import { connect, askName } from "./client.js";
       import { attachLiveCredits } from "./live-credits.js";
       const credits = attachLiveCredits(
         document.getElementById("live-credits"),
       );
       const c = connect({
+        name: await askName(),
         canvas: document.getElementById("cv"),
         onCredits: (publication) => credits.update(publication),
         onRole: (m) => {

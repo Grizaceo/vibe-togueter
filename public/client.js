@@ -1,7 +1,49 @@
 // Shared client: connects over WS, forwards inputs, renders states.
 import { drawFrame } from "./render.js";
 
+// Links shared in chat carry no name (anyone may click them), so the entry
+// page asks each viewer. An explicit ?name= is still honoured for own links.
+export function askName({ doc = document, storage = globalThis.localStorage } = {}) {
+  const fromLink = new URLSearchParams(location.search).get("name")?.trim();
+  if (fromLink) return Promise.resolve(fromLink.slice(0, 20));
+  let stored = "";
+  try {
+    stored = storage?.getItem("va-name") || "";
+  } catch {}
+  return new Promise((resolve) => {
+    const form = doc.createElement("form");
+    form.id = "name-gate";
+    const label = doc.createElement("label");
+    label.textContent = "Your name in this game";
+    const input = doc.createElement("input");
+    Object.assign(input, {
+      name: "name",
+      maxLength: 20,
+      required: true,
+      autocomplete: "nickname",
+      value: stored.slice(0, 20),
+    });
+    const button = doc.createElement("button");
+    button.textContent = "Play";
+    label.append(input);
+    form.append(label, button);
+    form.onsubmit = (event) => {
+      event.preventDefault();
+      const name = input.value.trim().slice(0, 20);
+      if (!name) return;
+      try {
+        storage?.setItem("va-name", name);
+      } catch {}
+      form.remove();
+      resolve(name);
+    };
+    doc.body.append(form);
+    input.focus();
+  });
+}
+
 export function connect({
+  name: chosenName,
   spectator = false,
   canvas,
   onWelcome,
@@ -13,6 +55,7 @@ export function connect({
 } = {}) {
   const params = new URLSearchParams(location.search);
   const name =
+    chosenName ||
     params.get("name") ||
     localStorage.getItem("va-name") ||
     `anon-${Math.floor(1000 + Math.random() * 9000)}`;
