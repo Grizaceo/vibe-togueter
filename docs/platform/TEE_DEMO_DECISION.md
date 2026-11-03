@@ -8,6 +8,8 @@ The completed Studio construction run remains the demo's build evidence. These T
 
 Candidate pin: `e9af04154ff6d891dff1e8d87f989cf4725392c5` in the owner's separate teeworlds-rs repository. Inspect the committed revision, not the dirty main worktree. The active bots branch at inspection was `8cb855c1ebed0c5db948f04d52f97c6af5a289ee`; its extra input and snapshot fields do not match this adapter.
 
+> **Post-submission errata (2026-11-03):** at submission time, `teeworlds-rs` was a private repository, so the pin above did not resolve for reviewers. Once noticed, the pinned commit was published unchanged at [`Grizaceo/teeworlds-rs-public`](https://github.com/Grizaceo/teeworlds-rs-public) on branch [`hackathon-pin`](https://github.com/Grizaceo/teeworlds-rs-public/tree/hackathon-pin). This note and that push are the only post-deadline changes touching this reference; the [gate receipt](../evidence/tee-gate-decision.json) remains the as-submitted record.
+
 The candidate revision's input fields and order match Vibe Arena's narrow postcard encoder: direction, jump, hook, fire, aim vector and weapon after the sequence number. Its player/projectile snapshot layout matches the decoder's existing field order. Welcome carries a map and jump configuration after the header read by the bridge. There is no negotiated protocol version. This is static compatibility evidence, not a tested network connection or permission to substitute the newer branch.
 
 Committed source fingerprints (SHA-256):
