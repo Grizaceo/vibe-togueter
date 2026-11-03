@@ -20,3 +20,9 @@ test('actual guest nested extensions cannot recurse in controller compaction',as
 test('external sprite URLs and invalid primitive geometry are removed before broadcast',()=>{
  const state=JSON.parse(encodeMessage({t:'state',view:{layers:[{t:'sprite',src:'https://example.test/pixel?name=viewer'},{t:'sprite',src:'/curated/test/allowed.png'},{t:'circle',r:-1}]}}));assert.equal(state.view.layers.length,1);assert.equal(state.view.layers[0].src,'/curated/test/allowed.png');
 });
+test('state rate follows the game tick rate, configuration overrides it, and 30 Hz is the cap',async()=>{
+ const {stateHz,stateIntervalMs,MAX_STATE_HZ}=await import('../src/traffic.js');
+ assert.equal(MAX_STATE_HZ,30);assert.equal(stateHz({tickRate:30}),30);assert.equal(stateHz({tickRate:20}),20);assert.equal(stateHz({tickRate:60}),30);
+ assert.equal(stateHz({configuredHz:10,tickRate:30}),10);assert.equal(stateHz({configuredHz:120,tickRate:30}),30);assert.equal(stateHz({configuredHz:'nope',tickRate:15}),15);assert.equal(stateHz({}),30);
+ assert.equal(Math.round(stateIntervalMs({tickRate:30})*10)/10,33.3);
+});

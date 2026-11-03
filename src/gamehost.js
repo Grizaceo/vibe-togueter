@@ -167,6 +167,7 @@ export class GameHost {
         const now = Date.now();
         this.safeCall("tick", Math.min(0.25, (now - last) / 1000));
         last = now;
+        this.onTick?.();
       },
       1000 / (this.game?.meta.tickRate || 30),
     );

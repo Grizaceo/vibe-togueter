@@ -39,3 +39,10 @@ test('global context constructor cannot escape to the guest process or spoof its
  const h=fixture(t,`export function createState(){try{return {outcome:globalThis.constructor.constructor('return process')().pid}}catch{return {outcome:'blocked'}}};export function tick(){};export function view(s){return {hud:[{t:'text',text:s.outcome}]}}`);
  assert.equal(await h.load(),true);assert.equal(h.getView().hud[0].text,'blocked');
 });
+test('isolated frames follow the game tick, and slow-tick games keep a heartbeat',async t=>{
+ const counter=rate=>`export const meta={name:'cadence',tickRate:${rate}};export function createState(){return {n:0}};export function tick(s){s.n++};export function view(s){return {hud:[{t:'text',text:String(s.n)}]}}`;
+ for(const [rate,min,max] of [[30,20,36],[5,7,13]]){
+  const h=fixture(t,counter(rate));assert.equal(await h.load(),true);let frames=0;h.onFrame=()=>frames++;h.start();await wait(1000);h.stop();
+  assert.ok(frames>=min&&frames<=max,`tickRate ${rate}: ${frames} frames/s`);
+ }
+});

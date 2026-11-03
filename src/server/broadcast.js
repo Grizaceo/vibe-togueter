@@ -2,8 +2,9 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { WebSocketServer } from "ws";
 import { secretMatches } from "../request-boundaries.js";
+import { performance } from "node:perf_hooks";
 import {
-  STATE_INTERVAL_MS,
+  stateIntervalMs,
   WS_COMPRESSION,
   encodeMessage,
   sendRoom,
@@ -99,8 +100,35 @@ export function startBroadcast({
     };
   }
 
-  // ---------- broadcast loop (view @ 10Hz; slow recipients skip obsolete frames) ----------
+  // ---------- state stream ----------
+  // Each new game frame goes out as soon as the configured rate allows (default:
+  // the game's tickRate, capped at 30 Hz). A 10 Hz heartbeat keeps players,
+  // errors and fallback state flowing when the game produces no frames.
+  // Slow recipients still skip obsolete frames (sendRoom backpressure).
+  const configuredHz =
+    Number(process.env.VA_STATE_HZ || CONFIG.transport?.stateHz) || null;
+  const interval = () =>
+    stateIntervalMs({ configuredHz, tickRate: host.game?.meta?.tickRate });
+  let lastSent = -Infinity,
+    lastFrame = -Infinity,
+    pending = null;
+  function pump() {
+    if (pending) return;
+    const wait = lastSent + interval() - performance.now();
+    if (wait <= 1) sendState();
+    else pending = setTimeout(sendState, wait);
+  }
+  host.onFrame = () => {
+    lastFrame = performance.now();
+    pump();
+  };
   setInterval(() => {
+    if (performance.now() - lastFrame > 150) pump();
+  }, 100);
+  function sendState() {
+    clearTimeout(pending);
+    pending = null;
+    lastSent = performance.now();
     const players = [...clients.values()]
       .filter((c) => c.kind === "player")
       .map((c) => ({ id: c.id, name: c.name }));
@@ -125,7 +153,7 @@ export function startBroadcast({
         generating: isGenerating(),
       },
     });
-  }, STATE_INTERVAL_MS);
+  }
 }
 
 export function attachRoomSockets({

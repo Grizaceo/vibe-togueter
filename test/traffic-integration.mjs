@@ -7,5 +7,5 @@ try{
  for(let n=0;n<100;n++)ws.send(JSON.stringify({t:'chat',text}));
  await new Promise(r=>setTimeout(r,450));const feed=messages.filter(m=>m.t==='feed'&&m.kind==='chat'&&m.text.startsWith('traffic-probe:'));
  assert.equal(feed.length,1);assert.ok(feed[0].text.length<=215);console.log('PASS web flood is throttled before feed broadcast and ordinary text is capped');
- const states=messages.filter(m=>m.t==='state');assert.ok(states.length>=2&&states.length<=7);assert.equal((await fetch(base+'/community/state')).status,200);console.log('PASS bounded broadcast and HTTP remain responsive under chat flood');
+ const states=messages.filter(m=>m.t==='state');assert.ok(states.length>=5&&states.length<=18,'30 Hz tick-rate cap: '+states.length+' states in ~450 ms');assert.equal((await fetch(base+'/community/state')).status,200);console.log('PASS bounded broadcast and HTTP remain responsive under chat flood');
 }finally{ws.close();}

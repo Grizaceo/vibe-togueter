@@ -1,6 +1,7 @@
 // Local synthetic traffic comparison. Only reviewed bundled games; no live services.
 import {GameHost} from '../src/gamehost.js';
-import {encodeMessage,STATE_INTERVAL_MS} from '../src/traffic.js';
+import {encodeMessage,stateIntervalMs} from '../src/traffic.js';
+const STATE_INTERVAL_MS=stateIntervalMs({tickRate:30});
 import {deflateRawSync,constants} from 'node:zlib';
 import fs from 'node:fs';
 const results=[];

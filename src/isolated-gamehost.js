@@ -145,6 +145,7 @@ export class IsolatedGameHost {
             } else if (msg.t === "frame") {
               this.view = msg.view;
               this.lastFrame = Date.now();
+              this.onFrame?.();
             } else return fail("Invalid game IPC response.");
           } catch {
             return fail("Invalid game IPC JSON.");

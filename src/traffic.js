@@ -1,5 +1,17 @@
 // Transport controls shared by controller and reproducible traffic probes.
-export const STATE_INTERVAL_MS = 100;
+// State follows the game's tick rate, capped at MAX_STATE_HZ. VA_STATE_HZ or
+// vibe-arena.config.json transport.stateHz override it (still capped).
+export const MAX_STATE_HZ = 30;
+export function stateHz({ configuredHz, tickRate } = {}) {
+  const wanted =
+    Number(configuredHz) > 0
+      ? Number(configuredHz)
+      : Number(tickRate) > 0
+        ? Number(tickRate)
+        : MAX_STATE_HZ;
+  return Math.min(MAX_STATE_HZ, Math.max(1, wanted));
+}
+export const stateIntervalMs = (options) => 1000 / stateHz(options);
 export const WS_COMPRESSION = Object.freeze({
   serverNoContextTakeover: true,
   clientNoContextTakeover: true,
