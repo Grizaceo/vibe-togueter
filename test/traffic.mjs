@@ -26,3 +26,7 @@ test('state rate follows the game tick rate, configuration overrides it, and 30 
  assert.equal(stateHz({configuredHz:10,tickRate:30}),10);assert.equal(stateHz({configuredHz:120,tickRate:30}),30);assert.equal(stateHz({configuredHz:'nope',tickRate:15}),15);assert.equal(stateHz({}),30);
  assert.equal(Math.round(stateIntervalMs({tickRate:30})*10)/10,33.3);
 });
+test('optional primitive ids survive compaction only when they are short strings or int32 integers',()=>{
+ const layers=JSON.parse(encodeMessage({t:'state',view:{layers:[{t:'rect',id:'player-7'},{t:'rect',id:42},{t:'rect',id:'x'.repeat(65)},{t:'rect',id:1.5},{t:'rect',id:{nested:true}},{t:'rect',id:2**40}]}})).view.layers;
+ assert.deepEqual(layers.map(p=>p.id),['player-7',42,undefined,undefined,undefined,undefined]);
+});

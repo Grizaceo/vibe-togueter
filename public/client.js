@@ -1,5 +1,6 @@
 // Shared client: connects over WS, forwards inputs, renders states.
 import { drawFrame } from "./render.js";
+import { createInterpolator } from "./interpolate.js";
 
 // Links shared in chat carry no name (anyone may click them), so the entry
 // page asks each viewer. An explicit ?name= is still honoured for own links.
@@ -68,6 +69,22 @@ export function connect({
   );
   const ctx = canvas?.getContext("2d");
   let world = { w: 1280, h: 720 };
+  // Drawing happens on requestAnimationFrame, never per message. Primitives with
+  // a stable id glide between the last two states; others show the latest state.
+  const motion = createInterpolator();
+  let frameRequest = 0;
+  const paint = () => {
+    frameRequest = 0;
+    const now = performance.now();
+    const view = motion.sample(now);
+    if (!view) return;
+    if (canvas.width !== canvas.clientWidth) {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+    }
+    drawFrame(ctx, view, canvas, view.world || world);
+    if (motion.animating(now)) frameRequest = requestAnimationFrame(paint);
+  };
 
   ws.onmessage = (e) => {
     const msg = JSON.parse(e.data);
@@ -85,11 +102,8 @@ export function connect({
         msg.fund,
       );
       if (ctx && canvas) {
-        if (canvas.width !== canvas.clientWidth) {
-          canvas.width = canvas.clientWidth;
-          canvas.height = canvas.clientHeight;
-        }
-        drawFrame(ctx, msg.view, canvas, msg.view.world || world);
+        motion.push(msg.view, performance.now());
+        frameRequest ||= requestAnimationFrame(paint);
       }
     }
     if (msg.t === "credits") onCredits?.(msg.publication);

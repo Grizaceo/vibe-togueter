@@ -23,6 +23,7 @@ Rendering primitives (the browser draws these; there is no server canvas):
 - `{t:'line',x1,y1,x2,y2,color?,w?}`
 - `{t:'text',x,y,text,size?,color?,align?}` (`align` is 'left', 'center' or 'right'; default 'center'; set 'left' near the left edge)
 - `{t:'sprite',x,y,w,h,src,rot?}` (`src` must be a reviewed local image path supplied by the approved resource manifest)
+- Any primitive may add an optional `id` (a string of at most 64 characters, or an integer) that names the same moving object in every frame, for example `id:'player-'+playerId`. Keep ids unique within `layers` and within `hud`. The browser then animates that object smoothly between states. Static scenery needs no id.
 
 Rules:
 

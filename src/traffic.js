@@ -65,6 +65,11 @@ function primitive(value) {
           : "";
   if (value.t === "sprite") result.src = value.src;
   if (typeof value.fill === "boolean") result.fill = value.fill;
+  // Optional stable identity for smooth motion and deltas (SDK contract, optional).
+  if (typeof value.id === "string" && value.id.length && value.id.length <= 64)
+    result.id = value.id;
+  else if (Number.isSafeInteger(value.id) && Math.abs(value.id) < 2 ** 31)
+    result.id = value.id;
   return result;
 }
 function compact(view) {
