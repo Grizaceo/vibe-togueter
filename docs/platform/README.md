@@ -15,6 +15,7 @@ Current operations describe the shipped specialized boundaries, with worker/prep
 | [REFACTOR_REPORT.md](REFACTOR_REPORT.md) | Current develop module map, validation and preserved submission refs. |
 | [REMOTE_GAMES.md](REMOTE_GAMES.md) | Current specific adapters and empty shipped catalog. |
 | [STUDIO_WORKER.md](STUDIO_WORKER.md) | Current specialized Studio worker boundary and explicit run authorization. |
+| [MODE_A_FRAMES.md](MODE_A_FRAMES.md) | Current mode-A data plane: tick-rate state, keyframes/deltas, b1/d1 formats, interpolation by optional id, measured latency. |
 | [TRAFFIC.md](TRAFFIC.md) | Current frame/chat limits and polling cadence. |
 
 ## Historical evidence, decisions and handoffs

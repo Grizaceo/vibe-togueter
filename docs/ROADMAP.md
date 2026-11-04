@@ -29,14 +29,20 @@ The order follows dependencies:
 - Mode C runs inside VM3.
 - The full pipeline needs all of the above.
 
-### 0. Base on `next` — next session
+### 0. Base on `next` — done (2026-11-03)
 
 - Merge `feat/session-flow-cloudflare-20261102`, which contains tee-vm-trial and tee-demo-contract. A trial merge showed no conflicts. `feat/private-openai-auth-wrapper-20261102` also merges cleanly but stays a separate decision.
 - **Public tunnel:** startup creates or detects the tunnel and updates the URL that `!join` returns. A stale `VA_PUBLIC_URL` is never sent.
 - **`!join` link:** a link posted in chat must not carry `?name=<requester>`.
 - **Done when:** tests pass on `next`, and `!join` returns a live link without someone else's name.
+- **Result:**
+  - Merged with a merge commit (d7f4f0d).
+  - `src/server/public-link.js` verifies `VA_PUBLIC_URL`, detects a running quick tunnel or starts one, and only hands out a URL after a probe through it reaches this controller. `VA_TUNNEL=auto|detect|off`.
+  - `!join` says so when no live link exists, and its link carries no name. The entry pages ask each viewer.
+  - Covered with simulated tunnels (`test/public-link.mjs`).
+  - **Pending:** one owner-run check with a real `cloudflared` quick tunnel. The session's permission policy blocked opening public ingress.
 
-### 1. Measure and improve mode A latency — next session
+### 1. Measure and improve mode A latency — done (2026-11-03)
 
 - **Current limits:**
   - State is sent at 10 Hz (`src/traffic.js:2`), while games tick at 30 Hz (`src/gamehost.js:74`).
@@ -49,6 +55,10 @@ The order follows dependencies:
   - deltas by `id`, static layers sent once, and a negotiated binary encoding with JSON as fallback.
 - The resulting frame format becomes the data plane of the phase 3 protocol.
 - **Done when:** a before/after table from the same reproducible test.
+- **Result:**
+  - The benchmark is `scripts/latency/bench.mjs`. The before/after table and the decisions are in [MODE_A_FRAMES](platform/MODE_A_FRAMES.md), and the raw runs are `docs/evidence/latency-*.json`.
+  - All three steps landed in separate commits: send rate tied to tick rate, `requestAnimationFrame` with interpolation by optional `id`, and keyframes/deltas with negotiated `b1` binary and `d1` JSON.
+  - **Pending:** adding ids to the bundled games, which changes reviewed hashes and needs owner review.
 
 ### 2. Cross-platform identity, seats and real Kick
 
