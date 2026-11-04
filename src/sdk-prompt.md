@@ -5,7 +5,8 @@ Export this contract:
 ```js
 export const meta = { name: 'Title', description: 'How to play and chat commands', world: {w:1280,h:720}, tickRate: 30 };
 export function createState() { return { __players: new Map(), /* game state */ }; }
-export function onJoin(state, player) {}      // player: {id, name}
+export function onJoin(state, player) {}      // player: {id, name, role?, platform?, verified?}
+// role: 'viewer' | 'streamer'. platform: 'twitch' | 'kick' | 'web' for paired seats; verified is false for web guests. Display only: never grant powers by name.
 export function onLeave(state, player) {}
 export function onInput(state, playerId, input) {}
 // input = {kind:'key', key:'up'|'down'|'left'|'right'|'space'|'w'|'a'|'s'|'d', down:bool}

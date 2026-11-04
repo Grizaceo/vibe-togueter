@@ -40,7 +40,7 @@ The order follows dependencies:
   - `src/server/public-link.js` verifies `VA_PUBLIC_URL`, detects a running quick tunnel or starts one, and only hands out a URL after a probe through it reaches this controller. `VA_TUNNEL=auto|detect|off`.
   - `!join` says so when no live link exists, and its link carries no name. The entry pages ask each viewer.
   - Covered with simulated tunnels (`test/public-link.mjs`).
-  - **Pending:** one owner-run check with a real `cloudflared` quick tunnel. The session's permission policy blocked opening public ingress.
+  - **Pending:** one owner-run check with a real `cloudflared` quick tunnel. The session's permission policy blocked opening public ingress. `scripts/public-link-check.mjs` runs it and writes the evidence.
 
 ### 1. Measure and improve mode A latency — done (2026-11-03)
 
@@ -59,9 +59,19 @@ The order follows dependencies:
   - The benchmark is `scripts/latency/bench.mjs`. The before/after table and the decisions are in [MODE_A_FRAMES](platform/MODE_A_FRAMES.md), and the raw runs are `docs/evidence/latency-*.json`.
   - All three steps landed in separate commits: send rate tied to tick rate, `requestAnimationFrame` with interpolation by optional `id`, and keyframes/deltas with negotiated `b1` binary and `d1` JSON.
   - **Pending:** adding ids to the bundled games, which changes reviewed hashes and needs owner review.
+  - Run-to-run variance was measured afterwards: back to back, p50 moved by 1.5 ms or less and p99 by 3.5 ms or less. Treat differences under ~3 ms at p50 and ~10 ms at p99 as noise. Details are in MODE_A_FRAMES.
 
-### 2. Cross-platform identity, seats and real Kick
+### 2. Cross-platform identity, seats and real Kick — implemented locally, real session pending
 
+- **Result so far (2026-11-03).** The design and the decision are in [IDENTITY_SEATS](platform/IDENTITY_SEATS.md):
+  - The owner chose a pairing code typed in chat, bound to the browser tab with a non-extractable WebCrypto key. There is no fingerprinting, and the client IP is used only for limits.
+  - `!join` still posts the generic verified link. The page shows `!join <code>`, and the chat message that carries the code seats that tab as `twitch:<id>` or `kick:<id>`, with the platform's roles.
+  - Web guests get an unverified `web:` seat.
+  - The Kick webhook read the wrong timestamp header, so every real event would have failed with 403. That is fixed.
+  - Tests: 335 checks. The local Chromium rehearsals pass 38/38 (UI) and 10/10 (seats).
+  - **Pending:**
+    - a real session in which one Twitch viewer and one Kick viewer join the same room. It needs the owner's Kick app, accounts and a stable public URL;
+    - seats on `tee-play.html`, which move to phase 3.
 - Identities are `twitch:`, `kick:` and `web:`, with each platform's moderator and broadcaster roles.
 - Short-lived signed seat tokens, and `!join` answers with a personal link. This replaces the phase 0 patch.
 - Test Kick end to end with a real account. The adapter in `src/chat/kick.js` exists but has only been tested with fixtures (`docs/COMPAT.md`).

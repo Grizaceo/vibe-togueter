@@ -10,6 +10,17 @@ Status: **accepted on 2026-11-03.** Written for roadmap phase 2. It replaces the
 
 Signatures use Ed25519, the default below, because no other choice was made.
 
+**Implementation status (2026-11-03, branch `next`).**
+- **Done:** steps 1–5 of [section 7](#7-implementation-plan-once-you-choose):
+  - `src/chat/kick-webhook.js` and `src/identity.js`;
+  - `src/seats.js`, `src/server/pairing.js` and `src/server/seating.js`;
+  - `public/seat.js` and the lobby;
+  - the tests `test/kick-webhook.mjs`, `test/identity.mjs`, `test/seats.mjs` and `test/seating.mjs`;
+  - a local Chromium rehearsal, `scripts/rehearse-seats.mjs`.
+- **Pending:**
+  - the real session with one Twitch viewer and one Kick viewer ([section 6](#6-kick-what-the-real-test-needs-from-you));
+  - pairing on `tee-play.html`: Tee individual play still asks for a name, because Tee seats belong to the phase 3 control channel.
+
 ## 1. Goals and constraints
 
 - **Goal.** A Twitch viewer and a Kick viewer enter the same room under their own platform names, with correct roles.

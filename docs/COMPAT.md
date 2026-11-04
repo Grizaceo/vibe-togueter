@@ -8,7 +8,8 @@
 | Democracy Duel | One latest ballot per viewer, 3s majority window, private streamer input, automatic rounds | SDK tests plus real Twitch votes and public WSS web input |
 | Twitch subscriptions and Bits | Signed receiver, subscription CLI with correct app-token transport | Signed fixtures and mocked API tests; real paid events unverified |
 | Channel points | Exact configurable reward title → game command | Signed HTTP fixture affected a game vote once across duplicate delivery; actual redemption unverified |
-| Kick | Existing signed webhook and outgoing adapter | Existing RSA fixture tests; no real Kick account event/reply tested this session |
+| Kick | Signed webhook with Kick's documented headers (`Kick-Event-Message-Timestamp`, fixed 2026-11-03), redelivery dedupe, ±5 min window, `kick:<user_id>` principals with moderator/broadcaster roles; outgoing adapter | RSA fixture tests with the real header names; local Chromium pairing via a test-signed webhook (`docs/evidence/seats-local-*`). No real Kick account event or reply yet: needs the owner's app, accounts and a stable public URL (see platform/IDENTITY_SEATS.md §6) |
+| Seats (phase 2) | `!join <code>` pairing from Twitch or Kick chat, Ed25519 seat tokens bound to a per-tab WebCrypto key, web guests, legacy `?name=` clients unchanged | Unit and socket tests (`test/seats.mjs`, `test/seating.mjs`, Twitch through the real IRC parser); local Chromium rehearsal for Kick and web guest. No real Twitch+Kick session yet |
 | Simulated build credits → SDK fixture | Legacy local generator and demo accounting; default cloud worker is blocked | Mock-provider tests only for this route; separate real Codex VM trial has construction evidence but no automatic dispatch or settled billing |
 | Chat Trivia / anarchy / subscriber weighting | Spec only | Not implemented or claimed |
 
