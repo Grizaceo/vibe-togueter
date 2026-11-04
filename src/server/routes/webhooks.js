@@ -1,7 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { decodeTwitchEvent, rewardCommand } from "../../twitch-events.js";
+import {
+  verifyKickWebhook,
+  KickDeliveries,
+  kickChatMessage,
+} from "../../chat/kick-webhook.js";
 
 export function createWebhookRoutes({
   ROOT,
@@ -13,34 +17,47 @@ export function createWebhookRoutes({
   chatEffects,
   host,
 }) {
-  // kick webhook signature verification (official Events API)
-  let kickPubkey = null;
-  async function getKickPubkey() {
-    if (kickPubkey) return kickPubkey;
+  // kick webhook signature verification (official Events API). Kick may rotate
+  // its key, so a failed check refetches it (at most once a minute) and retries.
+  let kickPubkey = null,
+    kickKeyFetchedAt = 0;
+  const kickDeliveries = new KickDeliveries();
+  async function getKickPubkey({ refresh = false } = {}) {
     if (process.env.VA_KICK_PUBKEY)
       return (kickPubkey = process.env.VA_KICK_PUBKEY.replace(/\\n/g, "\n"));
+    if (kickPubkey && !refresh) return kickPubkey;
+    if (refresh && Date.now() - kickKeyFetchedAt < 60000) return kickPubkey;
+    kickKeyFetchedAt = Date.now();
     const res = await fetch("https://api.kick.com/public/v1/public-key", {
       signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) throw new Error(`kick public-key ${res.status}`);
     const data = await res.json();
-    kickPubkey = data.public_key || data.data?.public_key;
+    kickPubkey = data.public_key || data.data?.public_key || kickPubkey;
     return kickPubkey;
   }
-  function verifyKickSignature(req, rawBody) {
-    const msgId = req.headers["kick-event-message-id"];
-    const ts = req.headers["kick-event-timestamp"];
-    const sig = req.headers["kick-event-signature"];
-    if (!msgId || !ts || !sig) return false;
-    if (!kickPubkey) return "pending"; // still fetching
+  async function verifyKick(req, rawBody) {
     try {
-      return crypto
-        .createVerify("RSA-SHA256")
-        .update(`${msgId}.${ts}.${rawBody}`)
-        .verify(kickPubkey, sig, "base64");
-    } catch {
-      return false;
+      await getKickPubkey();
+    } catch {}
+    let check = verifyKickWebhook({
+      headers: req.headers,
+      rawBody,
+      publicKey: kickPubkey,
+    });
+    if (check.reason === "bad signature") {
+      const before = kickPubkey;
+      try {
+        await getKickPubkey({ refresh: true });
+      } catch {}
+      if (kickPubkey !== before)
+        check = verifyKickWebhook({
+          headers: req.headers,
+          rawBody,
+          publicKey: kickPubkey,
+        });
     }
+    return check;
   }
 
   const deliveryFile = path.join(ROOT, "runtime", "twitch-deliveries.jsonl");
@@ -60,13 +77,15 @@ export function createWebhookRoutes({
       let b = "";
       req.on("data", (c) => (b += c));
       req.on("end", async () => {
-        try {
-          if (!kickPubkey) await getKickPubkey();
-        } catch {}
-        const check = verifyKickSignature(req, b);
-        if (check !== true) {
-          res.writeHead(check === "pending" ? 503 : 403);
-          return res.end("bad signature");
+        const check = await verifyKick(req, b);
+        if (!check.ok) {
+          res.writeHead(check.status);
+          return res.end(check.reason);
+        }
+        // A redelivery is acknowledged so Kick stops retrying, but never replayed.
+        if (!kickDeliveries.first(check.id)) {
+          res.writeHead(200);
+          return res.end("duplicate");
         }
         let body = {};
         try {
@@ -75,9 +94,10 @@ export function createWebhookRoutes({
         const evType = req.headers["kick-event-type"];
         const M = CONFIG.monetization;
         if (evType === "chat.message.sent") {
-          const user = body.sender?.username || "anon";
-          const text = String(body.content || "").slice(0, 200);
-          if (text) handleChat({ user, text, source: "kick" });
+          const message = kickChatMessage(body, {
+            broadcasterUserId: CONFIG.kick?.broadcasterUserId,
+          });
+          if (message) handleChat(message);
         } else if (
           simulateEventCredits &&
           evType === "channel.subscription.new"

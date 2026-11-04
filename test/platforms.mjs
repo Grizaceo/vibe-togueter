@@ -67,13 +67,13 @@ ok('twitch depósitos en fondo', Math.abs(after - before - 7.5) < 0.01, `+$${(af
 const PRIV = fs.readFileSync(process.env.VA_TEST_KICK_PRIVATE_KEY || '/tmp/kick-test-priv.pem', 'utf8');
 function kickHeaders(evType, raw) {
   const msgId = 'kick-' + crypto.randomBytes(8).toString('hex');
-  const ts = String(Math.floor(Date.now() / 1000));
+  const ts = new Date().toISOString();
   const sig = crypto.createSign('RSA-SHA256').update(`${msgId}.${ts}.${raw}`).sign(PRIV, 'base64');
   return {
     'content-type': 'application/json',
     'kick-event-type': evType,
     'kick-event-message-id': msgId,
-    'kick-event-timestamp': ts,
+    'kick-event-message-timestamp': ts,
     'kick-event-signature': sig,
   };
 }
@@ -87,12 +87,19 @@ const feeds = [];
 spec.on('message', r => { const m = JSON.parse(r); if (m.t === 'feed') feeds.push(m.text); });
 await new Promise(r => setTimeout(r, 300));
 
-const chatBody = { message_id: 'm1', sender: { username: 'fan_kick' }, content: 'hola desde kick' };
+const chatBody = { message_id: 'm1', sender: { user_id: 4242, username: 'fan_kick' }, content: 'hola desde kick' };
 let raw = JSON.stringify(chatBody);
-r = await fetch(BASE + '/webhook/kick', { method: 'POST', headers: kickHeaders('chat.message.sent', raw), body: raw });
+const chatHeaders = kickHeaders('chat.message.sent', raw);
+r = await fetch(BASE + '/webhook/kick', { method: 'POST', headers: chatHeaders, body: raw });
 ok('kick chat.message.sent aceptado', r.status === 200);
 await new Promise(r => setTimeout(r, 400));
 ok('kick chat en feed', feeds.some(t => t.includes('fan_kick: hola desde kick')));
+
+// Kick redelivers with the same message id: acknowledged, not replayed.
+const fedBefore = feeds.filter(t => t.includes('hola desde kick')).length;
+r = await fetch(BASE + '/webhook/kick', { method: 'POST', headers: chatHeaders, body: raw });
+await new Promise(r => setTimeout(r, 300));
+ok('kick reentrega duplicada no se repite', r.status === 200 && (await r.text()) === 'duplicate' && feeds.filter(t => t.includes('hola desde kick')).length === fedBefore);
 
 // firma mala
 r = await fetch(BASE + '/webhook/kick', {
