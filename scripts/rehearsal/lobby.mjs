@@ -11,6 +11,25 @@ export async function rehearseLobby({
   capture,
 }) {
   await navigate("/?name=BrowserRehearsal");
+  // The lobby asks for a pairing code (or a web-guest name) before playing.
+  await wait(() =>
+    evaluate(
+      "/^!join [0-9A-HJKMNP-TV-Z]{6}$/.test(document.getElementById('seat-code').textContent)",
+    ),
+  );
+  check(
+    "lobby shows a chat pairing code and a prefilled web-guest name",
+    await evaluate(
+      "!document.getElementById('seat-gate').hidden&&document.getElementById('seat-guest-name').value==='BrowserRehearsal'",
+    ),
+  );
+  await evaluate("document.getElementById('seat-guest').requestSubmit()");
+  await wait(() =>
+    evaluate(
+      "document.getElementById('me').textContent==='You are BrowserRehearsal · web guest'&&document.getElementById('seat-gate').hidden",
+    ),
+  );
+  check("web guest takes an unverified seat and the gate closes", true);
   await wait(() =>
     evaluate(
       "document.querySelector('.creator-strip')?.textContent.includes('Kenney')",

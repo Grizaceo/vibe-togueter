@@ -1,0 +1,93 @@
+{
+  "at": "2026-11-04T01:24:06.341Z",
+  "kind": "automated-local-seat-rehearsal",
+  "checks": [
+    {
+      "name": "legacy ?name= client joins without a seat and keeps full frames",
+      "ok": true
+    },
+    {
+      "name": "lobby shows a pairing code over the running game",
+      "ok": true
+    },
+    {
+      "name": "signed Kick webhook with the code is accepted",
+      "ok": true
+    },
+    {
+      "name": "the tab that showed the code plays as the Kick account",
+      "ok": true
+    },
+    {
+      "name": "a reload resumes the seat with the tab's own key, no new code",
+      "ok": true
+    },
+    {
+      "name": "a second tab plays as an unverified web guest",
+      "ok": true
+    },
+    {
+      "name": "one room: Kick viewer, web guest and legacy client",
+      "ok": true
+    },
+    {
+      "name": "Kick seat is verified, bound to the browser key and a viewer",
+      "ok": true
+    },
+    {
+      "name": "web guest is unverified",
+      "ok": true
+    },
+    {
+      "name": "no browser JavaScript exception occurred",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "roster": [
+    {
+      "id": 3,
+      "state": "player",
+      "name": "kick_viewer",
+      "identity": {
+        "id": "kick:987",
+        "platform": "kick",
+        "name": "kick_viewer",
+        "roles": [
+          "viewer"
+        ],
+        "verified": true,
+        "bound": true
+      },
+      "address": "(loopback)"
+    },
+    {
+      "id": 4,
+      "state": "player",
+      "name": "Guest Bob",
+      "identity": {
+        "id": "web:85W7R_yguF4J",
+        "platform": "web",
+        "name": "Guest Bob",
+        "roles": [
+          "viewer"
+        ],
+        "verified": false,
+        "bound": true
+      },
+      "address": "(loopback)"
+    }
+  ],
+  "players": [
+    "legacy-client",
+    "kick_viewer",
+    "Guest Bob"
+  ],
+  "limits": [
+    "Disposable checkout; no tunnel, no real Twitch or Kick traffic.",
+    "Kick events are signed with a local test RSA key standing in for Kick's key.",
+    "Twitch pairing needs a live IRC socket; test/seating.mjs covers it through the real IRC parser and chat pipeline.",
+    "Headless Chromium on Linux at the default window size; not a mobile usability claim."
+  ],
+  "pass": true
+}

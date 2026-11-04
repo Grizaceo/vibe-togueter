@@ -46,8 +46,21 @@
     </p>
     <h2>Playing and joining the conversation</h2>
     <p>
+      To play under your Twitch or Kick name, the page shows a short code that
+      you type in the stream chat. Twitch or Kick then supplies your account id,
+      login, display name and channel badges (moderator, broadcaster) with that
+      message, and the seat uses them for as long as the server runs. Your
+      browser creates a signing key for that tab whose private part cannot be
+      exported, keeps it in IndexedDB, and keeps a short-lived seat token in
+      sessionStorage; closing the tab or clearing site data removes them. The
+      server keeps your network address in memory while you pair and play, to
+      limit pending codes and to show the streamer who is connected; it is not
+      written to disk. A web guest seat uses a name you type and is marked as
+      unverified.
+    </p>
+    <p>
       The server receives your chosen browser nickname, game controls and chat
-      text. Twitch supplies channel usernames and chat messages. Accepted
+      text. Twitch and Kick supply channel usernames and chat messages. Accepted
       messages and game actions can appear to other players, the studio and the
       OBS overlay. The recent feed holds up to 60 entries in server memory.
       Game-specific state may retain names and actions until that game resets or

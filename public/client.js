@@ -2,6 +2,9 @@
 import { drawFrame } from "./render.js";
 import { createInterpolator } from "./interpolate.js";
 import { createFrameDecoder, FORMATS } from "./frame-codec.js";
+import { createSeatClient, tabKey } from "./seat.js";
+
+const SEAT_MESSAGES = ["challenge", "seat-offer", "seat", "pair", "guest"];
 
 // Links shared in chat carry no name (anyone may click them), so the entry
 // page asks each viewer. An explicit ?name= is still honoured for own links.
@@ -44,9 +47,15 @@ export function askName({ doc = document, storage = globalThis.localStorage } = 
   });
 }
 
+// seat: true pairs a seat (a code typed in Twitch/Kick chat, or a web guest)
+// instead of sending a name; see public/seat.js.
 export function connect({
   name: chosenName,
   spectator = false,
+  seat = false,
+  onSeat,
+  onCode,
+  onSeatError,
   canvas,
   onWelcome,
   onFeed,
@@ -56,21 +65,33 @@ export function connect({
   onActivity,
 } = {}) {
   const params = new URLSearchParams(location.search);
-  const name =
-    chosenName ||
-    params.get("name") ||
-    localStorage.getItem("va-name") ||
-    `anon-${Math.floor(1000 + Math.random() * 9000)}`;
-  localStorage.setItem("va-name", name);
+  const name = seat
+    ? ""
+    : chosenName ||
+      params.get("name") ||
+      localStorage.getItem("va-name") ||
+      `anon-${Math.floor(1000 + Math.random() * 9000)}`;
+  if (!seat) localStorage.setItem("va-name", name);
 
   const proto = location.protocol === "https:" ? "wss" : "ws";
   const path = spectator ? "/spectate" : "/play";
   // Binary deltas preferred, JSON deltas as fallback; ?frames= on the page overrides.
   const formats = params.get("frames") || FORMATS.join(",");
+  const who = seat && !spectator ? "seat=1" : `name=${encodeURIComponent(name)}`;
   const ws = new WebSocket(
-    `${proto}://${location.host}${path}?name=${encodeURIComponent(name)}&frames=${encodeURIComponent(formats)}`,
+    `${proto}://${location.host}${path}?${who}&frames=${encodeURIComponent(formats)}`,
   );
   ws.binaryType = "arraybuffer";
+  const seatClient =
+    seat && !spectator
+      ? createSeatClient({
+          send: (msg) => ws.readyState === 1 && ws.send(JSON.stringify(msg)),
+          keyPromise: tabKey(),
+          onSeat,
+          onCode,
+          onError: onSeatError,
+        })
+      : null;
   const frames = createFrameDecoder();
   const ctx = canvas?.getContext("2d");
   let world = { w: 1280, h: 720 };
@@ -100,6 +121,10 @@ export function connect({
     }
     if (msg.t === "resync") {
       if (ws.readyState === 1) ws.send(JSON.stringify({ t: "resync" }));
+      return;
+    }
+    if (seatClient && SEAT_MESSAGES.includes(msg.t)) {
+      seatClient.handle(msg);
       return;
     }
     if (msg.t === "welcome") {
@@ -232,5 +257,6 @@ export function connect({
       ws.readyState === 1 &&
       ws.send(JSON.stringify({ t: "claim-streamer", key })),
     name,
+    seat: seatClient,
   };
 }
