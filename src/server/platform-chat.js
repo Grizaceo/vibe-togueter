@@ -23,7 +23,7 @@ export async function connectPlatformChat({
     replies.twitch = twitch.send;
   }
 
-  // optional kick send (needs user token OAuth chat:write)
+  // Optional Kick replies: needs a user token with chat:write.
   if (process.env.VA_KICK_TOKEN && CONFIG.kick?.broadcasterUserId) {
     replies.kick = (text) =>
       import("../chat/kick.js")
@@ -41,11 +41,11 @@ export async function connectPlatformChat({
         });
   }
 
-  // kick chat: la lectura anónima murió (Kick dejó Pusher cloud). Vía oficial:
-  // webhook /webhook/kick — ver src/chat/kick.js y scripts/kick-subscribe.mjs.
+  // Kick chat only arrives through the official webhook (/webhook/kick); the
+  // anonymous socket is gone. See src/chat/kick.js and scripts/kick-subscribe.mjs.
   if (KICK_CHANNEL) {
     console.log(
-      `[kick] canal objetivo: ${KICK_CHANNEL} — suscribe el webhook con:`,
+      `[kick] channel: ${KICK_CHANNEL} — subscribe its webhook with:`,
     );
     console.log(
       `[kick]   node scripts/kick-subscribe.mjs --token <APP_TOKEN> --user <broadcaster_user_id>`,

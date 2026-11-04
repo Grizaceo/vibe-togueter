@@ -1,20 +1,25 @@
-// Kick chat source — estado real de la API (verificado 2026-11-01):
+// Kick chat: the state of Kick's API, checked on 2026-11-01.
 //
-// OFICIAL: Kick Events API webhook. App en kick.com → Developer → webhooks →
-//   https://<tu-tunnel>/webhook/kick + suscripción a chat.message.sent para el
-//   canal (app token + broadcaster_user_id). server.js verifica la firma RSA
-//   (GET /public/v1/public-key) antes de aceptar eventos.
-//   Setup: node scripts/kick-subscribe.mjs --token <app_token> --user <broadcaster_user_id>
+// Reading chat (official): the Kick Events API webhook.
+//   - Create an app at kick.com, under Developer. Enable webhooks with
+//     https://<public URL>/webhook/kick.
+//   - Subscribe the channel to chat.message.sent:
+//     node scripts/kick-subscribe.mjs --token <token> --user <broadcaster_user_id>
+//   - src/chat/kick-webhook.js verifies Kick's RSA signature (key from GET
+//     /public/v1/public-key) before any event is accepted.
 //
-// NO-OFICIAL (MUERTA): Kick abandonó el cloud Pusher — la key pública
-//   (32cbd69e4b950bf97679, ws-us2) ahora responde 4001 "not in this cluster" en
-//   todos los clusters. El gateway actual wss://websockets.kick.com/viewer/v1/connect
-//   exige token de sesión single-use obtenido con cookies de navegador +
-//   X-CLIENT-TOKEN, Cloudflare-bloqueado fuera del browser. No es viable
-//   server-side sin automatización de navegador (rompería ToS y es frágil).
+// Reading chat (unofficial, dead): Kick left cloud Pusher.
+//   - The public key 32cbd69e4b950bf97679 (ws-us2) now answers 4001 "not in
+//     this cluster" on every cluster.
+//   - The current gateway, wss://websockets.kick.com/viewer/v1/connect, needs a
+//     single-use session token obtained with browser cookies plus
+//     X-CLIENT-TOKEN, and Cloudflare blocks it outside a browser.
+//   - Using it from a server would need browser automation, which breaks
+//     Kick's terms and is fragile.
 //
-// Para enviar mensajes (respuestas del bot): POST https://api.kick.com/public/v1/chat
-//   con user token scope chat:write (OAuth PKCE del broadcaster o bot account).
+// Sending (bot replies): POST https://api.kick.com/public/v1/chat with a user
+//   token that has the chat:write scope (OAuth PKCE of the broadcaster or a bot
+//   account).
 
 export async function sendKickChat({
   accessToken,
