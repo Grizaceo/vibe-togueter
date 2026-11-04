@@ -1,9 +1,9 @@
 {
   "claims": [
     {
-      "claim": "npm test passes 335 checks: 221 node:test tests and 114 isolated integration checks, with 0 failures",
+      "claim": "npm test passes 336 checks: 221 node:test tests and 115 isolated integration checks, with 0 failures",
       "command": "npm test",
-      "value": "335",
+      "value": "336",
       "date": "2026-11-03"
     },
     {
