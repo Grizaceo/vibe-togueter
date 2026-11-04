@@ -215,7 +215,20 @@ Rows:
 ### What did not improve, or is uncertain
 
 - Step **b** does not reduce latency in Grove or Duel beyond noise. Its gain is smoothness. In the Marble lobby it reduced p50 from 49 to 30 ms. The likely reason is that step a still drew ~400 primitives synchronously on every message in the harness. How large that effect is in a real browser depends on the device and was not measured.
-- Step **c** raised Grove's clean p99 from 47 to 58 ms (n≈600), while `c-delta-d1` and `c-no-ids` show 49 ms. Duel under loss moved from 109 (a) to 120 (b) to 113 (c) ms at p50 with n≈60. Run-to-run variance was not measured, so treat differences under about 10 ms as noise.
+- **Run-to-run variance**, measured on 2026-11-03:
+  - Two back-to-back repetitions of the clean scenario with `--ids` ran on the same commit (99a8222, the step c code plus docs) and the same seeds: `latency-c-var-1.json` and `latency-c-var-2.json`. The host was not idle: the 1-minute load average was 3.7–6.6 on 12 cores, from other work on the machine.
+
+    | Game | p50 rep 1 / rep 2 / earlier `c-delta-b1` (ms) | p99 rep 1 / rep 2 / earlier (ms) | KB/s per client |
+    |---|---:|---:|---:|
+    | Grove | 25.3 / 26.8 / 27.6 | 48.1 / 48.2 / 57.7 | 1.4 / 1.4 / 1.4 |
+    | Democracy Duel | 29.2 / 29.2 / 28.1 | 48.6 / 48.7 / 47.5 | 1.8 / 1.8 / 1.8 |
+    | Marble Race (lobby) | 28 / 27.1 / 28 | 52.8 / 49.3 / 49.3 | 1.2 / 1.2 / 1.2 |
+    | Marble Race (racing) | — | — | 4.6 / 4.6 / 5.2 |
+
+  - Back to back, p50 differed by at most 1.5 ms and p99 by at most 3.5 ms. Bytes, messages and distinct frames per second matched within 3%. Controller CPU differed by up to 0.5 points.
+  - The earlier `c-delta-b1` run of the same code differed more: Grove p99 was 57.7 ms against 48.1–48.2 ms now. The p99 rise from 47 to 58 ms that step **c** appeared to cause is therefore noise, not a regression.
+  - Rule from these runs: **treat p50 differences under about 3 ms and p99 differences under about 10 ms as noise.** Marble racing bytes vary by about 12%, because each run has only about 2 s of racing.
+  - Duel under loss moved from 109 (a) to 120 (b) to 113 (c) ms at p50 with n≈60. That lossy scenario was not repeated, so its variance is not known.
 - Marble racing traffic comes from about 2 s of racing per run, so it is less stable than the other rows.
 - **Limits of the method.**
   - Loss is modelled as RTO stalls, not as real packet loss.

@@ -1,0 +1,153 @@
+{
+  "label": "c-var-2",
+  "at": "2026-11-04T01:04:11.262Z",
+  "commit": "99a8222",
+  "dirty": false,
+  "node": "v26.12.1",
+  "cpus": 12,
+  "options": {
+    "games": [
+      "grove",
+      "duel",
+      "marble"
+    ],
+    "scenarios": [
+      "clean"
+    ],
+    "clients": 8,
+    "durationSeconds": 60,
+    "raceDurationSeconds": 75,
+    "idVariants": true,
+    "frames": "client default",
+    "env": {}
+  },
+  "scenarios": {
+    "clean": {
+      "delayMs": 0,
+      "jitterMs": 0,
+      "loss": 0
+    }
+  },
+  "method": [
+    "Each run starts the real controller (isolated game runtime) from a disposable copy of this checkout and connects N headless viewers through a userspace impairment proxy.",
+    "Viewers run the real public/client.js and public/render.js with stubbed browser globals; a recording canvas captures every drawn frame, and frames reach the screen on a 60 Hz vsync grid (draw-on-message frames present at the next vsync; requestAnimationFrame frames present at their own vsync).",
+    "Latency: a viewer sends an input and waits for the first presented frame that shows its effect. Grove: every viewer moves its own avatar (web key). Duel: viewer 0 claims the streamer key and moves the paddle; the others vote by chat. Marble: viewer 0 sends !reset/!play in the lobby and waits for its marble label to disappear/appear (chat path).",
+    "Marble traffic and frame rates come from a separate run (marble-race) that keeps starting races and counts only the time while marbles race (seconds = racing time), so they reflect motion, not an idle lobby or podium.",
+    "bytesPerSecond is wire bytes read by each client socket (WebSocket framing + permessage-deflate as negotiated, no TLS). Distinct frames are presented frames whose drawn content differs from the previous one.",
+    "Loss is modelled as TCP head-of-line stalls: a chunk (and all behind it) waits an extra RTO with the given probability. It is not real packet loss or congestion control."
+  ],
+  "runs": [
+    {
+      "game": "grove",
+      "scenario": "clean",
+      "clients": 8,
+      "seconds": 60,
+      "latencyMs": {
+        "n": 600,
+        "timeouts": 0,
+        "p50": 26.8,
+        "p90": 41.3,
+        "p99": 48.2,
+        "max": 49.9
+      },
+      "rttMs": {
+        "p50": 0.3
+      },
+      "serverToClientMs": {
+        "p50": 1,
+        "p99": 1
+      },
+      "perClient": {
+        "bytesPerSecond": 1432,
+        "stateMessagesPerSecond": 30.3,
+        "presentedFramesPerSecond": 53,
+        "distinctFramesPerSecond": 47.7
+      },
+      "serverCpuPercent": 2.7
+    },
+    {
+      "game": "duel",
+      "scenario": "clean",
+      "clients": 8,
+      "seconds": 60,
+      "latencyMs": {
+        "n": 71,
+        "timeouts": 0,
+        "p50": 29.2,
+        "p90": 42.6,
+        "p99": 48.7,
+        "max": 49
+      },
+      "rttMs": {
+        "p50": 0.4
+      },
+      "serverToClientMs": {
+        "p50": 1,
+        "p99": 1
+      },
+      "perClient": {
+        "bytesPerSecond": 1821,
+        "stateMessagesPerSecond": 30.3,
+        "presentedFramesPerSecond": 44,
+        "distinctFramesPerSecond": 35
+      },
+      "serverCpuPercent": 2.3
+    },
+    {
+      "game": "marble-lobby",
+      "scenario": "clean",
+      "clients": 8,
+      "seconds": 60,
+      "latencyMs": {
+        "n": 120,
+        "timeouts": 0,
+        "p50": 27.1,
+        "p90": 39.6,
+        "p99": 49.3,
+        "max": 50.8
+      },
+      "rttMs": {
+        "p50": 0.3
+      },
+      "serverToClientMs": {
+        "p50": 1,
+        "p99": 2
+      },
+      "perClient": {
+        "bytesPerSecond": 1241,
+        "stateMessagesPerSecond": 30.3,
+        "presentedFramesPerSecond": 30.3,
+        "distinctFramesPerSecond": 2
+      },
+      "serverCpuPercent": 3.1
+    },
+    {
+      "game": "marble-race",
+      "scenario": "clean",
+      "clients": 8,
+      "seconds": 2.2,
+      "latencyMs": {
+        "n": 0,
+        "timeouts": 0,
+        "p50": null,
+        "p90": null,
+        "p99": null,
+        "max": null
+      },
+      "rttMs": {
+        "p50": 0.4
+      },
+      "serverToClientMs": {
+        "p50": 1,
+        "p99": 2
+      },
+      "perClient": {
+        "bytesPerSecond": 4611,
+        "stateMessagesPerSecond": 30.3,
+        "presentedFramesPerSecond": 59.5,
+        "distinctFramesPerSecond": 59.5
+      },
+      "serverCpuPercent": 4.1
+    }
+  ]
+}
