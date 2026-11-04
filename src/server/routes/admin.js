@@ -35,6 +35,7 @@ export function createAdminRoutes({
   handleChat,
   loadGameDir,
   publicLink,
+  seating,
 }) {
   return async function adminRoutes(req, res, url) {
     // admin (localhost only)
@@ -588,8 +589,18 @@ export function createAdminRoutes({
               goal: CONFIG.generator.gameCostUsd,
             },
             publicLink: publicLink?.status() || null,
+            seats: seating?.roster() || [],
           }),
         );
+      }
+      if (url.pathname === "/admin/seats/revoke" && req.method === "POST") {
+        const { sub } = JSON.parse((await readBody()) || "{}");
+        if (typeof sub !== "string" || !/^(twitch|kick|web):[\w-]{1,40}$/.test(sub)) {
+          res.writeHead(400);
+          return res.end("sub like twitch:123 required");
+        }
+        res.writeHead(200, { "content-type": "application/json" });
+        return res.end(JSON.stringify({ unseated: seating?.revoke(sub) || 0 }));
       }
       if (url.pathname === "/admin/chat" && req.method === "POST") {
         const { user, text } = JSON.parse((await readBody()) || "{}");

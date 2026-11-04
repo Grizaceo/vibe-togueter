@@ -32,6 +32,7 @@ import { CreatorAssets } from "./creator-assets.js";
 import { RemoteGames } from "./remote-games.js";
 import { TeeChatBridge } from "./tee-chat-bridge.js";
 import { createLocalChat } from "./chat/local.js";
+import { createSeating } from "./server/seating.js";
 
 const {
   ROOT,
@@ -123,6 +124,18 @@ const remoteGames = new RemoteGames(
 const teeBridge = new TeeChatBridge();
 startRoundTicks();
 
+// ---------- seats (docs/platform/IDENTITY_SEATS.md) ----------
+const seating = createSeating({
+  clients,
+  host,
+  feed,
+  requireBoundKey: CONFIG.seats?.requireBoundKey === true,
+});
+if (seating.seats.ephemeral)
+  console.log(
+    "[vibe-arena] seats    -> per-process key (run npm run setup:local to add VA_SEAT_KEY)",
+  );
+
 // ---------- chat pipeline ----------
 const replies = {};
 const handleChat = createChatCommands({
@@ -142,6 +155,7 @@ const handleChat = createChatCommands({
   remoteGames,
   ideaRounds,
   requireNoPendingArtifact,
+  claimPairing: (code, principal) => seating.claim(code, principal),
 });
 
 const localChat = createLocalChat(handleChat);
@@ -259,6 +273,7 @@ const adminRoutes = createAdminRoutes({
   handleChat,
   loadGameDir,
   publicLink,
+  seating,
 });
 
 const server = http.createServer(async (req, res) => {
@@ -292,6 +307,7 @@ attachRoomSockets({
   events,
   feed,
   handleChat,
+  seating,
 });
 
 startServer({

@@ -22,6 +22,7 @@ export function createChatCommands({
   remoteGames,
   ideaRounds,
   requireNoPendingArtifact,
+  claimPairing = null,
 }) {
   const chatGate = new ChatGate();
 
@@ -94,6 +95,18 @@ export function createChatCommands({
       // requester's name. The entry page asks each viewer for their own name.
       const say = (text) =>
         replies[source] ? replies[source](text) : feed("system", text);
+      // "!join <code>": the tab that showed this code takes this chat account's
+      // seat. Only the feed hears about it, so pairing never floods the chat.
+      if (args[0] && claimPairing) {
+        const result = claimPairing(args[0], principal);
+        feed(
+          "system",
+          result.ok
+            ? `${result.name} (${principal.platform}) paired a seat.`
+            : `!join code from ${user}: ${result.reason}.`,
+        );
+        return;
+      }
       const publicURL = getPublicURL();
       if (!publicURL) {
         say(

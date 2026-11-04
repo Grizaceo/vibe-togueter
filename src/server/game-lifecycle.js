@@ -83,6 +83,12 @@ export async function startGameRuntime({
               id: player.id,
               name: player.name,
               role: player.role,
+              ...(player.identity
+                ? {
+                    platform: player.identity.platform,
+                    verified: player.identity.verified,
+                  }
+                : {}),
             });
         crowdBursts.reset();
         refreshPublication();
@@ -116,6 +122,12 @@ export async function startGameRuntime({
             id: player.id,
             name: player.name,
             role: player.role,
+            ...(player.identity
+              ? {
+                  platform: player.identity.platform,
+                  verified: player.identity.verified,
+                }
+              : {}),
           });
       host.start();
       host.startWatching();

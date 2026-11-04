@@ -178,6 +178,7 @@ export function attachRoomSockets({
   events,
   feed,
   handleChat,
+  seating = null,
 }) {
   let nextId = 1;
   // ---------- ws ----------
@@ -191,10 +192,16 @@ export function attachRoomSockets({
     ws.on("error", () => ws.terminate());
     const url = new URL(req.url, "http://x");
     const kind = url.pathname === "/spectate" ? "spectator" : "player";
-    const name = (
-      url.searchParams.get("name")?.trim() ||
-      `anon-${Math.floor(1000 + Math.random() * 9000)}`
-    ).slice(0, 20);
+    // ?seat=1: the page pairs a seat first (src/server/seating.js) and never
+    // sends a name. Without it, the legacy ?name= join is unchanged.
+    const seatMode =
+      Boolean(seating) && kind === "player" && url.searchParams.get("seat") === "1";
+    const name = seatMode
+      ? ""
+      : (
+          url.searchParams.get("name")?.trim() ||
+          `anon-${Math.floor(1000 + Math.random() * 9000)}`
+        ).slice(0, 20);
 
     const client = {
       id: nextId++,
@@ -207,6 +214,7 @@ export function attachRoomSockets({
       lastSeq: -1,
     };
     clients.set(ws, client);
+    if (seatMode) client.kind = "pending";
 
     ws.send(JSON.stringify({ t: "credits", publication: clientCredits() }));
     ws.send(
@@ -214,7 +222,8 @@ export function attachRoomSockets({
         t: "welcome",
         id: client.id,
         name,
-        kind,
+        kind: client.kind,
+        ...(seatMode ? { seat: "pending" } : {}),
         frames: client.frames,
         game: host.game
           ? { name: host.game.name, desc: host.game.meta.description || "" }
@@ -224,7 +233,8 @@ export function attachRoomSockets({
       }),
     );
 
-    if (kind === "player") {
+    if (seatMode) seating.connect(ws, client, req);
+    else if (kind === "player") {
       host.safeCall("onJoin", { id: client.id, name });
       feed("system", `${name} joined`);
     }
@@ -251,7 +261,10 @@ export function attachRoomSockets({
         ws.send(JSON.stringify({ t: "pong", c: msg.c, s: Date.now() }));
         return;
       }
-      if (kind !== "player" && msg.t !== "chat") return;
+      if (seating?.message(ws, client, msg)) return;
+      // A pending seat watches but cannot play or chat until it is seated.
+      if (client.kind === "pending") return;
+      if (client.kind !== "player" && msg.t !== "chat") return;
       if (msg.t === "claim-streamer") {
         const expected = process.env.VA_STREAMER_KEY;
         if (!secretMatches(expected, msg.key)) {
@@ -267,27 +280,34 @@ export function attachRoomSockets({
           return;
         }
         client.role = "streamer";
-        host.safeCall("onJoin", { id: client.id, name, role: client.role });
+        host.safeCall("onJoin", {
+          id: client.id,
+          name: client.name,
+          role: client.role,
+        });
         ws.send(JSON.stringify({ t: "role", ok: true }));
         return;
       }
       if (msg.t === "input") {
         host.safeCall("onInput", client.id, msg.data);
       } else if (msg.t === "chat" && typeof msg.text === "string") {
+        // Browser chat stays source "web": a paired seat lends its name and
+        // identity key, never platform roles.
         handleChat({
-          user: name,
+          user: client.name,
           text: msg.text.slice(0, msg.text.startsWith("!idea ") ? 10000 : 200),
           source: "web",
-          participantId: client.communityId,
+          participantId: client.identity?.id || client.communityId,
         });
       }
     });
 
     ws.on("close", () => {
       clients.delete(ws);
-      if (kind === "player") {
-        host.safeCall("onLeave", { id: client.id, name });
-        feed("system", `${name} left`);
+      seating?.close(client);
+      if (client.kind === "player") {
+        host.safeCall("onLeave", { id: client.id, name: client.name });
+        feed("system", `${client.name} left`);
       }
     });
   });
