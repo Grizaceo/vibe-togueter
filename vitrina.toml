@@ -1,6 +1,6 @@
 # vitrina.toml: how this repository presents itself (Vitrina protocol, PROTOCOL.md).
 version = 1
-audience = "private"        # public | private
+audience = "public"        # public | private
 status = "alpha"            # alpha | beta | stable | hackathon | archived
 owner = "Grizaceo"              # GitHub user who approves agent work
 

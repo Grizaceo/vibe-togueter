@@ -13,7 +13,7 @@
 - **Reviewed hashes.** The source of the bundled games in `games/` is bound to reviewed hashes in each `credits.json`. Change it only with the maintainer's approval.
 - **Where notes go.** Notes, plans and handoffs go in `.workshop/`, which git ignores because the repo is public. Hackathon material, kept for the record, is in `docs/hackathon/`. The plan is [docs/ROADMAP.md](docs/ROADMAP.md).
 
-<!-- vitrina:block v=1 sha256=e8e27628030a63daa382bf813822abbb09c611bdedc19f732f9a042f5b1f796d -->
+<!-- vitrina:block v=1 sha256=217c921a83daef0c7a21a4c828caf6f9e907b042472b713017214f98a4da9c14 -->
 ## Vitrina rules for agents
 
 This repository follows the Vitrina protocol (see PROTOCOL.md in the vitrina repository). The rules apply to every agent and harness. Most are enforced: a guard in your harness, git hooks and GitHub reject what breaks them.
@@ -28,7 +28,7 @@ This repository follows the Vitrina protocol (see PROTOCOL.md in the vitrina rep
 
 **You may not, and what stops you**
 
-- Push to `main`, force-push, delete branches or push tags. Stopped by the guard and the `pre-push` hook.
+- Push to `main`, force-push, delete branches or push tags. Stopped by the guard, the `pre-push` hook and GitHub rulesets.
 - Skip hooks with `--no-verify` or change `core.hooksPath`. Stopped by the guard; CI runs every check again.
 - Approve a pull request, or merge one that the maintainer (@Grizaceo) has not approved. Stopped by GitHub (an author cannot approve their own pull request) and by the guard.
 - Change visibility, settings, rulesets, secrets, workflows or releases, or read credentials. Agents use a GitHub identity without admin or workflow permission, and the guard blocks the commands.
