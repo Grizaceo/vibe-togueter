@@ -1,0 +1,21 @@
+flowchart LR
+  subgraph Join
+    A[Viewer sends !join] --> B[Bot posts the public link]
+    B --> C[Lobby shows a code for this tab]
+    C --> D[Viewer types !join CODE in Twitch or Kick chat]
+    D --> E[Tab seated as twitch:id or kick:id with its role]
+    C -.-> G[Or: play as unverified web guest]
+  end
+  subgraph Play
+    E --> P[Game runs sandboxed on the controller]
+    G --> P
+    P --> F[Browser receives drawing primitives only]
+    P -->|game fails| W[Watchdog switches to a reviewed fallback]
+  end
+  subgraph Build
+    I[Chat proposes !idea and votes] --> S[Streamer approves the exact input]
+    S --> V1[Codex builds in VM1]
+    V1 --> V2[VM2 tests it]
+    V2 --> R[Streamer approves the exact artifact]
+    R -.->|phase 4| V3[VM3 runs it live]
+  end
