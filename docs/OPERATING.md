@@ -50,7 +50,8 @@ These administration commands are local. A second controller cannot take the sam
 
 How each game ends:
 - **Grove:** grow all six trees; the round resets after the celebration.
-- **Marble Race and Democracy Duel:** there is no final round. Democracy Duel's chat-voted turns repeat continuously.
+- **Marble Race:** a race ends when every marble finishes or time runs out. The result stays on screen for 8 seconds, then the same marbles return to the lobby and wins keep counting.
+- **Democracy Duel:** each side starts with 3 health. When one side reaches zero, the winner is shown for 8 seconds and the duel restarts.
 
 Grove uses three Kenney CC0 images. Its contributor record credits them even before an operator publishes a resource manifest. Kenney has not joined or endorsed this project.
 
@@ -149,7 +150,7 @@ A display name never grants broadcaster or moderator powers. Those come from Twi
 **Isolation.** Reviewed bundled games run in a disposable Linux namespace process with an empty credential environment, bounded pipes and deadlines. The controller never evaluates game callbacks. The browser only receives drawing primitives ([MODE_A_FRAMES](platform/MODE_A_FRAMES.md)).
 
 **Fallback.** When a game stops answering or fails, the controller:
-- follows the streamer's fallback order ([FEATURES](FEATURES.md#preferred-fallback-games));
+- follows the streamer's fallback order ([FEATURES](FEATURES.md#preferred-fallback-games-configuredfallback));
 - keeps connected players;
 - shows the cause.
 

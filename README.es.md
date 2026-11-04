@@ -1,4 +1,4 @@
-<!-- vitrina:translation-of README.md sha256=2cb268f3739c598c014aa26135e0e8b3d228c0784f019f0f64f280599dd62406 -->
+<!-- vitrina:translation-of README.md sha256=aa3a6a0e19d59b643cc5b22f2696a9132b00cd8b9531117b0a7bccfad11e971e -->
 # Vibe Arena
 
 [English](README.md)
@@ -72,7 +72,7 @@ Más detalle, en inglés:
   Revisé y aprobé los artefactos exactos de las pruebas de construcción en VM.
 - **Antes del hackathon:** construí el primer prototipo con Devin CLI. El commit `fab3227` lo registra.
 - **Lo escribió la IA:**
-  - **Durante el hackathon:** Codex escribió el código. Devin lo revisó en modo de solo lectura y redactó conmigo los diagramas del producto.
+  - **Durante el hackathon:** Codex escribió el código. Devin lo revisó en modo de solo lectura y redactó conmigo los diagramas del producto. El 2 de noviembre, después del congelamiento de funciones, Claude Code redactó el texto de la entrega y empaquetó esos diagramas en un visor, sin cambiar código de la aplicación.
   - **Después del hackathon:** Claude Code escribió la mayor parte del trabajo en `main` (el link público, el formato de frames, la identidad y los asientos) y el primer borrador de este README.
 - **Lo verifiqué:**
   - la suite `npm test` ([claims.json](claims.json));

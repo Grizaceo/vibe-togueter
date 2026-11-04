@@ -71,7 +71,7 @@ More detail:
   I reviewed and approved the exact artifacts from the VM build trials.
 - **Before the hackathon:** I built the first prototype with Devin CLI. Commit `fab3227` records it.
 - **Written by AI:**
-  - **During the hackathon:** Codex wrote the code. Devin reviewed it read-only and drafted the product diagrams with me.
+  - **During the hackathon:** Codex wrote the code. Devin reviewed it read-only and drafted the product diagrams with me. On November 2, after the feature freeze, Claude Code drafted the submission text and packaged those diagrams into a viewer, without changing application code.
   - **After the hackathon:** Claude Code wrote most of the work on `main` (the public link, the frame format, identity and seats) and the first draft of this README.
 - **Verified:**
   - the `npm test` suite ([claims.json](claims.json));
