@@ -89,7 +89,7 @@ server.registerTool(
   "get_sdk_spec",
   {
     description:
-      "Devuelve el contrato SDK que debe implementar todo game.js (léelo antes de escribir/adaptar un juego).",
+      "The SDK contract every game.js must implement. Read it before writing or adapting a game.",
     inputSchema: {},
   },
   async () =>
@@ -100,7 +100,7 @@ server.registerTool(
   "list_templates",
   {
     description:
-      "Catálogo de formatos de chat-games preexistentes listos para adaptar (marble-race, trivia, chat-vs-streamer...).",
+      "Catalog of existing chat-game formats ready to adapt (marble-race, trivia, chat-vs-streamer...).",
     inputSchema: {},
   },
   async () => {
@@ -128,9 +128,9 @@ server.registerTool(
   "get_template",
   {
     description:
-      "Fuente completa de un template: template.md (contrato de chat + notas de adaptación) y game.js si existe.",
+      "Full source of one template: template.md (chat contract and adaptation notes) and game.js when it exists.",
     inputSchema: {
-      name: z.string().describe("nombre del template, ej. marble-race"),
+      name: z.string().describe("template name, for example marble-race"),
     },
   },
   async ({ name }) => {
@@ -155,10 +155,10 @@ server.registerTool(
       name: z
         .string()
         .regex(/^[\w-]+$/)
-        .describe("slug del juego"),
+        .describe("game slug: letters, digits, underscores and dashes"),
       code: z
         .string()
-        .describe("contenido completo de game.js según get_sdk_spec"),
+        .describe("the complete game.js, following get_sdk_spec"),
       activate: z.boolean().default(false),
     },
   },
@@ -174,21 +174,21 @@ server.registerTool(
         "Use the isolated VM quarantine workflow; host installation is disabled in cloud-vm mode.",
       );
     const dir = path.resolve(GAMES, name);
-    if (!dir.startsWith(GAMES)) return fail("nombre inválido");
+    if (!dir.startsWith(GAMES)) return fail("invalid name");
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, "game.js"), code);
-    // validación real: compilar en el sandbox sin tocar el juego en vivo
+    // Real validation: load it in the sandbox without touching the live game.
     const probe = new GameHost({ gameDir: dir, onEvent: () => {} });
     await probe.load();
     probe.stop();
-    if (probe.error) return fail(`no compila en el sandbox: ${probe.error}`);
+    if (probe.error) return fail(`does not load in the sandbox: ${probe.error}`);
     if (activate) {
       try {
         await api("/admin/load", { game: name });
         const st = await api("/admin/status");
         return ok({ installed: name, live: st.game?.name, error: st.error });
       } catch (e) {
-        return fail(`instalado pero no se pudo cargar: ${e.message}`);
+        return fail(`installed but could not be loaded: ${e.message}`);
       }
     }
     return ok({ installed: name, validated: true });
@@ -198,7 +198,7 @@ server.registerTool(
 server.registerTool(
   "load_game",
   {
-    description: "Pone en vivo un juego ya instalado en games/<name>.",
+    description: "Put a game already installed in games/<name> live.",
     inputSchema: { name: z.string() },
   },
   async ({ name }) => {
@@ -230,7 +230,7 @@ server.registerTool(
 server.registerTool(
   "list_ideas",
   {
-    description: "Ideas de juegos propuestas por el chat con !idea.",
+    description: "Game ideas proposed by chat with !idea.",
     inputSchema: {},
   },
   async () => {
@@ -245,7 +245,7 @@ server.registerTool(
 server.registerTool(
   "clear_ideas",
   {
-    description: "Vacía la cola de ideas.",
+    description: "Empty the idea queue.",
     inputSchema: {},
   },
   async () => {
@@ -298,7 +298,7 @@ server.registerTool(
   "inject_chat",
   {
     description:
-      "Inyecta un mensaje de chat como si viniera de un usuario (para probar comandos del juego).",
+      "Inject a chat message as if a user sent it, to test game commands.",
     inputSchema: { user: z.string(), text: z.string() },
   },
   async ({ user, text }) => {

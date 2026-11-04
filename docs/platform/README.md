@@ -1,52 +1,49 @@
-# Platform documentation index
+# Platform documentation
 
-[Start here](../../README.md#start-here) remains the project entry point. For develop, use the [architecture map](../ARCHITECTURE.md) and [refactor report](REFACTOR_REPORT.md). The submission branch/tag preserve the hackathon deliverable; this index changes no approval, hosting state or spending authority.
+The project entry point is the [README](../../README.md). The overview is in [ARCHITECTURE](../ARCHITECTURE.md), and the plan is in the [roadmap](../ROADMAP.md).
 
-Current operations describe the shipped specialized boundaries, with worker/preparation off by default. Historical receipts prove only their stated run/version. Future requirements are not implemented behavior. No evidence was relocated; existing links remain valid.
+How to read these documents:
+- **Current** documents describe what the code on `main` does today.
+- **Records** prove only the run or version they name.
+- **Plans** are requirements that are not built yet.
 
-## Current operations and develop maintenance
+Hackathon handoffs, plans, audits and pull-request notes are kept, unchanged, in [docs/hackathon](../hackathon/README.md).
 
-| Document | How to read it |
+## Current
+
+| Document | What it covers |
 | --- | --- |
-| [BUILDER_PREWARM.md](BUILDER_PREWARM.md) | Current preparation controls and finite lease limits; default disabled. |
-| [CREATOR_CREDITS.md](CREATOR_CREDITS.md) | Current source-bound attribution and publication contract. |
-| [JUDGE_DEPLOYMENT.md](JUDGE_DEPLOYMENT.md) | Operator runbook; hosting is pending, not a deployment receipt. |
-| [LOCAL_RUNTIME.md](LOCAL_RUNTIME.md) | Current Linux isolation and bundled-game fallback boundary. |
-| [REFACTOR_REPORT.md](REFACTOR_REPORT.md) | Current develop module map, validation and preserved submission refs. |
-| [REMOTE_GAMES.md](REMOTE_GAMES.md) | Current specific adapters and empty shipped catalog. |
-| [STUDIO_WORKER.md](STUDIO_WORKER.md) | Current specialized Studio worker boundary and explicit run authorization. |
-| [MODE_A_FRAMES.md](MODE_A_FRAMES.md) | Current mode-A data plane: tick-rate state, keyframes/deltas, b1/d1 formats, interpolation by optional id, measured latency. |
-| [TRAFFIC.md](TRAFFIC.md) | Current frame/chat limits and polling cadence. |
+| [IDENTITY_SEATS.md](IDENTITY_SEATS.md) | Twitch, Kick and web identities, seat tokens and pairing by chat code (phase 2). |
+| [MODE_A_FRAMES.md](MODE_A_FRAMES.md) | What reaches the browser: tick-rate state, keyframes and deltas, `b1`/`d1`, interpolation, measured latency (phase 1). |
+| [TRAFFIC.md](TRAFFIC.md) | Frame and chat limits. Its 10 Hz figures predate phase 1. |
+| [LOCAL_RUNTIME.md](LOCAL_RUNTIME.md) | Linux isolation of bundled games and the fallback boundary. |
+| [CREATOR_CREDITS.md](CREATOR_CREDITS.md) | Attribution bound to the source version, and the publication contract. |
+| [REMOTE_GAMES.md](REMOTE_GAMES.md) | The specific external-game adapters; the shipped catalog is empty. |
+| [STUDIO_WORKER.md](STUDIO_WORKER.md) | The Studio build worker boundary and its explicit run authorization. Off by default. |
+| [BUILDER_PREWARM.md](BUILDER_PREWARM.md) | Preparing a build VM during voting, with finite leases. Off by default. |
+| [BUILD_QUARANTINE.md](BUILD_QUARANTINE.md) | The journal that keeps candidates inert until exact approval. |
+| [TEE_LOCAL_ADAPTER.md](TEE_LOCAL_ADAPTER.md) | The pinned local protocol adapter for teeworlds-rs. |
 
-## Historical evidence, decisions and handoffs
+## Records
 
-| Document | How to read it |
+| Document | What it records |
 | --- | --- |
-| [AUDIT_REPORT.md](AUDIT_REPORT.md) | November 1 response; superseded delivery counts and chronology. |
-| [BUILD_QUARANTINE.md](BUILD_QUARANTINE.md) | Journal implementation increment; its opening predates the connected worker. The journal boundary remains relevant. |
-| [CREATOR_GAME_DEMO.md](CREATOR_GAME_DEMO.md) | Bundled Grove authorship and attribution implementation evidence. |
-| [DELIVERY_CHECKPOINT.md](DELIVERY_CHECKPOINT.md) | Frozen submission delivery checkpoint; does not describe develop changes. |
-| [FREE_HOSTING_REVIEW.md](FREE_HOSTING_REVIEW.md) | Historical provider research; recheck terms before any owner decision. |
-| [HANDOFF_NEXT_SESSION.md](HANDOFF_NEXT_SESSION.md) | Prior Seed Race handoff and exact owner decisions. |
-| [INCREMENT_HISTORY.md](INCREMENT_HISTORY.md) | Intermediate failures, decisions and implementation chronology. |
-| [INCREMENT_VM_RUN_PROPOSAL.md](INCREMENT_VM_RUN_PROPOSAL.md) | Historical bounded run proposal; grants no new VM/model authority. |
-| [INTEGRATION_AUDIT.md](INTEGRATION_AUDIT.md) | Historical integration review, not a current test receipt. |
-| [LANTERN_ROLES_REVIEW.md](LANTERN_ROLES_REVIEW.md) | Exact reviewed roles revision; inert evidence. |
-| [LANTERN_TABLE_REVIEW.md](LANTERN_TABLE_REVIEW.md) | Exact approved Lantern Table evidence and known findings. |
-| [NEXT_INCREMENT.md](NEXT_INCREMENT.md) | Frozen increment calendar/results; no longer a refactor work queue. |
-| [PREWARM_CONTROL_VERIFICATION.md](PREWARM_CONTROL_VERIFICATION.md) | Real preparation/renewal/close verification receipts; no new spending authority. |
-| [REORIENTATION.md](REORIENTATION.md) | Historical selection of Plan B and earlier scope. |
-| [ROTATING_ROLES_PROPOSAL.md](ROTATING_ROLES_PROPOSAL.md) | Historical proposal with recorded outcome; no new test run authority. |
-| [SEED_RUNTIME_PROPOSAL.md](SEED_RUNTIME_PROPOSAL.md) | Prepared transfer/runtime proposal; no deployment or renewed approval. |
-| [SESSION_HANDOFF.md](SESSION_HANDOFF.md) | Submission-era handoff, branch and counts. |
-| [STUDIO_INCREMENT.md](STUDIO_INCREMENT.md) | Original Studio increment provenance and evidence. |
-| [TEE_DEMO_DECISION.md](TEE_DEMO_DECISION.md) | Recorded Plan B decision; external Tee stays off. |
-| [VM_TRIAL.md](VM_TRIAL.md) | Historical Seed Race trial and exact artifact provenance. |
+| [LANTERN_TABLE_REVIEW.md](LANTERN_TABLE_REVIEW.md) | The real Codex VM build, a separate test VM and the exact approval, with known findings. |
+| [LANTERN_ROLES_REVIEW.md](LANTERN_ROLES_REVIEW.md) | The reviewed rotating-roles revision; inert. |
+| [VM_TRIAL.md](VM_TRIAL.md) | The earlier Seed Race trial and its artifact provenance. |
+| [PREWARM_CONTROL_VERIFICATION.md](PREWARM_CONTROL_VERIFICATION.md) | Real prepare, renew and close checks on a build VM. |
+| [CREATOR_GAME_DEMO.md](CREATOR_GAME_DEMO.md) | Grove authorship and attribution. |
+| [STUDIO_INCREMENT.md](STUDIO_INCREMENT.md) | Where the Studio increment came from, and its evidence. |
+| [TEE_CLOUDFLARE_RESULT.md](TEE_CLOUDFLARE_RESULT.md) | The Cloudflare waiting-game VM trial of 2026-11-02. |
+| [TEE_RAILWAY_TRIAL.md](TEE_RAILWAY_TRIAL.md) | The Railway trial, rejected for the account before any resource existed. |
+| [TEE_DEMO_DECISION.md](TEE_DEMO_DECISION.md) | The hackathon decision to keep external Tee off. |
+| [FREE_HOSTING_REVIEW.md](FREE_HOSTING_REVIEW.md) | Provider research from 2026-11-01. Recheck the terms before relying on it. |
 
-## Future requirements and planning
+## Plans
 
-| Document | How to read it |
+| Document | What it asks for |
 | --- | --- |
-| [EXECUTION_PLAN.md](EXECUTION_PLAN.md) | Historical execution plan and future seams; does not authorize new work or spending. |
-| [HOSTING_POLICY.md](HOSTING_POLICY.md) | Owner-directed future hosting/lifecycle requirements; current limits are explicit. |
-| [VISION.md](VISION.md) | Long-term product requirements, not a claim of implementation. |
+| [HOSTING_POLICY.md](HOSTING_POLICY.md) | Hosting choices and VM inactivity defaults set by the owner. |
+| [SESSION_FLOW.md](SESSION_FLOW.md) | The intended stream session, with parallel waiting-game and construction lanes. |
+| [JUDGE_DEPLOYMENT.md](JUDGE_DEPLOYMENT.md) | A runbook for a fixed HTTPS host. Nothing has been provisioned. |
+| [VISION.md](VISION.md) | Long-term product requirements, not implemented behaviour. |

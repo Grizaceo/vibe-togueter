@@ -1,5 +1,5 @@
-// Compatibilidad por plataforma: Twitch EventSub (HMAC) + Kick webhook (RSA).
-// Requiere server corriendo con VA_KICK_PUBKEY=<test pub> y eventsubSecret='cambia-esto-tambien'.
+// Platform compatibility: Twitch EventSub (HMAC) and the Kick webhook (RSA).
+// Needs a running server with VA_KICK_PUBKEY=<test public key> and eventsubSecret='cambia-esto-tambien'.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 
@@ -40,7 +40,7 @@ r = await fetch(BASE + '/webhook/twitch', {
   headers: { ...twitchHeaders('notification', {}), 'twitch-eventsub-message-signature': 'sha256=deadbeef' },
   body: '{}',
 });
-ok('twitch firma mala → 403', r.status === 403);
+ok('twitch bad signature → 403', r.status === 403);
 
 // channel.subscribe notification
 const subBody = {
@@ -61,7 +61,7 @@ ok('twitch bits.use', r.status === 204);
 
 let after = (await treasury()).balance;
 // sub $2.50 + 500 bits × $0.01 = $7.50
-ok('twitch depósitos en fondo', Math.abs(after - before - 7.5) < 0.01, `+$${(after - before).toFixed(2)}`);
+ok('twitch deposits reach the fund', Math.abs(after - before - 7.5) < 0.01, `+$${(after - before).toFixed(2)}`);
 
 // ---------- Kick webhook (RSA test key) ----------
 const PRIV = fs.readFileSync(process.env.VA_TEST_KICK_PRIVATE_KEY || '/tmp/kick-test-priv.pem', 'utf8');
@@ -80,7 +80,7 @@ function kickHeaders(evType, raw) {
 
 before = after;
 
-// chat.message.sent → debe llegar al pipeline (lo verificamos vía feed en spectate)
+// chat.message.sent must reach the chat pipeline (checked through the spectator feed)
 const { WebSocket } = await import('ws');
 const spec = new WebSocket(BASE.replace(/^http/,'ws')+'/spectate');
 const feeds = [];
@@ -91,15 +91,15 @@ const chatBody = { message_id: 'm1', sender: { user_id: 4242, username: 'fan_kic
 let raw = JSON.stringify(chatBody);
 const chatHeaders = kickHeaders('chat.message.sent', raw);
 r = await fetch(BASE + '/webhook/kick', { method: 'POST', headers: chatHeaders, body: raw });
-ok('kick chat.message.sent aceptado', r.status === 200);
+ok('kick chat.message.sent accepted', r.status === 200);
 await new Promise(r => setTimeout(r, 400));
-ok('kick chat en feed', feeds.some(t => t.includes('fan_kick: hola desde kick')));
+ok('kick chat reaches the feed', feeds.some(t => t.includes('fan_kick: hola desde kick')));
 
 // Kick redelivers with the same message id: acknowledged, not replayed.
 const fedBefore = feeds.filter(t => t.includes('hola desde kick')).length;
 r = await fetch(BASE + '/webhook/kick', { method: 'POST', headers: chatHeaders, body: raw });
 await new Promise(r => setTimeout(r, 300));
-ok('kick reentrega duplicada no se repite', r.status === 200 && (await r.text()) === 'duplicate' && feeds.filter(t => t.includes('hola desde kick')).length === fedBefore);
+ok('kick redelivery is not replayed', r.status === 200 && (await r.text()) === 'duplicate' && feeds.filter(t => t.includes('hola desde kick')).length === fedBefore);
 
 // firma mala
 r = await fetch(BASE + '/webhook/kick', {
@@ -107,7 +107,7 @@ r = await fetch(BASE + '/webhook/kick', {
   headers: { ...kickHeaders('chat.message.sent', raw), 'kick-event-signature': 'AAAA' },
   body: raw,
 });
-ok('kick firma mala → 403', r.status === 403);
+ok('kick bad signature → 403', r.status === 403);
 
 // channel.subscription.new → depósito
 const subKick = { subscriber: { username: 'kickfan' } };
@@ -123,7 +123,7 @@ ok('kick kicks.gifted', r.status === 200);
 
 after = (await treasury()).balance;
 // kick sub $4.74 + 250 kicks × $0.01 = $7.24
-ok('kick depósitos en fondo', Math.abs(after - before - 7.24) < 0.01, `+$${(after - before).toFixed(2)}`);
+ok('kick deposits reach the fund', Math.abs(after - before - 7.24) < 0.01, `+$${(after - before).toFixed(2)}`);
 
 spec.close();
 console.log('done');

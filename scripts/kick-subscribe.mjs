@@ -1,12 +1,11 @@
-// Suscribe el webhook /webhook/kick a los eventos de un canal Kick.
-// Uso:
-//   1. kick.com → Account → Developer: crea app, activa "Enable Webhooks" con
-//      https://<tu-tunnel-cloudflare>/webhook/kick
-//   2. Obtén app access token (client credentials) o user token OAuth.
+// Subscribes /webhook/kick to a Kick channel's events.
+//   1. At kick.com, Account, Developer: create an app and enable webhooks with
+//      https://<public URL>/webhook/kick.
+//   2. Get an app access token (client credentials) or a user OAuth token.
 //   3. node scripts/kick-subscribe.mjs --token <TOKEN> --user <BROADCASTER_USER_ID>
 //
-// broadcaster_user_id: numérico — GET https://api.kick.com/public/v1/channels?slug=<canal>
-// Lista subs actuales: --list --token <T>   Borra: --delete <id> --token <T>
+// broadcaster_user_id is numeric: GET https://api.kick.com/public/v1/channels?slug=<channel>
+// List subscriptions: --list --token <T>   Delete one: --delete <id> --token <T>
 
 const args = process.argv.slice(2);
 const arg = (n, d) => { const i = args.indexOf(`--${n}`); return i >= 0 ? args[i + 1] : d; };
@@ -14,7 +13,7 @@ const TOKEN = arg('token', process.env.KICK_TOKEN);
 const USER_ID = arg('user', null);
 const API = 'https://api.kick.com/public/v1';
 
-if (!TOKEN) { console.error('falta --token'); process.exit(1); }
+if (!TOKEN) { console.error('missing --token'); process.exit(1); }
 const H = { authorization: `Bearer ${TOKEN}`, 'content-type': 'application/json' };
 
 async function api(method, p, body) {
@@ -33,7 +32,7 @@ if (args.includes('--delete')) {
   await api('DELETE', `/events/subscriptions/${id}`);
   console.log('deleted', id); process.exit(0);
 }
-if (!USER_ID) { console.error('falta --user <broadcaster_user_id>'); process.exit(1); }
+if (!USER_ID) { console.error('missing --user <broadcaster_user_id>'); process.exit(1); }
 
 const sub = await api('POST', '/events/subscriptions', {
   broadcaster_user_id: Number(USER_ID),
@@ -45,4 +44,4 @@ const sub = await api('POST', '/events/subscriptions', {
   ],
   method: 'webhook',
 });
-console.log('suscripción creada:', JSON.stringify(sub, null, 2));
+console.log('subscription created:', JSON.stringify(sub, null, 2));

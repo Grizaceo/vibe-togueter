@@ -14,6 +14,15 @@ Run from the repository root after `npm ci`.
 | `npm run setup:local` | Prepare ignored local operator configuration. |
 | `npm run twitch:subscribe -- [args]` | Register Twitch EventSub subscriptions; requires operator authorization. |
 
-The separate browser rehearsal is `node scripts/rehearse-ui-local.mjs`. It uses a disposable copy, mock worker routes and headless Chromium, with no owner environment, cloud VM or model call. Screenshots and JSON go to `docs/evidence/local-ui-*`; new outputs are ignored, while committed submission evidence remains tracked.
+## Scripts outside npm
 
-See [Start here](../README.md#start-here) for the demo and delivery evidence. Evidence remains in place to preserve historical references. Do not treat ignored runtime journals as disposable operator data.
+| Script | Purpose |
+| --- | --- |
+| `node scripts/rehearse-ui-local.mjs` | Headless Chromium rehearsal of the lobby, overlay, Studio and privacy pages. Uses a disposable copy and mock worker routes, with no owner environment, cloud VM or model call. Writes `docs/evidence/local-ui-*`, which git ignores. |
+| `node scripts/rehearse-seats.mjs` | Headless Chromium rehearsal of seat pairing. Pairs a Kick viewer through a webhook signed with a local test key, then checks a reload, a web guest and a legacy client. Writes `docs/evidence/seats-local-*`. |
+| `node scripts/public-link-check.mjs` | Owner-run check of `!join` through a real cloudflared tunnel. It never opens ingress itself. Writes `docs/evidence/public-link-real-*`. |
+| `node scripts/latency/bench.mjs` | Mode-A latency and traffic benchmark. Options and results are in [MODE_A_FRAMES](platform/MODE_A_FRAMES.md). |
+| `node scripts/demo-local.mjs` | Disposable practice session with terminal controls. |
+| `node scripts/arena-admin.mjs load <game>` | Switch the bundled game on a running local controller. |
+
+How to run the controller is in the [operating guide](OPERATING.md). Do not treat ignored runtime journals as disposable operator data.

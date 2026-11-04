@@ -57,6 +57,9 @@ const ins = await tool('install_game', { name: 'marble-race', code: tmpl['game.j
 ok('install_game valida', !ins.result.isError, ins.result.content[0].text.slice(0, 120));
 
 // a broken game must NOT validate
+const escape = await tool('install_game', { name: '../games-escape', code: tmpl['game.js'], activate: false });
+// The input schema only accepts [\w-]+, so a path never reaches the handler.
+ok('install_game rejects a path as a game name', escape.result.isError === true && !fs.existsSync(path.join(ROOT, 'games-escape')), escape.result.content[0].text.slice(0, 100));
 const bad = await tool('install_game', { name: 'roto', code: 'export function nope(){}', activate: false });
 ok('install_game rechaza código inválido', bad.result.isError === true, bad.result.content[0].text.slice(0, 100));
 

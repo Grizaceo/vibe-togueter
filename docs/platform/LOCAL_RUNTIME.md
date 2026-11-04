@@ -14,4 +14,4 @@ References: [Node permission limitations](https://nodejs.org/api/permissions.htm
 
 A second review reproduced a global context constructor route into the guest process. The null-prototype context regression now blocks it, and the controller independently hashes submitted bytes before accepting the guest version. Missing-file/watch failures and moderator requests during transitions were also repaired. Eight isolation regressions passed on final re-review. UTF-8 stream decoding preserves multibyte names across pipe chunks.
 
-Historical isolation-increment suite: 89 focused + 75 integration = **164 passing checks**, zero failures; [saved output](../evidence/isolation-tests.txt). The [current delivery checkpoint](DELIVERY_CHECKPOINT.md) records the later complete suite and current browser evidence.
+Historical isolation-increment suite: 89 focused + 75 integration = **164 passing checks**, zero failures; [saved output](../evidence/isolation-tests.txt). The [current delivery checkpoint](../hackathon/platform/DELIVERY_CHECKPOINT.md) records the later complete suite and current browser evidence.

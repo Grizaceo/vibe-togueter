@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 treasury.jsonl
 ideas.jsonl
 games/auto-*
@@ -10,3 +10,16 @@ runtime/
 
 # Disposable browser rehearsal outputs; committed hackathon evidence stays tracked.
 docs/evidence/local-ui-*
+
+# vitrina: workshop and agent folders stay out of the showcase
+.claude/
+.codex/
+.cursor/
+.hermes/
+.gemini/
+.opencode/
+.devin/
+.specstory/
+
+# Workshop notes stay out of git in this public repo (vitrina R1).
+.workshop/

@@ -1,6 +1,6 @@
 # Recording shot list — 2:45 English draft
 
-Record actual Twitch participation and actual Codex footage. The text and captions are ready to rehearse, not evidence that a video exists. Measure the final export and keep it under three minutes. The current narration has 320 words; [draft checks](../evidence/recording-draft-check.json) confirm matching caption text and a planned end at 2:45. The public YouTube link and human review remain owner work.
+Record actual Twitch participation and actual Codex footage. The text and captions are ready to rehearse, not evidence that a video exists. Measure the final export and keep it under three minutes. The current narration has 320 words; [draft checks](../../evidence/recording-draft-check.json) confirm matching caption text and a planned end at 2:45. The public YouTube link and human review remain owner work.
 
 | Time | Capture | Keep visible / verify |
 | --- | --- | --- |
@@ -15,11 +15,11 @@ Record actual Twitch participation and actual Codex footage. The text and captio
 
 ## Before recording
 
-- Complete the hosting/recording notice and test the real judging URL with [the deployment checklist](../platform/JUDGE_DEPLOYMENT.md). Use [REHEARSAL](../REHEARSAL.md) for human Twitch checks.
-- Open [original Lantern review](../platform/LANTERN_TABLE_REVIEW.md), [static preview](../evidence/lantern-table-static-preview.png), [real-run observations](../evidence/increment-real-rerun-status.json), [owner review](../evidence/lantern-table-owner-review.json) and the real Codex thread before starting.
+- Complete the hosting/recording notice and test the real judging URL with [the deployment checklist](../../platform/JUDGE_DEPLOYMENT.md). Use [REHEARSAL](../REHEARSAL.md) for human Twitch checks.
+- Open [original Lantern review](../../platform/LANTERN_TABLE_REVIEW.md), [static preview](../../evidence/lantern-table-static-preview.png), [real-run observations](../../evidence/increment-real-rerun-status.json), [owner review](../../evidence/lantern-table-owner-review.json) and the real Codex thread before starting.
 - Keep keys, `.env`, login instructions, participant private data and unrelated tabs off camera. Capture the complete credit strip at 1080p; check the 720p export.
 - Rehearse [narration](narration-en.txt), then retime [captions](captions-en.srt) to actual speech. Omit narration for an action that was not captured. If Tee footage is unavailable, use that time for the planned adapter over the Vibe Arena screen, without claiming the external game is integrated.
-- [Plan B was selected at the Tee gate](../platform/TEE_DEMO_DECISION.md); the real integration trial was not executed. Keep the external clip as future vision with its declared provenance. The owner decides separate-source access; an integrated demonstration would also require addressing judges' access to that game's code. No new paid run is needed for the existing Lantern evidence.
+- [Plan B was selected at the Tee gate](../../platform/TEE_DEMO_DECISION.md); the real integration trial was not executed. Keep the external clip as future vision with its declared provenance. The owner decides separate-source access; an integrated demonstration would also require addressing judges' access to that game's code. No new paid run is needed for the existing Lantern evidence.
 
 ## Export and delivery
 
