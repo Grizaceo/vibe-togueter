@@ -10,7 +10,7 @@ export class ChatPredictions {
   owner(actor) {
     if (
       actor?.owner !== true ||
-      !["twitch", "streamer-ui"].includes(actor.source)
+      !["twitch", "kick", "streamer-ui"].includes(actor.source)
     )
       throw Error("Only the streamer controls predictions.");
   }

@@ -3,6 +3,7 @@ import path from "node:path";
 import { ChatGate } from "../traffic.js";
 import { roundApprovalActor } from "../approval-delegation.js";
 import { teeEntryURL } from "../tee-join.js";
+import { chatPrincipal, CHAT_PLATFORMS } from "../identity.js";
 
 export function createChatCommands({
   ROOT,
@@ -24,25 +25,26 @@ export function createChatCommands({
 }) {
   const chatGate = new ChatGate();
 
-  function handleChat({
-    user,
-    text,
-    source,
-    messageId,
-    participantId,
-    isModerator = false,
-  }) {
+  function handleChat(message) {
+    let { user, text, source, messageId, participantId } = message;
     text = String(text).slice(0, text.startsWith("!idea ") ? 10000 : 200);
     user = String(user).slice(0, 100);
+    // Roles come from the platform (IRC tags, signed Kick payload), never a name.
+    const principal = chatPrincipal(message, { twitchChannel: TWITCH_CHANNEL });
+    const isModerator = principal.moderator;
+    const platformName = principal.platform === "kick" ? "Kick" : "Twitch";
     if (
-      source === "twitch" &&
+      CHAT_PLATFORMS.includes(source) &&
       text.trim() === "!fallback" &&
-      (isModerator || user.toLowerCase() === TWITCH_CHANNEL?.toLowerCase())
+      (isModerator || principal.broadcaster)
     ) {
-      requestFallback("Requested by Twitch moderator " + user);
+      requestFallback(`Requested by ${platformName} moderator ${user}`);
       return;
     }
-    const control = chatEffects.command({ source, user, isModerator }, text);
+    const control = chatEffects.command(
+      { source, user, isModerator, isBroadcaster: principal.broadcaster },
+      text,
+    );
     if (control.handled) {
       if (control.changed) {
         if (chatEffects.blocked) {
@@ -59,19 +61,23 @@ export function createChatCommands({
       }
       return;
     }
-    if (!chatGate.accept(source, participantId || user)) return;
+    if (!chatGate.accept(source, principal.platformId || participantId || user))
+      return;
     feed("chat", `${user}: ${text}`);
     if (
       !chatEffects.blocked &&
       !host.error &&
       host.gameDir === path.join(ROOT, "games", "community-grove")
     ) {
-      const bonus = crowdBursts.accept({ source, user }, text);
+      const bonus = crowdBursts.accept(
+        { source, user, id: principal.id || undefined },
+        text,
+      );
       if (bonus) {
         host.safeCall("onCrowdBonus", bonus);
         feed(
           "system",
-          `${bonus.participants} distinct Twitch viewers unlocked a ${bonus.kind} bonus!`,
+          `${bonus.participants} distinct viewers unlocked a ${bonus.kind} bonus!`,
         );
       }
     }
@@ -108,12 +114,10 @@ export function createChatCommands({
       return;
     }
     const actor = {
-      id: participantId || user,
+      id: principal.platformId || participantId || user,
       name: user,
       source,
-      owner:
-        source === "twitch" &&
-        user.toLowerCase() === TWITCH_CHANNEL?.toLowerCase(),
+      owner: principal.broadcaster,
     };
     if (cmd === "delegate") {
       try {
@@ -160,8 +164,8 @@ export function createChatCommands({
       return;
     }
     if (cmd === "fallback") {
-      if (source === "twitch" && (actor.owner || isModerator))
-        requestFallback("Requested by Twitch moderator " + user);
+      if (CHAT_PLATFORMS.includes(source) && (actor.owner || isModerator))
+        requestFallback(`Requested by ${platformName} moderator ${user}`);
       return;
     }
     if (cmd === "tee") {

@@ -8,7 +8,7 @@ export class ApprovalDelegation {
   owner(actor) {
     if (
       actor?.owner !== true ||
-      !["twitch", "streamer-ui"].includes(actor.source)
+      !["twitch", "kick", "streamer-ui"].includes(actor.source)
     )
       throw Error("Only the streamer can delegate round approval.");
   }
@@ -25,6 +25,8 @@ export class ApprovalDelegation {
       throw Error("Choose a moderator login and duration of 1–1800 seconds.");
     this.grant = {
       name: name.toLowerCase(),
+      // The login is matched on the platform the streamer delegated from.
+      platform: actor.source === "kick" ? "kick" : "twitch",
       expiresAt: this.now() + seconds * 1000,
     };
     return this.public();
@@ -43,7 +45,7 @@ export class ApprovalDelegation {
     const grant = this.public();
     return !!(
       grant &&
-      actor?.source === "twitch" &&
+      actor?.source === (grant.platform || "twitch") &&
       isModerator === true &&
       String(actor.name).toLowerCase() === grant.name
     );

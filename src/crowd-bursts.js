@@ -1,4 +1,4 @@
-// Twitch login identity counts once per burst. Browser aliases cannot manufacture viewers.
+// One platform identity (Twitch or Kick) counts once per burst. Browser aliases cannot manufacture viewers.
 const kindFor = (text) => {
   const token = String(text).trim().replaceAll("\ufe0f", "");
   return token === "☀" ? "sun" : token === "🌧" ? "rain" : null;
@@ -25,10 +25,11 @@ export class CrowdBursts {
     for (const [id, at] of this.groups[kind])
       if (at <= cutoff) this.groups[kind].delete(id);
   }
-  accept({ source, user }, text) {
+  // id: the platform principal ("twitch:123"); the login is the fallback key.
+  accept({ source, user, id: principalId }, text) {
     if (
       !this.enabled ||
-      source !== "twitch" ||
+      !["twitch", "kick"].includes(source) ||
       typeof user !== "string" ||
       !user.trim()
     )
@@ -39,7 +40,7 @@ export class CrowdBursts {
     const now = this.now();
     if (now < this.cooldown[kind]) return null;
     const group = this.groups[kind],
-      id = user.toLowerCase();
+      id = principalId || source + ":" + user.toLowerCase();
     if (group.has(id)) return null;
     group.set(id, now);
     if (group.size < this.needed) return null;

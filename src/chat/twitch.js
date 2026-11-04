@@ -16,12 +16,22 @@ export function parseTwitchMessage(line, channel) {
   if (!match || match[2].toLowerCase() !== channel.toLowerCase()) return null;
   if (tags["source-room-id"] && tags["source-room-id"] !== tags["room-id"])
     return null;
+  const numeric = (value) => (/^\d{1,20}$/.test(value || "") ? value : null);
+  const userId = numeric(tags["user-id"]),
+    roomId = numeric(tags["room-id"]);
+  const badges = (tags.badges || "").split(",").map((b) => b.split("/")[0]);
   return {
     user: match[1],
     text: match[3],
     source: "twitch",
     messageId: tags.id,
-    ...(tags.mod === "1" ? { isModerator: true } : {}),
+    ...(userId ? { platformUserId: userId } : {}),
+    ...(tags["display-name"] ? { displayName: tags["display-name"] } : {}),
+    ...(tags.mod === "1" || badges.includes("moderator")
+      ? { isModerator: true }
+      : {}),
+    // The broadcaster is the account whose id is the room's id.
+    ...(userId && roomId ? { isBroadcaster: userId === roomId } : {}),
   };
 }
 export function connectTwitch(
