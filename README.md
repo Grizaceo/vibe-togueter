@@ -11,7 +11,7 @@ Alpha.
 **History.**
 - It started as an entry to the Codex x TwitchCon hackathon of November 2026.
 - The judged state is frozen at the tag `submission-2026-11-02` and the branch `develop`.
-- Work continues on `next`, following the [roadmap](docs/ROADMAP.md).
+- Work continues on `main`, following the [roadmap](docs/ROADMAP.md).
 
 **Roadmap progress.**
 - Phase 0 (public join link) and phase 1 (low-latency frames) are done.
@@ -66,13 +66,13 @@ More detail:
   - the three-VM plan and the delivery modes;
   - pairing by chat code for identity;
   - the scope of each roadmap phase;
-  - every merge into `next`.
+  - every merge into `main`.
 
   I reviewed and approved the exact artifacts from the VM build trials.
 - **Before the hackathon:** I built the first prototype with Devin CLI. Commit `fab3227` records it.
 - **Written by AI:**
   - **During the hackathon:** Codex wrote the code. Devin reviewed it read-only and drafted the product diagrams with me.
-  - **After the hackathon:** Claude Code wrote most of the work on `next` (the public link, the frame format, identity and seats) and the first draft of this README.
+  - **After the hackathon:** Claude Code wrote most of the work on `main` (the public link, the frame format, identity and seats) and the first draft of this README.
 - **Verified:**
   - the `npm test` suite ([claims.json](claims.json));
   - headless Chromium rehearsals of the lobby, overlay, Studio and seat pairing;
@@ -93,4 +93,4 @@ More detail:
 - **Tee.** Tee individual play still asks for a name. It moves to seats with the game protocol in roadmap phase 3.
 - **Public link.** Quick tunnels change hostname on every start, and there is no stable hosted instance.
 - **Build credits.** They are simulated accounting, not money. No payment is processed.
-- **Live stream.** No human stream or OBS rehearsal has been done on `next`.
+- **Live stream.** No human stream or OBS rehearsal has been done on `main`.

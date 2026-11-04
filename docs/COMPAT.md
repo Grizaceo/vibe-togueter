@@ -21,4 +21,4 @@ Twitch webhook subscriptions require an app token after user-scope consent, HTTP
 
 Source checks: [token validation](https://dev.twitch.tv/docs/authentication/validate-tokens/), [subscription authorization](https://dev.twitch.tv/docs/eventsub/manage-subscriptions/#authorization), [event types/scopes](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/). Do not equate valid signed fixtures with real purchases or Twitch delivery.
 
-The shipped configuration excludes external runtimes and leaves paid-event credit simulation off. The Twitch checks above date from the hackathon and were not replayed on `next`.
+The shipped configuration excludes external runtimes and leaves paid-event credit simulation off. The Twitch checks above date from the hackathon and were not replayed on `main`.

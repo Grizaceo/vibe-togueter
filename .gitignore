@@ -20,3 +20,6 @@ docs/evidence/local-ui-*
 .opencode/
 .devin/
 .specstory/
+
+# Workshop notes stay out of git in this public repo (vitrina R1).
+.workshop/

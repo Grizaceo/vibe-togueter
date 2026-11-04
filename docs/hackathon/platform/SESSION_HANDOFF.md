@@ -15,7 +15,7 @@ The authorized technical increment is complete. Start with [NEXT_INCREMENT.md](N
 
 ## Next session
 
-Follow the user's next instruction. Existing pending delivery work is owner human Twitch/mod/three-account and OBS rehearsal, durable free judge access, hosting/recording disclosure, English video/YouTube, private push and testing@devpost.com access, then Devpost. See [REHEARSAL.md](../REHEARSAL.md), [DEMO_SCRIPT.md](../DEMO_SCRIPT.md), [SUBMISSION.md](../SUBMISSION.md) and [final audit](../../../docs/evidence/increment-final-audit.json). Do not mistake these prepared owner actions for completed submission.
+Follow the user's next instruction. Existing pending delivery work is owner human Twitch/mod/three-account and OBS rehearsal, durable free judge access, hosting/recording disclosure, English video/YouTube, private push and testing@devpost.com access, then Devpost. See [REHEARSAL.md](../REHEARSAL.md), [DEMO_SCRIPT.md](../DEMO_SCRIPT.md), [SUBMISSION.md](../SUBMISSION.md) and [final audit](../../evidence/increment-final-audit.json). Do not mistake these prepared owner actions for completed submission.
 
 Keep main Devpost session `01a19536-0f02-7fc3-b030-d6b6fd8e170c`; list additional work sessions separately. Preserve Devin baseline provenance and exact approved artifacts. No .env/token/secret reads or commits, candidate host execution, push, upload, publication, submission, payment calls or unapproved new spend. New guest/model work needs a new bounded authorization and guest login where applicable; do not repeat the completed tests merely to resume.
 

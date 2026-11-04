@@ -27,7 +27,7 @@ Reviewed bundled games use the current Linux process-isolation path. Their watch
 
 `runtime/` holds controller leases, durable rounds, creator/publication records, quarantine and build journals. Keep it on persistent storage, with private backups and an operator retention/deletion procedure. Session-only controls such as predictions and delegated approval reset on restart; feed history is bounded memory. `artifacts/` holds inert evidence and is never a candidate deployment directory.
 
-`server.js` contains composition only. On `next`, the WebSocket protocol gained negotiated frame formats (phase 1) and seat messages (phase 2). Clients that ask for neither get the submission behaviour. Treasury/event-credit accounting remains simulated, with no payment settlement.
+`server.js` contains composition only. On `main`, the WebSocket protocol gained negotiated frame formats (phase 1) and seat messages (phase 2). Clients that ask for neither get the submission behaviour. Treasury/event-credit accounting remains simulated, with no payment settlement.
 
 ## Composition map
 
@@ -44,4 +44,4 @@ Reviewed bundled games use the current Linux process-isolation path. Their watch
 
 The admin gate is a trust boundary, not a route-level privilege inferred from a public name. Provider CLI credentials stay on the operator side; only the explicitly assigned fresh guest authenticates the coding agent. Build/test cleanup leases and durable ownership journals remain authoritative after observation failures. Public activity never includes candidate source, login instructions, approval tokens or voter identities.
 
-See the [platform index](platform/README.md) for current documents versus historical records. The hackathon [refactor report](../.workshop/hackathon/platform/REFACTOR_REPORT.md) lists the local PRs and retained debt. The tag `submission-2026-11-02` and the branch `develop` stay frozen; work continues on `next`.
+See the [platform index](platform/README.md) for current documents versus historical records. The hackathon [refactor report](hackathon/platform/REFACTOR_REPORT.md) lists the local PRs and retained debt. The tag `submission-2026-11-02` and the branch `develop` stay frozen; work continues on `main`.

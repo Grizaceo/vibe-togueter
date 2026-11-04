@@ -1,6 +1,6 @@
 # Platform roadmap (post-hackathon)
 
-Work continues on the `next` branch. `develop` (d2edc1e) and the tag `submission-2026-11-02` are the judged state and stay frozen until results are published.
+Work continues on the `main` branch, which was called `next` until 2026-11-03. `develop` (d2edc1e) and the tag `submission-2026-11-02` are the judged state and stay frozen until results are published.
 
 ## Principles
 
@@ -118,4 +118,4 @@ The order follows dependencies:
 ## Ongoing
 
 - Remove merged `refactor/*` branches and the prunable `/tmp` worktrees.
-- Add CI for `next`.
+- Add CI for `main`.

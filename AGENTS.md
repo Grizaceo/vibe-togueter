@@ -3,7 +3,7 @@
 ## This project
 
 - **Branches.**
-  - The base branch is `next`. Work in a worktree on `agent/<harness>/<topic>`, created from `next`; the maintainer merges it.
+  - The base branch is `main`. Work in a worktree on `agent/<harness>/<topic>`, created from `main`; the maintainer merges it.
   - `develop` and the tag `submission-2026-11-02` are the judged hackathon state. Never commit or push to them.
 - **Checks before every commit.** Run `npm test` and report the real number of checks. Then run `vitrina check .`.
 - **Ask first, every time.**
@@ -11,7 +11,7 @@
   - Do not open public ingress (cloudflared or any tunnel).
   - Do not create VMs or spend provider credits.
 - **Reviewed hashes.** The source of the bundled games in `games/` is bound to reviewed hashes in each `credits.json`. Change it only with the maintainer's approval.
-- **Where notes go.** Notes, plans and handoffs go in `.workshop/`. Hackathon material is in `.workshop/hackathon/`. The plan is [docs/ROADMAP.md](docs/ROADMAP.md).
+- **Where notes go.** Notes, plans and handoffs go in `.workshop/`, which git ignores because the repo is public. Hackathon material, kept for the record, is in `docs/hackathon/`. The plan is [docs/ROADMAP.md](docs/ROADMAP.md).
 
 <!-- vitrina:block v=1 sha256=e8e27628030a63daa382bf813822abbb09c611bdedc19f732f9a042f5b1f796d -->
 ## Vitrina rules for agents

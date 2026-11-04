@@ -1,4 +1,4 @@
-<!-- vitrina:translation-of README.md sha256=f4145a5024f694c5220e98c60b8376a42c75d8c8ba8cfbeb8d682e99756837ec -->
+<!-- vitrina:translation-of README.md sha256=2cb268f3739c598c014aa26135e0e8b3d228c0784f019f0f64f280599dd62406 -->
 # Vibe Arena
 
 [English](README.md)
@@ -12,7 +12,7 @@ Alfa.
 **Historia.**
 - Nació como proyecto para el hackathon Codex x TwitchCon de noviembre de 2026.
 - El estado que se evaluó está congelado en el tag `submission-2026-11-02` y en la rama `develop`.
-- El trabajo sigue en `next`, según el [roadmap](docs/ROADMAP.md).
+- El trabajo sigue en `main`, según el [roadmap](docs/ROADMAP.md).
 
 **Avance del roadmap.**
 - La fase 0 (link público para unirse) y la fase 1 (frames de baja latencia) están hechas.
@@ -67,13 +67,13 @@ Más detalle, en inglés:
   - el plan de tres VMs y los modos de entrega;
   - el emparejamiento por código en el chat para la identidad;
   - el alcance de cada fase del roadmap;
-  - cada merge a `next`.
+  - cada merge a `main`.
 
   Revisé y aprobé los artefactos exactos de las pruebas de construcción en VM.
 - **Antes del hackathon:** construí el primer prototipo con Devin CLI. El commit `fab3227` lo registra.
 - **Lo escribió la IA:**
   - **Durante el hackathon:** Codex escribió el código. Devin lo revisó en modo de solo lectura y redactó conmigo los diagramas del producto.
-  - **Después del hackathon:** Claude Code escribió la mayor parte del trabajo en `next` (el link público, el formato de frames, la identidad y los asientos) y el primer borrador de este README.
+  - **Después del hackathon:** Claude Code escribió la mayor parte del trabajo en `main` (el link público, el formato de frames, la identidad y los asientos) y el primer borrador de este README.
 - **Lo verifiqué:**
   - la suite `npm test` ([claims.json](claims.json));
   - ensayos en Chromium headless de la página de juego, el overlay, el Studio y el emparejamiento;
@@ -94,4 +94,4 @@ Más detalle, en inglés:
 - **Tee.** El juego individual de Tee todavía pide un nombre. Pasa a asientos con el protocolo de juegos de la fase 3 del roadmap.
 - **Link público.** Los quick tunnels cambian de hostname en cada arranque, y no hay una instancia alojada estable.
 - **Créditos de construcción.** Son contabilidad simulada, no dinero. No se procesa ningún pago.
-- **Transmisión en vivo.** No hay un ensayo humano de transmisión ni de OBS sobre `next`.
+- **Transmisión en vivo.** No hay un ensayo humano de transmisión ni de OBS sobre `main`.

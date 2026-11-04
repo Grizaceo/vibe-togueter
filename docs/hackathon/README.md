@@ -1,6 +1,6 @@
 # Hackathon workshop (Codex x TwitchCon, November 1–2, 2026)
 
-Working material from the hackathon, moved out of `docs/` on 2026-11-03.
+Working material from the hackathon, gathered here on 2026-11-03 so the rest of `docs/` describes the current project.
 
 What is here:
 - handoffs and session notes;

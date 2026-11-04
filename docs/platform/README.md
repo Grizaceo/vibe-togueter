@@ -3,11 +3,11 @@
 The project entry point is the [README](../../README.md). The overview is in [ARCHITECTURE](../ARCHITECTURE.md), and the plan is in the [roadmap](../ROADMAP.md).
 
 How to read these documents:
-- **Current** documents describe what the code on `next` does today.
+- **Current** documents describe what the code on `main` does today.
 - **Records** prove only the run or version they name.
 - **Plans** are requirements that are not built yet.
 
-Hackathon handoffs, plans, audits and pull-request notes are kept in [.workshop/hackathon](../../.workshop/hackathon/README.md).
+Hackathon handoffs, plans, audits and pull-request notes are kept, unchanged, in [docs/hackathon](../hackathon/README.md).
 
 ## Current
 

@@ -27,11 +27,11 @@ November 2 UTC gates: 10:00 real-A go/no-go; 13:00 C eligibility; 15:00 feature 
 
 | Block | Committed result | Evidence |
 | --- | --- | --- |
-| 0 | Grove stages 053698f, credits/sidebar 612e15a, English 8e04663, boundaries b880112 | Fresh lobby/overlay/Studio captures; [720p credits](../../../docs/evidence/overlay-scaled-720p.png) |
+| 0 | Grove stages 053698f, credits/sidebar 612e15a, English 8e04663, boundaries b880112 | Fresh lobby/overlay/Studio captures; [720p credits](../../evidence/overlay-scaled-720p.png) |
 | B | Pause a86e583; fallback df59edb; bursts 99c2cce; predictions 580c3b9; delegation c2ad17e; co-credit 7f1a560 | Six separately disableable flags; focused/integration and browser checks |
-| A | Worker 723d4cd; approval retry fc8d9f2; stdin fix 1e8bd6c; real approved result 4dddd3e | [Exact review](../../../docs/platform/LANTERN_TABLE_REVIEW.md): ~63 seconds dispatch→tested/cleaned, nine protocol checks, zero audience ballots |
-| C | Inert draft 2e61db6; actual tests/owner review 8ffe83f | [Roles review](../../../docs/platform/LANTERN_ROLES_REVIEW.md): 14 controlled guest checks; no natural full-game claim |
-| Warm controls | a13097d; bounded destruction observation 9dbc7b4; real verification f9b41ef | [Prepare/extend/pause/resume/close](../../../docs/platform/PREWARM_CONTROL_VERIFICATION.md): same guest, 46.249 seconds, no model/login completion |
+| A | Worker 723d4cd; approval retry fc8d9f2; stdin fix 1e8bd6c; real approved result 4dddd3e | [Exact review](../../platform/LANTERN_TABLE_REVIEW.md): ~63 seconds dispatch→tested/cleaned, nine protocol checks, zero audience ballots |
+| C | Inert draft 2e61db6; actual tests/owner review 8ffe83f | [Roles review](../../platform/LANTERN_ROLES_REVIEW.md): 14 controlled guest checks; no natural full-game claim |
+| Warm controls | a13097d; bounded destruction observation 9dbc7b4; real verification f9b41ef | [Prepare/extend/pause/resume/close](../../platform/PREWARM_CONTROL_VERIFICATION.md): same guest, 46.249 seconds, no model/login completion |
 
 Current local suite: **271 = 161 focused + 110 integration**. Separate checks: 26 local UI (warm HTTP cases explicitly mocked), 14 normal-launcher browser, 10 disposable launcher and six inert Seed-transfer checks. See [evidence index](../EVIDENCE.md) and its final clean-checkout receipt. All 14 project trial guests are independently recorded destroyed; unrelated provider guests were untouched. Earlier failures remain evidence. No candidate executed on the host. Local reviewed publication is saved evidence, not an external deployment.
 
