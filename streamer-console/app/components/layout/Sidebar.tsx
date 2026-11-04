@@ -1,5 +1,6 @@
 import { appPath } from "@agent-native/core/client/api-path";
 import { useT } from "@agent-native/core/client/i18n";
+import { useActionQuery } from "@agent-native/core/client/hooks";
 import {
   navigateWithAgentChatViewTransition,
   useAgentChatRunningThreads,
@@ -14,12 +15,17 @@ import { OrgSwitcher } from "@agent-native/toolkit/app/org";
 import { openCommandMenu } from "@agent-native/toolkit/app/shared";
 import { AgentNativeIcon } from "@agent-native/toolkit/app/shared/AgentNativeIcon";
 import {
+  IconAward,
+  IconDeviceGamepad2,
   IconEdit,
+  IconFlag,
   IconHome,
   IconLayoutSidebarLeftCollapse,
   IconLayoutSidebarLeftExpand,
   IconLoader2,
   IconSearch,
+  IconAdjustments,
+  IconUser,
 } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
@@ -304,6 +310,128 @@ function ChatThreadsSection({ collapsed }: { collapsed: boolean }) {
   );
 }
 
+function ConsoleNavLink({
+  collapsed,
+  to,
+  label,
+  icon: ItemIcon,
+}: {
+  collapsed: boolean;
+  to: string;
+  label: string;
+  icon: typeof IconHome;
+}) {
+  const location = useLocation();
+  const active =
+    to === "/console"
+      ? location.pathname === "/console"
+      : location.pathname.startsWith(to);
+  const link = (
+    <Link
+      to={to}
+      aria-current={active ? "page" : undefined}
+      aria-label={collapsed ? label : undefined}
+      className={cn(
+        "flex items-center text-sidebar-accent-foreground transition-colors hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+        active && "bg-sidebar-accent",
+        collapsed
+          ? "size-8 justify-center rounded-md"
+          : "h-8 w-full gap-3 rounded-lg px-3 text-sm font-medium",
+      )}
+    >
+      <ItemIcon className="size-4 shrink-0" strokeWidth={1.8} />
+      <span className={collapsed ? "sr-only" : "truncate"}>{label}</span>
+    </Link>
+  );
+  if (collapsed)
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{link}</TooltipTrigger>
+        <TooltipContent side="right">{label}</TooltipContent>
+      </Tooltip>
+    );
+  return <div className="px-2">{link}</div>;
+}
+
+function ConsoleNavLinks({ collapsed }: { collapsed: boolean }) {
+  const t = useT();
+  const access = useActionQuery("get-my-access", {}, { retry: false });
+  const role = (access.data as any)?.role;
+  return (
+    <>
+      <ConsoleNavLink
+        collapsed={collapsed}
+        to="/me"
+        label={t("navigation.myProfile")}
+        icon={IconUser}
+      />
+      {(role === "streamer" || role === "moderator") && (
+        <>
+          <ConsoleNavLink
+            collapsed={collapsed}
+            to="/console"
+            label={t("navigation.console")}
+            icon={IconDeviceGamepad2}
+          />
+          <ConsoleNavLink
+            collapsed={collapsed}
+            to="/console/credits"
+            label={t("navigation.credits")}
+            icon={IconAward}
+          />
+        </>
+      )}
+      {role === "streamer" && (
+        <>
+          <ConsoleNavLink
+            collapsed={collapsed}
+            to="/console/reports"
+            label={t("navigation.reports")}
+            icon={IconFlag}
+          />
+          <ConsoleNavLink
+            collapsed={collapsed}
+            to="/console/controls"
+            label={t("navigation.controls")}
+            icon={IconAdjustments}
+          />
+        </>
+      )}
+    </>
+  );
+}
+
+// Viewers (signed-in users without the streamer unlock or a moderator
+// delegation) get a minimal shell: the chat rail and team switcher are
+// streamer-console surfaces, so they stay hidden for them.
+function useConsoleRole() {
+  const access = useActionQuery("get-my-access", {}, { retry: false });
+  return (access.data as any)?.role;
+}
+
+function SidebarChatSection({ collapsed }: { collapsed: boolean }) {
+  const role = useConsoleRole();
+  if (role === "viewer") return null;
+  return <ChatThreadsSection collapsed={collapsed} />;
+}
+
+function SidebarOrgSwitcher({ collapsed }: { collapsed: boolean }) {
+  const role = useConsoleRole();
+  if (role === "viewer") return null;
+  return (
+    <OrgSwitcher
+      reserveSpace
+      compact={collapsed}
+      currentAppId="chat"
+      className={
+        collapsed
+          ? "size-8 bg-transparent p-0 hover:bg-sidebar-accent"
+          : "min-w-0 flex-1 h-11 rounded-lg bg-transparent px-3 py-2 text-sm text-sidebar-accent-foreground hover:bg-sidebar-accent"
+      }
+    />
+  );
+}
+
 export function Sidebar({
   collapsed = false,
   collapsible = true,
@@ -408,7 +536,8 @@ export function Sidebar({
         )}
       >
         <HomeNavLink collapsed={collapsed} />
-        <ChatThreadsSection collapsed={collapsed} />
+        <ConsoleNavLinks collapsed={collapsed} />
+        <SidebarChatSection collapsed={collapsed} />
       </nav>
 
       <div className="mt-auto shrink-0 border-t border-sidebar-border p-2">
@@ -419,16 +548,7 @@ export function Sidebar({
               : "flex items-center gap-0.5",
           )}
         >
-          <OrgSwitcher
-            reserveSpace
-            compact={collapsed}
-            currentAppId="chat"
-            className={
-              collapsed
-                ? "size-8 bg-transparent p-0 hover:bg-sidebar-accent"
-                : "min-w-0 flex-1 h-11 rounded-lg bg-transparent px-3 py-2 text-sm text-sidebar-accent-foreground hover:bg-sidebar-accent"
-            }
-          />
+          <SidebarOrgSwitcher collapsed={collapsed} />
           {searchButton}
           {collapseButton}
         </div>

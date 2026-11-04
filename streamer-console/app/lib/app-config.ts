@@ -1,5 +1,5 @@
 const rawAppName = "streamer-console";
-const rawAppTitle = "Streamer Console";
+const rawAppTitle = "Vibe Arena Console";
 
 const APP_NAME_PLACEHOLDER = "{" + "{APP_NAME}}";
 const APP_TITLE_PLACEHOLDER = "{" + "{APP_TITLE}}";
