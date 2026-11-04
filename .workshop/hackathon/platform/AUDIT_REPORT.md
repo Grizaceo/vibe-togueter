@@ -58,7 +58,7 @@ Use local Marble as fallback rather than remote Tee: it avoids a network depende
 5. Upload the video publicly to YouTube and check logged-out playback. Push the private repository yourself; grant testing@devpost.com access and verify testing instructions with a clean checkout.
 6. Fill Devpost repository/video/session fields, submit before the prudent deadline and verify its receipt. No submission has been sent by this session.
 
-Skill workflow used: [Hermes game-dev router](/home/gris96/.agents/skills/hermes-game-dev/SKILL.md), with gaming-hub, its game-development-resources and studio-capability-gates references. Native shell/Node, bubblewrap and Chromium were actually executed; no external engine/library integration is inferred from reading those references.
+Skill workflow used: the Hermes game-dev router skill (a local skill, not in this repository), with gaming-hub, its game-development-resources and studio-capability-gates references. Native shell/Node, bubblewrap and Chromium were actually executed; no external engine/library integration is inferred from reading those references.
 
 ## Later delivery-preparation update
 

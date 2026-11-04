@@ -59,7 +59,7 @@ Keep a browser player, the actual Twitch channel and OBS overlay visible. A part
 | Two entrants, chat `!play` then `!race` | Both entrants and actual moving race | Pending |
 | Game/art/idea credits, Kenney links | Human readability check on player and OBS at capture size | Pending |
 | Disconnect/reconnect and return to Grove | Observed recovery and any failure | Pending |
-| Private Studio prepare/extend/close with an explicitly approved future allocation | Remaining time, approved maximum, no model call during discussion, exact close; [existing real verification](platform/PREWARM_CONTROL_VERIFICATION.md) passed, while the local UI rehearsal uses mocks | Pending |
+| Private Studio prepare/extend/close with an explicitly approved future allocation | Remaining time, approved maximum, no model call during discussion, exact close; [existing real verification](../../docs/platform/PREWARM_CONTROL_VERIFICATION.md) passed, while the local UI rehearsal uses mocks | Pending |
 | Recorded Lantern Table construction/test/cleanup and exact approval | Actual thread and hashes; static preview and known gameplay issues labelled | Evidence ready; human recording pending |
 | English video, under three minutes | Full export watch, exact duration, readable Twitch/Codex shots | Pending |
 

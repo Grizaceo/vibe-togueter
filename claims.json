@@ -1,0 +1,28 @@
+{
+  "claims": [
+    {
+      "claim": "npm test passes 335 checks: 221 node:test tests and 114 isolated integration checks, with 0 failures",
+      "command": "npm test",
+      "value": "335",
+      "date": "2026-11-03"
+    },
+    {
+      "claim": "Local Chromium UI rehearsal passes 38 checks (lobby with web-guest seat, overlay, Studio, privacy)",
+      "command": "node scripts/rehearse-ui-local.mjs",
+      "value": "38",
+      "date": "2026-11-03"
+    },
+    {
+      "claim": "Local Chromium seat rehearsal passes 10 checks (Kick pairing through a test-signed webhook, reload, web guest, legacy client)",
+      "command": "node scripts/rehearse-seats.mjs",
+      "value": "10",
+      "date": "2026-11-03"
+    },
+    {
+      "claim": "Mode-A input-to-frame latency on a clean local network, p50, for Grove with ids: 25.3 ms and 26.8 ms in two back-to-back runs",
+      "command": "node scripts/latency/bench.mjs --label c-var-1 --scenarios clean --ids",
+      "value": "25.3-26.8 ms",
+      "date": "2026-11-03"
+    }
+  ]
+}

@@ -14,7 +14,7 @@ A real guest Codex access check returned the requested marker without tools: [ac
 
 - [Initial guest build](../evidence/seed-race-build-1793544931163.json): guest thread `01a1979b-5da5-77f2-9aa2-865908b2e35e`, two tool operations, 6,870 source bytes.
 - [Guest readability revision](../evidence/seed-race-revision-1793545531231.json): guest thread `01a197a4-b520-79f0-a679-45bc510547b3`. It corrects left-margin alignment for the actual renderer and labels selected lanes with bounded player names. Prior source/test/approval hashes were not reused.
-- [Final source and pinned creator manifest](../../artifacts/seed-race/f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105/): source SHA-256 **f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105**. This directory is review material outside public/ and games/; do not import it on the host.
+- [Final source and pinned creator manifest](../../artifacts/seed-race/f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105): source SHA-256 **f145319f61feb57ffbb41a0057954f5533b59d28caed10f3a625d751ef812105**. This directory is review material outside public/ and games/; do not import it on the host.
 - [Exact owner approval](../evidence/seed-race-owner-approval-1793545735358.json): final source approved in the conversation, with its artifact and test-report hashes. Publication remains false.
 
 Kenney's three original bundled PNGs retain CC0 provenance, notices, fingerprints, website and social links. They are curated public resources; Kenney did not join or endorse the project.

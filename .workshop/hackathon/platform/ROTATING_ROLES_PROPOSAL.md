@@ -1,12 +1,12 @@
 # Conditional C — approved roles revision and historical test proposal
 
-**Outcome:** owner authorized the one-test-guest scope. All 14 checks passed; the guest is destroyed, and exact owner approval saved [reviewed local evidence](../evidence/lantern-roles-reviewed-publication.json). The source remains inert, outside served games. The proposal below is historical and grants no further VM/model use.
+**Outcome:** owner authorized the one-test-guest scope. All 14 checks passed; the guest is destroyed, and exact owner approval saved [reviewed local evidence](../../../docs/evidence/lantern-roles-reviewed-publication.json). The source remains inert, outside served games. The proposal below is historical and grants no further VM/model use.
 
 A completed the real reviewed-publication path and B's six features are implemented before 13:00 UTC. The newly requested warm controls are also implemented/default-off and clean-tested. This makes the conditional roles work eligible to prepare; it does not authorize another charged guest by itself.
 
 ## Concrete draft
 
-[Source as inert text](../../artifacts/lantern-table-roles-draft/game.js), [guest-only fixed harness](../../artifacts/lantern-table-roles-draft/guest-check.mjs), [metadata](../../artifacts/lantern-table-roles-draft/draft.json). Source SHA-256: `449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075`.
+[Source as inert text](../../../artifacts/lantern-table-roles-draft/game.js), [guest-only fixed harness](../../../artifacts/lantern-table-roles-draft/guest-check.mjs), [metadata](../../../artifacts/lantern-table-roles-draft/draft.json). Source SHA-256: `449a8def63ca7d6d0261ef0e60d8bea9dddd743962bf6a16e8367674e1b5e075`.
 
 Proposed exact inputs:
 

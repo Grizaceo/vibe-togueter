@@ -1,4 +1,6 @@
-# Platform compatibility — November 1, 2026
+# Platform compatibility
+
+Last updated 2026-11-03. Rows without a newer date describe the hackathon state of November 1–2, 2026.
 
 | Path | Implemented | Evidence |
 |---|---|---|
@@ -19,4 +21,4 @@ Twitch webhook subscriptions require an app token after user-scope consent, HTTP
 
 Source checks: [token validation](https://dev.twitch.tv/docs/authentication/validate-tokens/), [subscription authorization](https://dev.twitch.tv/docs/eventsub/manage-subscriptions/#authorization), [event types/scopes](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/). Do not equate valid signed fixtures with real purchases or Twitch delivery.
 
-Submission configuration now excludes all external runtimes and disables paid-event credit simulation. Kick is a retained fixture adapter outside the pitch. See platform/AUDIT_REPORT.md for current scope; historical Twitch checks above were not replayed by this audit-response session.
+The shipped configuration excludes external runtimes and leaves paid-event credit simulation off. The Twitch checks above date from the hackathon and were not replayed on `next`.
