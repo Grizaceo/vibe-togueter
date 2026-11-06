@@ -26,7 +26,7 @@ export function renderAssets(data) {
       const image = el("img");
       image.src = asset.sourceURL;
       image.alt = asset.title;
-      image.style = "max-width:100%;max-height:120px;object-fit:contain";
+      image.className = "asset-thumb";
       card.append(image);
     }
     card.append(

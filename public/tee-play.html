@@ -3,20 +3,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vibe Togueter · Play teeworlds-rs</title>
-<style>
-html,body{height:100%;margin:0;background:#121725;color:#fff;font:18px system-ui}
-body{display:flex;flex-direction:column}header{padding:14px 24px}p{margin:5px 0}
-small{color:#c9d6ee}iframe{width:100%;flex:1;border:0;min-height:300px}
-a{color:#9edcff}button{padding:8px 14px;margin-top:10px;font:inherit;cursor:pointer}
-input{font:inherit;padding:6px 10px;margin-top:10px}
-</style>
+<link rel="stylesheet" href="/tee-play.css">
 <header>
   <b>Vibe Togueter · Play teeworlds-rs</b>
   <p>External game by Cristóbal Muñoz, developed separately with Devin and Hermes.</p>
   <small>Your own tee · keyboard and mouse · same server as the streamer.</small>
   <p id="status" role="status">Loading entry…</p>
   <label id="name-row" hidden>Your name <input id="name" maxlength="25" autocomplete="nickname"></label>
-  <button id="play" hidden>Enter game with my own tee</button>
+  <label id="modeb-row" hidden><input id="modeb-accept" type="checkbox"> This game runs its own client code in your browser. Vibe Arena does not review that client. It runs in a sandboxed frame that cannot reach this page, but the game server sees your IP address and the game may keep its own data in your browser.</label>
+  <button id="play" hidden disabled>Enter game with my own tee</button>
   <p><small id="boundary"></small></p>
 </header>
 <script type="module" src="/tee-play.js"></script>

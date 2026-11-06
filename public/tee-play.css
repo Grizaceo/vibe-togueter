@@ -1,0 +1,8 @@
+html,body{height:100%;margin:0;background:#121725;color:#fff;font:18px system-ui}
+body{display:flex;flex-direction:column}header{padding:14px 24px}p{margin:5px 0}
+small{color:#c9d6ee}iframe{width:100%;flex:1;border:0;min-height:300px}
+a{color:#9edcff}button{padding:8px 14px;margin-top:10px;font:inherit;cursor:pointer}
+input{font:inherit;padding:6px 10px;margin-top:10px}
+#modeb-row{display:block;max-width:60ch;margin-top:10px;font-size:15px;line-height:1.4}
+#modeb-row input{margin-top:0}
+button:disabled{cursor:default;opacity:.5}
