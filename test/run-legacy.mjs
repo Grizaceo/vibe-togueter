@@ -111,6 +111,7 @@ try {
     "prediction-integration",
     "delegation-integration",
     "studio-worker-integration",
+    "console-integration",
   ]) {
     const child = spawn(
       process.execPath,

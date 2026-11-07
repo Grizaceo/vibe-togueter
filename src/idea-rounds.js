@@ -420,8 +420,7 @@ export class IdeaRounds {
     this.save();
     return this.public();
   }
-  inputHash() {
-    const r = this.current();
+  inputHash(r = this.current()) {
     if (!r || !r.selected.length) return null;
     const input = r.selected
       .map((id) => r.ideas.find((i) => i.id === id))
@@ -527,14 +526,13 @@ export class IdeaRounds {
     this.save();
     return this.public();
   }
-  credit() {
-    const r = this.current();
+  credit(r = this.current()) {
     if (
       !r ||
       !["approved", "building", "completed", "reconcile-required"].includes(
         r.phase,
       ) ||
-      r.approvedInputHash !== this.inputHash()
+      r.approvedInputHash !== this.inputHash(r)
     )
       return null;
     const approval = r.history.findLast(
@@ -559,6 +557,68 @@ export class IdeaRounds {
         authority: approval.approvalAuthority || "streamer",
       },
     });
+  }
+  // One viewer's own footprint across recent rounds. Chat actors hash
+  // "platform:id"; seated browser chat hashes "web:<platform:id>". Only the
+  // viewer's own ideas and ballot are returned, never other participants'.
+  participation(sub, { limit = 50 } = {}) {
+    if (!/^(twitch|kick):[\w-]{1,40}$/.test(String(sub)))
+      throw new Error("Invalid viewer identity.");
+    const lower = sub.toLowerCase(),
+      keys = [hash(lower), hash("web:" + lower)],
+      rounds = [];
+    const totals = { ideas: 0, ballots: 0, credits: 0 };
+    for (const r of this.data.rounds.slice(-limit).reverse()) {
+      const ideas = r.ideas.filter((i) => keys.includes(i.proposerKey)),
+        ballotId = keys.map((k) => r.ballots[k]).find((id) => id != null);
+      if (!ideas.length && ballotId == null) continue;
+      const votes = new Map();
+      for (const id of Object.values(r.ballots))
+        votes.set(id, (votes.get(id) || 0) + 1);
+      const credited =
+        this.credit(r) !== null && ideas.some((i) => r.selected.includes(i.id));
+      totals.ideas += ideas.length;
+      if (ballotId != null) totals.ballots++;
+      if (credited) totals.credits++;
+      rounds.push({
+        roundId: r.id,
+        openedAt: r.openedAt,
+        phase: r.phase,
+        ideas: ideas.map((i) => ({
+          id: i.id,
+          text: i.text,
+          at: i.at,
+          votes: votes.get(i.id) || 0,
+          selected: r.selected.includes(i.id),
+        })),
+        ballot:
+          ballotId == null
+            ? null
+            : { ideaId: ballotId, selected: r.selected.includes(ballotId) },
+        credited,
+      });
+    }
+    return { sub, rounds, totals };
+  }
+  creditHistory({ limit = 20 } = {}) {
+    return this.data.rounds
+      .slice(-limit)
+      .reverse()
+      .map((r) => ({
+        roundId: r.id,
+        phase: r.phase,
+        openedAt: r.openedAt,
+        approvedAt:
+          r.history.findLast(
+            (e) =>
+              e.type === "streamer-approved" &&
+              e.inputHash === r.approvedInputHash,
+          )?.at ?? null,
+        ideaCount: r.ideas.length,
+        selectedCount: r.selected.length,
+        voters: Object.keys(r.ballots).length,
+        credit: this.credit(r),
+      }));
   }
   public() {
     const r = this.current();
