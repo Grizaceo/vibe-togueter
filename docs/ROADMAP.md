@@ -85,7 +85,7 @@ The order follows dependencies:
 - **Data plane:** the phase 1 frame format for mode A.
 - **Adapters, in order:** SDK games, Tee (from the pinned postcard codec), t99. `src/remote-games.js` stops hardcoding adapters.
 - Update `src/sdk-prompt.md` so generated games declare a manifest.
-- Write the spec before the code.
+- Write the spec before the code. **Spec accepted on 2026-11-06:** [GAME_PROTOCOL](platform/GAME_PROTOCOL.md). t99 is out of v1, and Tee individual seats move to v1.1.
 - **Done when:** Grove and Tee run under the same contract, with conformance tests.
 
 ### 4. VM3 game runtime
