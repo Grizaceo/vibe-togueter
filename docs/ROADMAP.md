@@ -40,7 +40,9 @@ The order follows dependencies:
   - `src/server/public-link.js` verifies `VA_PUBLIC_URL`, detects a running quick tunnel or starts one, and only hands out a URL after a probe through it reaches this controller. `VA_TUNNEL=auto|detect|off`.
   - `!join` says so when no live link exists, and its link carries no name. The entry pages ask each viewer.
   - Covered with simulated tunnels (`test/public-link.mjs`).
-  - **Pending:** one owner-run check with a real `cloudflared` quick tunnel. The session's permission policy blocked opening public ingress. `scripts/public-link-check.mjs` runs it and writes the evidence.
+  - **Real tunnel check (2026-11-04):** `scripts/public-link-check.mjs` ran against a real `cloudflared` quick tunnel.
+    - The first run failed: the tunnel never reached the controller within the 45 s start timeout (`docs/evidence/public-link-real-1793823593588.json`).
+    - The start timeout is now 120 s. The second run passed every check: the live link reaches this controller, a stale `VA_PUBLIC_URL` is not used, `!join` says so while the tunnel is down, and the tunnel is recreated with a new link (`docs/evidence/public-link-real-1793824002394.json`). The link went live 43 s after start.
 
 ### 1. Measure and improve mode A latency — done (2026-11-03)
 
