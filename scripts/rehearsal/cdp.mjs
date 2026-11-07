@@ -3,7 +3,7 @@ import path from "node:path";
 
 export async function createCDP(
   cdp,
-  { base, wait, sleep, evidence, runId, errors, requests },
+  { base, wait, sleep, evidence, runId, errors, requests, violations = [] },
 ) {
   let id = 0;
   const pending = new Map();
@@ -27,10 +27,16 @@ export async function createCDP(
       errors.push(msg.params.exceptionDetails.text);
     else if (msg.method === "Network.requestWillBeSent")
       requests.push(msg.params.request.url);
+    else if (msg.method === "Log.entryAdded") {
+      const entry = msg.params.entry;
+      if (/Refused|Content Security Policy|securitypolicyviolation/i.test(entry.text || ""))
+        violations.push(entry.text);
+    }
   });
   await command("Page.enable");
   await command("Runtime.enable");
   await command("Network.enable");
+  await command("Log.enable");
   await command("Emulation.setDeviceMetricsOverride", {
     width: 1600,
     height: 900,

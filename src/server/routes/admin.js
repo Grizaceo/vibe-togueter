@@ -590,6 +590,10 @@ export function createAdminRoutes({
             },
             publicLink: publicLink?.status() || null,
             seats: seating?.roster() || [],
+            sandbox: {
+              level: host.sandbox || null,
+              warning: host.sandboxWarning || null,
+            },
           }),
         );
       }

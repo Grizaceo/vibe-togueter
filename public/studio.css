@@ -242,3 +242,30 @@
           padding-right: 16px;
         }
       }
+      .mt-16 {
+        margin-top: 16px;
+      }
+      #test-preview {
+        width: 100%;
+        background: #111;
+      }
+      #artifact-source {
+        height: 240px;
+      }
+      #artifact-report {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .privacy-corner {
+        position: fixed;
+        bottom: 4px;
+        right: 8px;
+        color: #9bd;
+        font: 12px system-ui;
+        z-index: 10;
+      }
+      .asset-thumb {
+        max-width: 100%;
+        max-height: 120px;
+        object-fit: contain;
+      }

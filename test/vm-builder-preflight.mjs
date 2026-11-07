@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {VMBuilderPreflight,TRIAL_PROFILE} from '../src/vm-builder-preflight.js';
+import crypto from 'node:crypto';
 const id='sb-01m6yyyyyyyyyyyyyyyyyyyyyy';
 function fixture(t,{receipt={},ambiguous=false,deleteFails=false,mismatch=false,initialStatus='running'}={}){
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'va-vm-probe-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
@@ -15,7 +16,7 @@ function fixture(t,{receipt={},ambiguous=false,deleteFails=false,mismatch=false,
   else if(args[1]==='create'){
    vm={id,name:args[args.indexOf('--name')+1],created_at:new Date().toISOString(),shape:TRIAL_PROFILE.shape,rootfs:TRIAL_PROFILE.rootfs,ingress_enabled:false,status:initialStatus};
    if(ambiguous)throw Error('lost create reply');result=vm;
-  }else if(args[1]==='exec')result={platform:'linux',node:'v24.1.0',codex:'codex-cli 0.166.0',personalAuthPresent:false,credentialEnvironmentPresent:false,...receipt};
+  }else if(args[1]==='exec')result={platform:'linux',arch:'x64',node:'v24.1.0',codex:'codex-cli 0.166.0',personalAuthPresent:false,credentialEnvironmentPresent:false,...receipt};
   else if(args[1]==='get')result=mismatch?{...vm,name:'foreign-game'}:vm;
   else if(args[1]==='rm'){if(deleteFails)throw Error('network failed');vm.status='destroyed';result={ok:true};}
   else throw Error('Unexpected CLI operation');
@@ -85,6 +86,31 @@ test('build dispatch rejects absent/nonfinite expiry and unconfirmed timer ident
 test('a trusted independent-lease hook runs before provider creation and a failed hook creates nothing',async t=>{
  const first=fixture(t);let armed=false;const run=first.worker.run;first.worker.run=async(command,args,options)=>{if(args[1]==='create')assert.equal(armed,true);return run(command,args,options);};await first.worker.preflight({beforeCreate:async state=>{assert.equal(state.creationRequested,false);assert.equal(first.calls.some(c=>c[1]==='create'),false);armed=true;}});
  const second=fixture(t);await assert.rejects(second.worker.preflight({beforeCreate:async()=>{throw Error('lease supervisor unavailable');}}),/incomplete/);assert.equal(second.calls.some(c=>c[1]==='create'),false);assert.equal(second.worker.state.phase,'released');assert.equal(second.worker.state.providerTerminalStatus,'not-created');
+});
+test('a failing CLI call retains only sizes and hashes, never raw output',async t=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'va-vm-diag-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+ const file=path.join(dir,'probe.json'),secret='sk-fixture-SECRET-7f3a',stdout='out '+secret+' out',stderr='err '+secret+' err';
+ const run=async()=>{const e=Error('cli failed');e.code=7;e.signal='SIGKILL';e.killed=true;e.stdout=stdout;e.stderr=stderr;throw e;};
+ const worker=new VMBuilderPreflight(file,{run});
+ await assert.rejects(worker.cli(['sandbox','get','sb-x']));
+ const text=fs.readFileSync(file+'.diagnostic.json','utf8');
+ assert.ok(!text.includes(secret));
+ const diag=JSON.parse(text);
+ assert.equal(diag.operation,'get');assert.equal(diag.exit,7);assert.equal(diag.signal,'SIGKILL');assert.equal(diag.killed,true);
+ assert.equal(diag.stdoutBytes,Buffer.byteLength(stdout));assert.equal(diag.stderrBytes,Buffer.byteLength(stderr));
+ assert.equal(diag.stdoutSha256,crypto.createHash('sha256').update(stdout).digest('hex'));
+ assert.equal(diag.stderrSha256,crypto.createHash('sha256').update(stderr).digest('hex'));
+ assert.equal(fs.existsSync(file+'.exec-output.txt'),false);
+});
+test('successful exec/create calls never write a raw exec-output file',async t=>{
+ const {worker,file}=fixture(t);await worker.preflight();
+ assert.equal(fs.existsSync(file+'.exec-output.txt'),false);
+});
+test('a probe receipt with an extra key or wrong type fails without storing raw values',async t=>{
+ const extra=fixture(t,{receipt:{unexpected:'value'}});await assert.rejects(extra.worker.preflight(),/incomplete/);
+ assert.equal(extra.worker.state.probeReceipt,undefined);assert.equal(extra.calls.filter(a=>a[1]==='rm').length,1);
+ const wrong=fixture(t,{receipt:{node:123}});await assert.rejects(wrong.worker.preflight(),/incomplete/);
+ assert.equal(wrong.worker.state.probeReceipt,undefined);assert.equal(wrong.calls.filter(a=>a[1]==='rm').length,1);
 });
 test('destruction observes the same VM through pending and empty replies without a second delete',async t=>{
  const f=fixture(t);await f.worker.preflight({retainForLogin:true});const run=f.worker.run;let deleted=false,reads=0;f.worker.run=async(command,args,options)=>{const response=await run(command,args,options);if(args[1]==='rm')deleted=true;if(deleted&&args[1]==='get'){assert.equal(args[2],id);reads++;if(reads===1)return {stdout:JSON.stringify({...JSON.parse(response.stdout),status:'destroying'})};if(reads===2)return {stdout:''};}return response;};assert.equal((await f.worker.release()).providerTerminalStatus,'destroyed');assert.equal(reads,3);assert.equal(f.calls.filter(a=>a[1]==='rm').length,1);assert.equal(f.calls.filter(a=>a[1]==='create').length,1);

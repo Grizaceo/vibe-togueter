@@ -1,0 +1,131 @@
+body {
+  margin: 0;
+  background: transparent;
+  font: 16px system-ui;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: 100vh;
+  overflow: hidden;
+}
+/* OBS browser source: set this page as a browser source; background is transparent so it can sit on the stream, or capture the canvas fullscreen. */
+canvas {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  background: #0b0b0f;
+}
+#side {
+  min-height: 0;
+  background: #101018ee;
+  color: #eee;
+  display: flex;
+  flex-direction: column;
+}
+#side h3 {
+  margin: 10px 12px 4px;
+  color: #8ef;
+  font-size: 20px;
+}
+#feed {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 12px;
+  font-size: 17px;
+  line-height: 1.5;
+}
+#feed .chat {
+  color: #ccc;
+}
+#feed .system {
+  color: #8ef;
+}
+#players {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-top: 1px solid #222;
+  font-size: 13px;
+  color: #9a9;
+  line-height: 18px;
+  max-height: 49px;
+  overflow: hidden;
+}
+#err {
+  color: #f88;
+  padding: 0 12px;
+  font-size: 12px;
+}
+#live-credits a {
+  color: #8ef;
+}
+#live-credits {
+  grid-column: 1 / -1;
+  background: #101018;
+  color: #fff;
+  border-top: 2px solid #8ef;
+  padding: 10px 18px;
+}
+.creator-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  font-size: clamp(18px, 1.5vw, 28px);
+  font-weight: 650;
+  line-height: 1.5;
+}
+#live-credits > :not(.creator-strip) {
+  display: none;
+}
+#activity {
+  overflow: hidden;
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-bottom: 1px solid #38414d;
+  font-size: 16px;
+  line-height: 1.3;
+}
+#activity p {
+  margin: 2px 0;
+  color: #e0e7ef;
+}
+#err,
+#activity p,
+#activity strong {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+#feed > div,
+#players > div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#activity strong {
+  color: #ffe598;
+}
+#activity .input-credit {
+  -webkit-line-clamp: unset;
+}
+#feed:empty::before {
+  content: "Waiting for community activity";
+  color: #b4c1d2;
+}
+.privacy-link {
+  padding: 6px 12px;
+  color: #9bd;
+  font: 12px system-ui;
+}
+@media (max-width: 900px) {
+  body {
+    grid-template-columns: minmax(0, 1fr) 230px;
+  }
+  .creator-strip {
+    font-size: 18px;
+  }
+}

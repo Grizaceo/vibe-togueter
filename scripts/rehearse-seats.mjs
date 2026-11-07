@@ -53,7 +53,8 @@ let browser, legacy;
 const sockets = [];
 const checks = [],
   errors = [],
-  requests = [];
+  requests = [],
+  violations = [];
 const check = (name, ok) => {
   checks.push({ name, ok: Boolean(ok) });
   if (!ok) throw Error(name);
@@ -92,9 +93,9 @@ async function tab() {
   const cdp = new WebSocket(target.webSocketDebuggerUrl);
   sockets.push(cdp);
   await new Promise((r) => cdp.once("open", r));
-  return createCDP(cdp, { base, wait, sleep, evidence, runId, errors, requests });
+  return createCDP(cdp, { base, wait, sleep, evidence, runId, errors, requests, violations });
 }
-const report = { at: new Date().toISOString(), kind: "automated-local-seat-rehearsal", checks, errors };
+const report = { at: new Date().toISOString(), kind: "automated-local-seat-rehearsal", checks, errors, violations };
 try {
   await wait(async () => (await fetch(base + "/community/state")).ok);
   browser = spawn(
@@ -155,6 +156,7 @@ try {
   );
   check("web guest is unverified", seated.some((i) => i.platform === "web" && !i.verified && i.name === "Guest Bob"));
   check("no browser JavaScript exception occurred", errors.length === 0);
+  check("no Content Security Policy violation was logged", violations.length === 0);
   report.limits = [
     "Disposable checkout; no tunnel, no real Twitch or Kick traffic.",
     "Kick events are signed with a local test RSA key standing in for Kick's key.",

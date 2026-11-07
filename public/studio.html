@@ -28,7 +28,7 @@
       </div>
       <aside class="panel">
         <span id="channel" class="pill">Connecting to studio…</span>
-        <h2 style="margin-top: 16px">Propose → vote → streamer decides</h2>
+        <h2 class="mt-16">Propose → vote → streamer decides</h2>
         <p class="muted">
           Your first ideas enter a limited round. The chosen idea and resource
           pack need the streamer's review before construction.
@@ -38,6 +38,7 @@
     </section>
     <main>
       <div id="connection-error" class="status error" role="status"></div>
+      <div id="sandbox-warning" class="status error" role="status" hidden></div>
       <section id="artists" class="section">
         <div class="section-head">
           <div>
@@ -334,19 +335,14 @@
               id="test-preview"
               width="1280"
               height="720"
-              style="width: 100%; background: #111"
             ></canvas
             ><label
               >Exact quarantined source<textarea
                 id="artifact-source"
                 readonly
-                style="height: 240px"
               ></textarea>
             </label>
-            <pre
-              id="artifact-report"
-              style="white-space: pre-wrap; overflow-wrap: anywhere"
-            ></pre>
+            <pre id="artifact-report"></pre>
             <label
               >Game creator credit<input
                 id="artifact-creator"
@@ -412,16 +408,7 @@
       </section>
     </main>
     <script type="module" src="/studio.js"></script>
-    <a
-      href="/privacy.html"
-      style="
-        position: fixed;
-        bottom: 4px;
-        right: 8px;
-        color: #9bd;
-        font: 12px system-ui;
-        z-index: 10;
-      "
+    <a href="/privacy.html" class="privacy-corner"
       >Privacy · hosting details pending</a
     >
   </body>

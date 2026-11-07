@@ -27,6 +27,43 @@ export const TRIAL_PROFILE = Object.freeze({
 });
 const probe = `const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),cp=require('node:child_process'); const version=cp.execFileSync('codex',['--version'],{encoding:'utf8',timeout:15000}).trim(); console.log(JSON.stringify({node:process.version,codex:version,platform:process.platform,arch:process.arch,personalAuthPresent:fs.existsSync(path.join(os.homedir(),'.codex','auth.json')),credentialEnvironmentPresent:Object.keys(process.env).some(k=>/TWITCH|OPENAI_API_KEY|VA_ADMIN_TOKEN|VA_STREAMER_KEY/.test(k))}));`;
 const ownId = (id) => typeof id === "string" && /^sb-[a-z0-9]{20,40}$/.test(id);
+// The probe receipt is persisted; an allowlist keeps anything else or a wrong
+// type out of the journal instead of storing a raw provider-controlled value.
+export function sanitizeProbeReceipt(receipt) {
+  if (!receipt || typeof receipt !== "object" || Array.isArray(receipt))
+    throw Error("Invalid probe receipt.");
+  if (
+    JSON.stringify(Object.keys(receipt).sort()) !==
+    JSON.stringify(
+      [
+        "node",
+        "codex",
+        "platform",
+        "arch",
+        "personalAuthPresent",
+        "credentialEnvironmentPresent",
+      ].sort(),
+    )
+  )
+    throw Error("Invalid probe receipt.");
+  for (const key of ["node", "codex", "platform", "arch"])
+    if (typeof receipt[key] !== "string" || receipt[key].length > 100)
+      throw Error("Invalid probe receipt.");
+  for (const key of [
+    "personalAuthPresent",
+    "credentialEnvironmentPresent",
+  ])
+    if (typeof receipt[key] !== "boolean")
+      throw Error("Invalid probe receipt.");
+  return {
+    node: receipt.node,
+    codex: receipt.codex,
+    platform: receipt.platform,
+    arch: receipt.arch,
+    personalAuthPresent: receipt.personalAuthPresent,
+    credentialEnvironmentPresent: receipt.credentialEnvironmentPresent,
+  };
+}
 export function validateBuildSession(state, now = Date.now()) {
   if (
     state?.phase !== "awaiting-login" ||
@@ -88,21 +125,25 @@ export class VMBuilderPreflight {
         maxBuffer: 1024 * 1024,
         ...options,
       });
-      if (args[1] === "exec" || args[1] === "create")
-        fs.writeFileSync(this.file + ".exec-output.txt", result.stdout, {
-          mode: 0o600,
-        });
       return result.stdout;
     } catch (error) {
-      // Provider diagnostics can include sensitive details; retain only in protected runtime.
+      // Provider diagnostics can include sensitive details; retain sizes and
+      // hashes only, never raw stdout/stderr text.
+      const hash = (value) =>
+        crypto.createHash("sha256").update(value || "").digest("hex");
       fs.mkdirSync(path.dirname(this.file), { recursive: true });
       fs.writeFileSync(
         this.file + ".diagnostic.json",
         JSON.stringify({
           operation: args[1],
-          exit: error.code,
-          stdout: error.stdout || "",
-          stderr: error.stderr || "",
+          exit: error.code ?? null,
+          signal: error.signal ?? null,
+          killed: !!error.killed,
+          stdoutBytes: Buffer.byteLength(error.stdout || ""),
+          stdoutSha256: hash(error.stdout),
+          stderrBytes: Buffer.byteLength(error.stderr || ""),
+          stderrSha256: hash(error.stderr),
+          at: new Date().toISOString(),
         }) + "\n",
         { mode: 0o600 },
       );
@@ -266,11 +307,13 @@ export class VMBuilderPreflight {
       this.state.phase = "probing";
       this.save();
       signal?.throwIfAborted();
-      let receipt = JSON.parse(
-        await this.cli(["sandbox", "exec", vm.id, "--", "node", "-e", probe], {
-          signal,
-          timeout: TRIAL_PROFILE.maxProbeMs,
-        }),
+      let receipt = sanitizeProbeReceipt(
+        JSON.parse(
+          await this.cli(
+            ["sandbox", "exec", vm.id, "--", "node", "-e", probe],
+            { signal, timeout: TRIAL_PROFILE.maxProbeMs },
+          ),
+        ),
       );
       this.state.probeReceipt = receipt;
       this.save();
@@ -311,10 +354,12 @@ export class VMBuilderPreflight {
           ],
           { signal, timeout: 45000 },
         );
-        receipt = JSON.parse(
-          await this.cli(
-            ["sandbox", "exec", vm.id, "--", "node", "-e", probe],
-            { signal },
+        receipt = sanitizeProbeReceipt(
+          JSON.parse(
+            await this.cli(
+              ["sandbox", "exec", vm.id, "--", "node", "-e", probe],
+              { signal },
+            ),
           ),
         );
         this.state.probeReceipt = receipt;
