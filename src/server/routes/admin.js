@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { secretMatches } from "../../request-boundaries.js";
+import { REMOTE_ADAPTERS } from "../../protocol/adapters/index.js";
 import { importCuratedResource } from "../../curated-resources.js";
 import { reviewGame, publishGameCredits } from "../../game-credits.js";
 
@@ -16,7 +17,7 @@ export function createAdminRoutes({
   fallbackPolicy,
   chatEffects,
   crowdBursts,
-  teeBridge,
+  teeSession,
   feed,
   activateFallback,
   getFallback,
@@ -258,9 +259,8 @@ export function createAdminRoutes({
           if (result.changed) {
             if (chatEffects.blocked) {
               crowdBursts.reset();
-              teeBridge.pulse = null;
-              teeBridge.tick();
-            }
+              teeSession.pause("chat-effects");
+            } else teeSession.resume("chat-effects");
             feed(
               "system",
               chatEffects.blocked
@@ -407,12 +407,12 @@ export function createAdminRoutes({
           }
           const data = JSON.parse((await readBody()) || "{}");
           let result;
-          if (data.action === "enable")
-            result = await teeBridge.start(
-              remoteGames.entry(data.gameId),
-              TWITCH_CHANNEL || "local",
-            );
-          else if (data.action === "disable") result = teeBridge.stop();
+          if (data.action === "enable") {
+            const game = remoteGames.entry(data.gameId);
+            if (!REMOTE_ADAPTERS[game.adapter]?.chatControl)
+              throw Error("That remote game is not chat-controlled.");
+            result = await teeSession.start(game, TWITCH_CHANNEL || "local");
+          } else if (data.action === "disable") result = teeSession.stop("disabled");
           else throw Error("Unknown bridge action.");
           res.writeHead(200, { "Content-Type": "application/json" });
           return res.end(JSON.stringify(result));

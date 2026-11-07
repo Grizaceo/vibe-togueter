@@ -32,6 +32,7 @@ import path from "node:path";
 import { CreatorAssets } from "./creator-assets.js";
 import { RemoteGames } from "./remote-games.js";
 import { TeeChatBridge } from "./tee-chat-bridge.js";
+import { createTeeSession } from "./server/tee-session.js";
 import { createLocalChat } from "./chat/local.js";
 import { createSeating } from "./server/seating.js";
 
@@ -123,6 +124,7 @@ const remoteGames = new RemoteGames(
   path.join(ROOT, "runtime", "remote-games.json"),
 );
 const teeBridge = new TeeChatBridge();
+const teeSession = createTeeSession({ teeBridge, feed });
 startRoundTicks();
 
 // ---------- seats (docs/platform/IDENTITY_SEATS.md) ----------
@@ -147,7 +149,7 @@ const handleChat = createChatCommands({
   replies,
   chatEffects,
   crowdBursts,
-  teeBridge,
+  teeSession,
   feed,
   host,
   requestFallback,
@@ -239,6 +241,7 @@ const publicRoutes = createPublicRoutes({
   creatorAssets,
   remoteGames,
   teeBridge,
+  teeSession,
   clientCredits,
   PUBLIC,
 });
@@ -255,7 +258,7 @@ const adminRoutes = createAdminRoutes({
   fallbackPolicy,
   chatEffects,
   crowdBursts,
-  teeBridge,
+  teeSession,
   feed,
   activateFallback,
   getFallback,
@@ -323,6 +326,7 @@ startServer({
   resourceWatcher,
   getResourceDebounce,
   teeBridge,
+  teeSession,
   twitch,
   host,
   localChat,
