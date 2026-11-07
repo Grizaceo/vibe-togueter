@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { ProtocolError, parseGameMessage, hello, join, leave, input, effect, chat, stop, MAX_GAME_FRAME } from "../src/protocol/messages.js";
 import { PROTOCOL, PLATFORM_COMMANDS, validateManifest, derivedManifest } from "../src/protocol/manifest.js";
 import { seatForGame, checkInput, EffectGate } from "../src/protocol/checks.js";
+import { BurstCounter } from "../src/protocol/bursts.js";
 const ok = (fn) => fn();
 const fails = (fn, code) => assert.throws(fn, (e) => e instanceof ProtocolError && (code === undefined || e.code === code));
 const minimal = () => ({ protocol: "va-game/1" });
@@ -175,4 +176,41 @@ test("a world that matches meta by value (not key order) is accepted", () => {
   const meta = { name: "M", world: { w: 1280, h: 720 } };
   const m = validateManifest({ ...minimal(), name: "M", world: { h: 720, w: 1280 } }, { id: "g", meta });
   assert.deepEqual(m.world, { w: 1280, h: 720 });
+});
+
+const burstManifest = () =>
+  validateManifest(
+    {
+      protocol: "va-game/1",
+      chat: {
+        commands: [],
+        bursts: [
+          { name: "cheer", token: "\u{1f389}", distinct: 3, windowMs: 5000 },
+          { name: "rain", token: "\u{1f327}", distinct: 2, windowMs: 5000 },
+        ],
+      },
+    },
+    { id: "g" },
+  );
+test("BurstCounter fires once per distinct crowd, with cooldown and window expiry", () => {
+  let at = 0;
+  const g = new BurstCounter(burstManifest(), { now: () => at });
+  const tw = (n) => ({ platform: "twitch", identity: "twitch:" + n });
+  const kick = (n) => ({ platform: "kick", identity: "kick:" + n });
+  assert.equal(g.accept(tw(1), "\u{1f389}"), null);
+  assert.equal(g.accept(tw(1), "\u{1f389}"), null, "same identity cannot count twice");
+  assert.equal(g.accept({ platform: "web", identity: "w1" }, "\u{1f389}"), null, "web never counts");
+  assert.equal(g.accept({ platform: "twitch", identity: "" }, "\u{1f389}"), null, "no identity, no count");
+  assert.equal(g.accept(kick(7), "  \u{1f389}\ufe0f  "), null, "variation selector and trim");
+  assert.equal(g.accept(tw(2), "\u{1f389}"), "cheer", "third distinct identity fires");
+  assert.equal(g.accept(kick(8), "\u{1f389}"), null, "cooldown clears the crowd and blocks a refire");
+  assert.equal(g.accept(kick(9), "\u{1f389}"), null, "cooldown still blocking");
+  at = 6000; // window expired, so do the fresh counts
+  assert.equal(g.accept(tw(1), "\u{1f389}"), null);
+  assert.equal(g.accept(tw(2), "\u{1f389}"), null);
+  assert.equal(g.accept(kick(7), "\u{1f389}"), "cheer", "fires again after cooldown + window");
+  // independent bursts
+  assert.equal(g.accept(tw(1), "\u{1f327}"), null);
+  assert.equal(g.accept(tw(2), "\u{1f327}"), "rain", "second burst fires at its own threshold");
+  assert.equal(g.accept(tw(9), "hello"), null, "no token match, no count");
 });

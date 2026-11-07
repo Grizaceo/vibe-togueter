@@ -8,6 +8,7 @@ import {
   derivedManifest,
 } from "./manifest.js";
 import { seatForGame, checkInput, EffectGate } from "./checks.js";
+import { BurstCounter } from "./bursts.js";
 export class GameSession {
   constructor({
     adapter,
@@ -118,6 +119,7 @@ export class GameSession {
       this.sdk = msg.sdk ?? null;
       this.state = "running";
       this._gate = new EffectGate(this.manifest);
+      this._bursts = new BurstCounter(this.manifest);
       this._beat();
       this._arm();
       this._resolveReady?.(true);
@@ -238,6 +240,14 @@ export class GameSession {
       }),
     );
     return "effect";
+  }
+  // A declared burst fires once `distinct` platform identities post its token.
+  crowd({ platform, identity }, text) {
+    if (this.state !== "running" || this.manifest?.legacy) return null;
+    const name = this._bursts?.accept({ platform, identity }, text);
+    if (!name) return null;
+    this._send(M.effect(name, [], null));
+    return name;
   }
   effect(name, args = [], actor = null) {
     if (this.state !== "running") return false;

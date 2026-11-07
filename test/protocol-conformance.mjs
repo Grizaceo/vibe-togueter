@@ -183,6 +183,35 @@ for (const [name, make] of ADAPTERS) {
     ok.stop("done");
     assert.equal(ok.state, "ended");
   });
+  test(name + ": declared bursts fire one effect per crowd, never paused or legacy", async (t) => {
+    const manifest = {
+      protocol: "va-game/1",
+      chat: {
+        commands: [],
+        bursts: [{ name: "cheer", token: "\u{1f389}", distinct: 2, windowMs: 5000 }],
+      },
+    };
+    const { s, received } = await session(t, make, { manifest });
+    const u = (n) => ({ platform: "twitch", identity: "twitch:" + n });
+    assert.equal(s.crowd(u(1), "\u{1f389}"), null);
+    assert.equal(s.crowd(u(1), "\u{1f389}"), null, "same identity counts once");
+    assert.equal(s.crowd({ platform: "web", identity: "w1" }, "\u{1f389}"), null, "web never counts");
+    assert.equal(s.crowd(u(2), "\u{1f389}\ufe0f"), "cheer");
+    await flush();
+    const fx = received().filter((m) => m.t === "effect" && m.name === "cheer");
+    assert.equal(fx.length, 1);
+    assert.deepEqual(fx[0].args, []);
+    assert.equal(fx[0].actor, null);
+    assert.equal(s.crowd(u(3), "\u{1f389}"), null, "cooldown");
+    assert.equal(s.crowd(u(4), "\u{1f389}"), null, "cooldown");
+    s.pause("test");
+    assert.equal(s.crowd(u(5), "\u{1f389}"), null, "paused never fires");
+    s.resume("test");
+    const legacy = await session(t, make, { manifest: null, legacy: true });
+    assert.equal(legacy.s.crowd(u(9), "\u{1f389}"), null, "legacy games cannot burst");
+    legacy.s.stop("done");
+    s.stop("done");
+  });
   test(name + ": round results naming unknown seats end the game", async (t) => {
     const bad = await session(t, make,{ rounds: true, behavior: "round", results: [{ seat: 99, score: 1 }] });
     bad.s.join({ id: 1, type: "player", name: "V" });

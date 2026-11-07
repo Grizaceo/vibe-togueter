@@ -82,6 +82,22 @@ export function createChatCommands({
         );
       }
     }
+    // Declared bursts: any manifest may unlock its own crowd moment the same
+    // way. Lines starting with "!" are commands, never burst tokens.
+    if (
+      crowdBursts?.enabled &&
+      !chatEffects.blocked &&
+      !host.error &&
+      !text.startsWith("!")
+    ) {
+      const hit = host.crowd?.({ platform: source, identity: principal.id }, text);
+      if (hit) {
+        const b = host.game?.manifest?.chat?.bursts?.find(
+          (x) => x.name === hit,
+        );
+        feed("system", `${b?.distinct ?? "?"} distinct viewers unlocked ${hit}!`);
+      }
+    }
     if (!text.startsWith("!")) return;
     const [cmd, ...args] = text.slice(1).split(/\s+/);
     // meta commands handled by infra

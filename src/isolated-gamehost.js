@@ -165,6 +165,9 @@ export class IsolatedGameHost {
   chat({ cmd, args, actor }) {
     return this._session?.chat({ cmd, args, actor }) ?? null;
   }
+  crowd({ platform, identity }, text) {
+    return this._session?.crowd({ platform, identity }, text) ?? null;
+  }
   effect(name, args = [], actor = null) {
     return this._session?.effect(name, args, actor) ?? false;
   }
