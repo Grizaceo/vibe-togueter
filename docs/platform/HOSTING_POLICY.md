@@ -2,6 +2,8 @@
 
 Owner requirement recorded November 1, 2026. The owner is opening an Oracle account and continues to defer human rehearsal. This document extends the full product requirements; it does not change Plan B or claim that the general builder/runtime adapters are connected. No cloud resource was changed to write it.
 
+Revised November 4, 2026: the session lifecycle (owner decisions, November 4) replaces the pause-and-resume inactivity policy for session VMs. A paused VM is never resumed; on session close every VM is destroyed and only a filtered log remains.
+
 ## Hosting choices
 
 The platform/controller, build agent and game runtime are separate workloads. Their placement is a streamer decision, never a chat/model instruction or an automatic response to a provider failure.
@@ -18,23 +20,32 @@ Before enabling a local mode, the streamer accepts the concrete exposure: the ma
 
 Local game VMs receive explicit CPU, RAM, disk and network limits; no broad host-home/shared-folder mount, personal profiles, Twitch refresh tokens or provider master credentials. The platform owns persistent decisions and creator attribution outside candidate-controlled code. Self-hosting does not grant an artifact permission to publish itself or reuse approval after its source/resources change.
 
-## VM timeouts: enabled by default, streamer configurable
+## Session lifecycle of managed VMs
 
-The product must enable an inactivity policy on managed VMs by default. Streamers can change the thresholds and actions, including an explicitly acknowledged always-on mode, separately for build, game and platform hosting. Selecting an always-on judging host is not the same as disabling all game-VM limits. Show the effective policy, next deadline and estimated remaining usage in owner controls.
+Replaces the pause-based inactivity policy for session VMs. A Vibe Togueter session is the unit: it opens, runs and closes; nothing is kept "paused for later". The streamer still sets the session's spend and duration caps, and owner controls show the effective policy, next deadline and estimated remaining usage.
 
-Initial product defaults for new **game runtime VMs**: pause after **5 minutes of inactivity** and destroy after **30 minutes of total inactivity**, including time paused. These are future runtime-adapter defaults, not settings already applied to existing VMs. Destruction requires durable approved source/resources and recoverable platform records; do not delete the only copy of a user's work. Display state-reset consequences before enabling destructive expiry. Resume/recreate stays inside the configured provider/budget/approval policy, with no local-process fallback.
+- **One game VM per session (VM3).** It runs the waiting game and then the approved vibe-coded game. Every game change resets it to a clean image (destroy and recreate from the same template); a restart without a fresh image does not count as a reset.
+- **Builder VM.** Lives only for build work: it stays available for rework until the approved game is live, within the session cap, and is then destroyed together with the review VM.
+- **Review VM.** Starts with each candidate, runs the fixed no-network harness, and resets to a clean image before re-testing a patch. Destroyed once the approved game runs in the game VM.
+- **Provider pause is only a cost fuse** (for example, a controller failure). A paused VM is **never resumed**: the external supervisor destroys it. There is no "idle, resume later" state.
+- **Session close.** On close — or when the time or spend cap expires — every VM is destroyed, the provider is asked to confirm none remain, and only a **filtered session log** is kept: events, hashes, decisions, behavior report and costs; never secrets, raw VM output or viewer IPs; published retention. The next session starts from clean images.
+- **Pre-warmed VMs.** A pre-created VM is valid only if freshly created and never used.
+
+Destruction still requires durable approved source/resources and recoverable platform records; do not delete the only copy of a user's work. Display state-reset consequences before enabling destructive expiry.
 
 A build additionally needs a finite job deadline and an independent cleanup lease. The historical builder trial used provider auto-pause at five minutes and an independently checked thirty-minute cleanup timer; those were trial-specific controls, not a general runtime supervisor or authority to rerun/spend the old budget.
 
-Platform-host inactivity is separately configurable. Pausing the only controller also pauses its own ability to wake itself, serve judges or supervise guests. Before enabling that action, provide an external management/wake/cleanup path and clearly disclose the resulting availability. A platform hosting choice must not silently inherit a short game-VM timeout. Judge access through November 15 remains a requirement; idle policies must be chosen together with an actual wake/recovery plan.
+Platform-host inactivity is separately configurable. Pausing the only controller also pauses its own ability to wake itself, serve judges or supervise guests. Before enabling that action, provide an external management/wake/cleanup path and clearly disclose the resulting availability. A platform hosting choice must not silently inherit a short game-VM timeout. Judge access through November 15 remains a requirement; session policies must be chosen together with an actual wake/recovery plan.
 
 [CreateOS documents](https://createos.sh/docs/Sandbox/Limits/) provider auto-pause, but a pause stops only vCPU billing; RAM/storage continue. Its [rate card](https://createos.sh/pricing/sandbox) remains usage-based. Therefore the owner panel must distinguish running, paused, destruction requested, destruction confirmed and cleanup requiring attention. An elapsed timer, lost connection, failed status or deletion acknowledgement alone cannot be called zero cost or successful destruction.
 
 ## What counts as idle
 
-Use accepted participant/streamer activity and the intended live game/session state, not arbitrary process CPU, periodic frame broadcasts, health checks, credit refreshes, polling or WebSocket pings. Rejected flood traffic must not extend a VM's life. A round still deliberately playing should not be paused mid-race merely because viewers stop pressing buttons. Apply a separate finite owner-selected lease/budget deadline so an untrusted game cannot claim perpetual activity to avoid shutdown.
+Use accepted participant/streamer activity and the intended live game/session state, not arbitrary process CPU, periodic frame broadcasts, health checks, credit refreshes, polling or WebSocket pings. Rejected flood traffic must not extend a VM's life. A round still deliberately playing should not be torn down mid-race merely because viewers stop pressing buttons.
 
-The application-level policy and the provider's activity definition are different. Record both, verify their interaction against the actual provider, and never claim that one `--auto-pause` flag implements the full application policy. Once paused, continuing the destroy countdown requires an external supervisor rather than a timer inside that paused guest.
+Idleness ends the session — the VMs are destroyed — and never pauses them for later. Apply a separate finite owner-selected session lease/budget deadline so an untrusted game cannot claim perpetual activity to avoid shutdown.
+
+The application-level policy and the provider's activity definition are different. Record both, verify their interaction against the actual provider, and never claim that one `--auto-pause` flag implements the full application policy. Because a paused VM is never resumed, destruction of a paused guest always runs on the external supervisor, not on a timer inside that guest.
 
 ## Lifecycle and ownership invariants
 
