@@ -75,7 +75,7 @@ export function createChatCommands({
         text,
       );
       if (bonus) {
-        host.safeCall("onCrowdBonus", bonus);
+        host.effect("crowd-bonus", [bonus], null);
         feed(
           "system",
           `${bonus.participants} distinct viewers unlocked a ${bonus.kind} bonus!`,
@@ -275,8 +275,18 @@ export function createChatCommands({
       return;
     }
     if (chatEffects.blocked) return;
-    const handled = host.safeCall("onChat", { name: user, source }, cmd, args);
-    if (handled) feed("system", `${user} used !${cmd}`);
+    const handled = host.chat({
+      cmd,
+      args,
+      actor: {
+        key: principal.id || participantId || user,
+        name: user,
+        platform: source,
+        moderator: !!isModerator,
+        broadcaster: !!principal.broadcaster,
+      },
+    });
+    if (handled === "effect") feed("system", `${user} used !${cmd}`);
   }
 
   return handleChat;

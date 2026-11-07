@@ -98,18 +98,26 @@ export function createSeating({
       jkt: client.jkt,
     }).token;
     send(ws, { t: "seat", ok: true, identity: client.identity, resume });
-    host.safeCall("onJoin", {
-      id: client.id,
-      name: client.name,
-      role: client.role,
-      platform: claims.plat,
-      verified,
-    });
-    feed("system", `${client.name} joined (${verified ? claims.plat : "web guest"})`);
+    const label = verified ? claims.plat : "web guest";
+    if (
+      host.join({
+        id: client.id,
+        name: client.name,
+        role: client.role,
+        platform: claims.plat,
+        verified,
+      })
+    )
+      feed("system", `${client.name} joined (${label})`);
+    else {
+      client.kind = "spectator";
+      send(ws, { t: "seat", full: true });
+      feed("system", `${client.name} is watching (${label}, game full)`);
+    }
   }
 
   function unseat(ws, client, reason) {
-    host.safeCall("onLeave", { id: client.id, name: client.name });
+    host.leave({ id: client.id });
     feed("system", `${client.name} left`);
     Object.assign(client, { kind: "pending", identity: null, jkt: null, role: "viewer", name: "" });
     client.challenge = nonce();

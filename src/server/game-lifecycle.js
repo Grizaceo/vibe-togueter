@@ -79,7 +79,7 @@ export async function startGameRuntime({
       if (kind === "game-reloaded") {
         for (const player of clients.values())
           if (player.kind === "player")
-            host.safeCall("onJoin", {
+            host.join({
               id: player.id,
               name: player.name,
               role: player.role,
@@ -118,7 +118,7 @@ export async function startGameRuntime({
       if (!(await host.load())) return false;
       for (const player of clients.values())
         if (player.kind === "player")
-          host.safeCall("onJoin", {
+          host.join({
             id: player.id,
             name: player.name,
             role: player.role,

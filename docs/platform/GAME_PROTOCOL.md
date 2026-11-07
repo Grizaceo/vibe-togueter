@@ -220,14 +220,11 @@ The game's own text is never forwarded to viewers. Viewers see "Game stopped" an
 An adapter connects one kind of game to the control channel. The platform holds a registry of adapters instead of the hard-coded `t99`/`tee` checks in `src/remote-games.js`.
 
 ```js
-// src/protocol/adapter.js (planned interface)
-{
-  kind: "sdk" | "tee",
-  manifest(entry) -> manifest,           // derived, exported or from reviewed config
-  start({ hello, onMessage }) -> { send(message), stop(reason) },
-  health() -> { ok, checkedAt, details }
-}
+adapter.legacyManifest   // boolean: may answer ready.manifest === null (SDK games); false for others
+adapter.start({ onMessage(line /* string */), onExit(info) }) -> Promise<{ send(message /* object */), stop() }>
 ```
+
+The manifest arrives in the `ready` message and health arrives as `health` messages — the earlier `manifest(entry)` and `health()` hooks are gone.
 
 In order:
 1. **SDK.** Wraps the isolated runtime. The worker's IPC (`load`, `start`, `call` / `ready`, `frame`, `failure`) becomes the v1 messages. Derived manifests cover the bundled games.
