@@ -1,6 +1,6 @@
 # Vibe Arena game protocol v1
 
-Status: **accepted on 2026-11-06; not implemented yet.** This is roadmap phase 3, written before the code as the roadmap asks. The owner's decisions are in section 12.
+Status: **implemented locally on 2026-11-06 (steps 1–7).** This is roadmap phase 3, written before the code as the roadmap asks. The owner's decisions are in section 12.
 
 The protocol is the contract between the platform and a game. It has three parts:
 - a **manifest**: what the game declares about itself before it runs;

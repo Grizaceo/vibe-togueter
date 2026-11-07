@@ -214,3 +214,22 @@ test("BurstCounter fires once per distinct crowd, with cooldown and window expir
   assert.equal(g.accept(tw(2), "\u{1f327}"), "rain", "second burst fires at its own threshold");
   assert.equal(g.accept(tw(9), "hello"), null, "no token match, no count");
 });
+test("studio-worker manifest verdict: valid, invalid and absent receipts", async () => {
+  const { manifestVerdict } = await import("../src/studio-worker/test.js");
+  const sha = "a".repeat(64);
+  const good = manifestVerdict(
+    { protocol: "va-game/1", seats: { player: 4 } },
+    sha,
+  );
+  assert.equal(good.manifest.seats.player, 4);
+  assert.equal(good.manifest.id, "candidate");
+  assert.equal(good.manifest.version.sha256, sha);
+  const bad = manifestVerdict(
+    { protocol: "va-game/1", version: { sha256: sha } },
+    sha,
+  );
+  assert.match(bad.manifestError, /unknown-key/);
+  const none = manifestVerdict(null, sha);
+  assert.equal(none.manifest.legacy, true);
+  assert.equal(none.manifest.version.sha256, sha);
+});

@@ -256,6 +256,14 @@
         white-space: pre-wrap;
         overflow-wrap: anywhere;
       }
+      .manifest-summary {
+        border: 1px solid #333;
+        padding: 6px 8px;
+        white-space: pre-wrap;
+      }
+      .manifest-summary:empty {
+        display: none;
+      }
       .privacy-corner {
         position: fixed;
         bottom: 4px;
