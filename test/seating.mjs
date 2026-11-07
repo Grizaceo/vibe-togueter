@@ -41,6 +41,14 @@ async function stack(t) {
     gameDir: "",
     game: { name: "Test", meta: { description: "", world: { w: 100, h: 100 } } },
     safeCall: (fn, ...args) => (calls.push([fn, ...args]), true),
+    join: (p) => (calls.push(["onJoin", p]), true),
+    leave: (p) => (calls.push(["onLeave", p]), true),
+    input: (id, data) => (calls.push(["onInput", id, data]), true),
+    chat: ({ cmd, args, actor }) => (
+      calls.push(["onChat", { name: actor?.name, source: actor?.platform }, cmd, args]),
+      "effect"
+    ),
+    effect: (name, args) => (calls.push(["effect", name, ...args]), true),
   };
   const clients = new Map();
   const feed = (kind, text) => feedLines.push(text);
@@ -160,7 +168,7 @@ async function stack(t) {
     return res.status;
   }
 
-  return { open, tab, twitchChat, kickChat, calls, feedLines, clients, seating };
+  return { open, tab, twitchChat, kickChat, calls, feedLines, clients, seating, host };
 }
 
 test("a Twitch viewer, a Kick viewer and a legacy client share one room with their own names and roles", async (t) => {
@@ -365,4 +373,24 @@ test("the browser seat client (public/seat.js) pairs, resumes after reload and h
   reload.client.notMe();
   assert.equal((await reload.until("seat")).reason, "unseated");
   assert.equal(store.get("va-seat-resume"), undefined);
+});
+
+test("a full game seats the pairing client as spectator, no join feed", async (t) => {
+  const s = await stack(t);
+  const alice = await s.tab(await browserKey());
+  const code = await alice.pair();
+  const prev = s.host.join;
+  s.host.join = () => false;
+  try {
+    await s.twitchChat("user-id=42;room-id=7;display-name=Alice", "alice", `!join ${code}`);
+    const okSeat = await alice.acceptOffer();
+    assert.equal(okSeat.ok, true); // claim succeeds; the seat-full notice follows
+    const seat = await alice.next("seat");
+    assert.equal(seat.full, true);
+    assert.equal([...s.clients.values()][0].kind, "spectator");
+    assert.ok(!s.feedLines.some((l) => l.includes("joined")));
+    assert.ok(s.feedLines.some((l) => l.includes("is watching")));
+  } finally {
+    s.host.join = prev;
+  }
 });

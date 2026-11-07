@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { REMOTE_ADAPTERS } from "../protocol/adapters/index.js";
 import { ChatGate } from "../traffic.js";
 import { roundApprovalActor } from "../approval-delegation.js";
 import { teeEntryURL } from "../tee-join.js";
@@ -13,7 +14,7 @@ export function createChatCommands({
   replies,
   chatEffects,
   crowdBursts,
-  teeBridge,
+  teeSession,
   feed,
   host,
   requestFallback,
@@ -50,9 +51,8 @@ export function createChatCommands({
       if (control.changed) {
         if (chatEffects.blocked) {
           crowdBursts.reset();
-          teeBridge.pulse = null;
-          teeBridge.tick();
-        }
+          teeSession.pause("chat-effects");
+        } else teeSession.resume("chat-effects");
         feed(
           "system",
           chatEffects.blocked
@@ -75,11 +75,27 @@ export function createChatCommands({
         text,
       );
       if (bonus) {
-        host.safeCall("onCrowdBonus", bonus);
+        host.effect("crowd-bonus", [bonus], null);
         feed(
           "system",
           `${bonus.participants} distinct viewers unlocked a ${bonus.kind} bonus!`,
         );
+      }
+    }
+    // Declared bursts: any manifest may unlock its own crowd moment the same
+    // way. Lines starting with "!" are commands, never burst tokens.
+    if (
+      crowdBursts?.enabled &&
+      !chatEffects.blocked &&
+      !host.error &&
+      !text.startsWith("!")
+    ) {
+      const hit = host.crowd?.({ platform: source, identity: principal.id }, text);
+      if (hit) {
+        const b = host.game?.manifest?.chat?.bursts?.find(
+          (x) => x.name === hit,
+        );
+        feed("system", `${b?.distinct ?? "?"} distinct viewers unlocked ${hit}!`);
       }
     }
     if (!text.startsWith("!")) return;
@@ -186,16 +202,18 @@ export function createChatCommands({
       if (action === "on" || action === "off") {
         if (!actor.owner) return;
         if (action === "off") {
-          teeBridge.stop();
+          teeSession.stop("disabled");
           feed("system", "Tee chat bridge disabled.");
           return;
         }
-        const game = remoteGames.entries.find((g) => g.adapter === "tee");
+        const game = remoteGames.entries.find(
+          (g) => REMOTE_ADAPTERS[g.adapter]?.chatControl,
+        );
         if (!game) {
           feed("system", "No Tee runtime configured.");
           return;
         }
-        teeBridge
+        teeSession
           .start(game, TWITCH_CHANNEL)
           .then(() => {
             feed(
@@ -207,11 +225,20 @@ export function createChatCommands({
             );
           })
           .catch((error) => feed("system", "Tee bridge: " + error.message));
-      } else if (
-        !chatEffects.blocked &&
-        teeBridge.command(action, { source, user })
-      )
-        feed("system", `${user}: Tee ${action}`);
+      } else if (CHAT_PLATFORMS.includes(source) && !chatEffects.blocked) {
+        const routed = teeSession.chat({
+          cmd: action,
+          args: [],
+          actor: {
+            key: principal.id || participantId || user,
+            name: user,
+            platform: source,
+            moderator: !!isModerator,
+            broadcaster: !!principal.broadcaster,
+          },
+        });
+        if (routed === "effect") feed("system", `${user}: Tee ${action}`);
+      }
       return;
     }
     if (["idea", "vote", "build"].includes(cmd)) {
@@ -275,8 +302,18 @@ export function createChatCommands({
       return;
     }
     if (chatEffects.blocked) return;
-    const handled = host.safeCall("onChat", { name: user, source }, cmd, args);
-    if (handled) feed("system", `${user} used !${cmd}`);
+    const handled = host.chat({
+      cmd,
+      args,
+      actor: {
+        key: principal.id || participantId || user,
+        name: user,
+        platform: source,
+        moderator: !!isModerator,
+        broadcaster: !!principal.broadcaster,
+      },
+    });
+    if (handled === "effect") feed("system", `${user} used !${cmd}`);
   }
 
   return handleChat;

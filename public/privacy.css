@@ -1,0 +1,20 @@
+body {
+  max-width: 850px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background: #101018;
+  color: #eee;
+  font: 17px/1.6 system-ui;
+}
+a {
+  color: #8df;
+}
+.pending {
+  padding: 16px;
+  border: 2px solid #ffd166;
+  color: #ffd166;
+}
+h1,
+h2 {
+  line-height: 1.2;
+}

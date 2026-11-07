@@ -131,6 +131,7 @@ export class TeeChatBridge {
                 alive: own.alive,
                 score: own.score,
               };
+            this.onSnapshot?.(message);
           }
         } catch {
           this.stop("incompatible or malformed protocol");
@@ -159,10 +160,22 @@ export class TeeChatBridge {
     }
     this.cooldowns.set(key, now);
     this.lastAccepted = now;
+    this.state.lastActor = key;
+    return this.action(action);
+  }
+  // Protocol v1 path: the session's EffectGate already applied who/args/rate
+  // limits, so this only shapes the pulse.
+  action(action) {
+    if (
+      this.paused ||
+      !this.state.connected ||
+      !["left", "right", "jump", "hook", "fire", "stop"].includes(action)
+    )
+      return false;
+    const now = this.now();
     this.lastCommand = now;
     this.state.commands++;
     this.state.lastAction = action;
-    this.state.lastActor = key;
     this.state.lastCommandSeq = this.sequence + 1;
     this.pulse = {
       until: now + this.pulseMs,
@@ -207,6 +220,7 @@ export class TeeChatBridge {
     this.pendingReject = null;
     if (reject) reject(Error(reason));
     ws?.terminate();
+    this.onStop?.(reason);
     return this.status();
   }
 }

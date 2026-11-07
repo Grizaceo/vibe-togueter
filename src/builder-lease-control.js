@@ -100,10 +100,10 @@ export class BuilderLeaseControl {
         if (s.claimedBy || !id(d.jobId)) throw Error("Invalid build claim.");
         s.claimedBy = d.jobId;
       } else if (d.kind === "close") {
-        if (!["explicit", "expiry"].includes(d.reason))
+        if (!["explicit", "expiry", "provider-pause"].includes(d.reason))
           throw Error("Invalid close decision.");
         s.closed = true;
-        s.stopRequested = d.reason === "explicit";
+        s.stopRequested = d.reason !== "expiry";
       } else throw Error("Unknown lease decision.");
       s.revision++;
     }
@@ -240,20 +240,20 @@ export class BuilderLeaseControl {
     }
     throw Error("Lease claim contention.");
   }
-  beginClose({ explicit = false, allowClaimed = false } = {}) {
+  beginClose({ explicit = false, allowClaimed = false, pausedByProvider = false } = {}) {
+    const reason = pausedByProvider
+      ? "provider-pause"
+      : explicit
+        ? "explicit"
+        : "expiry";
     for (let n = 0; n < 64; n++) {
       const s = this.deadline();
       if (s.closed) return true;
-      if (explicit && s.claimedBy && !allowClaimed)
+      if (explicit && !pausedByProvider && s.claimedBy && !allowClaimed)
         throw Error("Guest belongs to a build; use job cancellation.");
-      if (!explicit && this.now() < s.expiresAt) return false;
-      if (
-        this.commit(s, {
-          kind: "close",
-          reason: explicit ? "explicit" : "expiry",
-        })
-      )
-        return true;
+      if (!explicit && !pausedByProvider && this.now() < s.expiresAt)
+        return false;
+      if (this.commit(s, { kind: "close", reason })) return true;
     }
     throw Error("Lease close contention.");
   }

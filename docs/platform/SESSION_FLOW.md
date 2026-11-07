@@ -4,34 +4,43 @@ Vibe Togueter is the platform; its implementation remains Vibe Arena. This is th
 intended experience, not a claim that every stage is integrated. The frozen delivery
 remains untouched. The platform's stable public URL/custom domain and hosting are pending.
 
+Revised November 4 (owner decisions): two session modes, one game VM per
+session that resets to a clean image on every change, ephemeral builder and review
+VMs that never talk over the network, a funnel as the only public door, and a close
+that destroys everything and keeps only a filtered log.
+
 ## Intended experience
 
-1. The streamer opens a session. Chat discusses, proposes and votes. In parallel,
-   separately budgeted preparation starts for a private builder VM and a waiting-game
-   runtime VM. Preparing infrastructure neither approves inputs nor invokes a model.
-2. The waiting-game VM starts an existing approved game such as teeworlds-rs.
-   Cloudflare supplies HTTPS entry and WSS ingress. A viewer writes `!join`, opens
-   the platform entry and controls their own tee with keyboard/mouse in the same
-   match as the streamer. This is individual play, not a collective tee or buffs.
-   VM hosting is the default; the streamer's PC is an explicit opt-in alternative,
-   never an automatic outage fallback.
-3. After voting/discussion and exact input/resource approval, the streamer sends
-   the selected prompt to Codex in the prepared builder VM. The community keeps
-   playing the waiting game. Guest login stays private; no Twitch token, streamer
-   key or host auth cache enters a game VM.
-4. Completed construction enters quarantine and separate testing. Model completion
-   is not playable-game readiness. The source/resources, behavior report, rights
-   and credits require exact streamer review. A reviewed artifact then needs its
-   own isolated runtime and verified browser endpoint before a ready announcement.
-5. Chat is notified when the new game is genuinely ready. The streamer chooses
-   **when** to transition. Build completion never interrupts the waiting match.
-   An approved handoff can notify connected platform pages and offer/switch their
-   embedded game to the reviewed target.
-6. Record client handoff acknowledgements. Closed tabs, detached direct-game clients
-   and disconnected viewers cannot be claimed as automatically migrated; provide a
-   fresh `!join` link. If target health fails, retain the waiting game. Retire only
-   a platform-owned runtime after grace/deadline; never stop a separately operated
-   PC development server without coordination.
+1. The streamer opens a session from the Studio (in the vault, over a login
+   tunnel) and chooses **play** — game VM only — or **play and create** — game VM
+   plus builder and review when needed — with a spend and duration cap.
+2. The single game VM starts from a prepared image with the waiting game (e.g.
+   teeworlds-rs): no internet egress, outbound to the funnel only. A viewer writes
+   `!join`, opens the funnel's fixed link, types the pairing code in chat and gets
+   a signed ed25519 seat verified by the funnel's public key. They play the
+   waiting game; the VM never sees their IP.
+3. Chat proposes and votes; the streamer approves the exact input and the spend.
+   The builder VM starts (egress only to the key broker, capped session token)
+   and builds the game. It stays available for rework and is destroyed
+   together with the review VM once the approved game is live. No Twitch token, streamer key or host auth cache enters a game VM.
+4. The review VM starts with the candidate, which travels through the controller
+   as data — never VM to VM. A fixed no-network harness runs first. If it fails,
+   a review agent may patch; the VM then resets to a clean image and the harness
+   runs again on the new hash. Whoever changes the code does not sign the result;
+   a big change goes back to the builder through the controller.
+5. The streamer approves the exact hash with a button. While the game VM resets
+   to a clean image and loads the approved game read-only, players wait in the
+   funnel's waiting room (predictions, votes, countdown); no game code runs on
+   the host. Builder and review are destroyed once the game is live.
+6. If the vibe-coded game crashes, a streamer button (or the watchdog) sends
+   everyone to the waiting room and resets the game VM to the default-game image.
+   The review VM starts with the bug report, the streamer approves the repaired
+   hash, and the game VM resets again with the fixed version.
+7. On close — or when the cap expires — every VM is destroyed and the provider is
+   asked to confirm none remain. Provider pause is only a cost fuse: a paused VM
+   is never resumed. Only a filtered session log is kept (events, hashes,
+   decisions, behavior report, costs; no secrets, raw output or viewer IPs).
+   The next session starts from clean images.
 
 teeworlds-rs is Cristóbal Muñoz's external game, developed separately with Devin and
 Hermes. Its code is not attributed to Codex or the platform hackathon implementation.
@@ -42,20 +51,19 @@ game redesign or spectator-effect system is required for this example.
 
 ```mermaid
 flowchart LR
-  A[Open platform session] --> B[Chat proposes and votes]
-  A --> C[Prepare private builder VM]
-  A --> D[Prepare waiting-game VM]
-  D --> E[Cloudflare entry and individual Tee players]
-  B --> F[Streamer approves exact prompt and resources]
-  C --> F
-  F --> G[Codex construction in builder VM]
-  G --> H[Quarantine and separate tests]
-  H --> I[Streamer reviews exact artifact]
-  I --> J[New isolated runtime passes readiness checks]
-  J --> K[Notify chat that new game is ready]
-  K --> L[Streamer chooses transition time]
-  E --> L
-  L --> M[Handoff connected platform clients and publish new join link]
+  A[Open session, choose mode] --> B[Game VM: waiting game]
+  B --> C[Viewers join via funnel, signed seats]
+  C --> D[Chat proposes and votes]
+  D --> E[Streamer approves exact input and spend]
+  E --> F[Builder VM builds; egress to key broker only]
+  F --> G[Candidate via controller, never VM to VM]
+  G --> H[Review VM: fixed harness, no network]
+  H -->|fail| I[Review agent patches; reset to clean image]
+  I --> H
+  H -->|pass| J[Streamer approves exact hash]
+  J --> K[Waiting room while game VM resets to clean image]
+  K --> L[Approved game live; builder and review destroyed]
+  L --> M[Close: all VMs destroyed, filtered log]
 ```
 
 This diagram specifies the target flow; the verification table below governs what
@@ -64,12 +72,12 @@ triggered by model completion alone.
 
 | Resource | Responsibility | Authority |
 | --- | --- | --- |
-| Platform controller | Decisions, votes, credits, routing and evidence | Private streamer controls; trusted Twitch identity |
-| Builder VM | Codex and exact approved inputs | Bounded allocation and fresh guest authorization |
-| Waiting-game VM | Existing Tee match during construction | Game-only ingress; no coding or platform credentials |
-| Test VM | Test quarantined artifact separately | Fixed harness and finite lease |
-| New-game runtime | Serve the exact approved artifact | Separate allocation and runtime identity/health gates |
-| Cloudflare tunnel | Temporary HTTPS/WSS transport | Not a VM, approval or hosting guarantee |
+| Vault: controller, key broker, journals | Decisions, votes, credits, routing, keys, evidence | No public ports; Studio over login tunnel; streamer and mods only |
+| Funnel | Lobby, waiting room, frame/input relay, signed Kick webhooks | Public door, holds nothing valuable; verifies seats with the public key |
+| Game VM (one per session) | Waiting game, then approved vibe-coded game | Clean image per change; outbound to funnel only; destroyed on close |
+| Builder VM | Builds the candidate | Egress only to the key broker; capped session token; destroyed with the review VM once the approved game is live |
+| Review VM | Fixed harness, optional patch agent | No network; resets to a clean image per retest; destroyed after approval |
+| Paused VM | Cost fuse only | Never resumed; the external supervisor destroys it |
 
 Builder and waiting-game leases are independent. Failure of one does not authorize
 a replacement or extend the other. The existing worker destroys its builder before
@@ -85,8 +93,12 @@ A display name `streamer` does not authenticate a privileged game role.
 | Codex construction, quarantine, separate tests/review | Prior real Studio trial; no new model run authorized here; protected artifacts stay untouched |
 | Individual Twitch `!join` → local Tee → ONLINE keyboard play | Verified with real command, owner confirmation and authoritative local snapshots |
 | Waiting-game VM + Cloudflare + individual play | Verified November 2: real manual Twitch !join, complete public link and owner-confirmed ONLINE play; automated WSS movement/disconnect/return. Two-human interaction and independent-network testing remain pending. |
-| Session opening automatically prepares both VMs | Pending orchestration; current controls are separate |
-| Generally usable runtime for newly generated artifacts | Pending; reviewed-publication evidence is not deployment |
+| Chat pairing code (`!join <code>`) bound to a signed seat | Implemented locally on main (phase 2); a real two-platform session is pending |
+| Session orchestration: open, mode choice, caps, close | Pending; current controls are separate |
+| Funnel as a separate public door with fixed domain and waiting room | Pending; today a Cloudflare quick tunnel fronts the controller |
+| Review agent patch + clean-image retest inside the review VM | Pending |
+| Game-VM reset to a clean image on game change | Pending; current code still resumes paused builder VMs |
+| Filtered session log replacing raw output retention | Pending |
 | Ready notice and streamer-selected cross-game handoff | Pending integrated flow |
 | Automatically move every viewer between arbitrary games | Not implemented; requires connected platform clients and acknowledgements |
 

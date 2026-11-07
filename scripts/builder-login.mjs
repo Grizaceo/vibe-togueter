@@ -26,7 +26,7 @@ if(process.argv.length!==3||!['prepare','status','release'].includes(action)){
     worker.state.cleanupUnit=unit;worker.state.cleanupLeaseVersion=2;worker.state.expiresAt=state.requestedAt+30*60*1000;worker.save();fs.mkdirSync(leaseDir,{recursive:true,mode:0o700});
     const writeLease=record=>{const tmp=leaseFile+'.tmp';const fd=fs.openSync(tmp,'w',0o600);try{fs.writeFileSync(fd,JSON.stringify(record)+'\n');fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(tmp,leaseFile);};
     writeLease({...worker.state,creationRequested:true});
-    await run('systemd-run',['--user','--unit='+unit,'--on-active=30m','--on-unit-active=30s','--timer-property=AccuracySec=1s',process.execPath,path.join(root,'scripts','cleanup-builder-session.mjs'),state.name,'--due'],{timeout:10000,signal:controller.signal});
+    await run('systemd-run',['--user','--unit='+unit,'--on-active=1m','--on-unit-active=30s','--timer-property=AccuracySec=1s',process.execPath,path.join(root,'scripts','cleanup-builder-session.mjs'),state.name,'--due'],{timeout:10000,signal:controller.signal});
     await run('systemctl',['--user','is-active',unit+'.timer'],{timeout:10000,signal:controller.signal});
     writeLease({...worker.state,creationRequested:true});
    }});prepared=true;

@@ -66,7 +66,8 @@ const server = spawn(
 let browser, cdp;
 const checks = [],
   errors = [],
-  requests = [];
+  requests = [],
+  violations = [];
 const check = (name, ok) => {
   checks.push({ name, ok });
   if (!ok) throw Error(name);
@@ -159,6 +160,7 @@ try {
     runId,
     errors,
     requests,
+    violations,
   });
   await rehearseLobby({
     base,
@@ -193,6 +195,10 @@ try {
   await rehearsePrivacy({ navigate, check, evaluate, capture });
   check("no browser JavaScript exception occurred", errors.length === 0);
   check(
+    "no Content Security Policy violation was logged",
+    violations.length === 0,
+  );
+  check(
     "credit clients make no HTTP polling requests",
     !requests.some((url) => url.includes("/community/game-credits")),
   );
@@ -204,6 +210,7 @@ try {
         kind: "automated-local-Chromium-rehearsal",
         checks,
         errors,
+        violations,
         temp,
         limits: [
           "Disposable checkout without owner configuration.",

@@ -24,7 +24,7 @@ export function createPublicRoutes({
   builderWarm,
   creatorAssets,
   remoteGames,
-  teeBridge,
+  teeSession,
   clientCredits,
   PUBLIC,
 }) {
@@ -85,7 +85,7 @@ export function createPublicRoutes({
       return res.end(
         JSON.stringify({
           ...remoteGames.catalog(),
-          teeBridge: teeBridge.status(),
+          teeBridge: teeSession.status(),
         }),
       );
     }

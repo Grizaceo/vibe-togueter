@@ -4,11 +4,16 @@ Work continues on the `main` branch, which was called `next` until 2026-11-03. `
 
 ## Principles
 
-- **Three VMs.**
-  - VM1: Codex builds the vibe-coded game.
-  - VM2: a separate VM tests it.
-  - VM3: runs certified, ready-made games that keep chat and the streamer playing while VM1 and VM2 work.
+- **Session lifecycle (owner decisions, November 4).**
+  - The streamer opens a session and chooses **play** (game VM only) or **play and create** (game VM plus builder and review when needed), with a spend and duration cap.
+  - One game VM (VM3) per session: it runs the waiting game (e.g. teeworlds-rs) and then the vibe-coded game, returning to a clean image on every change. A plain restart does not count as a reset.
+  - The builder (VM1) lives only while it builds. The review VM (VM2) starts with each candidate, runs a fixed no-network harness, and resets to a clean image before re-testing a patch. Whoever changes the code does not sign the result.
+  - Builder and review never talk to each other over the network; everything passes through the controller as data.
+  - Before a new or repaired game goes live the streamer approves the exact hash (returning to the default game needs no approval); players wait in a funnel-hosted waiting room.
+  - Provider pause is only a cost fuse: a paused VM is never resumed. On close, every VM is destroyed and confirmed gone at the provider; only a filtered session log remains.
   - No game code runs on the controller host.
+- **Three zones.** The vault (controller, key broker, journals) has no public ports and is reached through a login tunnel, streamer and mods only. The funnel is the public door — lobby, waiting room, frame/input relay, signed Kick webhooks — and holds nothing valuable; by default a small VPS near the game VMs. Untrusted code runs only in VMs: the game VM talks outbound to the funnel; builder and review VMs only reach the key broker. The funnel verifies ed25519 seats with the public key; only the vault signs them.
+- **Community fund.** Donations go to the streamer; provider accounts and keys are the streamer's and live encrypted in the vault. The platform keeps the ledger, per-purpose reserves, caps and receipts, and never holds money. The key broker hands out per-session capped tokens; the key never enters a VM.
 - **Viewers only receive the game.** Nothing from the game executes on a viewer's PC.
 - **Delivery modes:**
 
@@ -78,21 +83,27 @@ The order follows dependencies:
 - If the Steam/Epic research recommends Epic Online Services for identity or lobbies, include it here.
 - **Done when:** a Twitch viewer and a Kick viewer join the same room under their own names.
 
-### 3. Vibe Arena game protocol v1
+### 3. Vibe Arena game protocol v1 — implemented locally (2026-11-06)
+
+- Bundled SDK games and the collective Tee run under `va-game/1`: SDK games on derived manifests through the sandboxed worker, Tee through `TeeAdapter` + `TeeSession` on the pinned codec.
+- One conformance suite (`test/protocol-conformance.mjs`, `test/protocol-tee.mjs`) drives fixture, real-SDK-sandbox and Tee adapters through every spec §9 case.
+- Deferred: Tee individual seats to v1.1, t99 outside the registry, bundled games stay on derived manifests (no reviewed-hash changes).
 
 - **Manifest:** id, version hash, credits, a declared input schema with bounds, seats (streamer/player/spectator and maximums), chat effects with rate limits, and the supported delivery modes.
 - **Control channel (platform ↔ game):** versioned hello, join/leave with a seat token, effects, pause/resume, health and round end.
 - **Data plane:** the phase 1 frame format for mode A.
 - **Adapters, in order:** SDK games, Tee (from the pinned postcard codec), t99. `src/remote-games.js` stops hardcoding adapters.
+- **Next data-plane step:** WebTransport for the funnel (Baseline since March 2026), with WebSocket as fallback. Support through Cloudflare tunnels is unverified.
 - Update `src/sdk-prompt.md` so generated games declare a manifest.
-- Write the spec before the code.
+- Write the spec before the code. **Spec accepted on 2026-11-06:** [GAME_PROTOCOL](platform/GAME_PROTOCOL.md). t99 is out of v1, and Tee individual seats move to v1.1.
 - **Done when:** Grove and Tee run under the same contract, with conformance tests.
 
 ### 4. VM3 game runtime
 
 - Two backends: a local VM (QEMU/KVM via libvirt, for self-hosting) and the cloud (CreateOS).
-- Browsers connect to VM3 directly with a seat token. The controller only keeps the control channel.
-- Fallback works across VMs, with the pause and destroy defaults from HOSTING_POLICY.
+- Browsers connect **through the funnel**, never directly to VM3: fixed URL, seat token on the first stream, the viewer IP never reaches the VM.
+- On every game change VM3 resets to a clean image; players wait in the funnel waiting room (predictions, votes, countdown).
+- Fallback returns VM3 to the default-game image, by streamer button or watchdog.
 - **Done when:** Grove runs in VM3, both local and cloud, with no game code on the host.
 
 ### 5. Mode C and a live view of Codex
@@ -103,6 +114,7 @@ The order follows dependencies:
   - the GPL obligations that come with x264;
   - CPU per stream (the voxl README reports 1.3–1.7 cores at 2560×1600 without a GPU);
   - multi-viewer behaviour, which is undocumented.
+- **Controls:** `--read-only` for spectators, input only from the active seat, signed short-lived room tokens (not the default password), clipboard off, `--allowed-origins` to the funnel domain, voxl reachable only from the funnel.
 - **Done when:** a forced A failure switches the room to C without dropping players.
 
 ### 6. Full VM1 → VM2 → VM3 pipeline
@@ -112,8 +124,25 @@ The order follows dependencies:
 
 ### 7. Opt-in mode B and Steam/Epic integrations
 
-- Mode B, with per-viewer risk acceptance.
+- Mode B, with per-viewer risk acceptance: notice plus sandboxed iframe (`sandbox="allow-scripts"`, `allow=""`, `referrerpolicy="no-referrer"`), and the game's WebSocket relayed through the funnel to hide the viewer IP.
 - Any Steam/Epic integration the research recommends that did not fit in phase 2.
+
+### 8. Community fund
+
+- Donations go to the streamer; provider keys are the streamer's, encrypted per streamer in the vault. Per-session capped tokens from the key broker; the key never enters a VM.
+- Platform-side ledger: declared contributions, per-purpose reserves, capped spend, public receipts; no custody of anyone's money.
+- Legal gate first: if the platform ever collects the money, a fintech review (Chilean Law 21.521) and a company setup come before it.
+
+## Security hardening — done locally (2026-11-06)
+
+Code findings from the November 4 review, approved and applied; none changed reviewed game hashes. Caveat: warm-builder behavior after an actual provider pause is unverified against a real VM.
+
+- Paused builder VMs are never resumed: `verify()` destroys them and the external supervisor closes a `provider-pause` lease within about a minute.
+- `--auto-pause` stays only as the provider cost fuse (`src/vm-builder-preflight.js`, `src/studio-worker/test.js`), unchanged.
+- Raw VM stdout/stderr is no longer retained: the diagnostic keeps sizes and sha256 only, and the probe receipt is allowlist-filtered.
+- The Tee iframe runs sandboxed cross-origin with an empty permission policy and no-referrer; a mode-B notice must be accepted before Play.
+- Every controller response gets CSP (script/style/img/connect 'self'), `nosniff`, `Referrer-Policy` and `frame-ancestors 'none'`; inline page scripts/styles moved to files.
+- `src/isolated-gamehost.js` runs bubblewrap with a mandatory x86_64 seccomp filter and a `systemd-run` cgroup scope; missing scope degrades with a visible warning. Caveat: seccomp is x86_64 only.
 
 ## Ongoing
 
