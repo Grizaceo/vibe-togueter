@@ -100,13 +100,14 @@ The order follows dependencies:
 - Write the spec before the code. **Spec accepted on 2026-11-06:** [GAME_PROTOCOL](platform/GAME_PROTOCOL.md). t99 is out of v1, and Tee individual seats move to v1.1.
 - **Done when:** Grove and Tee run under the same contract, with conformance tests.
 
-### 4. VM3 game runtime
+### 4. VM3 game runtime — spec accepted 2026-11-10, implementation in progress
 
-- Two backends: a local VM (QEMU/KVM via libvirt, for self-hosting) and the cloud (CreateOS).
+- Two backends: a local VM (QEMU/KVM via libvirt, for self-hosting) and the cloud (CreateOS), behind one runtime interface; the provider is a detail.
 - Browsers connect **through the funnel**, never directly to VM3: fixed URL, seat token on the first stream, the viewer IP never reaches the VM.
 - On every game change VM3 resets to a clean image; players wait in the funnel waiting room (predictions, votes, countdown).
 - Fallback returns VM3 to the default-game image, by streamer button or watchdog.
-- **Done when:** Grove runs in VM3, both local and cloud, with no game code on the host.
+- **Spec:** [VM3_RUNTIME](platform/VM3_RUNTIME.md) — topology, runtime interface, lifecycle and open questions.
+- **Done when:** Grove runs in VM3, both local and cloud, with no game code on the host. Real provider runs stay gated on owner-approved sessions; tests use injected fakes.
 
 ### 5. Mode C and a live view of Codex
 
