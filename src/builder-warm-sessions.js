@@ -228,7 +228,19 @@ export class BuilderWarmSessions {
     const vm = builder.owned(
       JSON.parse(await builder.cli(["sandbox", "get", state.id])),
     );
-    if (!["running", "paused"].includes(vm.status))
+    if (vm.status === "paused") {
+      // Provider pause is only a cost fuse: destroy the guest, never resume it.
+      this.readinessWarning =
+        "The provider paused the guest (its cost fuse); it is destroyed, never resumed. A new preparation needs a new owner decision.";
+      this.control(state).beginClose({ pausedByProvider: true });
+      await this.helper("release");
+      const error = Error(
+        "Prepared guest was paused by the provider and destroyed; it is never resumed.",
+      );
+      error.providerPaused = true;
+      throw error;
+    }
+    if (vm.status !== "running")
       throw Error("Prepared guest is not available.");
     this.assertUnclaimed(builder);
     return vm;
@@ -269,9 +281,6 @@ export class BuilderWarmSessions {
       )
         throw Error("Warm guest egress changed.");
       this.assertUnclaimed(builder);
-      if (vm.status === "paused")
-        await builder.cli(["sandbox", "resume", vm.id]);
-      this.assertUnclaimed(builder);
       await builder.cli([
         "sandbox",
         "exec",
@@ -285,8 +294,9 @@ export class BuilderWarmSessions {
       this.readinessWarning = null;
       return true;
     } catch (error) {
-      this.readinessWarning =
-        "Readiness check failed; the guest may be paused. Check before building.";
+      if (!error.providerPaused)
+        this.readinessWarning =
+          "Readiness check failed; the guest may be unavailable. Check before building.";
       throw error;
     } finally {
       this.heartbeating = false;

@@ -131,16 +131,16 @@ The order follows dependencies:
 - Platform-side ledger: declared contributions, per-purpose reserves, capped spend, public receipts; no custody of anyone's money.
 - Legal gate first: if the platform ever collects the money, a fintech review (Chilean Law 21.521) and a company setup come before it.
 
-## Security hardening (pending owner approval)
+## Security hardening — done locally (2026-11-06)
 
-Code findings from the November 4 review. Each item changes behavior and needs the owner's sign-off; none changes reviewed game hashes.
+Code findings from the November 4 review, approved and applied; none changed reviewed game hashes. Caveat: warm-builder behavior after an actual provider pause is unverified against a real VM.
 
-- Stop resuming paused builder VMs (`src/builder-warm-sessions.js`); a paused VM is destroyed by the external supervisor, never resumed.
-- Restrict `--auto-pause` to the cost-fuse role (`src/vm-builder-preflight.js`, `src/studio-worker/test.js`).
-- Replace raw VM stdout retention in `runtime/` with the filtered session log (events, hashes, decisions, behavior report, costs; no secrets, no raw output, no viewer IPs).
-- Sandbox the Tee iframe and add the mode-B viewer notice in `public/tee-play.js`.
-- Add security headers (CSP, `nosniff`, `Referrer-Policy`, `frame-ancestors`) in `src/server/routes/public.js`.
-- Harden `src/isolated-gamehost.js` (bubblewrap seccomp and cgroups, narrower mounts) as the transitional path until VM3 exists.
+- Paused builder VMs are never resumed: `verify()` destroys them and the external supervisor closes a `provider-pause` lease within about a minute.
+- `--auto-pause` stays only as the provider cost fuse (`src/vm-builder-preflight.js`, `src/studio-worker/test.js`), unchanged.
+- Raw VM stdout/stderr is no longer retained: the diagnostic keeps sizes and sha256 only, and the probe receipt is allowlist-filtered.
+- The Tee iframe runs sandboxed cross-origin with an empty permission policy and no-referrer; a mode-B notice must be accepted before Play.
+- Every controller response gets CSP (script/style/img/connect 'self'), `nosniff`, `Referrer-Policy` and `frame-ancestors 'none'`; inline page scripts/styles moved to files.
+- `src/isolated-gamehost.js` runs bubblewrap with a mandatory x86_64 seccomp filter and a `systemd-run` cgroup scope; missing scope degrades with a visible warning. Caveat: seccomp is x86_64 only.
 
 ## Ongoing
 

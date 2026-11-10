@@ -4,178 +4,19 @@
     <meta charset="utf-8" />
     <title>vibe-arena — play</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body {
-        margin: 0;
-        background: #0b0b0f;
-        color: #eee;
-        font: 16px system-ui;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-      }
-      header {
-        padding: 8px 12px;
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        flex-wrap: wrap;
-        background: #14141c;
-      }
-      header b {
-        color: #8ef;
-      }
-      #live-credits a {
-        color: #8ef;
-      }
-      canvas {
-        flex: 1;
-        min-height: 0;
-        height: 0;
-        width: 100%;
-        touch-action: none;
-      }
-      #bar {
-        padding: 6px 12px;
-        background: #14141c;
-        display: flex;
-        gap: 10px;
-        font-size: 14px;
-        align-items: center;
-      }
-      #players {
-        color: #9a9;
-      }
-      #err {
-        color: #f88;
-      }
-      input {
-        background: #222;
-        color: #eee;
-        border: 1px solid #333;
-        border-radius: 4px;
-        padding: 4px 8px;
-      }
-      #live-credits {
-        flex-shrink: 0;
-      }
-      .creator-strip {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px 24px;
-        font-size: clamp(18px, 1.5vw, 28px);
-        font-weight: 650;
-        color: #fff;
-        line-height: 1.5;
-      }
-      #live-credits details > div {
-        max-height: 140px;
-        overflow: auto;
-      }
-      #name-gate {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-        padding: 16px;
-        background: rgb(11 11 15 / 0.92);
-        z-index: 10;
-      }
-      #name-gate label {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
-        font-size: 18px;
-      }
-      #name-gate input,
-      #name-gate button {
-        font: inherit;
-        padding: 6px 10px;
-      }
-      #seat-gate {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 16px;
-        background: rgb(11 11 15 / 0.88);
-        z-index: 10;
-      }
-      #seat-gate[hidden] {
-        display: none;
-      }
-      .seat-card {
-        max-width: 460px;
-        width: 100%;
-        background: #14141c;
-        border: 1px solid #2a2a38;
-        border-radius: 10px;
-        padding: 18px 20px;
-        line-height: 1.45;
-      }
-      .seat-card h2 {
-        margin: 0 0 6px;
-        font-size: 20px;
-      }
-      .seat-code {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
-        margin: 10px 0;
-      }
-      .seat-code code {
-        font: 700 28px ui-monospace, monospace;
-        letter-spacing: 0.06em;
-        color: #8ef;
-        background: #0b0b0f;
-        border-radius: 6px;
-        padding: 6px 12px;
-        overflow-wrap: anywhere;
-      }
-      .seat-card button {
-        font: inherit;
-        padding: 6px 12px;
-      }
-      .seat-hint {
-        color: #aab;
-        font-size: 14px;
-      }
-      #seat-error {
-        color: #f88;
-        min-height: 1.2em;
-        margin: 6px 0;
-      }
-      #seat-guest {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        align-items: center;
-        border-top: 1px solid #2a2a38;
-        padding-top: 12px;
-        margin-top: 12px;
-      }
-      #not-me[hidden] {
-        display: none;
-      }
-    </style>
+    <link rel="stylesheet" href="/index.css" />
   </head>
   <body>
     <header>
       <b id="game">vibe-arena</b>
       <span id="me"></span>
       <button id="not-me" type="button" hidden>Not me</button>
-      <a href="/privacy.html" style="color: #9bd">Privacy</a>
-      <a href="/studio.html" style="color: #8ef"
+      <a href="/privacy.html" class="privacy-link">Privacy</a>
+      <a href="/studio.html" class="studio-link"
         >Community studio · creators &amp; ideas</a
       >
 
-      <form id="streamer" style="margin-left: auto; display: flex; gap: 6px">
+      <form id="streamer">
         <input
           id="streamer-key"
           type="password"
@@ -187,15 +28,7 @@
         ><span id="role-status" role="status"></span>
       </form>
     </header>
-    <div
-      id="rules"
-      style="
-        padding: 6px 12px;
-        color: #91a7ca;
-        font-size: 14px;
-        line-height: 1.5;
-      "
-    ></div>
+    <div id="rules"></div>
     <canvas id="cv"></canvas>
     <div id="seat-gate" hidden>
       <div class="seat-card" role="dialog" aria-labelledby="seat-title">
@@ -223,15 +56,11 @@
         </form>
       </div>
     </div>
-    <div
-      id="live-credits"
-      hidden
-      style="background: #14141c; padding: 8px 12px; font-size: 14px"
-    ></div>
+    <div id="live-credits" hidden></div>
     <div id="bar">
       <span id="players"></span>
       <span id="err"></span>
-      <form id="chat" style="margin-left: auto; display: flex; gap: 6px">
+      <form id="chat">
         <input
           id="ct"
           placeholder="!command or idea"
@@ -240,110 +69,6 @@
         />
       </form>
     </div>
-    <script type="module">
-      import { connect } from "./client.js";
-      import { attachLiveCredits } from "./live-credits.js";
-      const credits = attachLiveCredits(
-        document.getElementById("live-credits"),
-      );
-      const $ = (id) => document.getElementById(id);
-      // A seat comes from a code typed in Twitch/Kick chat (or a web-guest
-      // name). The link posted in chat is the same for everyone.
-      let code = "",
-        expiresAt = 0,
-        ttlTimer = 0;
-      const showCode = () => {
-        const left = Math.max(0, Math.round((expiresAt - Date.now()) / 1000));
-        $("seat-code").textContent = code ? `!join ${code}` : "…";
-        $("seat-ttl").textContent = code
-          ? left > 0
-            ? `Expires in ${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}.`
-            : "Expired: ask for a new code."
-          : "";
-        if (code && left <= 0) clearInterval(ttlTimer);
-      };
-      const REASONS = {
-        replaced: "This seat was opened in another tab.",
-        revoked: "The streamer removed this seat.",
-        unseated: "Seat released. Pair again with a new code.",
-      };
-      try {
-        $("seat-guest-name").value = (
-          new URLSearchParams(location.search).get("name") ||
-          localStorage.getItem("va-name") ||
-          ""
-        ).slice(0, 20);
-      } catch {}
-      const c = connect({
-        seat: true,
-        onSeat: ({ identity, reason }) => {
-          if (identity) {
-            $("seat-gate").hidden = true;
-            $("not-me").hidden = false;
-            $("me").textContent = `You are ${identity.name} · ${identity.verified ? identity.platform : "web guest"}`;
-            clearInterval(ttlTimer);
-            return;
-          }
-          $("not-me").hidden = true;
-          $("me").textContent = "";
-          $("seat-gate").hidden = false;
-          $("seat-error").textContent = REASONS[reason] || "";
-          c.seat.requestCode();
-        },
-        onCode: (m) => {
-          code = m.code;
-          expiresAt = Date.now() + m.ttlMs;
-          $("seat-error").textContent = "";
-          clearInterval(ttlTimer);
-          ttlTimer = setInterval(showCode, 1000);
-          showCode();
-        },
-        onSeatError: (reason) => ($("seat-error").textContent = reason),
-        canvas: document.getElementById("cv"),
-        onCredits: (publication) => credits.update(publication),
-        onRole: (m) => {
-          document.getElementById("role-status").textContent = m.ok
-            ? "Controls unlocked"
-            : "Key rejected / already claimed";
-          document.getElementById("streamer-key").value = "";
-        },
-        onWelcome: (m) => {
-          if (m.name) $("me").textContent = `You are ${m.name}`;
-        },
-        onPlayers: (p, game, err) => {
-          credits.matchGame(game);
-          if (game) {
-            document.getElementById("game").textContent = game.name;
-            document.getElementById("rules").textContent = game.desc || "";
-          }
-          document.getElementById("players").textContent =
-            `${p.length} playing`;
-          document.getElementById("err").textContent = err || "";
-        },
-      });
-      $("seat-new").onclick = () => c.seat.requestCode();
-      $("seat-copy").onclick = () =>
-        code && navigator.clipboard?.writeText(`!join ${code}`).catch(() => {});
-      $("seat-guest").onsubmit = (e) => {
-        e.preventDefault();
-        const name = $("seat-guest-name").value.trim().slice(0, 20);
-        if (!name) return;
-        try {
-          localStorage.setItem("va-name", name);
-        } catch {}
-        c.seat.guest(name);
-      };
-      $("not-me").onclick = () => c.seat.notMe();
-      document.getElementById("streamer").onsubmit = (e) => {
-        e.preventDefault();
-        c.claimStreamer(document.getElementById("streamer-key").value);
-      };
-      document.getElementById("chat").onsubmit = (e) => {
-        e.preventDefault();
-        const i = document.getElementById("ct");
-        if (i.value.trim()) c.sendChat(i.value.trim());
-        i.value = "";
-      };
-    </script>
+    <script type="module" src="/index.js"></script>
   </body>
 </html>

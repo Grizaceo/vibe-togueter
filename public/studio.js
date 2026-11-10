@@ -1,4 +1,10 @@
-import { $, state, setState, message } from "./studio/shared.js";
+import {
+  $,
+  state,
+  setState,
+  message,
+  ownerHeaders,
+} from "./studio/shared.js";
 import { renderRound, initConversation } from "./studio/rounds.js";
 import { renderAssets } from "./studio/resources.js";
 import {
@@ -44,14 +50,30 @@ export async function refresh(forceCatalog = false) {
     refreshing = false;
   }
 }
+async function sandboxBanner() {
+  try {
+    const response = await fetch(
+      "/admin/status",
+      ownerHeaders ? { headers: ownerHeaders } : {},
+    );
+    if (!response.ok) return;
+    const status = await response.json();
+    $("sandbox-warning").hidden = !status.sandbox?.warning;
+    if (status.sandbox?.warning)
+      $("sandbox-warning").textContent =
+        "Local sandbox warning: " + status.sandbox.warning;
+  } catch {}
+}
 initConversation();
 initContributionForm();
 initOwnerTools();
 initContributionReview();
 initOwnerLock();
 await refresh(true);
+sandboxBanner();
 async function poll() {
   await refresh();
+  await sandboxBanner();
   setTimeout(poll, document.hidden ? 15000 : 5000);
 }
 setTimeout(poll, 5000);

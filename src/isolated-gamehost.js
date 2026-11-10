@@ -1,18 +1,144 @@
 // Linux-only local runtime for reviewed SDK games. Candidate builds still require separate VMs.
-import { spawn } from "node:child_process";
+import { spawn, execFile, execFileSync } from "node:child_process";
+import { promisify } from "node:util";
 import fs from "node:fs";
 import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-const src = path.dirname(fileURLToPath(import.meta.url));
+import { buildSeccompFilter } from "./seccomp-filter.js";
+const src = path.dirname(fileURLToPath(import.meta.url)),
+  exec = promisify(execFile);
 const empty = () => ({
   bg: "#111",
   world: { w: 1280, h: 720 },
   layers: [],
   hud: [],
 });
+export function scopeArgs(unit = null) {
+  return [
+    "--user",
+    "--scope",
+    "--quiet",
+    "--collect",
+    ...(unit ? ["--unit", unit] : []),
+    "-p",
+    "MemoryMax=256M",
+    "-p",
+    "MemorySwapMax=0",
+    "-p",
+    "TasksMax=32",
+    "-p",
+    "CPUQuota=100%",
+    "--",
+  ];
+}
+// The sandbox mounts only the interpreter and the exact shared libraries the
+// dynamic linker lists; a resolution failure fails closed.
+export function binaryMounts(binary = "/usr/bin/node") {
+  const mounts = [binary];
+  const out = execFileSync("ldd", [binary], { encoding: "utf8" });
+  for (const line of out.split("\n")) {
+    const match = /^\s*(?:\S+\s+=>\s+)?(\/\S+)\s+\(0x[0-9a-f]+\)\s*$/.exec(
+      line,
+    );
+    if (match && !mounts.includes(match[1])) mounts.push(match[1]);
+  }
+  if (mounts.length < 2)
+    throw Error("Sandbox runtime libraries did not resolve.");
+  return mounts;
+}
+let cachedMounts = null;
+function nodeMounts() {
+  if (!cachedMounts) cachedMounts = binaryMounts("/usr/bin/node");
+  return cachedMounts;
+}
+export function bwrapArgs({ command, extraBinds = [] }) {
+  const args = [
+    "--unshare-all",
+    "--unshare-user",
+    "--die-with-parent",
+    "--new-session",
+    "--cap-drop",
+    "ALL",
+    "--disable-userns",
+    "--seccomp",
+    "3",
+    // The game sees exactly PATH/HOME/LANG; bus variables may be present in
+    // the spawn environment so systemd-run can reach the user manager.
+    "--clearenv",
+    "--setenv",
+    "PATH",
+    "/usr/bin",
+    "--setenv",
+    "HOME",
+    "/tmp",
+    "--setenv",
+    "LANG",
+    "C.UTF-8",
+  ];
+  for (const mount of nodeMounts())
+    args.push("--ro-bind", mount, mount);
+  args.push(
+    "--symlink",
+    "usr/lib",
+    "/lib",
+    "--symlink",
+    "usr/lib64",
+    "/lib64",
+    "--proc",
+    "/proc",
+    "--dev",
+    "/dev",
+    "--tmpfs",
+    "/tmp",
+  );
+  for (const bind of extraBinds)
+    args.push("--ro-bind", bind, bind);
+  args.push(
+    "--ro-bind",
+    path.join(src, "game-worker.js"),
+    "/app/game-worker.js",
+    "--ro-bind",
+    path.join(src, "gamehost.js"),
+    "/app/gamehost.js",
+    "--chdir",
+    "/tmp",
+    ...command,
+  );
+  return args;
+}
+export function sandboxArgv({
+  command,
+  unit = null,
+  cgroups = true,
+  extraBinds = [],
+}) {
+  const bwrap = ["bwrap", ...bwrapArgs({ command, extraBinds })];
+  return cgroups ? ["systemd-run", ...scopeArgs(unit), ...bwrap] : bwrap;
+}
+let cgroupProbe = null;
+export async function cgroupsAvailable() {
+  if (!cgroupProbe)
+    cgroupProbe = (async () => {
+      try {
+        await exec("systemd-run", [...scopeArgs(), "/usr/bin/true"], {
+          timeout: 5000,
+        });
+        return true;
+      } catch {
+        return false;
+      }
+    })();
+  return cgroupProbe;
+}
+let warnedCgroups = false;
 export class IsolatedGameHost {
-  constructor({ gameDir, onEvent = () => {} }) {
+  constructor({
+    gameDir,
+    onEvent = () => {},
+    cgroupsProbe = cgroupsAvailable,
+    seccompArch = process.arch,
+  }) {
     Object.assign(this, {
       gameDir,
       onEvent,
@@ -20,7 +146,10 @@ export class IsolatedGameHost {
       error: null,
       view: empty(),
       running: false,
-      sandbox: "linux-namespaces",
+      sandbox: "namespaces",
+      sandboxWarning: null,
+      _cgroupsProbe: cgroupsProbe,
+      _seccompArch: seccompArch,
     });
   }
   async load() {
@@ -44,6 +173,32 @@ export class IsolatedGameHost {
       this.onEvent("game-error", this.error);
       return false;
     }
+    const ticket = (this._loadSeq = (this._loadSeq || 0) + 1);
+    let filter, cgroups;
+    try {
+      // No seccomp, no game: the syscall boundary is not optional.
+      filter = buildSeccompFilter(this._seccompArch);
+      cgroups = await this._cgroupsProbe();
+    } catch (error) {
+      this.error = "Sandbox prerequisites failed: " + error.message;
+      this.onEvent("game-error", this.error);
+      return false;
+    }
+    // A newer load or stop superseded this one while the probe ran.
+    if (ticket !== this._loadSeq) return false;
+    this.sandbox = cgroups
+      ? "namespaces+seccomp+cgroups"
+      : "namespaces+seccomp";
+    this.sandboxWarning = cgroups
+      ? null
+      : "Cgroup limits unavailable (systemd-run user scope failed); the game runs without memory, CPU and process caps.";
+    if (this.sandboxWarning) {
+      if (!warnedCgroups) {
+        warnedCgroups = true;
+        console.error("[vibe-arena] " + this.sandboxWarning);
+      }
+      this.onEvent("sandbox-warning", this.sandboxWarning);
+    }
     const expectedHash = crypto
       .createHash("sha256")
       .update(source)
@@ -55,39 +210,14 @@ export class IsolatedGameHost {
         if (!settled) {
           settled = true;
           clearTimeout(this._loadTimer);
-          this._pendingLoad = null;
+          if (this._pendingLoad === done) this._pendingLoad = null;
           resolve(ok);
         }
       };
       this._pendingLoad = done;
-      const child = spawn(
-        "bwrap",
-        [
-          "--unshare-all",
-          "--die-with-parent",
-          "--new-session",
-          "--cap-drop",
-          "ALL",
-          "--ro-bind",
-          "/usr",
-          "/usr",
-          "--symlink",
-          "usr/lib",
-          "/lib",
-          "--symlink",
-          "usr/lib64",
-          "/lib64",
-          "--proc",
-          "/proc",
-          "--dev",
-          "/dev",
-          "--tmpfs",
-          "/tmp",
-          "--ro-bind",
-          src,
-          "/app",
-          "--chdir",
-          "/tmp",
+      const argv = sandboxArgv({
+        cgroups,
+        command: [
           "/usr/bin/node",
           "--permission",
           "--allow-fs-read=/app",
@@ -95,11 +225,27 @@ export class IsolatedGameHost {
           "--experimental-vm-modules",
           "/app/game-worker.js",
         ],
-        {
-          env: { PATH: "/usr/bin", HOME: "/tmp", LANG: "C.UTF-8" },
-          stdio: ["pipe", "pipe", "pipe"],
+      });
+      const child = spawn(argv[0], argv.slice(1), {
+        env: {
+          PATH: "/usr/bin",
+          HOME: "/tmp",
+          LANG: "C.UTF-8",
+          ...(process.env.XDG_RUNTIME_DIR
+            ? { XDG_RUNTIME_DIR: process.env.XDG_RUNTIME_DIR }
+            : {}),
+          ...(process.env.DBUS_SESSION_BUS_ADDRESS
+            ? {
+                DBUS_SESSION_BUS_ADDRESS:
+                  process.env.DBUS_SESSION_BUS_ADDRESS,
+              }
+            : {}),
         },
-      );
+        stdio: ["pipe", "pipe", "pipe", "pipe"],
+      });
+      // The seccomp program reaches bwrap through extra descriptor 3.
+      child.stdio[3].on("error", () => {});
+      child.stdio[3].end(filter);
       this.child = child;
       this.pid = child.pid;
       this.lastFrame = Date.now();
@@ -209,6 +355,7 @@ export class IsolatedGameHost {
     }
   }
   _kill() {
+    this._loadSeq = (this._loadSeq || 0) + 1;
     const pending = this._pendingLoad;
     this._pendingLoad = null;
     pending?.(false);

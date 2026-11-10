@@ -12,6 +12,7 @@ import { createChatCommands } from "./server/chat-commands.js";
 import { createAdminRoutes } from "./server/routes/admin.js";
 import { createPublicRoutes } from "./server/routes/public.js";
 import { loadServerConfig } from "./server/config.js";
+import { applySecurityHeaders } from "./server/security-headers.js";
 import { startServer } from "./server/bootstrap.js";
 import {
   PublicLink,
@@ -277,6 +278,7 @@ const adminRoutes = createAdminRoutes({
 });
 
 const server = http.createServer(async (req, res) => {
+  applySecurityHeaders(res, remoteGames);
   const url = new URL(req.url, "http://x");
   if (url.pathname === LINK_PROBE_PATH && req.method === "GET")
     return publicLink.handleProbe(req, res);
