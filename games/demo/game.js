@@ -81,10 +81,10 @@ export function tick(state, dt) {
 
   // movement
   for (const p of players) {
-    if (p.keys.left) p.vx -= SPEED * dt * 4;
-    if (p.keys.right) p.vx += SPEED * dt * 4;
-    if (p.keys.up) p.vy -= SPEED * dt * 4;
-    if (p.keys.down) p.vy += SPEED * dt * 4;
+    if (p.keys.left || p.keys.a) p.vx -= SPEED * dt * 4;
+    if (p.keys.right || p.keys.d) p.vx += SPEED * dt * 4;
+    if (p.keys.up || p.keys.w) p.vy -= SPEED * dt * 4;
+    if (p.keys.down || p.keys.s) p.vy += SPEED * dt * 4;
     p.vy += state.gravity * dt;
     p.vx *= FRICTION; p.vy *= FRICTION;
     p.x += p.vx * dt; p.y += p.vy * dt;
