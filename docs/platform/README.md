@@ -43,6 +43,7 @@ Hackathon handoffs, plans, audits and pull-request notes are kept, unchanged, in
 
 | Document | What it asks for |
 | --- | --- |
+| [GAME_PROTOCOL.md](GAME_PROTOCOL.md) | Draft of the game protocol v1: manifest, control channel, chat effects, adapters and conformance tests (phase 3). |
 | [HOSTING_POLICY.md](HOSTING_POLICY.md) | Hosting choices and VM inactivity defaults set by the owner. |
 | [SESSION_FLOW.md](SESSION_FLOW.md) | The intended stream session, with parallel waiting-game and construction lanes. |
 | [JUDGE_DEPLOYMENT.md](JUDGE_DEPLOYMENT.md) | A runbook for a fixed HTTPS host. Nothing has been provisioned. |
