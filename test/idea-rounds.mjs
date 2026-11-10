@@ -61,3 +61,24 @@ test('active construction cannot be cancelled into another round and restart nee
 test('structurally corrupt stored rounds fail at load, not during a later public request',()=>{
  const {file}=fixture();fs.writeFileSync(file,JSON.stringify({version:1,rounds:[{}]}));assert.throws(()=>new IdeaRounds(file),/Invalid/);
 });
+test('participation returns only the viewer own ideas and ballot under both chat and seated-web keys',()=>{
+ const {rounds:r}=fixture({maxIdeas:3}),sub='twitch:123';
+ const chat={name:'fan',source:'twitch',id:'123'},web={name:'fan-web',source:'web',id:'twitch:123'},other={name:'mallory',source:'twitch',id:'999'};
+ r.open(owner);r.propose(chat,'chat idea');r.propose(web,'web seated idea');r.propose(other,'mallory idea');
+ r.vote(chat,2);r.vote(other,3);
+ const p=r.participation(sub);assert.equal(p.sub,sub);assert.equal(p.rounds.length,1);
+ const rd=p.rounds[0];assert.equal(rd.phase,'voting');assert.equal(rd.ideas.length,2);
+ assert.deepEqual(rd.ideas.map(i=>i.id),[1,2]);assert.equal(rd.ideas[1].votes,1);assert.equal(rd.ideas[1].selected,false);
+ assert.deepEqual(rd.ballot,{ideaId:2,selected:false});assert.equal(rd.credited,false);assert.ok(!('ballots' in rd));
+ const json=JSON.stringify(p);assert.ok(!json.includes('mallory'));assert.ok(!json.includes('proposerKey'));assert.ok(!json.includes('reviewToken'));assert.ok(!json.includes('"ballots":{'));
+ assert.deepEqual(p.totals,{ideas:2,ballots:1,credits:0});
+ r.finishVoting(owner);assert.equal(r.public().phase,'awaiting-selection');r.select(owner,[2]);approveCurrent(r);
+ const p2=r.participation(sub);assert.equal(p2.rounds[0].credited,true);assert.equal(p2.totals.credits,1);
+ for(const bad of ['web:abc','twitch:','x',null])assert.throws(()=>r.participation(bad),/Invalid viewer identity/);
+});
+test('creditHistory keeps an approved round credit after a newer round opens and lists it without credit',()=>{
+ const {rounds:r}=fixture({maxIdeas:1});r.propose(a,'Chosen');r.finishVoting(owner);r.select(owner,[1]);approveCurrent(r);
+ const s=r.public(),grant={roundId:s.id,approvedInputHash:s.approvedInputHash};r.beginBuild('Chosen',grant);r.finishBuild(grant,true);r.open(owner);r.propose(b,'Next');
+ const h=r.creditHistory();assert.equal(h.length,2);assert.equal(h[0].roundId,r.current().id);assert.equal(h[0].credit,null);assert.equal(h[0].approvedAt,null);
+ assert.equal(h[1].roundId,s.id);assert.equal(h[1].phase,'completed');assert.equal(h[1].approvedAt,1000);assert.equal(h[1].ideaCount,1);assert.equal(h[1].selectedCount,1);assert.ok(h[1].credit);
+});
