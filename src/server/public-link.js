@@ -39,6 +39,8 @@ export function publicOrigin(value) {
   }
 }
 
+export const PUBLIC_LINK_START_TIMEOUT_MS = 120_000;
+
 export class PublicLink {
   constructor({
     configuredURL = "",
@@ -50,7 +52,7 @@ export class PublicLink {
     fetch: fetchImpl = globalThis.fetch,
     log = () => {},
     checkEveryMs = 30000,
-    startTimeoutMs = 45000,
+    startTimeoutMs = PUBLIC_LINK_START_TIMEOUT_MS,
     retryEveryMs = 2000,
     probeTimeoutMs = 5000,
     metricsPorts = METRICS_PORTS,
