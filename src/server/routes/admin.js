@@ -483,6 +483,57 @@ export function createAdminRoutes({
           return res.end(error.message);
         }
       }
+      if (url.pathname === "/admin/viewer-profile" && req.method === "GET") {
+        if (!streamerConfirmed) {
+          res.writeHead(403);
+          return res.end("streamer confirmation required");
+        }
+        try {
+          if (!tickRounds()) {
+            res.writeHead(503, { "Content-Type": "application/json" });
+            return res.end(
+              JSON.stringify({ code: "round_store_unavailable" }),
+            );
+          }
+          const result = ideaRounds.participation(url.searchParams.get("sub"));
+          res.writeHead(200, {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store",
+          });
+          return res.end(JSON.stringify(result));
+        } catch (error) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ error: error.message }));
+        }
+      }
+      if (url.pathname === "/admin/round-credits" && req.method === "GET") {
+        if (!streamerConfirmed) {
+          res.writeHead(403);
+          return res.end("streamer confirmation required");
+        }
+        try {
+          if (!tickRounds()) {
+            res.writeHead(503, { "Content-Type": "application/json" });
+            return res.end(
+              JSON.stringify({ code: "round_store_unavailable" }),
+            );
+          }
+          res.writeHead(200, {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store",
+          });
+          return res.end(
+            JSON.stringify({
+              communityCreditEnabled:
+                CONFIG.features?.communityCredit === true,
+              rounds: ideaRounds.creditHistory(),
+            }),
+          );
+        } catch (error) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ error: error.message }));
+        }
+      }
       if (url.pathname === "/admin/round" && req.method === "POST") {
         try {
           const data = JSON.parse((await readBody()) || "{}");
