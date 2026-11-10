@@ -1,0 +1,62 @@
+{
+  "at": "2026-11-04T20:26:42.394Z",
+  "port": 8420,
+  "steps": [
+    {
+      "name": "live",
+      "at": "2026-11-04T20:27:25.257Z",
+      "publicLink": {
+        "mode": "auto",
+        "state": "live",
+        "url": "https://webshots-outreach-filing-racial.trycloudflare.com",
+        "source": "spawned",
+        "reason": "",
+        "checkedAt": "2026-11-04T20:27:25.254Z"
+      },
+      "probe": {
+        "status": 200,
+        "sameController": true
+      },
+      "joinReply": "Join with your own tee: https://webshots-outreach-filing-racial.trycloudflare.com/tee-play.html?game=tee-vm"
+    },
+    {
+      "name": "after-kill",
+      "at": "2026-11-04T20:28:33.420Z",
+      "publicLink": {
+        "mode": "auto",
+        "state": "down",
+        "url": null,
+        "source": null,
+        "reason": "Tunnel process exited (0).",
+        "checkedAt": "2026-11-04T20:28:33.226Z"
+      },
+      "joinReply": "No live game link right now (the public tunnel is down). The streamer has been notified; try !join again in a minute."
+    },
+    {
+      "name": "recreated",
+      "at": "2026-11-04T20:28:46.387Z",
+      "publicLink": {
+        "mode": "auto",
+        "state": "live",
+        "url": "https://gave-artwork-don-compared.trycloudflare.com",
+        "source": "spawned",
+        "reason": "",
+        "checkedAt": "2026-11-04T20:28:46.281Z"
+      },
+      "probe": {
+        "status": 200,
+        "sameController": true
+      },
+      "joinReply": "Join with your own tee: https://gave-artwork-don-compared.trycloudflare.com/tee-play.html?game=tee-vm"
+    }
+  ],
+  "checks": {
+    "liveLinkReachesController": true,
+    "staleConfiguredUrlNotUsed": true,
+    "joinReturnsLiveLink": true,
+    "joinSaysNoLinkWhileDown": true,
+    "tunnelRecreated": true,
+    "joinReturnsNewLink": true
+  },
+  "pass": true
+}

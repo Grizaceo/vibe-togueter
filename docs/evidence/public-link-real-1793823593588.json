@@ -1,0 +1,8 @@
+{
+  "at": "2026-11-04T20:19:53.588Z",
+  "port": 8420,
+  "steps": [],
+  "checks": {},
+  "error": "timed out waiting for live link; last {\"mode\":\"auto\",\"state\":\"down\",\"url\":null,\"source\":null,\"reason\":\"Quick tunnel https://independently-fork-several-interstate.trycloudflare.com never reached this arena.\",\"checkedAt\":null}",
+  "pass": false
+}
