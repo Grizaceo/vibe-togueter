@@ -11,6 +11,29 @@ import {
 import { drawFrame } from "../render.js";
 import { refresh } from "../studio.js";
 
+function manifestSummary(report) {
+  if (!report) return "";
+  if (report.manifestError)
+    return "Invalid manifest: " + report.manifestError;
+  const m = report.manifest;
+  if (!m) return "";
+  if (m.legacy) return "Legacy game: no manifest (derived)";
+  const lines = [
+    `Manifest va-game/1 · delivery ${m.delivery?.join("+") || "?"}`,
+    `Seats: player ${m.seats?.player ?? "unlimited"} · spectator ${m.seats?.spectator ?? "unlimited"} · streamer ${m.seats?.streamer ?? 0}`,
+    `Input: keys [${(m.input?.keys || []).join(", ") || "none"}] · pointer ${m.input?.pointer ? "yes" : "no"}${m.input?.actions?.length ? ` · actions: ${m.input.actions.map((a) => a.name).join(", ")}` : ""}`,
+  ];
+  for (const c of m.chat?.commands || [])
+    lines.push(
+      `Command !${c.name} — who ${c.who} · ${c.perActorMs} ms/actor${c.globalPerSec ? ` · ${c.globalPerSec}/s` : ""} · args ${c.args.length}`,
+    );
+  for (const b of m.chat?.bursts || [])
+    lines.push(
+      `Burst ${b.name} — token ${b.token} · ${b.distinct} distinct in ${b.windowMs} ms`,
+    );
+  return lines.join("\n");
+}
+
 export function renderWorker() {
   const b = state?.build,
     j = b?.job,
@@ -161,6 +184,7 @@ export function initWorker() {
           : null,
       );
       $("artifact-source").value = ticket.source || "No candidate received.";
+      $("artifact-manifest").textContent = manifestSummary(ticket.report);
       $("artifact-report").textContent = JSON.stringify(
         {
           quarantineState: ticket.state,

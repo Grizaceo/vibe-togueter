@@ -20,5 +20,5 @@ const frame=host.getView();check('Bounded serializable view',!host.error&&JSON.s
 const primitives=[...(frame.layers||[]),...(frame.hud||[])],allowed=new Set(assets.map(a=>a.sourceURL));
 check('Sprites use approved local resource paths',primitives.filter(p=>p?.t==='sprite').every(p=>allowed.has(p.src)));
 check('Selected art appears in the test frame',!assets.length||primitives.some(p=>p?.t==='sprite'&&allowed.has(p.src)));
-const result={codeSha256:task.codeSha256,artifactHash:task.artifactHash,testNonce:task.testNonce,testVmId:task.testVmId,buildVmId:task.buildVmId,checks,passed:checks.every(c=>c.passed),frame,execution:'separate-quarantine-vm',limitations:['Trusted SDK protocol checks only; not an independent human playtest or proof of gameplay quality.','The VM, not node:vm, is the controller isolation boundary.']};
+const result={codeSha256:task.codeSha256,artifactHash:task.artifactHash,testNonce:task.testNonce,testVmId:task.testVmId,buildVmId:task.buildVmId,checks,passed:checks.every(c=>c.passed),manifest:host.game?.manifest??null,frame,execution:'separate-quarantine-vm',limitations:['Trusted SDK protocol checks only; not an independent human playtest or proof of gameplay quality.','The VM, not node:vm, is the controller isolation boundary.']};
 fs.writeFileSync('/workspace/result.json',JSON.stringify(result)+'\n');host.stop();

@@ -9,6 +9,7 @@ export function startServer({
   resourceWatcher,
   getResourceDebounce,
   teeBridge,
+  teeSession,
   twitch,
   host,
   localChat,
@@ -43,6 +44,7 @@ export function startServer({
     clearInterval(builderWarmHeartbeat);
     resourceWatcher.close();
     clearTimeout(getResourceDebounce());
+    teeSession.stop("shutdown");
     teeBridge.stop();
     publicLink?.stop();
     twitch?.close();

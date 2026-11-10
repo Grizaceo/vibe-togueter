@@ -49,11 +49,11 @@ export class GameHost {
       await mod.evaluate({ timeout });
       this.context.__module = mod.namespace;
       const json = vm.runInContext(
-        `JSON.stringify({meta:__module.meta||{},exports:Object.keys(__module).filter(k=>typeof __module[k]==='function')})`,
+        `JSON.stringify({meta:__module.meta||{},manifest:__module.manifest??null,exports:Object.keys(__module).filter(k=>typeof __module[k]==='function')})`,
         this.context,
         { timeout },
       );
-      if (json.length > 16384) throw Error("SDK metadata exceeds limit.");
+      if (json.length > 32768) throw Error("SDK metadata exceeds limit.");
       const descriptor = JSON.parse(json);
       for (const fn of ["createState", "tick", "view"])
         if (!descriptor.exports.includes(fn))
@@ -93,6 +93,7 @@ export class GameHost {
         meta,
         fns: mod.namespace,
         exports: descriptor.exports,
+        manifest: descriptor.manifest,
         versionSha256: crypto.createHash("sha256").update(source).digest("hex"),
       };
       this.error = null;

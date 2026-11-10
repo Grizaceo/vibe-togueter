@@ -2,13 +2,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { REMOTE_ADAPTERS } from "./protocol/adapters/index.js";
 export class RemoteGames {
   constructor(entries, file, { fetchImpl = fetch } = {}) {
     this.entries = (entries || []).map((entry) => {
       const url = new URL(entry.baseURL);
       if (
         !/^[a-z0-9-]{1,60}$/.test(entry.id) ||
-        !["t99", "tee"].includes(entry.adapter) ||
+        (entry.adapter !== "t99" && !(entry.adapter in REMOTE_ADAPTERS)) ||
         url.protocol !== "https:" ||
         url.username ||
         url.password ||
@@ -20,8 +21,8 @@ export class RemoteGames {
     });
     if (new Set(this.entries.map((e) => e.id)).size !== this.entries.length)
       throw Error("Duplicate remote game ID.");
-    if(this.entries.filter(e=>e.joinByDefault===true).length>1||this.entries.some(e=>e.joinByDefault!==undefined&&(typeof e.joinByDefault!=='boolean'||e.adapter!=='tee')))
-      throw Error('Select at most one Tee game for individual join.');
+    if(this.entries.filter(e=>e.joinByDefault===true).length>1||this.entries.some(e=>e.joinByDefault!==undefined&&(typeof e.joinByDefault!=='boolean'||!REMOTE_ADAPTERS[e.adapter]?.chatControl)))
+      throw Error('Select at most one chat-controlled remote game for individual join.');
     this.file = file;
     this.fetch = fetchImpl;
     this.data = fs.existsSync(file)
@@ -76,7 +77,7 @@ export class RemoteGames {
       games: this.entries.map((e) => ({
         ...e,
         health: this.health.get(e.id) || null,
-        chatControl: e.adapter === "tee",
+        chatControl: REMOTE_ADAPTERS[e.adapter]?.chatControl === true,
       })),
       sessions: structuredClone(this.data.sessions).slice(-30),
       notice:
@@ -111,9 +112,10 @@ export class RemoteGames {
   }
   async inspect(gameId) {
     const game = this.entry(gameId);
+    const Adapter = game.adapter === "t99" ? null : REMOTE_ADAPTERS[game.adapter];
     const body = await this.request(
       game,
-      game.adapter === "t99" ? "/api/rooms" : "/healthz",
+      game.adapter === "t99" ? "/api/rooms" : Adapter.healthPath,
     );
     if (game.adapter === "t99") {
       if (
@@ -129,7 +131,7 @@ export class RemoteGames {
         )
       )
         throw Error("Invalid room status from remote runtime.");
-    } else if (body?.data?.up !== true)
+    } else if (!Adapter.checkHealth(body))
       throw Error("Remote runtime is not healthy.");
     this.health.set(game.id, {
       checkedAt: Date.now(),

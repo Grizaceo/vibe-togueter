@@ -2,6 +2,24 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { encodeMessage } from "../traffic.js";
+import { validateManifest, derivedManifest } from "../protocol/manifest.js";
+// The receipt manifest is validated platform-side: a bad one becomes a stored
+// verdict, never a crash of the whole test path.
+export function manifestVerdict(receiptManifest, codeSha256) {
+  try {
+    return {
+      manifest:
+        receiptManifest == null
+          ? derivedManifest({ id: "candidate", version: { sha256: codeSha256 } })
+          : validateManifest(receiptManifest, {
+              id: "candidate",
+              version: { sha256: codeSha256 },
+            }),
+    };
+  } catch (error) {
+    return { manifestError: error.code || error.message };
+  }
+}
 const sha = (value) => crypto.createHash("sha256").update(value).digest("hex");
 const compact = (view) => JSON.parse(encodeMessage({ t: "state", view })).view;
 
@@ -160,9 +178,13 @@ export async function testArtifact(worker, ticket, { signal, job }, vmId) {
       result.checks.some(
         (c) => typeof c.name !== "string" || typeof c.passed !== "boolean",
       ) ||
-      result.passed !== result.checks.every((c) => c.passed)
+      result.passed !== result.checks.every((c) => c.passed) ||
+      (result.manifest !== undefined &&
+        result.manifest !== null &&
+        (typeof result.manifest !== "object" || Array.isArray(result.manifest)))
     )
       throw Error("Malformed or stale test receipt.");
+    const manifestField = manifestVerdict(result.manifest, ticket.codeSha256);
     await worker.destroyTest(job, state);
     const evidenceSha256 = sha(output);
     return {
@@ -175,6 +197,7 @@ export async function testArtifact(worker, ticket, { signal, job }, vmId) {
         isolatedVmAttested: true,
         evidenceSha256,
         checks: result.checks,
+        ...manifestField,
       },
       preview: compact(result.frame),
       evidence: {
@@ -183,6 +206,7 @@ export async function testArtifact(worker, ticket, { signal, job }, vmId) {
         buildVmId: job.buildVmId,
         evidenceSha256,
         checks: result.checks,
+        ...manifestField,
         limitations: [
           "Trusted SDK protocol checks only; independent human gameplay is not established.",
         ],

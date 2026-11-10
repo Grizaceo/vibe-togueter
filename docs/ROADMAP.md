@@ -85,7 +85,11 @@ The order follows dependencies:
 - If the Steam/Epic research recommends Epic Online Services for identity or lobbies, include it here.
 - **Done when:** a Twitch viewer and a Kick viewer join the same room under their own names.
 
-### 3. Vibe Arena game protocol v1
+### 3. Vibe Arena game protocol v1 — implemented locally (2026-11-06)
+
+- Bundled SDK games and the collective Tee run under `va-game/1`: SDK games on derived manifests through the sandboxed worker, Tee through `TeeAdapter` + `TeeSession` on the pinned codec.
+- One conformance suite (`test/protocol-conformance.mjs`, `test/protocol-tee.mjs`) drives fixture, real-SDK-sandbox and Tee adapters through every spec §9 case.
+- Deferred: Tee individual seats to v1.1, t99 outside the registry, bundled games stay on derived manifests (no reviewed-hash changes).
 
 - **Manifest:** id, version hash, credits, a declared input schema with bounds, seats (streamer/player/spectator and maximums), chat effects with rate limits, and the supported delivery modes.
 - **Control channel (platform ↔ game):** versioned hello, join/leave with a seat token, effects, pause/resume, health and round end.

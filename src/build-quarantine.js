@@ -79,6 +79,15 @@ function reportValue(report, job) {
       throw Error("Invalid test check.");
     return { name: check.name, passed: check.passed };
   });
+  if (
+    report.manifest !== undefined &&
+    (typeof report.manifest !== "object" ||
+      report.manifest === null ||
+      Array.isArray(report.manifest)) ||
+    (report.manifestError !== undefined &&
+      typeof report.manifestError !== "string")
+  )
+    throw Error("Invalid manifest verdict.");
   return {
     artifactHash: job.artifactHash,
     testNonce: job.testNonce,
@@ -86,6 +95,12 @@ function reportValue(report, job) {
     isolatedVmAttested: true,
     evidenceSha256: requireHash(report.evidenceSha256),
     checks,
+    ...(report.manifest !== undefined
+      ? { manifest: structuredClone(report.manifest) }
+      : {}),
+    ...(report.manifestError !== undefined
+      ? { manifestError: report.manifestError.slice(0, 64) }
+      : {}),
     passed: checks.every((c) => c.passed),
     verification: "operator-attested",
   };
@@ -436,6 +451,10 @@ export class BuildQuarantine {
     )
       throw Error(
         "Review passing tests, exact artifact/report hashes and rights before approval.",
+      );
+    if (job.report.manifestError)
+      throw Error(
+        "The candidate's manifest is invalid: " + job.report.manifestError,
       );
     const credits =
       contributors === undefined ? null : contributorCredits(contributors);

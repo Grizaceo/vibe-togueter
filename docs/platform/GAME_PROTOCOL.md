@@ -1,6 +1,6 @@
 # Vibe Arena game protocol v1
 
-Status: **accepted on 2026-11-06; not implemented yet.** This is roadmap phase 3, written before the code as the roadmap asks. The owner's decisions are in section 12.
+Status: **implemented locally on 2026-11-06 (steps 1–7).** This is roadmap phase 3, written before the code as the roadmap asks. The owner's decisions are in section 12.
 
 The protocol is the contract between the platform and a game. It has three parts:
 - a **manifest**: what the game declares about itself before it runs;
@@ -204,7 +204,7 @@ The game's own text is never forwarded to viewers. Viewers see "Game stopped" an
 - A declared command has a `name`, typed `args` (`int` with bounds, `enum` with values, or `text` with a maximum length), `who` (`anyone`, `moderator`, `broadcaster`) and a per-actor interval `perActorMs`. An optional `globalPerSec` caps the whole channel for that command.
 - The platform parses chat, checks `who` against the platform roles of that message (IRC tags or the signed Kick payload, never a name), applies the limits and sends one `effect`. Commands that fail any check are dropped silently, as today.
 - For a game with a manifest, a command it did not declare is dropped. Only legacy games with a derived manifest receive undeclared commands through `chat`.
-- Platform commands (`!join` and its aliases, `!idea`, `!vote`, `!build`, `!predict`, `!prediction`, `!fallback`, `!tee`, `!delegate`) always win and cannot be declared by a game.
+- Platform commands (`!join` and its aliases, `!idea`, `!vote`, `!build`, `!predict`, `!prediction`, `!fallback`, `!tee`, `!delegate`) always win and cannot be declared by a game. `!tee on|off|status` stay platform controls; `!tee <action>` is routed by the platform to the Tee session as the declared command `<action>` — and Kick viewers may drive the collective tee alongside Twitch.
 - **Crowd bursts** generalize the hard-coded Grove bonus in `src/server/chat-commands.js`: a burst fires when `distinct` different platform identities post its `token` within `windowMs`, and the game receives `effect {name, args: [], actor: null}`. Web identities never count, as today.
 - The streamer's chat-effects pause blocks every `effect` and `chat` message at the platform. The game does not need to know.
 
@@ -220,14 +220,11 @@ The game's own text is never forwarded to viewers. Viewers see "Game stopped" an
 An adapter connects one kind of game to the control channel. The platform holds a registry of adapters instead of the hard-coded `t99`/`tee` checks in `src/remote-games.js`.
 
 ```js
-// src/protocol/adapter.js (planned interface)
-{
-  kind: "sdk" | "tee",
-  manifest(entry) -> manifest,           // derived, exported or from reviewed config
-  start({ hello, onMessage }) -> { send(message), stop(reason) },
-  health() -> { ok, checkedAt, details }
-}
+adapter.legacyManifest   // boolean: may answer ready.manifest === null (SDK games); false for others
+adapter.start({ onMessage(line /* string */), onExit(info) }) -> Promise<{ send(message /* object */), stop() }>
 ```
+
+The manifest arrives in the `ready` message and health arrives as `health` messages — the earlier `manifest(entry)` and `health()` hooks are gone.
 
 In order:
 1. **SDK.** Wraps the isolated runtime. The worker's IPC (`load`, `start`, `call` / `ready`, `frame`, `failure`) becomes the v1 messages. Derived manifests cover the bundled games.
@@ -237,7 +234,7 @@ In order:
    - `health` comes from `/healthz` and the bridge's snapshots; `pause` stops the chat pulses;
    - individual platform seats are v1.1 (section 5).
 
-**t99 is not a v1 adapter** because of the unresolved rights question in [REMOTE_GAMES](REMOTE_GAMES.md). Its room code stays in `src/remote-games.js` unchanged, outside the registry, and can be ported once that question is resolved.
+The registry is `REMOTE_ADAPTERS` in `src/protocol/adapters/index.js`; `src/remote-games.js` asks it for `chatControl`, `healthPath` and `checkHealth` instead of hard-coding adapters. **t99 is not a v1 adapter** because of the unresolved rights question in [REMOTE_GAMES](REMOTE_GAMES.md): it sits outside the registry with its own code in `src/remote-games.js`, unchanged, and can be ported once that question is resolved.
 
 ## 9. Conformance tests
 

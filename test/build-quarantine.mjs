@@ -115,3 +115,19 @@ test('exact completed construction can receive final artifact approval without r
  const {q}=fixture(t);const job=tested(q);
  assert.equal(q.approve(owner,job.id,{artifactHash:job.artifactHash,reportHash:job.reportHash,rightsAttested:true},{...round,phase:'completed'}).state,'approved');
 });
+test('manifest verdicts ride the report; an invalid manifest refuses approval',t=>{
+ const {q}=fixture(t);let job=receive(q);job=q.beginTest(owner,job.id,job.artifactHash);
+ // A normalized manifest is stored verbatim with the report and is approvable.
+ job=q.recordTest(owner,job.id,report(job,{manifest:{protocol:'va-game/1',seats:{player:4},version:{sha256:'x'.repeat(64)}}}));
+ assert.equal(job.report.manifest.seats.player,4);assert.equal(job.report.manifest.protocol,'va-game/1');
+ assert.equal(approve(q,job).state,'approved');
+ // A manifestError verdict is stored and approval is refused with the code.
+ const {q:q2}=fixture(t);job=receive(q2);job=q2.beginTest(owner,job.id,job.artifactHash);
+ job=q2.recordTest(owner,job.id,report(job,{manifestError:'unknown-key:version'}));
+ assert.equal(job.report.manifestError,'unknown-key:version');
+ assert.throws(()=>approve(q2,job),/manifest is invalid: unknown-key:version/);
+ // A malformed manifest field is rejected at record time.
+ const {q:q3}=fixture(t);job=receive(q3);job=q3.beginTest(owner,job.id,job.artifactHash);
+ assert.throws(()=>q3.recordTest(owner,job.id,report(job,{manifest:'not-an-object'})),/manifest verdict/);
+ assert.throws(()=>q3.recordTest(owner,job.id,report(job,{manifestError:42})),/manifest verdict/);
+});

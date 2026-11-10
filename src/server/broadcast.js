@@ -235,8 +235,13 @@ export function attachRoomSockets({
 
     if (seatMode) seating.connect(ws, client, req);
     else if (kind === "player") {
-      host.safeCall("onJoin", { id: client.id, name });
-      feed("system", `${name} joined`);
+      if (host.join({ id: client.id, name, role: "viewer" }))
+        feed("system", `${name} joined`);
+      else {
+        client.kind = "spectator";
+        ws.send(JSON.stringify({ t: "seat", full: true }));
+        feed("system", `${name} is watching (game full)`);
+      }
     }
 
     ws.on("message", (raw) => {
@@ -279,17 +284,22 @@ export function attachRoomSockets({
           ws.send(JSON.stringify({ t: "role", ok: false }));
           return;
         }
+        if (
+          !host.join({
+            id: client.id,
+            name: client.name,
+            role: "streamer",
+          })
+        ) {
+          ws.send(JSON.stringify({ t: "role", ok: false }));
+          return;
+        }
         client.role = "streamer";
-        host.safeCall("onJoin", {
-          id: client.id,
-          name: client.name,
-          role: client.role,
-        });
         ws.send(JSON.stringify({ t: "role", ok: true }));
         return;
       }
       if (msg.t === "input") {
-        host.safeCall("onInput", client.id, msg.data);
+        host.input(client.id, msg.data);
       } else if (msg.t === "chat" && typeof msg.text === "string") {
         // Browser chat stays source "web": a paired seat lends its name and
         // identity key, never platform roles.
@@ -306,7 +316,7 @@ export function attachRoomSockets({
       clients.delete(ws);
       seating?.close(client);
       if (client.kind === "player") {
-        host.safeCall("onLeave", { id: client.id, name: client.name });
+        host.leave({ id: client.id });
         feed("system", `${client.name} left`);
       }
     });
