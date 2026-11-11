@@ -90,17 +90,20 @@ export class FunnelViewers {
       sub: claims.sub, name: claims.name, plat: claims.plat,
       roles: claims.roles, seat: "player", jkt: rec.jkt,
     }).token;
+    // Try the seat before answering: a full game yields one spectator
+    // seatResult instead of a transient player-then-spectator pair.
+    const joined = this.host.join({
+      id: vid, name: claims.name, role: rec.role,
+      platform: claims.plat, verified: rec.identity.verified,
+    });
+    rec.kind = joined ? "player" : "spectator";
     this._seatResult(vid, {
-      ok: true, name: rec.name, jkt: rec.jkt, identity: rec.identity, resume,
+      ok: true, full: !joined, name: rec.name, jkt: rec.jkt,
+      identity: rec.identity, resume,
     });
     const label = claims.plat !== "web" ? claims.plat : "web guest";
-    if (this.host.join({ id: vid, name: rec.name, role: rec.role, platform: claims.plat, verified: rec.identity.verified }))
-      this.feed("system", `${rec.name} joined (${label})`);
-    else {
-      rec.kind = "spectator";
-      this._seatResult(vid, { ok: true, full: true, name: rec.name, jkt: rec.jkt, identity: rec.identity, resume });
-      this.feed("system", `${rec.name} is watching (${label}, game full)`);
-    }
+    if (joined) this.feed("system", `${rec.name} joined (${label})`);
+    else this.feed("system", `${rec.name} is watching (${label}, game full)`);
   }
 
   _offer(rec, claims) {

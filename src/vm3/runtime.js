@@ -43,14 +43,31 @@ export function readJsonFile(file) {
 // reasons are kept only when they look like plain codes; anything else is
 // replaced by its sha256 so the journal stays provable without leaking content.
 const SAFE_TEXT = /^[a-zA-Z0-9 ._:/-]{1,160}$/;
+const IP_LIKE = /\d{1,3}(?:\.\d{1,3}){3}/;
+// Token shapes that must never reach the journal, even inside a longer
+// reason string: va-seat tokens (v1.<b64>.<b64>) and long opaque tokens.
+// sha256 hex digests and provider VM ids stay readable for audit.
+const TOKEN_PATTERNS = [
+  [/v1\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}/g, "redacted-seat-token"],
+  [
+    /[A-Za-z0-9_-]{32,}/g,
+    (m) =>
+      /^[0-9a-f]{64}$/.test(m) || /^sb-[a-z0-9]{20,40}$/.test(m)
+        ? m
+        : "redacted-token",
+  ],
+];
 export function safeText(value) {
-  const text = String(value ?? "")
+  const raw = String(value ?? "")
     .replace(/[^\x20-\x7e]/g, " ")
     .trim()
     .slice(0, 160);
-  if (!text) return "";
-  if (SAFE_TEXT.test(text) && !/\d{1,3}(?:\.\d{1,3}){3}/.test(text)) return text;
-  return "sha256:" + crypto.createHash("sha256").update(text).digest("hex");
+  if (!raw) return "";
+  let text = raw;
+  for (const [pattern, replacement] of TOKEN_PATTERNS)
+    text = text.replace(pattern, replacement);
+  if (SAFE_TEXT.test(text) && !IP_LIKE.test(text)) return text;
+  return "sha256:" + crypto.createHash("sha256").update(raw).digest("hex");
 }
 
 const EVENT_FIELDS = {

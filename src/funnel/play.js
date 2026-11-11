@@ -11,6 +11,7 @@ const seatToken = params.get("seat") || "";
 const frames = params.get("frames") || "d1";
 const proto = location.protocol === "https:" ? "wss" : "ws";
 const ws = new WebSocket(`${proto}://${location.host}/ws?room=${encodeURIComponent(room)}&frames=${frames}`);
+ws.binaryType = "arraybuffer";
 
 const $ = (id) => document.getElementById(id);
 const cv = $("cv"), ctx = cv.getContext("2d");
@@ -48,18 +49,26 @@ function paint() {
 }
 requestAnimationFrame(paint);
 
+function applyState(state) {
+  if (state.t === "resync") { send({ t: "resync" }); return; }
+  view = state.view;
+  world = state.view?.world || world;
+  interp.push(view, performance.now());
+}
+
 ws.onmessage = async (event) => {
-  let msg;
-  try { msg = JSON.parse(event.data); } catch { return; }
-  // Frame plane first: k/d frames decode to state views.
-  if (msg.t === "k" || msg.t === "d" || (typeof event.data === "string" && msg.t === "state")) {
-    const state = decoder.decode(typeof event.data === "string" ? event.data : event.data);
-    if (state.t === "resync") { ws.send(JSON.stringify({ t: "resync" })); return; }
-    view = state.view;
-    world = state.view?.world || world;
-    interp.push(view, performance.now());
+  // Frame plane first: k/d frames arrive as text (d1/legacy) or b1 binary.
+  if (typeof event.data !== "string") {
+    try { applyState(decoder.decode(event.data)); } catch {}
     return;
   }
+  let msg;
+  try { msg = JSON.parse(event.data); } catch { return; }
+  if (msg.t === "k" || msg.t === "d") {
+    try { applyState(decoder.decode(event.data)); } catch {}
+    return;
+  }
+  if (msg.t === "state") { applyState(msg); return; }
   if (await seat.handle(msg)) return;
   switch (msg.t) {
     case "waiting":

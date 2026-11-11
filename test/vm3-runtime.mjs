@@ -237,3 +237,35 @@ test("attach timeout destroys the fresh VM instead of leaving it", async (t) => 
   assert.equal([...vms.values()][0].status, "destroyed");
   assert.ok(calls.some((c) => c[0] === "destroy"));
 });
+
+test("concurrent lifecycle calls serialize and never leak a VM", async (t) => {
+  const { manager, calls, vms } = makeManager(t, {
+    hooks: { waitAttach: async () => {} },
+  });
+  await manager.open();
+  // Watchdog fallback racing a streamer reset and a provider check must not
+  // interleave destroy/create: every created VM ends current or destroyed.
+  await Promise.allSettled([
+    manager.activate("grove"),
+    manager.fallback("watchdog: game-error"),
+    manager.activate("default"),
+    manager.checkProvider(),
+  ]);
+  const created = calls.filter((c) => c[0] === "create").length;
+  const destroyed = calls.filter((c) => c[0] === "destroy").length;
+  const live = [...vms.values()].filter((v) => v.status !== "destroyed");
+  assert.equal(live.length, 1, "exactly the current incarnation survives");
+  assert.equal(created - destroyed, 1, "no orphaned provider VM");
+  assert.equal(manager.vm.id, live[0].id);
+});
+
+test("safeText redacts token shapes but keeps hashes and ids readable", () => {
+  const seat = "v1." + "a".repeat(20) + "." + "b".repeat(20);
+  assert.equal(safeText("leak " + seat + " here"), "leak redacted-seat-token here");
+  const game = "A".repeat(20) + "b".repeat(20); // 40-char mixed token
+  assert.equal(safeText("err " + game), "err redacted-token");
+  const hex = "a".repeat(64); // sha256 digest stays readable for audit
+  assert.equal(safeText(hex), hex);
+  const vmid = "sb-" + "a1".repeat(15); // provider id stays readable
+  assert.equal(safeText("pause " + vmid), "pause " + vmid);
+});

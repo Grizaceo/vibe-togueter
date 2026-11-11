@@ -42,6 +42,7 @@ export class GameVmManager {
     this.error = null;
     this._closing = false;
     this._poller = null;
+    this._tail = Promise.resolve(); // serializes lifecycle operations
     const prior = file ? readJsonFile(file) : null;
     if (prior) {
       // A controller restart never trusts a live VM: reconcile by destroying.
@@ -79,20 +80,34 @@ export class GameVmManager {
   }
 
   // ---- lifecycle ----------------------------------------------------------
+  // Lifecycle calls are serialized: a watchdog fallback racing a streamer
+  // button or loadGame must never interleave destroy/create and leak a VM.
+  _enqueue(fn) {
+    const run = this._tail.then(fn);
+    this._tail = run.then(() => undefined, () => undefined);
+    return run;
+  }
+
   async open() {
+    return this._enqueue(() => this._open());
+  }
+  async _open() {
     if (this.phase === "running" || this.phase === "attaching") return this.status();
     if (this.phase === "cleanup-required") {
       // A previous incarnation may still exist at the provider; destroy it
       // before anything new is created (never resume, never reuse).
       await this._destroyCurrent("restart-reconcile");
     }
-    await this.activate("default", { reason: "open" });
+    await this._activate("default", { reason: "open" });
     return this.status();
   }
 
   // Clean reset onto `imageKey` (default "default"): always destroy + create,
   // never restart-in-place. Resolves once the guest agent has attached.
-  async activate(imageKey = "default", { reason = "load", game = null, payload = undefined } = {}) {
+  async activate(imageKey = "default", options = {}) {
+    return this._enqueue(() => this._activate(imageKey, options));
+  }
+  async _activate(imageKey = "default", { reason = "load", game = null } = {}) {
     const spec = this.images[imageKey];
     if (!spec) throw Error("Unknown image: " + imageKey);
     if (this._closing) throw Error("Session is closing.");
@@ -182,12 +197,15 @@ export class GameVmManager {
 
   // Streamer button or watchdog: back to the default image and game.
   async fallback(reason = "fallback") {
+    return this._enqueue(() => this._fallback(reason));
+  }
+  async _fallback(reason = "fallback") {
     this.log("fallback", { reason, game: this.gameKey || undefined });
     try {
       await this.hooks.setWaiting?.({ phase: "resetting", reason: safeReason(reason) });
     } catch {}
     try {
-      await this.activate("default", { reason: "fallback" });
+      await this._activate("default", { reason: "fallback" });
     } finally {
       try {
         await this.hooks.setWaiting?.(null);
@@ -199,6 +217,9 @@ export class GameVmManager {
   // Session close (or cap expiry): stop game traffic, destroy the VM and
   // confirm the provider's terminal state. Idempotent.
   async close() {
+    return this._enqueue(() => this._close());
+  }
+  async _close() {
     if (this.phase === "closed" && !this.vm) return this.status();
     this._closing = true;
     this._stopPolling();
@@ -251,6 +272,9 @@ export class GameVmManager {
 
   // Provider pause is a cost fuse only: observe and destroy, never resume.
   async checkProvider() {
+    return this._enqueue(() => this._checkProvider());
+  }
+  async _checkProvider() {
     if (!this.vm || this.phase === "destroying" || this.phase === "closed") return this.status();
     let status;
     try {

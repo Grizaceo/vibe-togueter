@@ -140,7 +140,16 @@ export async function createVm3Host({
         }),
       beforeDestroy: async () => {
         host.stop("vm-reset");
-        await new Promise((r) => setTimeout(r, 150)); // let stop reach the agent
+        // Wait until the agent's game socket actually detaches at the funnel
+        // so the dead incarnation cannot leak frames into the next attach.
+        // Bounded: the provider destroy behind this is the real guarantee.
+        if (channel.isAttached?.(room))
+          await channel
+            .waitFor("game-detached", {
+              predicate: (m) => m.room === room,
+              timeoutMs: 2000,
+            })
+            .catch(() => {});
       },
     },
   });
@@ -177,11 +186,11 @@ export async function createVm3Host({
         if (kind === "game-error" && !host._closing) {
           host.error = data;
           // Watchdog fallback: any protocol/health failure returns VM3 to the
-          // default image. The manager destroys; we then reload.
-          manager
-            .fallback("watchdog: " + String(data).slice(0, 120))
-            .then(() => startSession("default", images.default))
-            .catch((e) => onEvent("vm3-fallback-failed", { error: String(e) }));
+          // default image. Goes through the same serialized path as the
+          // streamer button so it cannot race a manual loadGame.
+          fallback("watchdog: " + String(data).slice(0, 120)).catch((e) =>
+            onEvent("vm3-fallback-failed", { error: String(e) }),
+          );
         }
         if (kind === "ended") host.view = null;
         onEvent("vm3-" + kind, data);
@@ -208,37 +217,55 @@ export async function createVm3Host({
     return session;
   }
 
+  // Session operations are serialized like the manager's: a watchdog
+  // fallback racing a streamer loadGame must not attach a session to the
+  // wrong incarnation.
+  let tail = Promise.resolve();
+  const enqueue = (fn) => {
+    const run = tail.then(fn);
+    tail = run.then(() => undefined, () => undefined);
+    return run;
+  };
+
   async function loadGame(imageKey = "default") {
-    const spec = images[imageKey];
-    if (!spec) throw Error("Unknown image: " + imageKey);
-    await manager.activate(imageKey, {
-      game: spec.game ?? { key: imageKey },
+    return enqueue(async () => {
+      const spec = images[imageKey];
+      if (!spec) throw Error("Unknown image: " + imageKey);
+      await manager.activate(imageKey, {
+        game: spec.game ?? { key: imageKey },
+      });
+      return startSession(imageKey, spec);
     });
-    return startSession(imageKey, spec);
   }
 
   async function fallback(reason = "fallback") {
-    await manager.fallback(reason);
-    return startSession("default", images.default);
+    return enqueue(async () => {
+      await manager.fallback(reason);
+      return startSession("default", images.default);
+    });
   }
 
   async function open() {
-    // Provision + attach the default image once; the session starts on the
-    // already-clean incarnation (no second reset).
-    await manager.open();
-    return startSession("default", images.default);
+    return enqueue(async () => {
+      // Provision + attach the default image once; the session starts on the
+      // already-clean incarnation (no second reset).
+      await manager.open();
+      return startSession("default", images.default);
+    });
   }
 
   async function close() {
     if (host._closing) return;
     host._closing = true;
-    try {
-      host.stop("session-close");
-      await manager.close();
-    } finally {
-      viewers.detach();
-      channel.close();
-    }
+    return enqueue(async () => {
+      try {
+        host.stop("session-close");
+        await manager.close();
+      } finally {
+        viewers.detach();
+        channel.close();
+      }
+    });
   }
 
   return {
