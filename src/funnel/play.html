@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vibe Arena</title>
+<link rel="stylesheet" href="/index.css">
+<style>
+  body { margin:0; background:#0d0f14; color:#e8eaf0; font:14px/1.4 system-ui,sans-serif; }
+  #wrap { max-width:960px; margin:0 auto; padding:16px; }
+  #stage { position:relative; background:#111; border-radius:8px; overflow:hidden; }
+  canvas { display:block; width:100%; }
+  #waiting { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(10,12,18,.72); font-size:18px; text-align:center; padding:24px; }
+  #panel { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; align-items:center; }
+  input,button { background:#1a1d26; color:#e8eaf0; border:1px solid #2a2f3d; border-radius:6px; padding:8px 10px; }
+  button { cursor:pointer; } button:disabled { opacity:.5; }
+  #feed { margin-top:12px; max-height:180px; overflow:auto; font-size:13px; color:#9aa3b5; }
+  #seatbox { margin-top:12px; }
+  .hidden { display:none !important; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage"><canvas id="cv" width="1280" height="720"></canvas><div id="waiting" class="hidden"></div></div>
+  <div id="panel">
+    <span id="who">connecting…</span>
+    <button id="unseat" class="hidden">Leave seat</button>
+    <button id="fallback" class="hidden">!fallback</button>
+  </div>
+  <div id="seatbox">
+    <input id="guestname" placeholder="guest name" maxlength="20">
+    <button id="guest">Join as guest</button>
+    <button id="pair">Pair with chat (!join)</button>
+    <code id="paircode"></code>
+  </div>
+  <div id="feed"></div>
+</div>
+<script type="module" src="/play.js"></script>
+</body>
+</html>

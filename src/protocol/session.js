@@ -47,6 +47,9 @@ export class GameSession {
           if (!this._ended)
             this._end("Adapter exited: " + String(info?.reason || info || "unknown").slice(0, 120));
         },
+        // Runtimes that relay frames at the edge (VM3 funnel) beat the health
+        // watchdog on relayed traffic, not on protocol messages alone.
+        onLiveness: () => this.noteLiveness(),
       });
     } catch (error) {
       this._end("Adapter failed to start: " + error.message);
@@ -86,6 +89,11 @@ export class GameSession {
   }
   _beat() {
     this._lastBeat = Date.now();
+  }
+  // Transport-level liveness for relayed runtimes: counts as a beat only
+  // while the game is actually running, never during load or after end.
+  noteLiveness() {
+    if (this.state === "running" || this.state === "paused") this._beat();
   }
   _arm() {
     this._watch = setInterval(() => {
