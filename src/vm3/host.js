@@ -11,6 +11,8 @@ import { Vm3Link } from "./link.js";
 import { FunnelViewers } from "./viewers.js";
 import { GameVmManager } from "./manager.js";
 import { GameSession } from "../protocol/session.js";
+import { TeeAdapter, TEE_CONTRACT } from "../protocol/adapters/tee.js";
+import { TeeChatBridge } from "../tee-chat-bridge.js";
 import { SeatAuthority } from "../seats.js";
 import { Pairings } from "../server/pairing.js";
 
@@ -29,6 +31,25 @@ export function bundledImageSpec({ key, dir, root, ref = "va-game:1" }) {
     dir,
     payload: { kind: "sdk-source", source },
     version: { sha256: crypto.createHash("sha256").update(source).digest("hex") },
+  };
+}
+
+// A tee-native image runs teeworlds-rs inside VM3: the guest agent spawns the
+// server and relays its binary protocol through funnel "legs" to the vault's
+// TeeChatBridge. No SDK source crosses the channel.
+export function teeImageSpec({
+  key = "default",
+  ref,
+  mode = "dm",
+  name = "teeworlds-rs",
+}) {
+  return {
+    key,
+    ref,
+    payload: { kind: "tee-native" },
+    agent: { kind: "tee-native", mode },
+    version: { source: TEE_CONTRACT, runtime: ref },
+    meta: { name },
   };
 }
 
@@ -96,6 +117,9 @@ export async function createVm3Host({
   healthTimeoutMs = 4000,
   now = Date.now,
   onEvent = () => {},
+  onKickEvent = null,
+  teeBridge = new TeeChatBridge({ idleMs: 0 }),
+  chatName = room,
 }) {
   if (!backend || !funnelUrl || !room || !vaultSecret)
     throw Error("createVm3Host needs backend, funnelUrl, room and vaultSecret.");
@@ -112,15 +136,35 @@ export async function createVm3Host({
   });
   await channel.connect();
 
+  // Verified Kick events the funnel forwards for this room. The handler is
+  // platform-scoped: it dedupes by message id across every room's channel.
+  const offKickEvent = onKickEvent
+    ? channel.on("kick-event", (m) => {
+        if (m?.id === undefined || m?.id === null || m.id === "") return;
+        onKickEvent({
+          id: String(m.id),
+          type: String(m.type || ""),
+          body: m.body,
+        });
+      })
+    : null;
+
   const viewers = new FunnelViewers({
     channel, seats, pairings, host, feed, handleChat, requireBoundKey, now,
   });
   viewers.attach();
 
+  // Backends read agent.funnelUrl for VA_FUNNEL_URL; default it from the
+  // host's funnel so image specs only override when they must.
   const manager = new GameVmManager({
     backend,
     room,
-    images,
+    images: Object.fromEntries(
+      Object.entries(images).map(([key, spec]) => [
+        key,
+        { ...spec, agent: { funnelUrl, ...(spec.agent || {}) } },
+      ]),
+    ),
     file: journalDir ? `${journalDir}/gamevm-${room.replace(/[^a-zA-Z0-9_-]/g, "_")}.json` : null,
     attachTimeoutMs,
     statusPollMs,
@@ -171,10 +215,31 @@ export async function createVm3Host({
     });
   }
 
+  // Vault-side end of a funnel tee leg: the TeeChatBridge's ws terminates at
+  // /ws/tee on the funnel and is piped (binary, unparsed) to the in-VM agent.
+  const teeLegUrl =
+    String(funnelUrl).replace(/\/+$/, "") +
+    "/ws/tee?room=" +
+    encodeURIComponent(room) +
+    "&auth=" +
+    crypto
+      .createHmac("sha256", vaultSecret)
+      .update("tee|" + room)
+      .digest("base64url");
+
   async function startSession(imageKey, spec) {
     host.stop("reload");
+    const teeNative = spec?.payload?.kind === "tee-native";
     const session = new GameSession({
-      adapter: new Vm3Link({ channel, room, payload: spec?.payload ?? null, attachTimeoutMs }),
+      adapter: teeNative
+        ? new TeeAdapter({
+            entry: { id: imageKey, title: spec.meta?.name },
+            bridge: teeBridge,
+            channel: chatName,
+            connect: () =>
+              teeBridge.startUrl(teeLegUrl, "vm3-" + imageKey, chatName),
+          })
+        : new Vm3Link({ channel, room, payload: spec?.payload ?? null, attachTimeoutMs }),
       id: imageKey,
       version: spec?.version ?? { sha256: "vm3" },
       room,
@@ -262,6 +327,7 @@ export async function createVm3Host({
         host.stop("session-close");
         await manager.close();
       } finally {
+        offKickEvent?.();
         viewers.detach();
         channel.close();
       }
@@ -280,5 +346,19 @@ export async function createVm3Host({
     open,
     close,
     claimPairing: (code, principal) => viewers.claim(code, principal),
+    // The collective-tee surface (same shape as createTeeSession) so chat
+    // commands can drive the in-VM tee once it is the loaded image.
+    tee: {
+      chat: ({ cmd, args, actor }) =>
+        host.session?.chat({ cmd, args, actor }) ?? null,
+      pause: (reason = "chat-effects") =>
+        host.session?.pause(reason) ?? false,
+      resume: (reason = "chat-effects") =>
+        host.session?.resume(reason) ?? false,
+      status: () => ({
+        ...teeBridge.status(),
+        session: host.session?.state ?? "ended",
+      }),
+    },
   };
 }

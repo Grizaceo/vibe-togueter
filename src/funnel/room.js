@@ -9,6 +9,15 @@ import { verifySeatToken } from "../seats.js";
 
 const MAX_PENDING_TO_GAME = 64;
 const LIVENESS_MS = 500;
+// Tee legs: binary pipes between the vault's TeeChatBridge (/ws/tee) and the
+// in-VM agent (/ws/leg). The funnel never parses the bytes.
+export const MAX_TEE_LEGS = 4;
+const TEE_LEG_BUFFER_MESSAGES = 64;
+const TEE_LEG_BUFFER_BYTES = 256 * 1024;
+const TEE_LEG_BACKPRESSURE = 1024 * 1024;
+// ws close codes we may send onward: 1000 or the private-use 3000-4999 range.
+const relayCloseCode = (code) =>
+  code === 1000 || (code >= 3000 && code <= 4999) ? code : 1000;
 
 export class FunnelRoom {
   constructor({ id, now = Date.now, log = () => {} }) {
@@ -25,6 +34,7 @@ export class FunnelRoom {
     this.fallback = null;
     this.stream = new FrameStream();
     this.lastLiveness = 0;
+    this.teeLegs = new Map();    // leg id -> {client, agent, buffer, bytes, timer}
   }
 
   sendVault(obj) {
@@ -82,8 +92,9 @@ export class FunnelRoom {
     if (this.game?.ws !== ws) return;
     this.game = null;
     // Incarnation boundary: commands buffered for the dead game must not
-    // flush into the next VM's agent on attach.
+    // flush into the next VM's agent on attach, and its tee legs die with it.
     this.pendingToGame = [];
+    this.closeTeeLegs("game-detached");
     this.sendVault({ t: "game-detached", room: this.id, reason: String(reason || "closed").slice(0, 80) });
     this.log("game-detached", { room: this.id });
   }
@@ -271,6 +282,115 @@ export class FunnelRoom {
     }
   }
 
+  // ---- tee legs -------------------------------------------------------------
+  teeLegCount() {
+    return this.teeLegs.size;
+  }
+  // Vault side accepted on /ws/tee: mint a leg id, tell the attached game
+  // agent to dial /ws/leg, and buffer client bytes until it pairs.
+  openTeeLeg(client, { id, legTimeoutMs = 10000 } = {}) {
+    const leg = { id, client, agent: null, buffer: [], bytes: 0, timer: null };
+    leg.timer = setTimeout(() => {
+      this._dropLeg(leg);
+      if (client.readyState === 1) client.close(4004, "leg timeout");
+    }, legTimeoutMs);
+    leg.timer.unref?.();
+    this.teeLegs.set(id, leg);
+    client.on("message", (data, isBinary) =>
+      this._teeClientMessage(leg, data, isBinary),
+    );
+    client.on("close", (code) => this._teeSideClosed(leg, "client", code));
+    const game = this.game?.ws;
+    const fail = () => {
+      this._dropLeg(leg);
+      if (client.readyState === 1) client.close(4004, "no game");
+    };
+    if (game?.readyState !== 1) return fail(), leg;
+    try {
+      game.send(JSON.stringify({ t: "leg-open", leg: id }));
+    } catch {
+      fail();
+    }
+    return leg;
+  }
+  // Agent side accepted on /ws/leg: single use — a leg pairs exactly once.
+  pairTeeLeg(leg, agent) {
+    if (this.teeLegs.get(leg.id) !== leg || leg.agent) {
+      if (agent.readyState === 1) agent.close(4003, "leg used");
+      return false;
+    }
+    leg.agent = agent;
+    if (leg.timer) {
+      clearTimeout(leg.timer);
+      leg.timer = null;
+    }
+    agent.on("message", (data, isBinary) => {
+      if (leg.client.readyState !== 1) return;
+      leg.client.send(data, { binary: !!isBinary });
+      if (leg.client.bufferedAmount > TEE_LEG_BACKPRESSURE)
+        leg.client.terminate();
+    });
+    agent.on("close", (code) => this._teeSideClosed(leg, "agent", code));
+    for (const m of leg.buffer.splice(0)) {
+      if (agent.readyState !== 1) break;
+      agent.send(m.data, { binary: m.binary });
+      if (agent.bufferedAmount > TEE_LEG_BACKPRESSURE) {
+        agent.terminate();
+        break;
+      }
+    }
+    leg.bytes = 0;
+    return true;
+  }
+  _teeClientMessage(leg, data, isBinary) {
+    if (leg.agent) {
+      if (leg.agent.readyState === 1) {
+        leg.agent.send(data, { binary: !!isBinary });
+        if (leg.agent.bufferedAmount > TEE_LEG_BACKPRESSURE)
+          leg.agent.terminate();
+      }
+      return;
+    }
+    leg.bytes += data.length;
+    if (
+      leg.buffer.length >= TEE_LEG_BUFFER_MESSAGES ||
+      leg.bytes > TEE_LEG_BUFFER_BYTES
+    ) {
+      this._dropLeg(leg);
+      if (leg.client.readyState === 1)
+        leg.client.close(4008, "leg buffer overflow");
+      return;
+    }
+    leg.buffer.push({ data, binary: !!isBinary });
+  }
+  _teeSideClosed(leg, side, code) {
+    if (!this._dropLeg(leg)) return;
+    const other = side === "client" ? leg.agent : leg.client;
+    try {
+      if (other && (other.readyState === 0 || other.readyState === 1))
+        other.close(relayCloseCode(code));
+    } catch {}
+  }
+  _dropLeg(leg) {
+    if (!this.teeLegs.delete(leg.id)) return false;
+    if (leg.timer) {
+      clearTimeout(leg.timer);
+      leg.timer = null;
+    }
+    return true;
+  }
+  closeTeeLegs(reason = "closed") {
+    for (const leg of [...this.teeLegs.values()]) {
+      this._dropLeg(leg);
+      for (const side of [leg.client, leg.agent]) {
+        try {
+          if (side && (side.readyState === 0 || side.readyState === 1))
+            side.close(1001, String(reason).slice(0, 80));
+        } catch {}
+      }
+    }
+  }
+
   revokeSeat(sub) {
     for (const client of this.viewers.values())
       if (client.identity?.id === sub) client.ws.close(4001, "seat revoked");
@@ -280,6 +400,7 @@ export class FunnelRoom {
     this.viewers.clear();
     if (this.game?.ws.readyState === 1) this.game.ws.close(1001, "room closed");
     this.game = null;
+    this.closeTeeLegs("room closed");
     for (const ws of this.vaults) if (ws.readyState === 1) ws.close(1001, "room closed");
     this.vaults.clear();
   }

@@ -3,6 +3,7 @@ import { createConstruction } from "./server/construction.js";
 import { startGameRuntime } from "./server/game-lifecycle.js";
 import { startPublication } from "./server/publication.js";
 import { createWebhookRoutes } from "./server/routes/webhooks.js";
+import { createKickEventHandler } from "./server/kick-events.js";
 import {
   createRoomBroadcast,
   startBroadcast,
@@ -216,6 +217,15 @@ startBroadcast({
 });
 
 // ---------- http ----------
+// One Kick event handler serves the direct route and the funnel forward:
+// redeliveries dedupe on a single ledger across both paths.
+const kickEvents = createKickEventHandler({
+  CONFIG,
+  simulateEventCredits,
+  handleChat,
+  treasury,
+  feed,
+});
 const webhookRoutes = createWebhookRoutes({
   ROOT,
   CONFIG,
@@ -225,6 +235,7 @@ const webhookRoutes = createWebhookRoutes({
   feed,
   chatEffects,
   host,
+  kickEvents,
 });
 
 const publicRoutes = createPublicRoutes({

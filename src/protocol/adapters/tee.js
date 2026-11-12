@@ -35,8 +35,8 @@ export class TeeAdapter {
     return body?.data?.up === true;
   }
   static chatControl = true;
-  constructor({ entry, bridge, channel }) {
-    Object.assign(this, { entry, bridge, channel });
+  constructor({ entry, bridge, channel, connect = null }) {
+    Object.assign(this, { entry, bridge, channel, connect });
   }
   start({ onMessage, onExit }) {
     let connected = false,
@@ -60,8 +60,10 @@ export class TeeAdapter {
       send: (message) => {
         switch (message?.t) {
           case "hello":
-            this.bridge
-              .start(this.entry, this.channel)
+            (this.connect
+              ? this.connect()
+              : this.bridge.start(this.entry, this.channel)
+            )
               .then(() => {
                 connected = true;
                 onMessage(

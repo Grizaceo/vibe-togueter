@@ -44,6 +44,8 @@ export function createosBackend({
         `VA_ROOM=${agent.room}`,
         `VA_GAME_TOKEN=${agent.token}`,
         `VA_IMAGE_KEY=${agent.imageKey || ""}`,
+        `VA_GAME_KIND=${agent.kind || "sdk"}`,
+        ...(agent.mode ? [`VA_TEE_MODE=${agent.mode}`] : []),
       ];
       const started = await json([
         "sandbox", "process", "start", created.id, "--",

@@ -9,8 +9,8 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { WebSocketServer } from "ws";
-import { FunnelRoom } from "./room.js";
-import { verifyKickWebhook, KickDeliveries } from "../chat/kick-webhook.js";
+import { FunnelRoom, MAX_TEE_LEGS } from "./room.js";
+import { KickDeliveries, KickKeyCache } from "../chat/kick-webhook.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "../..");
@@ -23,11 +23,15 @@ const send = (ws, obj) => {
 };
 const hmac = (secret, room) =>
   crypto.createHmac("sha256", secret).update("vault|" + room).digest("base64url");
+const teeAuth = (secret, room) =>
+  crypto.createHmac("sha256", secret).update("tee|" + room).digest("base64url");
 
 export function createFunnel({
   vaultSecret,
   kickPublicKey = null,
+  kickKeys = null,
   broadcasterUserId = 0,
+  legTimeoutMs = 10000,
   now = Date.now,
   log = () => {},
 } = {}) {
@@ -35,6 +39,11 @@ export function createFunnel({
     throw Error("funnel requires a vaultSecret (>=16 chars)");
   const rooms = new Map(); // room id -> FunnelRoom
   const deliveries = new KickDeliveries();
+  const kickKeyCache =
+    kickKeys ??
+    (kickPublicKey
+      ? new KickKeyCache({ staticKey: kickPublicKey })
+      : new KickKeyCache());
 
   function room(id) {
     let r = rooms.get(id);
@@ -146,6 +155,33 @@ export function createFunnel({
     ws.on("close", () => r.detachGame(ws));
   });
 
+  // ---- tee legs -------------------------------------------------------------
+  // /ws/tee is the vault side (TeeChatBridge inside the controller); /ws/leg
+  // is the agent side (guest agent inside VM3). Both carry raw teeworlds-rs
+  // bytes once paired — the funnel pipes, it never parses.
+  const teeWss = new WebSocketServer({ noServer: true, maxPayload: 1024 * 1024 });
+  teeWss.on("connection", (ws, req) => {
+    const url = new URL(req.url, "http://funnel");
+    const id = url.searchParams.get("room") || "";
+    const r = rooms.get(id);
+    const expected = Buffer.from(teeAuth(vaultSecret, id));
+    const got = Buffer.from(String(url.searchParams.get("auth") || ""));
+    if (got.length !== expected.length || !crypto.timingSafeEqual(got, expected))
+      return ws.close(4003, "bad auth");
+    if (r?.game?.ws?.readyState !== 1) return ws.close(4004, "no game");
+    if (r.teeLegCount() >= MAX_TEE_LEGS) return ws.close(4008, "too many legs");
+    const leg = crypto.randomBytes(16).toString("base64url");
+    r.openTeeLeg(ws, { id: leg, legTimeoutMs });
+  });
+  const legWss = new WebSocketServer({ noServer: true, maxPayload: 1024 * 1024 });
+  legWss.on("connection", (ws, req) => {
+    const url = new URL(req.url, "http://funnel");
+    const r = rooms.get(url.searchParams.get("room"));
+    const leg = r?.teeLegs.get(String(url.searchParams.get("leg") || ""));
+    if (!leg || leg.agent) return ws.close(4003, "unknown leg");
+    r.pairTeeLeg(leg, ws);
+  });
+
   // ---- viewer channel --------------------------------------------------------
   const viewerWss = new WebSocketServer({ noServer: true, maxPayload: 64 * 1024 });
   viewerWss.on("connection", (ws, req) => {
@@ -235,10 +271,9 @@ export function createFunnel({
     try {
       if (req.method === "POST" && url.pathname === "/webhook/kick") {
         const rawBody = await readBody(req);
-        const checked = verifyKickWebhook({
+        const checked = await kickKeyCache.verify({
           headers: req.headers,
           rawBody,
-          publicKey: kickPublicKey,
           now: now(),
         });
         if (!checked.ok) {
@@ -256,9 +291,16 @@ export function createFunnel({
           res.writeHead(400);
           return res.end("bad json");
         }
-        // Forward the verified event to every vault link; the vault decides
-        // which room/channel it belongs to (chat is platform-scoped).
-        const line = JSON.stringify({ t: "kick-event", body });
+        // Forward the verified event to every vault link; several
+        // controllers may share this funnel and a room's vault may not
+        // subscribe onKickEvent, so each link gets a copy. The vault's
+        // shared handler dedupes by message id across rooms.
+        const line = JSON.stringify({
+          t: "kick-event",
+          id: checked.id,
+          type: String(req.headers["kick-event-type"] || "").slice(0, 80),
+          body,
+        });
         for (const r of rooms.values())
           for (const ws of r.vaults) if (ws.readyState === 1) ws.send(line);
         res.writeHead(200);
@@ -280,6 +322,8 @@ export function createFunnel({
       wss.handleUpgrade(req, socket, head, (ws) => wss.emit("connection", ws, req));
     if (pathName === "/ws/platform") return done(vaultWss);
     if (pathName === "/ws/game") return done(gameWss);
+    if (pathName === "/ws/tee") return done(teeWss);
+    if (pathName === "/ws/leg") return done(legWss);
     if (pathName === "/ws") return done(viewerWss);
     socket.destroy();
   });

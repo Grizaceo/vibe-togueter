@@ -115,6 +115,13 @@ export function validateImageSpec(spec, { allowPayload = true } = {}) {
       throw Error("Invalid image agent template.");
     if (a.funnelUrl !== undefined && typeof a.funnelUrl !== "string")
       throw Error("Image agent funnelUrl must be a string.");
+    if (a.kind !== undefined && !["sdk", "tee-native"].includes(a.kind))
+      throw Error("Unknown image agent kind: " + String(a.kind));
+    if (
+      a.mode !== undefined &&
+      (typeof a.mode !== "string" || !/^[a-z0-9-]{1,20}$/.test(a.mode))
+    )
+      throw Error("Image agent mode must be a short string.");
   }
   if (spec.payload !== undefined && allowPayload) {
     const p = spec.payload;
@@ -123,6 +130,8 @@ export function validateImageSpec(spec, { allowPayload = true } = {}) {
     if (p.kind === "sdk-source") {
       if (typeof p.source !== "string" || p.source.length > 300000)
         throw Error("SDK source payload too large.");
+    } else if (p.kind === "tee-native") {
+      // The teeworlds-rs server ships in the image; nothing crosses the wire.
     } else if (p.kind === "none") {
       // Phase 6 artifact bundles land here.
     } else throw Error("Unknown image payload kind: " + String(p.kind));

@@ -89,7 +89,18 @@ test("image specs and journal events are strictly validated", () => {
   assert.throws(() => validateImageSpec(null));
   assert.throws(() => validateImageSpec({ key: "Bad Key!", ref: "x" }));
   assert.throws(() => validateImageSpec({ key: "ok", ref: "x", agent: { funnelUrl: 1 } }));
+  assert.throws(() => validateImageSpec({ key: "ok", ref: "x", agent: { kind: "mystery" } }));
+  assert.throws(() => validateImageSpec({ key: "ok", ref: "x", agent: { mode: "dm; x" } }));
+  assert.throws(() => validateImageSpec({ key: "ok", ref: "x", agent: { mode: "M".repeat(21) } }));
   assert.throws(() => validateImageSpec({ key: "ok", ref: "x", payload: { kind: "mystery" } }));
+  assert.doesNotThrow(() =>
+    validateImageSpec({
+      key: "tee",
+      ref: "tee:test",
+      payload: { kind: "tee-native" },
+      agent: { kind: "tee-native", mode: "dm" },
+    }),
+  );
   const e = journalEvent("error", { reason: "has ip 10.0.0.1 inside", phase: "x" });
   assert.match(e.reason, /^sha256:/, "IP-looking text is hashed, not stored");
   assert.equal(safeText("plain reason"), "plain reason");

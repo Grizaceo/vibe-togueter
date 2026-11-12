@@ -37,6 +37,60 @@ export function verifyKickWebhook({
   return { ok: true, id: String(id) };
 }
 
+// Kick's signing key is fetched lazily and refreshed at most once per
+// minRefreshMs (Kick rotates it). A configured static key wins and never
+// fetches; fetch failures are swallowed so verification fails closed.
+export class KickKeyCache {
+  constructor({
+    fetchImpl = fetch,
+    now = Date.now,
+    staticKey = process.env.VA_KICK_PUBKEY || null,
+    minRefreshMs = 60000,
+  } = {}) {
+    Object.assign(this, { fetchImpl, now, minRefreshMs });
+    this.staticKey = staticKey ? String(staticKey).replace(/\\n/g, "\n") : null;
+    this.key = null;
+    this.fetchedAt = 0;
+  }
+  async get({ refresh = false } = {}) {
+    if (this.staticKey) return this.staticKey;
+    if (this.key && !refresh) return this.key;
+    if (refresh && this.now() - this.fetchedAt < this.minRefreshMs)
+      return this.key;
+    this.fetchedAt = this.now();
+    try {
+      const res = await this.fetchImpl(
+        "https://api.kick.com/public/v1/public-key",
+        { signal: AbortSignal.timeout(8000) },
+      );
+      if (res?.ok) {
+        const data = await res.json();
+        const key = data?.public_key || data?.data?.public_key;
+        if (typeof key === "string" && key) this.key = key;
+      }
+    } catch {}
+    return this.key;
+  }
+  async verify({ headers, rawBody, now } = {}) {
+    // Missing headers fail closed without spending a key fetch.
+    if (
+      !headers["kick-event-message-id"] ||
+      !headers["kick-event-message-timestamp"] ||
+      !headers["kick-event-signature"]
+    )
+      return verifyKickWebhook({ headers, rawBody, publicKey: null, now });
+    const key = await this.get();
+    let check = verifyKickWebhook({ headers, rawBody, publicKey: key, now });
+    if (check.reason === "bad signature") {
+      const before = key;
+      const fresh = await this.get({ refresh: true });
+      if (fresh !== before)
+        check = verifyKickWebhook({ headers, rawBody, publicKey: fresh, now });
+    }
+    return check;
+  }
+}
+
 // Remembers delivered message ids so a redelivery is acknowledged but not replayed.
 export class KickDeliveries {
   constructor({ ttlMs = 15 * 60 * 1000, max = 10000, now = Date.now } = {}) {
