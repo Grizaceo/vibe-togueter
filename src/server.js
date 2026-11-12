@@ -3,6 +3,7 @@ import { createConstruction } from "./server/construction.js";
 import { startGameRuntime } from "./server/game-lifecycle.js";
 import { startPublication } from "./server/publication.js";
 import { createWebhookRoutes } from "./server/routes/webhooks.js";
+import { createKickEventHandler } from "./server/kick-events.js";
 import {
   createRoomBroadcast,
   startBroadcast,
@@ -23,6 +24,10 @@ import {
 // Usage: node src/server.js [--port 8080] [--twitch <channel>] [--game-dir games/demo]
 
 import http from "node:http";
+import fs from "node:fs";
+import crypto from "node:crypto";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { ApprovalDelegation } from "./approval-delegation.js";
 import { ChatPredictions } from "./chat-predictions.js";
 import { CrowdBursts } from "./crowd-bursts.js";
@@ -33,6 +38,8 @@ import { CreatorAssets } from "./creator-assets.js";
 import { RemoteGames } from "./remote-games.js";
 import { TeeChatBridge } from "./tee-chat-bridge.js";
 import { createTeeSession } from "./server/tee-session.js";
+import { createosBackend } from "./vm3/createos.js";
+import { createVm3Host, teeImageSpec } from "./vm3/host.js";
 import { createLocalChat } from "./chat/local.js";
 import { createSeating } from "./server/seating.js";
 
@@ -125,6 +132,34 @@ const remoteGames = new RemoteGames(
 );
 const teeBridge = new TeeChatBridge();
 const teeSession = createTeeSession({ teeBridge, feed });
+
+// ---------- VM3 tee runtime (opt-in; docs/platform/VM3_REHEARSAL.md) ----------
+// VA_VM3=1 enables it without editing the tracked config. teeControl is a
+// lazy delegate: chat commands are wired before the host exists, and every
+// call lands on the VM3 tee once createVm3Host resolves below.
+const vm3Enabled = CONFIG.vm3?.enabled === true || process.env.VA_VM3 === "1";
+let vm3 = null;
+const teeControl = {
+  chat: (message) => vm3?.tee.chat(message) ?? null,
+  pause: (reason) => vm3?.tee.pause(reason) ?? false,
+  resume: (reason) => vm3?.tee.resume(reason) ?? false,
+  status: () => {
+    if (!vm3) return teeSession.status();
+    const s = vm3.manager.status();
+    return {
+      ...vm3.tee.status(),
+      vm3: { phase: s.phase, incarnation: s.incarnation, image: s.image },
+    };
+  },
+  start: (...args) => (vm3 ? vm3.open() : teeSession.start(...args)),
+  stop: (reason) => {
+    if (!vm3) return teeSession.stop(reason);
+    const status = teeControl.status();
+    feed("system", "Tee runs in VM3 until the session closes");
+    return status;
+  },
+};
+const teeSurface = vm3Enabled ? teeControl : teeSession;
 startRoundTicks();
 
 // ---------- seats (docs/platform/IDENTITY_SEATS.md) ----------
@@ -149,10 +184,20 @@ const handleChat = createChatCommands({
   replies,
   chatEffects,
   crowdBursts,
-  teeSession,
+  teeSession: teeSurface,
   feed,
   host,
-  requestFallback,
+  requestFallback: (reason) => {
+    if (!vm3) return requestFallback(reason);
+    vm3
+      .fallback(reason)
+      .catch((e) =>
+        feed(
+          "system",
+          "VM3 fallback failed: " + String(e?.message || e).slice(0, 120),
+        ),
+      );
+  },
   approvalDelegation,
   predictions,
   remoteGames,
@@ -216,6 +261,15 @@ startBroadcast({
 });
 
 // ---------- http ----------
+// One Kick event handler serves the direct route and the funnel forward:
+// redeliveries dedupe on a single ledger across both paths.
+const kickEvents = createKickEventHandler({
+  CONFIG,
+  simulateEventCredits,
+  handleChat,
+  treasury,
+  feed,
+});
 const webhookRoutes = createWebhookRoutes({
   ROOT,
   CONFIG,
@@ -225,7 +279,109 @@ const webhookRoutes = createWebhookRoutes({
   feed,
   chatEffects,
   host,
+  kickEvents,
 });
+
+// ---------- VM3 host (only when enabled) ----------
+// The funnel json is written by scripts/vm3/funnel-createos.mjs; the tee
+// bundle by scripts/vm3/build-tee-bundle.mjs. Both are verified before the
+// first VM can be created. open() runs in the background so the HTTP listen
+// is never blocked by provider provisioning.
+if (vm3Enabled) {
+  const vm3Cfg = CONFIG.vm3 || {};
+  const vm3Room = vm3Cfg.room || "main";
+  const funnelFile = path.resolve(ROOT, vm3Cfg.funnel || "runtime/vm3/funnel.json");
+  let funnel = null;
+  try {
+    funnel = JSON.parse(fs.readFileSync(funnelFile, "utf8"));
+  } catch {}
+  if (funnel?.phase !== "up" || !funnel.wsUrl || !funnel.secret || !funnel.host)
+    throw new Error(
+      `VM3 is enabled but ${vm3Cfg.funnel || "runtime/vm3/funnel.json"} is missing or not phase "up"; run scripts/vm3/funnel-createos.mjs up first.`,
+    );
+  const bundlePath = path.resolve(
+    ROOT,
+    vm3Cfg.tee?.bundle || "runtime/vm3/tee-bundle.tar",
+  );
+  const sidecarPath = bundlePath.replace(/\.tar$/, "") + ".json";
+  if (!fs.existsSync(bundlePath))
+    throw new Error(`VM3 tee bundle missing: ${vm3Cfg.tee?.bundle}`);
+  const sidecar = JSON.parse(fs.readFileSync(sidecarPath, "utf8"));
+  const bundleSha = crypto
+    .createHash("sha256")
+    .update(fs.readFileSync(bundlePath))
+    .digest("hex");
+  if (bundleSha !== sidecar.sha256)
+    throw new Error(
+      "VM3 tee bundle sha256 does not match tee-bundle.json; rebuild with scripts/vm3/build-tee-bundle.mjs.",
+    );
+  const execute = promisify(execFile);
+  const cli = async (args, options = {}) => {
+    try {
+      const result = await execute("createos", args, {
+        timeout: options?.timeout ?? 60000,
+        maxBuffer: 8 * 1024 * 1024,
+      });
+      return result.stdout;
+    } catch (error) {
+      // Provider diagnostics can carry sensitive detail; keep the exit only.
+      throw new Error(
+        `createos ${args.slice(0, 3).join(" ")} failed (exit ${error.code ?? "?"})`,
+      );
+    }
+  };
+  const co = vm3Cfg.createos || {};
+  const backend = createosBackend({
+    cli,
+    shape: co.shape || "s-1vcpu-2gb",
+    autoPause: co.autoPause || "30m",
+    egress: [funnel.host],
+    rootfs: co.rootfs || "devbox:1",
+    files: [
+      {
+        local: path.join(ROOT, "src", "vm3", "guest-agent.js"),
+        remote: "/opt/va/guest-agent.js",
+      },
+      { local: bundlePath, remote: "/tmp/tee-bundle.tar" },
+    ],
+    setup: [
+      ["mkdir", "-p", "/opt/tee"],
+      ["tar", "-xf", "/tmp/tee-bundle.tar", "-C", "/opt/tee"],
+    ],
+    agentCommand: "/opt/va/guest-agent.js",
+    agentCwd: "/opt/tee",
+    agentEnv: { VA_TEE_BIN: "/opt/tee/teeworlds-rs-server" },
+  });
+  vm3 = await createVm3Host({
+    backend,
+    funnelUrl: funnel.wsUrl,
+    room: vm3Room,
+    vaultSecret: funnel.secret,
+    images: {
+      default: teeImageSpec({
+        ref: co.rootfs || "devbox:1",
+        mode: vm3Cfg.tee?.mode || "dm",
+      }),
+    },
+    handleChat,
+    onKickEvent: kickEvents,
+    feed,
+    journalDir: path.join(ROOT, "runtime"),
+    chatName: TWITCH_CHANNEL || vm3Room,
+    onEvent: (kind) => console.log("[vibe-arena] vm3 " + kind),
+  });
+  vm3
+    .open()
+    .then((status) =>
+      feed("system", `VM3 tee ready (phase ${status?.phase || "?"}).`),
+    )
+    .catch((error) =>
+      feed(
+        "system",
+        "VM3 tee failed: " + String(error?.message || error).slice(0, 120),
+      ),
+    );
+}
 
 const publicRoutes = createPublicRoutes({
   CONFIG,
@@ -241,7 +397,7 @@ const publicRoutes = createPublicRoutes({
   creatorAssets,
   remoteGames,
   teeBridge,
-  teeSession,
+  teeSession: teeSurface,
   clientCredits,
   PUBLIC,
 });
@@ -258,7 +414,7 @@ const adminRoutes = createAdminRoutes({
   fallbackPolicy,
   chatEffects,
   crowdBursts,
-  teeSession,
+  teeSession: teeSurface,
   feed,
   activateFallback,
   getFallback,
@@ -326,7 +482,8 @@ startServer({
   resourceWatcher,
   getResourceDebounce,
   teeBridge,
-  teeSession,
+  teeSession: teeSurface,
+  vm3,
   twitch,
   host,
   localChat,

@@ -79,6 +79,7 @@ The order follows dependencies:
   - **Pending:**
     - a real session in which one Twitch viewer and one Kick viewer join the same room. It needs the owner's Kick app, accounts and a stable public URL;
     - seats on `tee-play.html`, which move to phase 3.
+  - **Kick through the funnel (2026-11-12).** Kick events now reach the controller through the deployed funnel as well as directly, with one handler and one dedupe ledger for both paths. The key is fetched and refreshed from Kick. The real rehearsal used webhooks signed with a local test key, not real Kick accounts (see phase 4).
 - Identities are `twitch:`, `kick:` and `web:`, with each platform's moderator and broadcaster roles.
 - Short-lived signed seat tokens, and `!join` answers with a personal link. This replaces the phase 0 patch.
 - Test Kick end to end with a real account. The adapter in `src/chat/kick.js` exists but has only been tested with fixtures (`docs/COMPAT.md`).
@@ -100,13 +101,18 @@ The order follows dependencies:
 - Write the spec before the code. **Spec accepted on 2026-11-06:** [GAME_PROTOCOL](platform/GAME_PROTOCOL.md). t99 is out of v1, and Tee individual seats move to v1.1.
 - **Done when:** Grove and Tee run under the same contract, with conformance tests.
 
-### 4. VM3 game runtime
+### 4. VM3 game runtime — spec accepted 2026-11-10, implementation in progress
 
-- Two backends: a local VM (QEMU/KVM via libvirt, for self-hosting) and the cloud (CreateOS).
+- Two backends: a local VM (QEMU/KVM via libvirt, for self-hosting) and the cloud (CreateOS), behind one runtime interface; the provider is a detail.
 - Browsers connect **through the funnel**, never directly to VM3: fixed URL, seat token on the first stream, the viewer IP never reaches the VM.
 - On every game change VM3 resets to a clean image; players wait in the funnel waiting room (predictions, votes, countdown).
 - Fallback returns VM3 to the default-game image, by streamer button or watchdog.
-- **Done when:** Grove runs in VM3, both local and cloud, with no game code on the host.
+- **Spec:** [VM3_RUNTIME](platform/VM3_RUNTIME.md) — topology, runtime interface, lifecycle and open questions.
+- **Done when:** Grove runs in VM3, both local and cloud, with no game code on the host. Real provider runs stay gated on owner-approved sessions; tests use injected fakes.
+- **Collective Tee in VM3 on CreateOS (2026-11-12).** The waiting game (teeworlds-rs `main` 9fca1ed, a bundle built in docker) runs inside VM3. The controller's chat bridge reaches it only through binary legs relayed by the funnel. The VM has no ingress, and its egress is limited to the funnel host.
+  - The real rehearsal passed 8/8 (`docs/evidence/kick-vm3-1794451351746.json`): the funnel ran in a CreateOS sandbox with ingress, and signed Kick `!tee` commands moved the in-VM tee. Redelivery was deduped, a bad signature got 403, and a moderator `!fallback` produced a new incarnation in 20 s. On teardown, every sandbox was destroyed and confirmed. Runbook: [VM3_REHEARSAL](platform/VM3_REHEARSAL.md).
+  - Still pending: Grove (SDK) in VM3 on a real provider, the libvirt backend on a real VM, and individual Tee play through the funnel.
+  - The codec label `teeworlds-rs/172cfef` names a bots-branch commit that is not wire-compatible. The JS codec matches `ec13eee` and `main` 9fca1ed. Renaming the label is an owner decision.
 
 ### 5. Mode C and a live view of Codex
 

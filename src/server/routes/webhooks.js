@@ -1,11 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { decodeTwitchEvent, rewardCommand } from "../../twitch-events.js";
-import {
-  verifyKickWebhook,
-  KickDeliveries,
-  kickChatMessage,
-} from "../../chat/kick-webhook.js";
+import { KickKeyCache } from "../../chat/kick-webhook.js";
+import { createKickEventHandler } from "../kick-events.js";
 
 export function createWebhookRoutes({
   ROOT,
@@ -16,49 +13,15 @@ export function createWebhookRoutes({
   feed,
   chatEffects,
   host,
+  kickEvents = createKickEventHandler({
+    CONFIG,
+    simulateEventCredits,
+    handleChat,
+    treasury,
+    feed,
+  }),
+  kickKeys = new KickKeyCache(),
 }) {
-  // kick webhook signature verification (official Events API). Kick may rotate
-  // its key, so a failed check refetches it (at most once a minute) and retries.
-  let kickPubkey = null,
-    kickKeyFetchedAt = 0;
-  const kickDeliveries = new KickDeliveries();
-  async function getKickPubkey({ refresh = false } = {}) {
-    if (process.env.VA_KICK_PUBKEY)
-      return (kickPubkey = process.env.VA_KICK_PUBKEY.replace(/\\n/g, "\n"));
-    if (kickPubkey && !refresh) return kickPubkey;
-    if (refresh && Date.now() - kickKeyFetchedAt < 60000) return kickPubkey;
-    kickKeyFetchedAt = Date.now();
-    const res = await fetch("https://api.kick.com/public/v1/public-key", {
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!res.ok) throw new Error(`kick public-key ${res.status}`);
-    const data = await res.json();
-    kickPubkey = data.public_key || data.data?.public_key || kickPubkey;
-    return kickPubkey;
-  }
-  async function verifyKick(req, rawBody) {
-    try {
-      await getKickPubkey();
-    } catch {}
-    let check = verifyKickWebhook({
-      headers: req.headers,
-      rawBody,
-      publicKey: kickPubkey,
-    });
-    if (check.reason === "bad signature") {
-      const before = kickPubkey;
-      try {
-        await getKickPubkey({ refresh: true });
-      } catch {}
-      if (kickPubkey !== before)
-        check = verifyKickWebhook({
-          headers: req.headers,
-          rawBody,
-          publicKey: kickPubkey,
-        });
-    }
-    return check;
-  }
 
   const deliveryFile = path.join(ROOT, "runtime", "twitch-deliveries.jsonl");
   fs.mkdirSync(path.dirname(deliveryFile), { recursive: true });
@@ -77,70 +40,22 @@ export function createWebhookRoutes({
       let b = "";
       req.on("data", (c) => (b += c));
       req.on("end", async () => {
-        const check = await verifyKick(req, b);
+        const check = await kickKeys.verify({ headers: req.headers, rawBody: b });
         if (!check.ok) {
           res.writeHead(check.status);
           return res.end(check.reason);
-        }
-        // A redelivery is acknowledged so Kick stops retrying, but never replayed.
-        if (!kickDeliveries.first(check.id)) {
-          res.writeHead(200);
-          return res.end("duplicate");
         }
         let body = {};
         try {
           body = JSON.parse(b);
         } catch {}
-        const evType = req.headers["kick-event-type"];
-        const M = CONFIG.monetization;
-        if (evType === "chat.message.sent") {
-          const message = kickChatMessage(body, {
-            broadcasterUserId: CONFIG.kick?.broadcasterUserId,
-          });
-          if (message) handleChat(message);
-        } else if (
-          simulateEventCredits &&
-          evType === "channel.subscription.new"
-        ) {
-          treasury.deposit(M.kickSubUsd, {
-            source: "kick-sub",
-            user: body.subscriber?.username,
-          });
-          feed(
-            "system",
-            `Subscription from ${body.subscriber?.username || "?"} → +$${M.kickSubUsd}`,
-          );
-        } else if (
-          simulateEventCredits &&
-          evType === "channel.subscription.gifts"
-        ) {
-          const n = body.giftees?.length || body.amount || 1;
-          treasury.deposit(n * M.kickSubUsd, {
-            source: "kick-sub-gift",
-            user: body.gifter?.username,
-            count: n,
-          });
-          feed(
-            "system",
-            `${body.gifter?.username || "?"} gifted ${n} subs → +$${(n * M.kickSubUsd).toFixed(2)}`,
-          );
-        } else if (simulateEventCredits && evType === "kicks.gifted") {
-          const amt =
-            (body.kicks?.amount || body.amount || 0) * M.kickUsdPerKick;
-          if (amt > 0) {
-            treasury.deposit(amt, {
-              source: "kicks",
-              user: body.sender?.username,
-              kicks: body.kicks?.amount,
-            });
-            feed(
-              "system",
-              `${body.sender?.username || "?"} sent kicks → +$${amt.toFixed(2)}`,
-            );
-          }
-        }
+        const result = kickEvents({
+          id: check.id,
+          type: String(req.headers["kick-event-type"] || "").slice(0, 80),
+          body,
+        });
         res.writeHead(200);
-        res.end("ok");
+        res.end(result === "duplicate" ? "duplicate" : "ok");
       });
       return true;
     }

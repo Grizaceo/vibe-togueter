@@ -55,6 +55,30 @@ export function verifyProof({ jwk, signature }, jkt, message) {
   }
 }
 
+// Stateless check shared with the funnel: signature, version, room, expiry.
+// Single-use redemption and revocation stay vault-side (redeem/revoke), so
+// the funnel only needs the public key.
+export function verifySeatToken(token, { publicKey, room, now = Date.now } = {}) {
+  if (typeof token !== "string" || token.length > MAX_TOKEN_CHARS) return { ok: false, reason: "malformed" };
+  const parts = token.split(".");
+  if (parts.length !== 3 || parts[0] !== "v1") return { ok: false, reason: "malformed" };
+  let valid = false;
+  try {
+    valid = crypto.verify(null, Buffer.from("v1." + parts[1]), publicKey, fromB64(parts[2]));
+  } catch {}
+  if (!valid) return { ok: false, reason: "bad signature" };
+  let claims;
+  try {
+    claims = JSON.parse(fromB64(parts[1]).toString("utf8"));
+  } catch {
+    return { ok: false, reason: "malformed" };
+  }
+  if (claims?.v !== 1 || claims.room !== room) return { ok: false, reason: "wrong room" };
+  if (!SEAT_TYPES.includes(claims.seat)) return { ok: false, reason: "malformed" };
+  if (!(now() < claims.exp)) return { ok: false, reason: "expired" };
+  return { ok: true, claims };
+}
+
 export class SeatAuthority {
   constructor({
     key = process.env.VA_SEAT_KEY,
@@ -97,24 +121,11 @@ export class SeatAuthority {
 
   // Stateless check: signature, version, room and expiry.
   verify(token) {
-    if (typeof token !== "string" || token.length > MAX_TOKEN_CHARS) return { ok: false, reason: "malformed" };
-    const parts = token.split(".");
-    if (parts.length !== 3 || parts[0] !== "v1") return { ok: false, reason: "malformed" };
-    let valid = false;
-    try {
-      valid = crypto.verify(null, Buffer.from("v1." + parts[1]), this.publicKey, fromB64(parts[2]));
-    } catch {}
-    if (!valid) return { ok: false, reason: "bad signature" };
-    let claims;
-    try {
-      claims = JSON.parse(fromB64(parts[1]).toString("utf8"));
-    } catch {
-      return { ok: false, reason: "malformed" };
-    }
-    if (claims?.v !== 1 || claims.room !== this.room) return { ok: false, reason: "wrong room" };
-    if (!SEAT_TYPES.includes(claims.seat)) return { ok: false, reason: "malformed" };
-    if (!(this.now() < claims.exp)) return { ok: false, reason: "expired" };
-    return { ok: true, claims };
+    return verifySeatToken(token, {
+      publicKey: this.publicKey,
+      room: this.room,
+      now: this.now,
+    });
   }
 
   // Single use. A second use means the token leaked: the identity's seat is revoked.

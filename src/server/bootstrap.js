@@ -10,6 +10,7 @@ export function startServer({
   getResourceDebounce,
   teeBridge,
   teeSession,
+  vm3 = null,
   twitch,
   host,
   localChat,
@@ -46,6 +47,18 @@ export function startServer({
     clearTimeout(getResourceDebounce());
     teeSession.stop("shutdown");
     teeBridge.stop();
+    if (vm3) {
+      // The VM3 destroy is provider-confirmed; bound the wait so shutdown
+      // cannot hang, and log only the outcome — never ids or urls.
+      const outcome = await Promise.race([
+        vm3
+          .close()
+          .then(() => "destroyed")
+          .catch(() => "close failed"),
+        new Promise((resolve) => setTimeout(() => resolve("timeout"), 90000)),
+      ]);
+      console.log("[vibe-arena] vm3     -> " + outcome);
+    }
     publicLink?.stop();
     twitch?.close();
     host.stop();

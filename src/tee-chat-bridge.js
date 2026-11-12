@@ -13,7 +13,7 @@ export class TeeChatBridge {
     this.pulseMs = pulseMs;
     this.idleMs = idleMs;
     this.codec = codec;
-    if (!Number.isFinite(pulseMs) || pulseMs < 20 || pulseMs > 500 || !Number.isFinite(idleMs) || idleMs < 500 || idleMs > 60000)
+    if (!Number.isFinite(pulseMs) || pulseMs < 20 || pulseMs > 500 || !(idleMs === 0 || (Number.isFinite(idleMs) && idleMs >= 500 && idleMs <= 60000)))
       throw Error('Invalid bridge time limits.');
     this.paused = false;
     this.ws = null;
@@ -58,6 +58,15 @@ export class TeeChatBridge {
     if (this.codec.version !== 'teeworlds-rs/172cfef' || parsed.protocol !== 'ws:' || !['127.0.0.1','[::1]'].includes(parsed.hostname) || parsed.username || parsed.password || parsed.search || parsed.hash || parsed.pathname !== '/ws')
       throw Error('Use the pinned contract and a private loopback WebSocket.');
     return this.connect(parsed, 'local-tee-prototype', channel);
+  }
+  // Funnel tee leg: the vault side of a binary pipe into a VM3-hosted
+  // teeworlds-rs server. Only the funnel's /ws/tee endpoint is accepted.
+  async startUrl(url, gameId, channel) {
+    if (this.ws) throw Error("Bridge already enabled or connecting.");
+    const parsed = new URL(url);
+    if (!["ws:", "wss:"].includes(parsed.protocol) || parsed.username || parsed.password || parsed.hash || parsed.pathname !== "/ws/tee")
+      throw Error("Use a funnel tee leg URL.");
+    return this.connect(parsed, gameId, channel);
   }
   pause(paused = true) {
     this.paused = !!paused;
@@ -192,7 +201,7 @@ export class TeeChatBridge {
   }
   tick() {
     if (!this.ws || !this.state.connected) return;
-    if (this.now() - this.lastCommand >= this.idleMs)
+    if (this.idleMs !== 0 && this.now() - this.lastCommand >= this.idleMs)
       return this.stop("idle timeout");
     if (this.ws.readyState !== 1 || this.ws.bufferedAmount > 65536)
       return this.stop("connection backpressure");
