@@ -92,10 +92,16 @@ export function makeCli(run, diagnosticFile = DIAGNOSTIC) {
 const cliJson = async (cli, args, options) =>
   JSON.parse(await cli(args, options));
 
-// `sandbox get` JSON shape for the ingress URL is not documented; look for
-// the common field names first, then fall back to the observed pattern
-// sb-<x> -> https://<x>-8080.app.sb.createos.sh.
-export function ingressUrl(get, id) {
+// `sandbox get` exposes `ingress_url_template` like
+// https://<id>-<port>.app.sb.createos.sh — the guest port is a literal
+// `<port>` placeholder. Prefer it; keep the field scan and the observed
+// pattern as fallbacks for older CLI/provider shapes.
+export function ingressUrl(get, id, port = 8080) {
+  const template = get?.ingress_url_template ?? get?.ingressUrlTemplate;
+  if (typeof template === "string" && /^https?:\/\//.test(template))
+    return template.includes("<port>")
+      ? template.replaceAll("<port>", String(port))
+      : template;
   const urlFrom = (value, depth = 0) => {
     if (depth > 2 || value == null) return null;
     if (typeof value === "string") {
@@ -245,6 +251,9 @@ export async function funnelUp({
       fs.rmSync(path.dirname(secretLocal), { recursive: true, force: true });
     }
 
+    // CreateOS rejects process-start --env keys that were not declared at
+    // `sandbox create`; the `env` utility sets them inside the guest instead
+    // (same pattern as src/vm3/createos.js — values are paths, never secrets).
     const env = [
       "PORT=8080",
       "VA_FUNNEL_SECRET_FILE=/opt/va/funnel.secret",
@@ -275,8 +284,7 @@ export async function funnelUp({
       [
         "sandbox", "process", "start", id,
         "--cwd", "/opt/va",
-        ...env.flatMap((entry) => ["--env", entry]),
-        "--", "node", "src/funnel/main.js",
+        "--", "env", ...env, "node", "src/funnel/main.js",
       ],
       { timeout: 60000 },
     );

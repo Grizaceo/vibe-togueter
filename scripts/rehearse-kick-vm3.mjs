@@ -123,6 +123,19 @@ try {
   positions.before = t0?.player?.position?.x ?? null;
   const commandsBefore = t0?.commands ?? 0;
 
+  // Sample positions at ~10 Hz while commands run: the tee can cross a map
+  // hazard and respawn at the exact spawn point, so rest-position equality
+  // proves nothing — only observed displacement does.
+  const posSamples = [];
+  const sampler = setInterval(() => {
+    teeStatus()
+      .then((t) => {
+        const p = t?.player?.position;
+        if (p && Number.isFinite(p.x)) posSamples.push({ x: p.x, y: p.y });
+      })
+      .catch(() => {});
+  }, 100);
+
   // 2. Drive movement: six !tee right across two senders, then !tee jump.
   const senders = [
     { senderId: "1001", username: "rehearsal-a" },
@@ -136,8 +149,16 @@ try {
   }
   deliveries.push(await sendAndExpectOk({ ...senders[0], content: "!tee jump" }));
   await sleep(1500); // let snapshots reflect the movement
+  clearInterval(sampler);
   const t1 = await teeStatus();
   positions.after = t1?.player?.position?.x ?? null;
+  const xs = posSamples.map((p) => p.x);
+  const ys = posSamples.map((p) => p.y);
+  positions.xRange = xs.length ? [Math.min(...xs), Math.max(...xs)] : null;
+  positions.yRange = ys.length ? [Math.min(...ys), Math.max(...ys)] : null;
+  const displaced =
+    xs.length > 1 &&
+    (Math.max(...xs) - Math.min(...xs) > 8 || Math.max(...ys) - Math.min(...ys) > 8);
   check(
     "chat commands reached the in-VM tee",
     (t1?.commands ?? 0) > commandsBefore,
@@ -145,8 +166,8 @@ try {
   );
   check(
     "tee position changed",
-    positions.before != null && positions.after != null && positions.after !== positions.before,
-    `x ${positions.before} -> ${positions.after}`,
+    displaced,
+    `x ${positions.before} -> ${positions.after}; observed x [${positions.xRange}] y [${positions.yRange}]`,
   );
 
   // 3. Idempotency and signature enforcement at the funnel.
@@ -236,7 +257,7 @@ const evidence = {
   incarnations,
   positions,
   bundle: { rev: bundle.rev, sha256: bundle.sha256 },
-  node: process.version,
+  node: { rehearsal: process.version, sandbox: funnelFile.node ?? null },
 };
 const out = path.join(
   ROOT,
