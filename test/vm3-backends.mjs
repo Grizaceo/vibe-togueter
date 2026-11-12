@@ -118,7 +118,124 @@ test("createos destroy is unconfirmed while the provider still reports running",
     if (cmd === "get") return JSON.stringify({ id: "sb-" + "b".repeat(20) + "1", status: "running" });
     throw Error("unexpected " + args.join(" "));
   };
-  const backend = createosBackend({ cli });
+  const backend = createosBackend({ cli, destroyPolls: 3, sleep: async () => {} });
   const result = await backend.destroy({ id: "sb-" + "b".repeat(20) + "1" });
   assert.equal(result.confirmed, false);
+  assert.equal(result.terminalStatus, "running");
+});
+
+test("createos backend pushes files, runs setup, starts agent with cwd and env", async () => {
+  const calls = [];
+  const cli = async (args, options = {}) => {
+    calls.push({ args, options });
+    const [group, cmd, ...rest] = args;
+    assert.equal(group, "sandbox");
+    if (cmd === "create") return JSON.stringify({ id: "sb-" + "c".repeat(20) + "9" });
+    if (cmd === "get") return JSON.stringify({ id: "sb-" + "c".repeat(20) + "9", status: "running" });
+    if (cmd === "push") return "{}";
+    if (cmd === "exec") return "{}";
+    if (cmd === "process") return JSON.stringify({ process_id: "proc_tee" });
+    throw Error("unexpected cli: " + args.join(" "));
+  };
+  const backend = createosBackend({
+    cli,
+    files: [
+      { local: "/tmp/guest-agent.js", remote: "/opt/va/guest-agent.js" },
+      { local: "/tmp/tee-bundle.tar", remote: "/tmp/tee-bundle.tar" },
+    ],
+    setup: [
+      ["mkdir", "-p", "/opt/tee"],
+      ["tar", "-xf", "/tmp/tee-bundle.tar", "-C", "/opt/tee"],
+    ],
+    agentCwd: "/opt/tee",
+    agentEnv: { VA_TEE_BIN: "/opt/tee/teeworlds-rs-server" },
+    egress: ["funnel.example.com"],
+  });
+  const agent = {
+    funnelUrl: "wss://funnel.example",
+    room: "main",
+    token: "tok-abc",
+    imageKey: "default",
+    kind: "tee-native",
+    mode: "dm",
+  };
+  const vm = await backend.create({ name: "va-game-main-1", image: "devbox:1", agent });
+  assert.equal(vm.id, "sb-" + "c".repeat(20) + "9");
+  assert.equal(vm.processId, "proc_tee");
+  // Order: create -> get -> push, push -> exec, exec -> process start.
+  const order = calls.map((c) => c.args[1]);
+  assert.deepEqual(order, ["create", "get", "push", "push", "exec", "exec", "process"]);
+  const pushes = calls.filter((c) => c.args[1] === "push");
+  assert.deepEqual(pushes[0].args.slice(3), ["/tmp/guest-agent.js", "/opt/va/guest-agent.js"]);
+  assert.deepEqual(pushes[1].args.slice(3), ["/tmp/tee-bundle.tar", "/tmp/tee-bundle.tar"]);
+  assert.equal(pushes[0].options.timeout, 300000, "push gets the long timeout");
+  const execs = calls.filter((c) => c.args[1] === "exec");
+  assert.deepEqual(execs[0].args.slice(4), ["mkdir", "-p", "/opt/tee"]);
+  assert.deepEqual(execs[1].args.slice(4), ["tar", "-xf", "/tmp/tee-bundle.tar", "-C", "/opt/tee"]);
+  const start = calls.find((c) => c.args[1] === "process").args;
+  assert.deepEqual(start.slice(0, 5), ["sandbox", "process", "start", vm.id, "--cwd"]);
+  assert.equal(start[5], "/opt/tee");
+  const envArgs = start.slice(start.indexOf("--") + 1);
+  assert.ok(envArgs.includes("VA_TEE_BIN=/opt/tee/teeworlds-rs-server"), "agentEnv reaches the env list");
+  assert.ok(envArgs.includes("VA_GAME_KIND=tee-native"));
+  assert.ok(envArgs.includes("VA_TEE_MODE=dm"));
+  assert.ok(envArgs.includes("VA_GAME_TOKEN=tok-abc"));
+  assert.equal(envArgs.at(-2), "node");
+  assert.equal(envArgs.at(-1), "/app/guest-agent.js");
+});
+
+test("createos destroy polls through destroying to destroyed", async () => {
+  const statuses = ["destroying", "destroying", "destroyed"];
+  const gets = [];
+  const cli = async (args) => {
+    const cmd = args[1];
+    if (cmd === "rm") return "{}";
+    if (cmd === "get") {
+      gets.push(args[2]);
+      const status = statuses.length > 1 ? statuses.shift() : statuses[0];
+      return JSON.stringify({ id: "sb-" + "d".repeat(20) + "2", status });
+    }
+    throw Error("unexpected " + args.join(" "));
+  };
+  const backend = createosBackend({ cli, destroyPolls: 5, sleep: async () => {} });
+  const result = await backend.destroy({ id: "sb-" + "d".repeat(20) + "2" });
+  assert.equal(result.confirmed, true);
+  assert.equal(result.terminalStatus, "destroyed");
+  assert.equal(gets.length, 3, "polled until the terminal state");
+});
+
+test("createos create destroys the fresh VM when a later step fails", async () => {
+  const calls = [];
+  let removed = false;
+  const cli = async (args) => {
+    calls.push(args.join(" "));
+    const cmd = args[1];
+    if (cmd === "create") return JSON.stringify({ id: "sb-" + "e".repeat(20) + "3" });
+    if (cmd === "get")
+      return JSON.stringify({
+        id: "sb-" + "e".repeat(20) + "3",
+        status: removed ? "destroyed" : "running",
+      });
+    if (cmd === "push") throw Error("push failed");
+    if (cmd === "rm") {
+      removed = true;
+      return "{}";
+    }
+    throw Error("unexpected " + args.join(" "));
+  };
+  const backend = createosBackend({
+    cli,
+    files: [{ local: "/tmp/guest-agent.js", remote: "/opt/va/guest-agent.js" }],
+    destroyPolls: 5,
+    sleep: async () => {},
+  });
+  await assert.rejects(
+    backend.create({
+      name: "va-game-main-2",
+      image: "devbox:1",
+      agent: { funnelUrl: "wss://f", room: "r", token: "t", kind: "tee-native" },
+    }),
+    /push failed/,
+  );
+  assert.ok(calls.some((c) => c.includes("sandbox rm sb-" + "e".repeat(20) + "3 --force")), "fresh VM destroyed after the failure");
 });

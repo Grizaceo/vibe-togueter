@@ -45,6 +45,7 @@ Hackathon handoffs, plans, audits and pull-request notes are kept, unchanged, in
 | --- | --- |
 | [GAME_PROTOCOL.md](GAME_PROTOCOL.md) | Draft of the game protocol v1: manifest, control channel, chat effects, adapters and conformance tests (phase 3). |
 | [VM3_RUNTIME.md](VM3_RUNTIME.md) | Plan for the game VM runtime and the funnel: topology, backend interface, lifecycle and open questions (phase 4). |
+| [VM3_REHEARSAL.md](VM3_REHEARSAL.md) | Runbook for the live Kick → funnel → VM3 tee rehearsal on CreateOS (stage 3). |
 | [HOSTING_POLICY.md](HOSTING_POLICY.md) | Hosting choices and VM inactivity defaults set by the owner. |
 | [SESSION_FLOW.md](SESSION_FLOW.md) | The intended stream session, with parallel waiting-game and construction lanes. |
 | [JUDGE_DEPLOYMENT.md](JUDGE_DEPLOYMENT.md) | A runbook for a fixed HTTPS host. Nothing has been provisioned. |

@@ -62,5 +62,19 @@
   },
   "fallback": {
     "order": []
+  },
+  "vm3": {
+    "enabled": false,
+    "room": "main",
+    "funnel": "runtime/vm3/funnel.json",
+    "createos": {
+      "shape": "s-1vcpu-2gb",
+      "rootfs": "devbox:1",
+      "autoPause": "30m"
+    },
+    "tee": {
+      "bundle": "runtime/vm3/tee-bundle.tar",
+      "mode": "dm"
+    }
   }
 }
